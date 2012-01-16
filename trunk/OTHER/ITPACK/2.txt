@@ -1,0 +1,9 @@
+ifort /O2 /arch:SSE2 /Gd -c dsrc2c.f -o dsrc2c.obj
+ifort /O2 /arch:SSE2 /Gd -c jcg.f -o jcg.obj
+ifort /O2 /arch:SSE2 /Gd -c jsi.f -o jsi.obj
+ifort /O2 /arch:SSE2 /Gd -c rscg.f -o rscg.obj 
+ifort /O2 /arch:SSE2 /Gd -c rssi.f -o rssi.obj
+ifort /O2 /arch:SSE2 /Gd -c sor.f -o sor.obj
+ifort /O2 /arch:SSE2 /Gd -c ssorcg.f -o ssorcg.obj 
+ifort /O2 /arch:SSE2 /Gd -c ssorsi.f -o ssorsi.obj
+lib /OUT:out.lib *.obj 

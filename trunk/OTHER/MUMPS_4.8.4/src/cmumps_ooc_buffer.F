@@ -1,0 +1,576 @@
+C
+C  This file is part of MUMPS 4.8.4, built on Mon Dec 15 15:31:38 UTC 2008
+C
+C
+C  This version of MUMPS is provided to you free of charge. It is public
+C  domain, based on public domain software developed during the Esprit IV
+C  European project PARASOL (1996-1999) by CERFACS, ENSEEIHT-IRIT and RAL.
+C  Since this first public domain version in 1999, the developments are
+C  supported by the following institutions: CERFACS, ENSEEIHT-IRIT, and
+C  INRIA.
+C
+C  Main contributors are Patrick Amestoy, Iain Duff, Abdou Guermouche,
+C  Jacko Koster, Jean-Yves L'Excellent, and Stephane Pralet.
+C
+C  Up-to-date copies of the MUMPS package can be obtained
+C  from the Web pages:
+C  http://mumps.enseeiht.fr/  or  http://graal.ens-lyon.fr/MUMPS
+C
+C
+C   THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
+C   EXPRESSED OR IMPLIED. ANY USE IS AT YOUR OWN RISK.
+C
+C
+C  User documentation of any code that uses this software can
+C  include this complete notice. You can acknowledge (using
+C  references [1], [2], and [3]) the contribution of this package
+C  in any scientific publication dependent upon the use of the
+C  package. You shall use reasonable endeavours to notify
+C  the authors of the package of this publication.
+C
+C   [1] P. R. Amestoy, I. S. Duff and  J.-Y. L'Excellent,
+C   Multifrontal parallel distributed symmetric and unsymmetric solvers,
+C   in Comput. Methods in Appl. Mech. Eng., 184,  501-520 (2000).
+C
+C   [2] P. R. Amestoy, I. S. Duff, J. Koster and  J.-Y. L'Excellent,
+C   A fully asynchronous multifrontal solver using distributed dynamic
+C   scheduling, SIAM Journal of Matrix Analysis and Applications,
+C   Vol 23, No 1, pp 15-41 (2001).
+C
+C   [3] P. R. Amestoy and A. Guermouche and J.-Y. L'Excellent and
+C   S. Pralet, Hybrid scheduling for the parallel solution of linear
+C   systems. Parallel Computing Vol 32 (2), pp 136-156 (2006).
+C
+      MODULE CMUMPS_OOC_BUFFER
+      USE MUMPS_OOC_COMMON
+      IMPLICIT NONE
+      PUBLIC
+      INTEGER FIRST_HBUF,SECOND_HBUF
+      PARAMETER (FIRST_HBUF=0, SECOND_HBUF=1)
+      INTEGER,SAVE :: OOC_FCT_TYPE_LOC
+      INTEGER TYPEF_L_LOC,TYPEF_U_LOC
+      PARAMETER ( TYPEF_L_LOC=1, TYPEF_U_LOC=2 )
+      INTEGER IO_STRAT
+      COMPLEX, DIMENSION(:),ALLOCATABLE :: BUF_IO
+      LOGICAL,SAVE :: PANEL_FLAG
+      INTEGER,SAVE :: EARLIEST_WRITE_MIN_SIZE
+      INTEGER,SAVE,DIMENSION(:), ALLOCATABLE ::
+     &  I_SHIFT_FIRST_HBUF, I_SHIFT_SECOND_HBUF,
+     &  I_SHIFT_CUR_HBUF, I_REL_POS_CUR_HBUF,
+     &  LAST_IOREQUEST,
+     &  CUR_HBUF
+      INTEGER, DIMENSION(:),ALLOCATABLE :: I_CUR_HBUF_NEXTPOS
+      INTEGER,SAVE ::  I_CUR_HBUF_FSTPOS,
+     &  I_SUB_HBUF_FSTPOS
+      INTEGER BufferEmpty
+      PARAMETER (BufferEmpty=-1)
+      INTEGER*8, DIMENSION(:),ALLOCATABLE :: NextAddVirtBuffer
+      INTEGER*8, DIMENSION(:),ALLOCATABLE :: FIRST_VADDR_IN_BUF
+      CONTAINS   
+      SUBROUTINE CMUMPS_689(TYPEF_ARG)
+      IMPLICIT NONE
+      INTEGER TYPEF_ARG
+      SELECT CASE(CUR_HBUF(TYPEF_ARG))
+         CASE (FIRST_HBUF)
+            CUR_HBUF(TYPEF_ARG) = SECOND_HBUF
+            I_SHIFT_CUR_HBUF(TYPEF_ARG) =
+     $           I_SHIFT_SECOND_HBUF(TYPEF_ARG)
+         CASE (SECOND_HBUF)
+            CUR_HBUF(TYPEF_ARG) = FIRST_HBUF
+            I_SHIFT_CUR_HBUF(TYPEF_ARG) =
+     $           I_SHIFT_FIRST_HBUF(TYPEF_ARG)
+      END SELECT
+      IF(.NOT.PANEL_FLAG)THEN
+         I_SUB_HBUF_FSTPOS =I_CUR_HBUF_FSTPOS
+         I_CUR_HBUF_FSTPOS =I_CUR_HBUF_NEXTPOS(TYPEF_ARG)
+      ENDIF
+      I_REL_POS_CUR_HBUF(TYPEF_ARG) = 1
+      END SUBROUTINE CMUMPS_689
+      SUBROUTINE CMUMPS_707(TYPEF_ARG,IERR)
+      IMPLICIT NONE
+      INTEGER TYPEF_ARG
+      INTEGER NEW_IOREQUEST
+      INTEGER IERR
+      IERR=0
+      CALL CMUMPS_696(TYPEF_ARG,NEW_IOREQUEST,
+     $     IERR)
+      IF(IERR.LT.0)THEN
+         RETURN
+      ENDIF
+      IERR=0
+      CALL MUMPS_WAIT_REQUEST(LAST_IOREQUEST(TYPEF_ARG),IERR)
+      IF(IERR.LT.0)THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) MYID_OOC,': ',ERR_STR_OOC(1:DIM_ERR_STR_OOC)
+         RETURN
+      ENDIF
+      LAST_IOREQUEST(TYPEF_ARG) = NEW_IOREQUEST
+      CALL CMUMPS_689(TYPEF_ARG)
+      IF(PANEL_FLAG)THEN
+         NextAddVirtBuffer(TYPEF_ARG)=BufferEmpty
+      ENDIF
+      RETURN
+      END SUBROUTINE CMUMPS_707
+      SUBROUTINE CMUMPS_675(IERR)
+      IMPLICIT NONE
+      INTEGER, intent(out) :: IERR
+      INTEGER TYPEF_LAST        
+      INTEGER TYPEF_LOC
+      IERR = 0 
+      TYPEF_LAST = OOC_FCT_TYPE_LOC
+      DO TYPEF_LOC = 1, OOC_FCT_TYPE_LOC
+         IERR=0
+         CALL  CMUMPS_707(TYPEF_LOC,IERR)
+         IF(IERR.LT.0)THEN
+            RETURN
+         ENDIF
+         IERR=0
+         CALL CMUMPS_707(TYPEF_LOC,IERR)
+         IF(IERR.LT.0)THEN
+            RETURN
+         ENDIF
+      ENDDO
+      RETURN
+      END SUBROUTINE CMUMPS_675
+      SUBROUTINE CMUMPS_696(TYPEF_ARG,IOREQUEST,
+     $     IERR)
+      IMPLICIT NONE
+      INTEGER IOREQUEST,IERR
+      INTEGER TYPEF_ARG
+      INTEGER TOTAL_SIZE,FIRST_INODE,
+     &  SIZE,FROM_BUFIO_POS
+      INTEGER TYPE
+      INTEGER ADDR_INT1,ADDR_INT2
+      INTEGER*8 TMP_VADDR
+      IERR=0
+      IF (I_REL_POS_CUR_HBUF(TYPEF_ARG) == 1) THEN
+        IOREQUEST=-1
+        RETURN
+      END IF      
+      IF(PANEL_FLAG)THEN
+         TYPE=TYPEF_ARG-1
+         FIRST_INODE=-9999
+         TMP_VADDR=FIRST_VADDR_IN_BUF(TYPEF_ARG)
+      ELSE
+         TYPE=FCT
+         FIRST_INODE =
+     &        OOC_INODE_SEQUENCE(I_CUR_HBUF_FSTPOS,TYPEF_ARG)
+         TMP_VADDR=OOC_VADDR(STEP_OOC(FIRST_INODE),TYPEF_ARG)
+      ENDIF
+      FROM_BUFIO_POS=I_SHIFT_CUR_HBUF(TYPEF_ARG)+1
+      SIZE = I_REL_POS_CUR_HBUF(TYPEF_ARG)-1
+      CALL MUMPS_677(ADDR_INT1,ADDR_INT2,
+     $     TMP_VADDR)
+      CALL MUMPS_LOW_LEVEL_WRITE_OOC_C(LOW_LEVEL_STRAT_IO,
+     &     BUF_IO(FROM_BUFIO_POS),SIZE,
+     $     FIRST_INODE,IOREQUEST,
+     $     TYPE,ADDR_INT1,ADDR_INT2,IERR)
+      IF(IERR.LT.0)THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*)MYID_OOC,': ',ERR_STR_OOC(1:DIM_ERR_STR_OOC)
+         RETURN
+      ENDIF
+      END SUBROUTINE CMUMPS_696
+      SUBROUTINE CMUMPS_669(I1,I2,IERR)
+      IMPLICIT NONE
+      INTEGER I1,I2,IERR 
+      INTEGER allocok
+      IERR=0
+      PANEL_FLAG=.FALSE.
+      IF(allocated(I_SHIFT_FIRST_HBUF))THEN
+         DEALLOCATE(I_SHIFT_FIRST_HBUF)
+      ENDIF
+      IF(allocated(I_SHIFT_SECOND_HBUF))THEN
+         DEALLOCATE(I_SHIFT_SECOND_HBUF)
+      ENDIF
+      IF(allocated(I_SHIFT_CUR_HBUF))THEN
+         DEALLOCATE(I_SHIFT_CUR_HBUF)
+      ENDIF
+      IF(allocated(I_REL_POS_CUR_HBUF))THEN
+         DEALLOCATE(I_REL_POS_CUR_HBUF)
+      ENDIF
+      IF(allocated(LAST_IOREQUEST))THEN
+         DEALLOCATE(LAST_IOREQUEST)
+      ENDIF
+      IF(allocated(CUR_HBUF))THEN
+         DEALLOCATE(CUR_HBUF)
+      ENDIF
+      DIM_BUF_IO = KEEP_OOC(100)
+      ALLOCATE(I_SHIFT_FIRST_HBUF(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      ALLOCATE(I_SHIFT_SECOND_HBUF(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      ALLOCATE(I_SHIFT_CUR_HBUF(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      ALLOCATE(I_REL_POS_CUR_HBUF(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      ALLOCATE(LAST_IOREQUEST(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      ALLOCATE(CUR_HBUF(OOC_NB_FILE_TYPE),
+     $     stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = OOC_NB_FILE_TYPE
+         IERR=-1
+         RETURN
+      ENDIF
+      OOC_FCT_TYPE_LOC=OOC_NB_FILE_TYPE
+      ALLOCATE(BUF_IO(DIM_BUF_IO), stat=allocok)
+      IF (allocok > 0) THEN
+         IF (ICNTL1>0)
+     *   WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC'
+         I1 = -13
+         I2 = DIM_BUF_IO
+         RETURN
+      ENDIF
+      PANEL_FLAG=(KEEP_OOC(201).EQ.1)
+      IF (PANEL_FLAG) THEN 
+         IERR=0
+         KEEP_OOC(228)=0
+         IF(allocated(AddVirtLibre))THEN
+            DEALLOCATE(AddVirtLibre)
+         ENDIF
+         ALLOCATE(AddVirtLibre(OOC_NB_FILE_TYPE), stat=allocok)
+         IF (allocok > 0) THEN
+            IF (ICNTL1>0)
+     *      WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC_BUF_PANEL'
+            IERR=-1
+            I1=-13
+            I2=OOC_NB_FILE_TYPE
+            RETURN
+         ENDIF
+         AddVirtLibre(1:OOC_NB_FILE_TYPE)=0
+         IF(allocated(NextAddVirtBuffer))THEN
+            DEALLOCATE(NextAddVirtBuffer)
+         ENDIF
+         ALLOCATE(NextAddVirtBuffer(OOC_NB_FILE_TYPE), stat=allocok)
+         IF (allocok > 0) THEN
+            IF (ICNTL1>0)
+     *      WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC_BUF_PANEL'
+            IERR=-1
+            I1=-13
+            I2=OOC_NB_FILE_TYPE
+            RETURN
+         ENDIF
+         NextAddVirtBuffer (1:OOC_NB_FILE_TYPE)  = BufferEmpty      
+         IF(allocated(FIRST_VADDR_IN_BUF))THEN
+            DEALLOCATE(FIRST_VADDR_IN_BUF)
+         ENDIF
+         ALLOCATE(FIRST_VADDR_IN_BUF(OOC_NB_FILE_TYPE), stat=allocok)
+         IF (allocok > 0) THEN
+            IF (ICNTL1>0)
+     *      WRITE(ICNTL1,*) 'PB allocation in CMUMPS_INIT_OOC_BUF_PANEL'
+            IERR=-1
+            I1=-13
+            I2=OOC_NB_FILE_TYPE
+            RETURN
+         ENDIF
+         CALL CMUMPS_686()   
+      ELSE
+         CALL CMUMPS_685()
+      ENDIF
+      RETURN
+      END SUBROUTINE CMUMPS_669
+      SUBROUTINE CMUMPS_659()
+      IMPLICIT NONE
+      IF(allocated(BUF_IO))THEN
+         DEALLOCATE(BUF_IO)
+      ENDIF
+      IF(allocated(I_SHIFT_FIRST_HBUF))THEN
+         DEALLOCATE(I_SHIFT_FIRST_HBUF)
+      ENDIF
+      IF(allocated(I_SHIFT_SECOND_HBUF))THEN
+         DEALLOCATE(I_SHIFT_SECOND_HBUF)
+      ENDIF
+      IF(allocated(I_SHIFT_CUR_HBUF))THEN
+         DEALLOCATE(I_SHIFT_CUR_HBUF)
+      ENDIF
+      IF(allocated(I_REL_POS_CUR_HBUF))THEN
+         DEALLOCATE(I_REL_POS_CUR_HBUF)
+      ENDIF
+      IF(allocated(LAST_IOREQUEST))THEN
+         DEALLOCATE(LAST_IOREQUEST)
+      ENDIF
+      IF(allocated(CUR_HBUF))THEN
+         DEALLOCATE(CUR_HBUF)
+      ENDIF
+      IF(PANEL_FLAG)THEN
+         IF(allocated(NextAddVirtBuffer))THEN
+            DEALLOCATE(NextAddVirtBuffer)
+         ENDIF         
+         IF(allocated(AddVirtLibre))THEN
+            DEALLOCATE(AddVirtLibre)
+         ENDIF
+         IF(allocated(FIRST_VADDR_IN_BUF))THEN
+            DEALLOCATE(FIRST_VADDR_IN_BUF)
+         ENDIF
+      ENDIF
+      RETURN
+      END SUBROUTINE CMUMPS_659
+      SUBROUTINE CMUMPS_685()
+      IMPLICIT NONE
+      OOC_FCT_TYPE_LOC=1
+      HBUF_SIZE = DIM_BUF_IO / 2
+      EARLIEST_WRITE_MIN_SIZE = 0
+      I_SHIFT_FIRST_HBUF(OOC_FCT_TYPE_LOC) = 0
+      I_SHIFT_SECOND_HBUF(OOC_FCT_TYPE_LOC) = HBUF_SIZE
+      LAST_IOREQUEST(OOC_FCT_TYPE_LOC) = -1
+      I_CUR_HBUF_NEXTPOS = 1
+      I_CUR_HBUF_FSTPOS = 1
+      I_SUB_HBUF_FSTPOS = 1
+      CUR_HBUF(OOC_FCT_TYPE_LOC) = SECOND_HBUF
+      CALL CMUMPS_689(OOC_FCT_TYPE_LOC)
+      END SUBROUTINE CMUMPS_685
+      SUBROUTINE CMUMPS_678(BLOCK,SIZE_OF_BLOCK,
+     $     IERR)
+      IMPLICIT NONE
+      INTEGER SIZE_OF_BLOCK
+      COMPLEX BLOCK(SIZE_OF_BLOCK)
+      INTEGER SIZE
+      INTEGER, intent(out) :: IERR
+      INTEGER I
+      IERR=0
+      IF (I_REL_POS_CUR_HBUF(OOC_FCT_TYPE_LOC) +
+     &    SIZE_OF_BLOCK <= HBUF_SIZE + 1) THEN
+      ELSE
+        CALL CMUMPS_707(OOC_FCT_TYPE_LOC,IERR)
+        IF(IERR.LT.0)THEN
+           RETURN
+        ENDIF
+      END IF
+      DO I = 1, SIZE_OF_BLOCK
+        BUF_IO(I_SHIFT_CUR_HBUF(OOC_FCT_TYPE_LOC) +
+     $        I_REL_POS_CUR_HBUF(OOC_FCT_TYPE_LOC) + I - 1) =
+     &    BLOCK(I)
+      END DO
+      I_REL_POS_CUR_HBUF(OOC_FCT_TYPE_LOC) =
+     $     I_REL_POS_CUR_HBUF(OOC_FCT_TYPE_LOC) + SIZE_OF_BLOCK
+      RETURN
+      END SUBROUTINE CMUMPS_678
+      SUBROUTINE CMUMPS_686()
+      IMPLICIT NONE
+      INTEGER DIM_BUF_IO_L_OR_U
+      INTEGER TYPEF, TYPEF_LAST
+      INTEGER NB_DOUBLE_BUFFERS
+      IF (KEEP_OOC(50) .EQ.0) THEN
+        NB_DOUBLE_BUFFERS = 2
+        TYPEF_LAST = 2
+      ELSE
+        NB_DOUBLE_BUFFERS = 1
+        TYPEF_LAST = 1
+      ENDIF
+      DIM_BUF_IO_L_OR_U = DIM_BUF_IO / NB_DOUBLE_BUFFERS
+      IF(.NOT.STRAT_IO_ASYNC)THEN
+         HBUF_SIZE = DIM_BUF_IO_L_OR_U
+      ELSE
+         HBUF_SIZE = DIM_BUF_IO_L_OR_U / 2
+      ENDIF
+      DO TYPEF = 1, TYPEF_LAST
+        LAST_IOREQUEST(TYPEF) = -1
+        IF (TYPEF == 1 ) THEN
+          I_SHIFT_FIRST_HBUF(TYPEF) = 0
+        ELSE
+          I_SHIFT_FIRST_HBUF(TYPEF) = DIM_BUF_IO_L_OR_U
+        ENDIF
+        IF(.NOT.STRAT_IO_ASYNC)THEN
+           I_SHIFT_SECOND_HBUF(TYPEF) = I_SHIFT_FIRST_HBUF(TYPEF)
+        ELSE
+           I_SHIFT_SECOND_HBUF(TYPEF) = I_SHIFT_FIRST_HBUF(TYPEF) +
+     $          HBUF_SIZE
+        ENDIF
+        CUR_HBUF(TYPEF) = SECOND_HBUF
+        CALL CMUMPS_689(TYPEF)
+      ENDDO
+      I_CUR_HBUF_NEXTPOS = 1
+      RETURN
+      END SUBROUTINE CMUMPS_686
+      SUBROUTINE CMUMPS_706(TYPEF,IERR)
+      IMPLICIT NONE
+      INTEGER, INTENT(in)  :: TYPEF
+      INTEGER, INTENT(out) :: IERR
+      INTEGER IFLAG
+      INTEGER NEW_IOREQUEST
+      IERR=0
+      CALL MUMPS_TEST_REQUEST_C(LAST_IOREQUEST(TYPEF),IFLAG,
+     *     IERR)
+      IF (IFLAG.EQ.1) THEN
+         IERR = 0
+         CALL CMUMPS_696(TYPEF,
+     $        NEW_IOREQUEST,
+     $        IERR)
+         IF(IERR.LT.0)THEN
+            RETURN
+         ENDIF
+         LAST_IOREQUEST(TYPEF) = NEW_IOREQUEST
+         CALL CMUMPS_689(TYPEF)
+         NextAddVirtBuffer(TYPEF)=BufferEmpty
+         RETURN
+      ELSE IF(IFLAG.LT.0)THEN
+         WRITE(*,*)MYID_OOC,': ',ERR_STR_OOC(1:DIM_ERR_STR_OOC)
+         RETURN
+      ELSE
+         IERR = 1
+         RETURN
+      ENDIF
+      END SUBROUTINE CMUMPS_706
+      SUBROUTINE CMUMPS_709(TYPEF,VADDR)
+      IMPLICIT NONE
+      INTEGER*8, INTENT(in) :: VADDR
+      INTEGER, INTENT(in) :: TYPEF
+      IF(I_REL_POS_CUR_HBUF(TYPEF).EQ.1)THEN
+#if defined(check_vaddr)
+         write(*,*) MYID_OOC, "Setting FIRST_VADDR_IN_BUF=",VADDR
+#endif
+         FIRST_VADDR_IN_BUF(TYPEF)=VADDR
+      ENDIF
+      RETURN
+      END SUBROUTINE CMUMPS_709      
+      SUBROUTINE CMUMPS_653( STRAT, TYPEF, MonBloc,
+     &     AFAC, LAFAC,
+     &     AddVirtCour, IPIVBEG, IPIVEND, LPANELeff,
+     &     IERR)
+      IMPLICIT NONE
+      INTEGER,          INTENT(IN) :: TYPEF, IPIVBEG, IPIVEND, STRAT
+      INTEGER,          INTENT(IN) :: LAFAC
+      COMPLEX, INTENT(IN) :: AFAC(LAFAC)
+      INTEGER*8,        INTENT(IN) :: AddVirtCour
+      TYPE(IO_BLOCK),   INTENT(IN) :: MonBloc   
+      INTEGER,          INTENT(OUT):: LPANELeff
+      INTEGER,          INTENT(OUT):: IERR
+      INTEGER   :: II, IPOS, IDEST, IDIAG, NBPIVeff
+      IERR=0
+      IF (STRAT.NE.STRAT_WRITE_MAX.AND.STRAT.NE.STRAT_TRY_WRITE) THEN
+         write(6,*) ' CMUMPS_653: STRAT Not implemented '
+         CALL MUMPS_ABORT()
+      ENDIF
+      NBPIVeff = IPIVEND - IPIVBEG + 1
+      IF (MonBloc%TypeNode.EQ.3) THEN
+         LPANELeff = NBPIVeff
+      ELSE IF (TYPEF.EQ.TYPEF_L) THEN
+         IF (MonBloc%MASTER) THEN
+            LPANELeff = (MonBloc%NROW-IPIVBEG+1)*NBPIVeff
+         ELSE 
+            LPANELeff = MonBloc%NROW*NBPIVeff
+         ENDIF
+      ELSE
+         LPANELeff = (MonBloc%NCOL-IPIVBEG+1)*NBPIVeff
+      ENDIF
+      IF ( ( I_REL_POS_CUR_HBUF(TYPEF) + LPANELeff - 1
+     &     >
+     &     HBUF_SIZE )
+     &     .OR.
+     &     ( (AddVirtCour.NE.NextAddVirtBuffer(TYPEF)) .AND.
+     &     (NextAddVirtBuffer(TYPEF).NE.BufferEmpty) )
+     &     ) THEN
+         IF (STRAT.EQ.STRAT_WRITE_MAX) THEN
+            CALL CMUMPS_707(TYPEF,IERR) 
+         ELSE IF (STRAT.EQ.STRAT_TRY_WRITE) THEN
+            CALL CMUMPS_706(TYPEF,IERR) 
+            IF (IERR.EQ.1) RETURN
+         ELSE
+            write(6,*) 'CMUMPS_653: STRAT Not implemented'
+         ENDIF
+      ENDIF
+      IF (IERR < 0 ) THEN
+        RETURN
+      ENDIF
+      IF (NextAddVirtBuffer(TYPEF).EQ. BufferEmpty) THEN
+#if defined(check_vaddr)
+         WRITE(*,*) MYID_OOC,": Call UPDATE_VADDR",AddVirtCour
+#endif
+         CALL CMUMPS_709(TYPEF,AddVirtCour)
+         NextAddVirtBuffer(TYPEF) = AddVirtCour
+      ENDIF
+      IF (MonBloc%Typenode.EQ.3) THEN
+         IDEST = I_SHIFT_CUR_HBUF(TYPEF) +
+     &        I_REL_POS_CUR_HBUF(TYPEF)
+         CALL CCOPY(LPANELeff,
+     &        AFAC(IPIVBEG), 1,
+     &        BUF_IO(IDEST), 1)
+      ELSE IF (MonBloc%MASTER) THEN
+         IDIAG =  (IPIVBEG-1)*MonBloc%NCOL + IPIVBEG 
+         IPOS   = IDIAG
+         IDEST = I_SHIFT_CUR_HBUF(TYPEF) +
+     &        I_REL_POS_CUR_HBUF(TYPEF)
+         IF (TYPEF.EQ.TYPEF_L) THEN
+            DO II = IPIVBEG, IPIVEND
+               CALL CCOPY(MonBloc%NROW-IPIVBEG+1, 
+     &              AFAC(IPOS), MonBloc%NCOL,
+     &              BUF_IO(IDEST), 1)
+               IDEST = IDEST+MonBloc%NROW-IPIVBEG+1
+               IPOS  = IPOS + 1
+            ENDDO
+         ELSE
+            DO II = IPIVBEG, IPIVEND
+               CALL CCOPY(MonBloc%NCOL-IPIVBEG+1, 
+     &              AFAC(IPOS), 1,
+     &              BUF_IO(IDEST), 1)
+               IDEST = IDEST+ MonBloc%NCOL-IPIVBEG+1
+               IPOS  = IPOS + MonBloc%NCOL
+            ENDDO
+         ENDIF
+      ELSE
+         IPOS  = IPIVBEG
+         IDEST = I_SHIFT_CUR_HBUF(TYPEF) +
+     &        I_REL_POS_CUR_HBUF(TYPEF)
+         DO II = IPIVBEG, IPIVEND
+            CALL CCOPY(MonBloc%NROW, 
+     &           AFAC(IPOS), MonBloc%NCOL,
+     &           BUF_IO(IDEST), 1)
+            IDEST = IDEST+MonBloc%NROW
+            IPOS  = IPOS + 1
+         ENDDO
+      ENDIF
+      I_REL_POS_CUR_HBUF(TYPEF) =
+     &     I_REL_POS_CUR_HBUF(TYPEF) + LPANELeff
+#if (check_vaddr)
+      WRITE(*,*) MYID_OOC,
+     *     ": NextAddVirtBuffer(TYPEF)=",NextAddVirtBuffer(TYPEF),
+     *     "+",LPANELeff,"=", NextAddVirtBuffer(TYPEF) + LPANELeff
+#endif
+      NextAddVirtBuffer(TYPEF) = NextAddVirtBuffer(TYPEF) + LPANELeff
+      RETURN
+      END SUBROUTINE CMUMPS_653         
+      END MODULE CMUMPS_OOC_BUFFER
