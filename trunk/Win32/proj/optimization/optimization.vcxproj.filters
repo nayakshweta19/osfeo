@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="domain">
+      <UniqueIdentifier>{65fab180-df9b-48ae-90c6-465d46502ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\component">
+      <UniqueIdentifier>{1e1d78f8-1907-49ae-b2a7-7cfd45990066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SNOPT">
+      <UniqueIdentifier>{5ae4e09d-8ff4-48ce-a730-902c14843f7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tcl">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\Optimization.cpp">
+      <Filter>domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\OptimizationDomain.cpp">
+      <Filter>domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\OptimizationDomainComponent.cpp">
+      <Filter>domain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\ConstraintFunction.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariable.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariableIter.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositioner.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositionerIter.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\ObjectiveFunction.cpp">
+      <Filter>domain\component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\TclOptimizationBuilder.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\Optimization.h">
+      <Filter>domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\OptimizationDomain.h">
+      <Filter>domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\OptimizationDomainComponent.h">
+      <Filter>domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\ConstraintFunction.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariable.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariableIter.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositioner.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositionerIter.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\ObjectiveFunction.h">
+      <Filter>domain\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\TclOptimizationBuilder.h">
+      <Filter>tcl</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

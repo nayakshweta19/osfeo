@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{9837adc2-ce4a-4316-9e1f-f55269e678a7}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\Cnames.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\superlu_ddefs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\superlu_defs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\supermatrix.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\util.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\ddistribute.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dgsequ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dlamch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dlangs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dlaqgs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dldperm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dmemory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dsp_blas2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dsp_blas3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\dutil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\etree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\get_perm_c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\mmd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pddistribute.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgsequ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgsmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgsmv_AXglobal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgsrfs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgsrfs_ABXglobal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgssvx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgssvx_ABglobal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgstrf_irecv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgstrs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgstrs1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgstrs_Bglobal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdgstrs_lsum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdlangs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdlaqgs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pdutil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\pxerbla.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\slamch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\sp_colorder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\sp_ienv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\superlu_grid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\superlu_timer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\symbfact.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OTHER\SuperLU_DIST_2.0\SRC\xerbla.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

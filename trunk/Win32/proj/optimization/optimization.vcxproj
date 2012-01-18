@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5577D7FB-6EAE-4DBD-A1AA-D22C88E9AC66}</ProjectGuid>
+    <RootNamespace>optimization</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\optimization\debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\optimization\release\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\SRC\optimization\domain\component;..\..\..\SRC\optimization\domain;..\..\..\SRC\optimization;..\..\..\SRC\element\upU;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\SRC\tcl;..\..\..\SRC\element\UP-ucsd;..\..\..\src\actor\machineBroker;..\..\..\SRC\actor\shadow;..\..\..\src\package;..\..\..\src\api;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\shell;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\beamWithHinges;c:\Program Files\tcl\include;..\..\..\src\element\forceBeamColumn;..\..\..\src\material\section\fiber;..\..\..\src\element\fourNodeQuad;..\..\..\src\material\backbone;..\..\..\src\material\state;..\..\..\src\material\state\stiffness;..\..\..\src\material\state\deformation;..\..\..\src\material\state\strength;..\..\..\src\material\nD;..\..\..\src\coordTransformation;..\..\..\src\domain\groundMotion;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\analysis\algorithm\domaindecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\material\section;..\..\..\src\modelbuilder;..\..\..\src\renderer;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\patch;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\reinfBar;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\reinfLayer;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\cell;..\..\..\src\element\nonlinearBeamColumn;..\..\..\src\element\nonlinearBEamCOlumn\quadrule;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\nonlinearBeamColumn\fiber;..\..\..\src\material;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\domain\load;..\..\..\src\domain\pattern;..\..\..\src\element\zeroLength;..\..\..\src\element\feap;..\..\..\src\element\truss;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material\uniaxial;..\..\..\src\actor\address;..\..\..\src\actor\message;..\..\..\src\nDarray;..\..\..\src\material\uniaxial\fedeas;..\..\..\src\material\uniaxial\drain;..\..\..\src\element\8nbrick;..\..\..\src\element\brick;..\..\..\src\material\uniaxial\py;..\..\..\src\material\nd\soil;..\..\..\src\element\joint;..\..\..\src\material\nd\feap;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_WIN32;_COROTATIONAL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\optimization\debug/optimization.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\optimization\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\api\debug/</ObjectFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\debug\optimization.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\..\src\optimization\domain\;..\..\..\src\optimization\snopt;..\..\..\src\optimization\domain\component;..\..\..\SRC\optimization;..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\api\release/optimization.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\optimization\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\optimization\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\optimization\release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <Parallelization>true</Parallelization>
+      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
+      <GlobalOptimizations>false</GlobalOptimizations>
+      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
+      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
+      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
+      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
+    </ClCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\release\optimization.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\ConstraintFunction.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariable.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariableIter.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositioner.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositionerIter.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\component\ObjectiveFunction.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\Optimization.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\OptimizationDomain.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\domain\OptimizationDomainComponent.cpp" />
+    <ClCompile Include="..\..\..\SRC\optimization\TclOptimizationBuilder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\ConstraintFunction.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariable.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariableIter.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositioner.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\DesignVariablePositionerIter.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\component\ObjectiveFunction.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\Optimization.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\OptimizationDomain.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\domain\OptimizationDomainComponent.h" />
+    <ClInclude Include="..\..\..\SRC\optimization\TclOptimizationBuilder.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

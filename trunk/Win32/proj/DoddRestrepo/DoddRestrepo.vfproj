@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{989447A9-7683-4406-9443-D46C26975538}">
+	<Platforms>
+		<Platform Name="Win32"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" FPS4Libs="false" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" FPS4Libs="false"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath="..\..\..\SRC\material\uniaxial\DoddRestrepo.f"/></Filter></Files>
+	<Globals/></VisualStudioProject>
