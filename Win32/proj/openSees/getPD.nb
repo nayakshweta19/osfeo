@@ -1,0 +1,303 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      8401,        293]
+NotebookOptionsPosition[      7531,        258]
+NotebookOutlinePosition[      7875,        273]
+CellTagsIndexPosition[      7832,        270]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Zeta]", "[", 
+   RowBox[{"fc_", ",", "\[Epsilon]1_", ",", "\[Eta]p_"}], "]"}], ":=", 
+  RowBox[{
+   FractionBox["5.8", 
+    SqrtBox["fc"]], 
+   FractionBox["1", 
+    SqrtBox[
+     RowBox[{"1", "+", 
+      FractionBox[
+       RowBox[{"400", "\[Epsilon]1"}], "\[Eta]p"]}]]]}]}]], "Input",
+ CellChangeTimes->{{3.511562835405654*^9, 3.511562916545315*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"\[Zeta]", "[", 
+    RowBox[{"fc", ",", "\[Epsilon]1", ",", "\[Eta]p"}], "]"}], ",", 
+   "\[Epsilon]1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.511562960838228*^9, 3.511563079437426*^9}}],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox["1160.`", 
+   RowBox[{
+    SqrtBox["fc"], " ", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      RowBox[{"1", "+", 
+       FractionBox[
+        RowBox[{"400", " ", "\[Epsilon]1"}], "\[Eta]p"]}], ")"}], 
+     RowBox[{"3", "/", "2"}]], " ", "\[Eta]p"}]]}]], "Output",
+ CellChangeTimes->{{3.511563062890522*^9, 3.511563080309222*^9}, 
+   3.5115640752673483`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Sigma]21", "[", 
+   RowBox[{
+   "D_", ",", "\[Zeta]_", ",", "fc_", ",", "\[Epsilon]2_", ",", 
+    "\[Epsilon]0_"}], "]"}], ":=", 
+  RowBox[{"D", " ", "\[Zeta]", " ", "fc", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"2", 
+      RowBox[{"(", 
+       FractionBox["\[Epsilon]2", 
+        RowBox[{"\[Zeta]", " ", "\[Epsilon]0"}]], ")"}]}], "-", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       FractionBox["\[Epsilon]2", 
+        RowBox[{"\[Zeta]", " ", "\[Epsilon]0"}]], ")"}], "2"]}], 
+    ")"}]}]}]], "Input",
+ CellChangeTimes->{{3.511563152875421*^9, 3.5115632616523385`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{"\[Sigma]21", "[", 
+     RowBox[{
+     "D", ",", "\[Zeta]", ",", "fc", ",", "\[Epsilon]2", ",", "\[Epsilon]0"}],
+      "]"}], ",", "\[Zeta]"}], "]"}], " ", "//", "Simplify"}]], "Input",
+ CellChangeTimes->{{3.511563265582303*^9, 3.511563305005444*^9}, {
+  3.5115634298854876`*^9, 3.511563433422429*^9}}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{"D", " ", "fc", " ", 
+   SuperscriptBox["\[Epsilon]2", "2"]}], 
+  RowBox[{
+   SuperscriptBox["\[Epsilon]0", "2"], " ", 
+   SuperscriptBox["\[Zeta]", "2"]}]]], "Output",
+ CellChangeTimes->{3.511563305722485*^9, 3.5115634344642353`*^9, 
+  3.511564067600181*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Sigma]22", "[", 
+   RowBox[{
+   "D_", ",", "\[Zeta]_", ",", "fc_", ",", "\[Epsilon]2_", ",", 
+    "\[Epsilon]0_"}], "]"}], ":=", 
+  RowBox[{"D", " ", "\[Zeta]", " ", "fc", " ", 
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"\[Epsilon]2", "/", 
+          RowBox[{"(", 
+           RowBox[{"\[Zeta]", " ", "\[Epsilon]0"}], ")"}]}], "-", "1"}], 
+        RowBox[{
+         RowBox[{"4", "/", "\[Zeta]"}], "-", "1"}]], ")"}], "2"]}], 
+    ")"}]}]}]], "Input",
+ CellChangeTimes->{{3.5115634388622293`*^9, 3.511563517810522*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"D", "[", 
+   RowBox[{
+    RowBox[{"\[Sigma]22", "[", 
+     RowBox[{
+     "D", ",", "\[Zeta]", ",", "fc", ",", "\[Epsilon]2", ",", "\[Epsilon]0"}],
+      "]"}], ",", "\[Zeta]"}], "]"}], " ", "//", "Simplify"}]], "Input",
+ CellChangeTimes->{{3.5115635631184855`*^9, 3.511563563693265*^9}}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{"D", " ", "fc", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"4", " ", "\[Epsilon]0"}], "-", "\[Epsilon]2"}], ")"}], " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "\[Epsilon]2"}], " ", 
+      RowBox[{"(", 
+       RowBox[{"4", "+", "\[Zeta]"}], ")"}]}], "+", 
+     RowBox[{"4", " ", "\[Epsilon]0", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "4"}], "+", 
+        RowBox[{"3", " ", "\[Zeta]"}]}], ")"}]}]}], ")"}]}], 
+  RowBox[{
+   SuperscriptBox["\[Epsilon]0", "2"], " ", 
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"-", "4"}], "+", "\[Zeta]"}], ")"}], "3"]}]]], "Output",
+ CellChangeTimes->{3.5115635300734415`*^9, 3.5115635642932997`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"\[Zeta]", "[", 
+      RowBox[{"fc", ",", "\[Epsilon]1", ",", "\[Eta]p"}], "]"}], ",", 
+     "\[Epsilon]1"}], "]"}], " ", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"\[Sigma]21", "[", 
+      RowBox[{
+      "D", ",", "\[Zeta]", ",", "fc", ",", "\[Epsilon]2", ",", 
+       "\[Epsilon]0"}], "]"}], ",", "\[Zeta]"}], "]"}]}], " ", "//", 
+  "Simplify"}]], "Input",
+ CellChangeTimes->{{3.5115640590054607`*^9, 3.5115640593582277`*^9}, {
+  3.511564099824185*^9, 3.5115641103505054`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox[
+   RowBox[{"1160.`", " ", "D", " ", 
+    SqrtBox["fc"], " ", 
+    SuperscriptBox["\[Epsilon]2", "2"]}], 
+   RowBox[{
+    SuperscriptBox["\[Epsilon]0", "2"], " ", 
+    SuperscriptBox["\[Zeta]", "2"], " ", 
+    SqrtBox[
+     RowBox[{"1", "+", 
+      FractionBox[
+       RowBox[{"400", " ", "\[Epsilon]1"}], "\[Eta]p"]}]], " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"400.`", " ", "\[Epsilon]1"}], "+", "\[Eta]p"}], 
+     ")"}]}]]}]], "Output",
+ CellChangeTimes->{3.5115640612933345`*^9, 3.5115641142562146`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"\[Zeta]", "[", 
+      RowBox[{"fc", ",", "\[Epsilon]1", ",", "\[Eta]p"}], "]"}], ",", 
+     "\[Epsilon]1"}], "]"}], " ", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"\[Sigma]22", "[", 
+      RowBox[{
+      "D", ",", "\[Zeta]", ",", "fc", ",", "\[Epsilon]2", ",", 
+       "\[Epsilon]0"}], "]"}], ",", "\[Zeta]"}], "]"}]}], " ", "//", 
+  "Simplify"}]], "Input",
+ CellChangeTimes->{{3.51156410955046*^9, 3.5115641126863823`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  FractionBox[
+   RowBox[{"1160.`", " ", "D", " ", 
+    SqrtBox["fc"], " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "16.`"}], " ", "\[Epsilon]0", " ", "\[Epsilon]2", " ", 
+       "\[Zeta]"}], "+", 
+      RowBox[{
+       SuperscriptBox["\[Epsilon]2", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"4.`", "\[VeryThinSpace]", "+", "\[Zeta]"}], ")"}]}], "+", 
+      RowBox[{
+       SuperscriptBox["\[Epsilon]0", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"-", "64.`"}], "+", 
+         RowBox[{"48.`", " ", "\[Zeta]"}]}], ")"}]}]}], ")"}]}], 
+   RowBox[{
+    SuperscriptBox["\[Epsilon]0", "2"], " ", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"-", "4.`"}], "+", "\[Zeta]"}], ")"}], "3"], " ", 
+    SqrtBox[
+     RowBox[{"1", "+", 
+      FractionBox[
+       RowBox[{"400", " ", "\[Epsilon]1"}], "\[Eta]p"]}]], " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"400.`", " ", "\[Epsilon]1"}], "+", "\[Eta]p"}], 
+     ")"}]}]]}]], "Output",
+ CellChangeTimes->{3.5115641160063114`*^9}]
+}, Open  ]]
+},
+WindowSize->{716, 795},
+WindowMargins->{{18, Automatic}, {Automatic, 23}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (November 7, 2010)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 389, 12, 72, "Input"],
+Cell[CellGroupData[{
+Cell[971, 36, 244, 6, 31, "Input"],
+Cell[1218, 44, 398, 12, 60, "Output"]
+}, Open  ]],
+Cell[1631, 59, 618, 18, 49, "Input"],
+Cell[CellGroupData[{
+Cell[2274, 81, 371, 9, 31, "Input"],
+Cell[2648, 92, 297, 8, 52, "Output"]
+}, Open  ]],
+Cell[2960, 103, 647, 19, 49, "Input"],
+Cell[CellGroupData[{
+Cell[3632, 126, 322, 8, 31, "Input"],
+Cell[3957, 136, 745, 23, 49, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4739, 164, 569, 16, 31, "Input"],
+Cell[5311, 182, 561, 17, 77, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5909, 204, 515, 15, 31, "Input"],
+Cell[6427, 221, 1088, 34, 79, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

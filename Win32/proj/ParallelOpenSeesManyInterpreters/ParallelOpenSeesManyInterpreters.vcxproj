@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4407F139-737B-41FA-9AF1-50825D1441D4}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\parallelManyInterpreters\release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\parallelManyInterpreters\debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\..\..\bin/openSees.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src\domain\partitioner;..\..\..\src\domain\loadBalancer;..\..\..\src\graph\partitioner;..\..\..\src\recorder\response;..\..\..\src\reliability\analysis\telm;..\..\..\src\optimization\domain;..\..\..\src\optimization\domain\component;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\analysis\algorithm\ritzAlgo;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\optimization\tcl;..\..\..\OTHER\SuperLU_DIST_2.5\SRC;..\..\..\src\actor\message;c:\Program Files\MPICH2\include;..\..\..\src\actor\channel;..\..\..\src\actor\shadow;..\..\..\src\domain\subdomain;..\..\..\src\domain\domain\partitioned;..\..\..\src\actor\machineBroker;..\..\..\src\package;..\..\..\src\material\uniaxial\backbone;..\..\..\src\actor\machineBroke;..\..\..\src\actor\address;..\..\..\SRC\package;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\damage;..\..\..\src\material\uniaxial\py;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\tcl;..\..\..\src\coordTransformation;..\..\..\src\material\section\repres\section;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\material\nD;..\..\..\src\material\uniaxial;..\..\..\src\handler;..\..\..\src\tcl;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\matrix;..\..\..\src\recorder;..\..\..\src\graph\numberer;..\..\..\src\material\section;..\..\..\src\graph\graph;..\..\..\src\element\beam2d;..\..\..\src\element\beam3d;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\domain\pattern;..\..\..\src\analysis\analysis;..\..\..\src\analysis\integrator;..\..\..\src\analysis\numberer;..\..\..\src\analysis\handler;..\..\..\src\renderer;..\..\..\src\material;..\..\..\src\analysis\algorithm;..\..\..\src\convergenceTest;..\..\..\src\analysis\model\simple;..\..\..\src\domain\load;..\..\..\src\analysis\model;..\..\..\src\element\truss;..\..\..\src\utility;..\..\..\src\actor\actor;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\domain\node;..\..\..\src\domain\domain;..\..\..\src\tagged\storage;..\..\..\src;..\..\..\src\tagged;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\other\SuperLU_4.1\SRC;..\..\..\src\database;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\rootFinding;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WGL;_RELIABILITY;_WIN32;_FORTRAN;WIN32;_CONSOLE;BUILD_tcl;_TCL84;_PARALLEL_INTERPRETERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\openSees\release/openSees.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\parallelManyInterpreters\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\parallelManyInterpreters\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\parallelManyInterpreters\release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <Parallelization>true</Parallelization>
+      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
+      <GlobalOptimizations>false</GlobalOptimizations>
+      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
+      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
+      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 /FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>mpi.lib;parallel.lib;distributedSuperLU.lib;handler.lib;wsock32.lib;OpenGL32.lib;glu32.lib;GlAux.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;tcl84.lib;tk84.lib;libm.lib;IFCONSOL.lib;LIBIFCORE.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\..\..\bin/OpenSeesManyInterpreters.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>c:\Program Files\MPICH2\lib;c:\program Files\tcl\lib;..\..\lib\release;..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\..\..\bin/openSees.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\SuperLU_DIST_2.0\SRC;..\..\..\src\actor\shadow;..\..\..\src\domain\subdomain;c:\Program Files\MPICH2\include;..\..\..\SRC\domain\domain\partitioned;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\package;..\..\..\src\actor\message;..\..\..\src\actor\actor;..\..\..\src\actor\channel;..\..\..\src\actor\machineBroker;..\..\..\SRC\actor\address;..\..\..\src\system_of_eqn\linearSOE\diagonal;c:\Program Files\tcl\include;..\..\..\src\damage;..\..\..\src\material\uniaxial\py;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\tcl;..\..\..\src\coordTransformation;..\..\..\src\material\section\repres\section;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\material\nD;..\..\..\src\material\uniaxial;..\..\..\src\handler;..\..\..\src\tcl;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\matrix;..\..\..\src\recorder;..\..\..\src\graph\numberer;..\..\..\src\material\section;..\..\..\src\graph\graph;..\..\..\src\element\beam2d;..\..\..\src\element\beam3d;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\domain\pattern;..\..\..\src\analysis\analysis;..\..\..\src\analysis\integrator;..\..\..\src\analysis\numberer;..\..\..\src\analysis\handler;..\..\..\src\renderer;..\..\..\src\material;..\..\..\src\analysis\algorithm;..\..\..\src\convergenceTest;..\..\..\src\analysis\model\simple;..\..\..\src\domain\load;..\..\..\src\analysis\model;..\..\..\src\element\truss;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\actor\actor;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\domain\node;..\..\..\src\domain\domain;..\..\..\src\tagged\storage;..\..\..\src;..\..\..\src\tagged;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\other\SuperLU_3.0\SRC;..\..\..\src\database;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\rootFinding;c:\Program Files\Tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_WGL;_RELIABILITY;_WIN32;_FORTRAN;WIN32;_CONSOLE;BUILD_tcl;_TCL84;_PARALLEL_INTERPRETERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\openSees\debug/openSees.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\parallelManyInterpreters\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\parallelManyInterpreters\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\parallelManyInterpreters\debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 /FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>parallel.lib;distributedSuperLU.lib;handler.lib;OpenGL32.lib;wsock32.lib;glu32.lib;GlAux.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;mpi.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;tcl84.lib;tk84.lib;libm.lib;ifconsol.lib;libifcore.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\..\..\bin/OpenSeesManyInterpreters.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>c:\Program Files\MPICH2\lib;c:\program Files\tcl\lib;..\..\lib;..\..\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\..\..\bin/openSees.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\tcl\commands.cpp" />
+    <ClCompile Include="..\..\..\SRC\tcl\mpiParameterMain.cpp" />
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\myCommands.cpp" />
+    <ClCompile Include="..\..\..\SRC\tcl\TclFeViewer.cpp" />
+    <ClCompile Include="..\..\..\SRC\tcl\tclMain.cpp" />
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclModelBuilder.cpp" />
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclUniaxialMaterialTester.cpp" />
+    <ClCompile Include="..\..\..\SRC\tcl\TclVideoPlayer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\classTags.h" />
+    <ClInclude Include="..\..\..\SRC\tcl\commands.h" />
+    <ClInclude Include="..\..\..\SRC\OPS_Globals.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

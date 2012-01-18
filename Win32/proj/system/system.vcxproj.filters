@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{65e72cec-544f-499a-b9cd-dbe1a394c373}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{79263268-f05d-490b-a29a-2e3dbf986c8e}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="profileSPD">
+      <UniqueIdentifier>{59aea63b-457f-46e0-b73a-eb7f0ccebca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="symSparse">
+      <UniqueIdentifier>{3390258c-c2cc-4f30-8ea5-08e5aace8703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bandGEN">
+      <UniqueIdentifier>{8b36795e-9f5f-456b-9bd6-4bfcff417c1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bandSPD">
+      <UniqueIdentifier>{5fd5cda4-2aeb-49e8-aa8f-b4406755e993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fullGEN">
+      <UniqueIdentifier>{f3e1165d-5516-4a2f-8706-444c4cb98673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="umfpack">
+      <UniqueIdentifier>{9d6d20a5-62ef-4b90-80fd-12dac9ce8b1e}</UniqueIdentifier>
+      <Extensions>.cpp; .h</Extensions>
+    </Filter>
+    <Filter Include="superLU">
+      <UniqueIdentifier>{7ff80e55-d24c-4773-865d-460f9b4cecb0}</UniqueIdentifier>
+      <Extensions>.cpp; .h</Extensions>
+    </Filter>
+    <Filter Include="arpack">
+      <UniqueIdentifier>{a37b3260-fee2-48c0-98ab-00601671f9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="symBandEigen">
+      <UniqueIdentifier>{edb49913-c849-425b-99b3-df95e6c90a4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="diagonal">
+      <UniqueIdentifier>{2f2dfeaf-cded-4a8f-b228-0bb98fc330d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ritz">
+      <UniqueIdentifier>{9e3b7332-528a-4b16-a4f3-1955ca07fc74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="itpack">
+      <UniqueIdentifier>{64ff0345-8eb0-466b-a48e-1aec8900d1df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\Solver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\SystemOfEqn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\grcm.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nest.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\newordr.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nmat.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nnsim.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\symbolic.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.c">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.cpp">
+      <Filter>bandGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.cpp">
+      <Filter>bandGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.cpp">
+      <Filter>bandGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.cpp">
+      <Filter>bandGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.cpp">
+      <Filter>bandSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.cpp">
+      <Filter>bandSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.cpp">
+      <Filter>bandSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.cpp">
+      <Filter>bandSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.cpp">
+      <Filter>umfpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.cpp">
+      <Filter>umfpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.cpp">
+      <Filter>superLU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.cpp">
+      <Filter>superLU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.cpp">
+      <Filter>superLU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.cpp">
+      <Filter>arpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.cpp">
+      <Filter>arpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.cpp">
+      <Filter>symBandEigen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.cpp">
+      <Filter>symBandEigen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.cpp">
+      <Filter>Ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.cpp">
+      <Filter>Ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.cpp">
+      <Filter>Ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.cpp">
+      <Filter>Ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.cpp">
+      <Filter>Ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.cpp">
+      <Filter>itpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.cpp">
+      <Filter>itpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\Solver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\SystemOfEqn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\FeStructs.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.h">
+      <Filter>bandGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.h">
+      <Filter>bandGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.h">
+      <Filter>bandGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.h">
+      <Filter>bandGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.h">
+      <Filter>bandSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.h">
+      <Filter>bandSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.h">
+      <Filter>bandSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.h">
+      <Filter>bandSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.h">
+      <Filter>umfpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.h">
+      <Filter>umfpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.h">
+      <Filter>superLU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.h">
+      <Filter>superLU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.h">
+      <Filter>superLU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.h">
+      <Filter>arpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.h">
+      <Filter>arpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.h">
+      <Filter>symBandEigen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.h">
+      <Filter>symBandEigen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.h">
+      <Filter>Ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.h">
+      <Filter>Ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.h">
+      <Filter>Ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.h">
+      <Filter>Ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.h">
+      <Filter>Ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.h">
+      <Filter>itpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.h">
+      <Filter>itpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

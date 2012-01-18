@@ -1,0 +1,1186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{21d8fe2c-a84e-4d27-b685-e410b9535e26}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6df2d6c7-a5d2-4af9-a1e4-dc3d03b21a17}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="truss">
+      <UniqueIdentifier>{1564b1ec-ce28-41aa-96b9-b8c4649d1045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="feap">
+      <UniqueIdentifier>{7c2c69f5-1713-4ea0-89f6-8649540c1ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zeroLength">
+      <UniqueIdentifier>{9fbb82e2-4596-43dc-85fd-c0f34ee1ca92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="beamWithHinges">
+      <UniqueIdentifier>{aaff9292-917d-44c6-892a-46dec8f743e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crdTransf">
+      <UniqueIdentifier>{b83ee841-862f-4b64-b69f-384bfca24f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quad">
+      <UniqueIdentifier>{778b8454-f84b-4f9d-a840-4575095e0150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="elasticBeamColumn">
+      <UniqueIdentifier>{8b9b43a1-77b6-4407-af21-f7197e87ea59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="eightNodeBrick">
+      <UniqueIdentifier>{a73f9938-3e56-49a7-9195-0676d688ef62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dispBeamColumn">
+      <UniqueIdentifier>{ad08ea00-b7be-4010-b778-fcbd046a4ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="twentyNodeBrick">
+      <UniqueIdentifier>{3f8335d5-4895-4202-a405-55c5b49be721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="upU">
+      <UniqueIdentifier>{373bd16a-adaa-4889-806a-6106c94d2e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="joint">
+      <UniqueIdentifier>{037965ea-cf6f-4061-bd23-1fe15bb77352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ulBeamColumn">
+      <UniqueIdentifier>{86951293-08c1-4f6f-9628-d3abca0b48d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="forceBeamColumn">
+      <UniqueIdentifier>{02b48966-c968-4a67-9c13-2225bb512c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="forceBeamColumn\beamIntegration">
+      <UniqueIdentifier>{5dc1b811-2a1f-4903-a112-dc65047e7814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nonlinearBeamColumn">
+      <UniqueIdentifier>{60de08cb-1ab8-4cbf-b100-ecc21733236d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nonlinearBeamColumn\matrixutil">
+      <UniqueIdentifier>{50c77ca2-a94a-4b48-9421-e4ed850d0531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nonlinearBeamColumn\quadrule">
+      <UniqueIdentifier>{12cbfd6f-ceae-43b1-8d47-b180f96b0e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="twentySevenNodeBrick">
+      <UniqueIdentifier>{6a3d9707-f442-410f-a81c-2d9c490e9f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TotalLangrangianFD20NodeBrick">
+      <UniqueIdentifier>{2f82d118-fb6b-422b-a053-a14c16bd8b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="up">
+      <UniqueIdentifier>{64c28b1e-5be3-4dc6-ad1c-20a81015d50e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dispBeamColumnInt">
+      <UniqueIdentifier>{3285bd51-96f1-436b-b1d0-79a950c09761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="generic">
+      <UniqueIdentifier>{763ba39b-2d98-451b-89a9-f4ccdea8b7a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="twoNodeLink">
+      <UniqueIdentifier>{16fde42f-cfcf-4069-8136-73fe451a9d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="elastomericBearing">
+      <UniqueIdentifier>{2bc4843e-4c42-464d-af1f-b4779ba26f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="adapter">
+      <UniqueIdentifier>{14efa49e-9073-4b81-876a-94a2b21368b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fictionBearing">
+      <UniqueIdentifier>{4f813f55-e5fe-4361-aa3b-3af56eeb9c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fictionBearing\frictionModel">
+      <UniqueIdentifier>{17716b45-91b4-47c7-b447-28872bd66b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shell">
+      <UniqueIdentifier>{d4cd14ed-4118-4c22-a79a-44d279c16a57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="brick">
+      <UniqueIdentifier>{e8b206d7-6630-4242-b6c4-d0a08235e7e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timoshenko">
+      <UniqueIdentifier>{04f0a9c3-a28a-4f60-b1f5-99ce736c850e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pyMacro">
+      <UniqueIdentifier>{84a7dbae-fe3f-4712-870b-d447ef3b0270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipe">
+      <UniqueIdentifier>{e7efeb3c-dfa9-408e-92aa-b7c2158ba49d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaceLoad">
+      <UniqueIdentifier>{42be9d3d-6cc3-4765-98a7-599c5ac3f87c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="simpleContact">
+      <UniqueIdentifier>{709c8252-4291-438c-a3c4-b7bcdc0f126a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UWelements">
+      <UniqueIdentifier>{65b38977-8556-4277-a73e-4275ade9396c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="triangle">
+      <UniqueIdentifier>{2e1d27e6-ffdc-4b1f-9788-f68d10f13bb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\element\Element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\ElementalLoad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Information.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\TclElementCommands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\WrapperElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\CorotTruss.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\truss\CorotTrussSection.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\TclTrussCommand.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\Truss.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\TrussSection.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\feap\fElement.cpp">
+      <Filter>feap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\feap\fElmt02.cpp">
+      <Filter>feap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\feap\TclFeapElementCommand.cpp">
+      <Filter>feap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\TclZeroLength.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLength.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthContact2D.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthContact3D.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthContactNTS2D.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthND.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthSection.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\beamWithHinges\TclBeamWithHingesBuilder.cpp">
+      <Filter>beamWithHinges</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\CorotCrdTransf3d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf2d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf3d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\LinearCrdTransf3d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf2d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf3d.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\TclGeomTransfCommand.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\ConstantPressureVolumeQuad.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\EnhancedQuad.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuad.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuadWithSensitivity.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\NineNodeMixedQuad.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\TclFourNodeQuadCommand.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ElasticBeam2d.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ElasticBeam3d.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\TclElasticBeamCommand.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\8nbrick\EightNodeBrick.cpp">
+      <Filter>eightNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\8nbrick\TclEightNodeBrickCommand.cpp">
+      <Filter>eightNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2d.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dWithSensitivity.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3d.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dWithSensitivity.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\20nbrick\TclTwenty_Node_BrickCommand.cpp">
+      <Filter>twentyNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\20nbrick\TclTwentyNodeBrickCommand.cpp">
+      <Filter>twentyNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\20nbrick\Twenty_Node_Brick.cpp">
+      <Filter>twentyNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\20nbrick\TwentyNodeBrick.cpp">
+      <Filter>twentyNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\upU\EightNodeBrick_u_p_U.cpp">
+      <Filter>upU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\upU\TclEightNodeBrick_u_p_U.cpp">
+      <Filter>upU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\upU\TclTwentyNodeBrick_u_p_U.cpp">
+      <Filter>upU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\upU\TwentyNodeBrick_u_p_U.cpp">
+      <Filter>upU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\BeamColumnJoint2d.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\BeamColumnJoint3d.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\ElasticTubularJoint.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\joint\Joint2D.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\Joint3D.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\joint\MP_Joint2D.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\MP_Joint3D.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\TclBeamColumnJointCommand.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\element\joint\TclJoint2dCommand.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\TclJoint3dCommand.cpp">
+      <Filter>joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\BilinearCyclic.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\CyclicModel.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Elastic2DGNL.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS01.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS02.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS03.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\InelasticYS2DGNL.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\LinearCyclic.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\QuadraticCyclic.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\TclCyclicModelCommands.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\TclElement2dGNL.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\TclElement2dYS.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\UpdatedLagrangianBeam2D.cpp">
+      <Filter>ulBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ElasticForceBeamColumn2d.cpp">
+      <Filter>forceBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ElasticForceBeamColumn3d.cpp">
+      <Filter>forceBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumn2d.cpp">
+      <Filter>forceBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumn3d.cpp">
+      <Filter>forceBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\TclForceBeamColumnCommand.cpp">
+      <Filter>forceBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\BeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\DistHingeIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\FixedLocationBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\HingeEndpointBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\HingeMidpointBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\HingeRadauBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\HingeRadauTwoBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\LegendreBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\LobattoBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\LowOrderBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\MidDistanceBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\NewtonCotesBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\RadauBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\RegularizedHingeIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\TrapezoidalBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\UserDefinedBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\UserDefinedHingeIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\nonlinearBeamColumn\matrixutil\MatrixUtil.cpp">
+      <Filter>nonlinearBeamColumn\matrixutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\27nbrick\TclTwentySevenNodeBrickCommand.cpp">
+      <Filter>twentySevenNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\27nbrick\TwentySevenNodeBrick.cpp">
+      <Filter>twentySevenNodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\TotalLagrangianFD20NodeBrick\TclTLFD20NodeBrickCommand.cpp">
+      <Filter>TotalLangrangianFD20NodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\TotalLagrangianFD20NodeBrick\TotalLagrangianFD20NodeBrick.cpp">
+      <Filter>TotalLangrangianFD20NodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\TotalLagrangianFD20NodeBrick\TotalLagrangianFD8NodeBrick.cpp">
+      <Filter>TotalLangrangianFD20NodeBrick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\BBarBrickUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\BBarFourNodeQuadUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\BrickUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP_ucdavis\EightNode_Brick_u_p.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP_ucdavis\EightNode_LDBrick_u_p.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\FourNodeQuadUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\Nine_Four_Node_QuadUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\shp3dv.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP_ucdavis\TclBrick_u_p.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\TclFourNodeQuadUPCommand.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UP-ucsd\Twenty_Eight_Node_BrickUP.cpp">
+      <Filter>up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumnInt\DispBeamColumn2dInt.cpp">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumnInt\FiberSection2dInt.cpp">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumnInt\LinearCrdTransf2dInt.cpp">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumnInt\TclDispBeamColumnIntCommand.cpp">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\generic\GenericClient.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\generic\GenericCopy.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\generic\TclGenericClientCommand.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\generic\TclGenericCopyCommand.cpp">
+      <Filter>generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TclTwoNodeLinkCommand.cpp">
+      <Filter>twoNodeLink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.cpp">
+      <Filter>twoNodeLink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingCommand.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\Actuator.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\ActuatorCorot.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\Adapter.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\TclActuatorCommand.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\TclActuatorCorotCommand.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\adapter\TclAdapterCommand.cpp">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\FlatSliderSimple2d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\FlatSliderSimple3d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\SingleFPSimple2d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\SingleFPSimple3d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclFlatSliderCommand.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclSingleFPCommand.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\CoulombFriction.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\FrictionModel.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\FrictionResponse.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\TclModelBuilderFrictionModelCommand.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\VDependentFriction.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\VPDependentFriction.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\R3vectors.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\TclShellCommand.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\BbarBrick.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\BbarBrickWithSensitivity.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\Brick.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\shp3d.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\TclBrickCommand.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\MCFTFiberSection2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\RASTMFiberSection2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\TclTimoshenkoBeamCommand.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\TimoshenkoBeam2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\TimoshenkoLinearCrdTransf2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\pyMacro\PY_Macro2D.cpp">
+      <Filter>pyMacro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\NewElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthInterface2D.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\pipe\Pipelin2.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\pipe\TclPipelin2Command.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\pipe\Pipe3.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\pipe\TclPipe3Command.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\BeamContact3D.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\SimpleContact2D.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\SimpleContact3D.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\TclSimpleContactCommand.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\surfaceLoad\SurfaceLoad.cpp">
+      <Filter>surfaceLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\CSMMFiberSection2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\FASTMFiberSection2d.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TPB1D.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\BeamContact2D.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\BeamEndContact3D.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\CoupledZeroLength.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\Shell02.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuad3d.cpp">
+      <Filter>quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing2d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UWelements\SSPquad.cpp">
+      <Filter>UWelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UWelements\SSPquadUP.cpp">
+      <Filter>UWelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\Timoshenko\Timoshenko2d01.cpp">
+      <Filter>Timoshenko</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\triangle\Tri31.cpp">
+      <Filter>triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellNL.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\TclTwenty_Node_BrickCommand.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\brick\Twenty_Node_Brick.cpp">
+      <Filter>brick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UWelements\SSPbrick.cpp">
+      <Filter>UWelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UWelements\SSPbrickUP.cpp">
+      <Filter>UWelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\simpleContact\BeamContact2Dp.cpp">
+      <Filter>simpleContact</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\element\Element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\ElementalLoad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Information.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\WrapperElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\truss\CorotTruss.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\element\truss\CorotTrussSection.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\truss\Truss.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\truss\TrussSection.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\feap\fElement.h">
+      <Filter>feap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\feap\fElmt02.h">
+      <Filter>feap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLength.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthContact2D.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthContact3D.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthContactNTS2D.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthND.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthSection.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf3d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf2d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf3d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\LinearCrdTransf3d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf2d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\ConstantPressureVolumeQuad.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\EnhancedQuad.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuad.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuadWithSensitivity.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\NineNodeMixedQuad.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ElasticBeam2d.h">
+      <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ElasticBeam3d.h">
+      <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\8nbrick\EightNodeBrick.h">
+      <Filter>eightNodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2d.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dWithSensitivity.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3d.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dWithSensitivity.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\20nbrick\Twenty_Node_Brick.h">
+      <Filter>twentyNodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\20nbrick\TwentyNodeBrick.h">
+      <Filter>twentyNodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\element\upU\EightNodeBrick_u_p_U.h">
+      <Filter>upU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\element\upU\TwentyNodeBrick_u_p_U.h">
+      <Filter>upU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\BeamColumnJoint2d.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\BeamColumnJoint3d.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\ElasticTubularJoint.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\element\joint\Joint2D.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\Joint3D.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\element\joint\MP_Joint2D.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\MP_Joint3D.h">
+      <Filter>joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\BilinearCyclic.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\CyclicModel.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Elastic2DGNL.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS01.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS02.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\Inelastic2DYS03.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\InelasticYS2DGNL.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\LinearCyclic.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\QuadraticCyclic.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\updatedLagrangianBeamColumn\UpdatedLagrangianBeam2D.h">
+      <Filter>ulBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ElasticForceBeamColumn2d.h">
+      <Filter>forceBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ElasticForceBeamColumn3d.h">
+      <Filter>forceBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumn2d.h">
+      <Filter>forceBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumn3d.h">
+      <Filter>forceBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\BeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\FixedLocationBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\HingeEndpointBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\HingeMidpointBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\HingeRadauBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\HingeRadauTwoBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\LegendreBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\LobattoBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\LowOrderBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\MidDistanceBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\NewtonCotesBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\RadauBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\RegularizedHingeIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\TrapezoidalBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\UserDefinedBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\nonlinearBeamColumn\matrixutil\MatrixUtil.h">
+      <Filter>nonlinearBeamColumn\matrixutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\27nbrick\TwentySevenNodeBrick.h">
+      <Filter>twentySevenNodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\TotalLagrangianFD20NodeBrick\TotalLagrangianFD20NodeBrick.h">
+      <Filter>TotalLangrangianFD20NodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\TotalLagrangianFD20NodeBrick\TotalLagrangianFD8NodeBrick.h">
+      <Filter>TotalLangrangianFD20NodeBrick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\BBarBrickUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\BBarFourNodeQuadUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\BrickUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP_ucdavis\EightNode_Brick_u_p.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP_ucdavis\EightNode_LDBrick_u_p.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\FourNodeQuadUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\Nine_Four_Node_QuadUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\shp3dv.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UP-ucsd\Twenty_Eight_Node_BrickUP.h">
+      <Filter>up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumnInt\DispBeamColumn2dInt.h">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumnInt\FiberSection2dInt.h">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumnInt\LinearCrdTransf2dInt.h">
+      <Filter>dispBeamColumnInt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\generic\GenericClient.h">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\generic\GenericCopy.h">
+      <Filter>generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.h">
+      <Filter>twoNodeLink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\adapter\Actuator.h">
+      <Filter>adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\adapter\ActuatorCorot.h">
+      <Filter>adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\adapter\Adapter.h">
+      <Filter>adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\FlatSliderSimple2d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\FlatSliderSimple3d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\SingleFPSimple2d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\SingleFPSimple3d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\CoulombFriction.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\FrictionModel.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\FrictionResponse.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\VDependentFriction.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\VPDependentFriction.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\R3vectors.h">
+      <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4.h">
+      <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\brick\BbarBrick.h">
+      <Filter>brick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\brick\BbarBrickWithSensitivity.h">
+      <Filter>brick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\brick\Brick.h">
+      <Filter>brick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\brick\shp3d.h">
+      <Filter>brick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\MCFTFiberSection2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\RASTMFiberSection2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\TimoshenkoBeam2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\TimoshenkoLinearCrdTransf2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\pyMacro\PY_Macro2D.h">
+      <Filter>pyMacro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\NewElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthInterface2D.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf3d.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\pipe\Pipelin2.h">
+      <Filter>pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\pipe\Pipe3.h">
+      <Filter>pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\BeamContact3D.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\SimpleContact2D.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\SimpleContact3D.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\surfaceLoad\SurfaceLoad.h">
+      <Filter>surfaceLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\CSMMFiberSection2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\FASTMFiberSection2d.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\TPB1D.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.h">
+      <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\BeamContact2D.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\BeamEndContact3D.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\CoupledZeroLength.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\Shell02.h">
+      <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\fourNodeQuad\FourNodeQuad3d.h">
+      <Filter>quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing2d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UWelements\SSPquad.h">
+      <Filter>UWelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UWelements\SSPquadUP.h">
+      <Filter>UWelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\Timoshenko\Timoshenko2d01.h">
+      <Filter>Timoshenko</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\triangle\Tri31.h">
+      <Filter>triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellNL.h">
+      <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\brick\Twenty_Node_Brick.h">
+      <Filter>brick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UWelements\SSPbrick.h">
+      <Filter>UWelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UWelements\SSPbrickUP.h">
+      <Filter>UWelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\simpleContact\BeamContact2Dp.h">
+      <Filter>simpleContact</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\SRC\element\feap\dummyFeap.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt01.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt02.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt03.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt04.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt05.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt06.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\elmt11.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\fillCommon.f">
+      <Filter>feap</Filter>
+    </None>
+    <None Include="..\..\..\SRC\element\feap\getCommon.f">
+      <Filter>feap</Filter>
+    </None>
+  </ItemGroup>
+</Project>

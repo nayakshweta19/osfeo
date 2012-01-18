@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BDE7ACC2-A5A5-49C1-8904-0020198B391C}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\graph\release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\graph\debug\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src\handler;..\..\..\src\actor\channel;..\..\..\src\graph\numberer;..\..\..\src\actor\objectBroker;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\actor\actor;..\..\..\src\analysis\model\simple;..\..\..\src\analysis\model;..\..\..\src\tagged\storage;..\..\..\src\matrix;..\..\..\src\graph\graph;..\..\..\src;..\..\..\src\tagged;..\..\..\src\nDarray;..\..\..\OTHER\amd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\graph\release/graph.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\graph\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\graph\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\graph\release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <Parallelization>true</Parallelization>
+      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
+      <GlobalOptimizations>false</GlobalOptimizations>
+      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
+      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
+      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\release\graph.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\amd;..\..\..\src\handler;..\..\..\src\actor\channel;..\..\..\src\graph\numberer;..\..\..\src\actor\objectBroker;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\actor\actor;..\..\..\src\analysis\model\simple;..\..\..\src\analysis\model;..\..\..\src\tagged\storage;..\..\..\src\matrix;..\..\..\src\graph\graph;..\..\..\src;..\..\..\src\tagged;..\..\..\src\nDarray;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\graph\debug/graph.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\graph\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\graph\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\graph\debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\debug\graph.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\graph\graph\ArrayGraph.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\ArrayVertexIter.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\DOF_Graph.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\DOF_GroupGraph.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\Graph.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\numberer\AMDNumberer.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\numberer\GraphNumberer.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\numberer\MyRCM.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\numberer\RCM.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\numberer\SimpleNumberer.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\Vertex.cpp" />
+    <ClCompile Include="..\..\..\SRC\graph\graph\VertexIter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\graph\graph\ArrayGraph.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\ArrayVertexIter.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\DOF_Graph.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\DOF_GroupGraph.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\Graph.h" />
+    <ClInclude Include="..\..\..\SRC\graph\numberer\AMDNumberer.h" />
+    <ClInclude Include="..\..\..\SRC\graph\numberer\GraphNumberer.h" />
+    <ClInclude Include="..\..\..\SRC\graph\numberer\MyRCM.h" />
+    <ClInclude Include="..\..\..\SRC\graph\numberer\RCM.h" />
+    <ClInclude Include="..\..\..\SRC\graph\numberer\SimpleNumberer.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\Vertex.h" />
+    <ClInclude Include="..\..\..\SRC\graph\graph\VertexIter.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

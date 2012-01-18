@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{246BBCA1-426F-4A76-8B78-59516862F9CE}</ProjectGuid>
+    <RootNamespace>system</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\system\debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\system\release\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_4.1\SRC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\system\debug/system.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\system\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\system\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\system\debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\debug\system.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_4.1\SRC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\system\release/system.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\system\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\system\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\system\release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <Parallelization>true</Parallelization>
+      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
+      <GlobalOptimizations>false</GlobalOptimizations>
+      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
+      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
+      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\release\system.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\Solver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\SystemOfEqn.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\grcm.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nest.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\newordr.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nmat.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nnsim.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\symbolic.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.c" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\Solver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\SystemOfEqn.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\FeStructs.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
