@@ -1,0 +1,162 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 2001, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** Reliability module developed by:                                   **
+**   Terje Haukaas (haukaas@ce.berkeley.edu)                          **
+**   Armen Der Kiureghian (adk@ce.berkeley.edu)                       **
+**                                                                    **
+** ****************************************************************** */
+                                                                        
+// $Revision: 1.15 $
+// $Date: 2008-05-08 15:32:54 $
+// $Source: /usr/local/cvs/OpenSees/SRC/reliability/domain/distributions/NormalRV.cpp,v $
+
+
+//
+// Written by Terje Haukaas (haukaas@ce.berkeley.edu) 
+//
+
+#include <NormalRV.h>
+#include <Vector.h>
+#include <cmath>
+#include <float.h>
+
+NormalRV::NormalRV(int passedTag, 
+				   double passedMean, double passedStdv)
+:RandomVariable(passedTag, RANDOM_VARIABLE_normal), startValue(0)
+{
+	int setp = setParameters(passedMean,passedStdv);
+	if (setp < 0)
+		opserr << "Error setting parameters in Normal RV with tag " << this->getTag() << endln;
+
+}
+
+
+NormalRV::NormalRV(int passedTag, 
+				   const Vector &passedParameters)
+:RandomVariable(passedTag, RANDOM_VARIABLE_normal), startValue(0)
+{
+	if (passedParameters.Size() != 2) {
+		opserr << "Normal RV requires 2 parameters, mu and sigma, for RV with tag " <<
+		this->getTag() << endln;
+		
+		// this will create terminal errors
+		mu = 0;
+		sigma = 0;
+		
+	} else {
+		
+		mu = passedParameters(0);
+		sigma = passedParameters(1);
+	}
+}
+
+
+NormalRV::~NormalRV()
+{
+}
+
+
+const char *
+NormalRV::getType()
+{
+	return "NORMAL";
+}
+
+
+double 
+NormalRV::getMean()
+{
+	return mu;
+}
+
+
+double 
+NormalRV::getStdv()
+{
+	return sigma;
+}
+
+
+const Vector &
+NormalRV::getParameters(void) {
+	static Vector temp(2);
+	temp(0) = mu;
+	temp(1) = sigma;
+	return temp;
+}
+
+
+int 
+NormalRV::setParameters(double mean, double stdv)
+{
+	mu = mean;
+	sigma = stdv;
+	
+	return 0;
+}
+
+
+double
+NormalRV::getPDFvalue(double rvValue)
+{
+	//static const double pi = std::acos(-1.0);
+	static const double oneOverRootTwoPi = 1.0/sqrt(2.0*pi);
+	
+	//return 1 / sqrt ( 2.0 * pi ) * exp ( - 0.5 * pow ( ( ( rvValue - mu ) / sigma ), 2.0 ) );
+	return oneOverRootTwoPi * exp ( - 0.5 * pow ( ( ( rvValue - mu ) / sigma ), 2.0 ) );
+}
+
+
+double
+NormalRV::getCDFvalue(double rvValue)
+{
+	static const double oneOverRootTwo = 1.0/sqrt(2.0);
+	//double result = 0.5 + errorFunction( ((rvValue-mu)/sigma)/sqrt(2.0) )/2.0;
+
+	//Phi(x) = 0.5 * erfc(-x/sqrt(2))
+	double result = 0.5 * (1.0 + errorFunction( ((rvValue-mu)/sigma)*oneOverRootTwo ));
+
+	return result;
+}
+
+
+double
+NormalRV::getInverseCDFvalue(double probValue)
+{
+	double trval = probValue;
+	if (trval <= 0.0) {
+		//opserr << "WARNING: Invalid probability value (" << trval << ") input <= 0 to NormalRV::getInverseCDFvalue()" << endln;
+		trval = 2.0*DBL_EPSILON;
+	} else if (trval >= 1.0) {
+		//opserr << "WARNING: Invalid probability value (" << trval << ") input >= 1 to NormalRV::getInverseCDFvalue()" << endln;
+		trval = 1.0-2.0*DBL_EPSILON;
+	}
+	static const double rootTwo = sqrt(2.0);
+	double result = getMean() + getStdv() * rootTwo * inverseErrorFunction(2.0*trval-1.0);
+	return result;
+}
+
+
+void
+NormalRV::Print(OPS_Stream &s, int flag)
+{
+	s << "Normal RV # " << this->getTag() << endln;
+	s << "\tmean = " << mu << endln;
+	s << "\tst.dev. = " << sigma << endln;
+}
