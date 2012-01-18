@@ -22,6 +22,5 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
 	<Files>
-		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
-		<File RelativePath="..\..\..\SRC\material\uniaxial\DoddRestrepo.f"/></Filter></Files>
+		<File RelativePath="..\..\..\SRC\material\uniaxial\DoddRestrepo.f"/></Files>
 	<Globals/></VisualStudioProject>

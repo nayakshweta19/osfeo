@@ -1187,6 +1187,9 @@
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete10.cpp">
       <Filter>nD\reinforcedConcretePlaneStress</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ElasticMultiLinear.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2197,6 +2200,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete10.h">
       <Filter>nD\reinforcedConcretePlaneStress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ElasticMultiLinear.h">
+      <Filter>uniaxial</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
