@@ -19,27 +19,18 @@ class MCFTSteel03 : public UniaxialMaterial
   public:
     MCFTSteel03(int tag,
 	    double fy, double E0, double b,
-	    double R0, double cR1, double cR2,
-	    double a1, double a2, double a3, double a4, double sigInit =0.0);
-    
-    // Constructor for no isotropic hardening
-    MCFTSteel03(int tag,
-	    double fy, double E0, double b,
-	    double R0, double cR1, double cR2);
-    
-    // Constructor for no isotropic hardening
-    // Also provides default values for R0, cR1, and cR2
-    MCFTSteel03(int tag, double fy, double E0, double b);
+	    double r, double cR1, double cR2, double a1, double a2);
 	    
     MCFTSteel03(void);
     ~MCFTSteel03();
 
     const char *getClassType(void) const {return "MCFTSteel03";};
 
-    double getInitialTangent(void);
+	double getInitialTangent(void) {return E0;};
     UniaxialMaterial *getCopy(void);
 
     int setTrialStrain(double strain, double strainRate = 0.0); 
+    int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
     double getStrain(void);      
     double getStress(void);
     double getTangent(void);
@@ -59,70 +50,74 @@ class MCFTSteel03 : public UniaxialMaterial
 
     void Print(OPS_Stream &s, int flag =0);
 
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+	int    setParameter             (const char **argv, int argc, Parameter &param);
+	int    updateParameter          (int parameterID, Information &info);
+	int    activateParameter        (int parameterID);
+	double getStressSensitivity     (int gradNumber, bool conditional);
+	double getStrainSensitivity		(int gradNumber);
+	double getInitialTangentSensitivity(int gradNumber);
+	int    commitSensitivity        (double strainGradient, int gradNumber, int numGrads);
+// AddingSensitivity:END ///////////////////////////////////////////
+
   protected:
     
   private:
-    // matpar : STEEL FIXED PROPERTIES
-    double Fy;  //  = matpar(1)  : yield stress
-    double E0;  //  = matpar(2)  : initial stiffness
-    double b;   //  = matpar(3)  : hardening ratio (Esh/E0)
-    double R0;  //  = matpar(4)  : exp transition elastic-plastic
-    double cR1; //  = matpar(5)  : coefficient for changing R0 to R
-    double cR2; //  = matpar(6)  : coefficient for changing R0 to R
-    double a1;  //  = matpar(7)  : coefficient for isotropic hardening in compression
-    double a2;  //  = matpar(8)  : coefficient for isotropic hardening in compression
-    double a3;  //  = matpar(9)  : coefficient for isotropic hardening in tension
-    double a4;  //  = matpar(10) : coefficient for isotropic hardening in tension
-    double sigini; // initial 
-    // hstvP : STEEL HISTORY VARIABLES
-    double epsminP; //  = hstvP(1) : max eps in compression
-    double epsmaxP; //  = hstvP(2) : max eps in tension
-    double epsplP;  //  = hstvP(3) : plastic excursion
-    double epss0P;  //  = hstvP(4) : eps at asymptotes intersection
-    double sigs0P;  //  = hstvP(5) : sig at asymptotes intersection
-    double epssrP;  //  = hstvP(6) : eps at last inversion point
-    double sigsrP;  //  = hstvP(7) : sig at last inversion point
-    int    konP;    //  = hstvP(8) : index for loading/unloading
-    // hstv : STEEL HISTORY VARIABLES   
-    double epsP;  //  = strain at previous converged step
-    double sigP;  //  = stress at previous converged step
-    double eP;    //   stiffness modulus at last converged step;
+    /*** Material Properties ***/
+    double fy;  // Yield stress
+    double E0;  // stiffness
+    double b;   // Hardening ratio (b = Esh/E0)
+    double r0;	// radius of rounded corners  20
+    
+	double coeffR1;  //18.5
+    double coeffR2;  //0.15
+    double a1;            //0
+    double a2;  // 0
 
-    double epsmin; 
-    double epsmax; 
-    double epspl;  
-    double epss0;  
-    double sigs0; 
-    double epsr;  
-    double sigr;  
-    int    kon;    
-    double sig;   
-    double e;     
-    double eps;   //  = strain at current step
+    /*** CONVERGED History Variables ***/
+    double CminStrain;  // Minimum strain in compression
+    double CmaxStrain;  // Maximum strain in tension
 
-  
-    void determineTrialState (double dStrain);  
-	// Calculates the trial state variables based on the trial strain
+    int Cloading;       // Flag for loading/unloading
+                        // 1 = loading (positive strain increment)
+                        // -1 = unloading (negative strain increment)
+                        // 0 initially
+    double CYieldStrain;
+    double CYieldStress;
+    double CReverStrain;
+    double CReverStress;
+    double CPlasticExcursion;
 
-    void initialEnvelope( ); 
-	void tensionEnvelope( );
-	void compressionEnvelope( );
-	
-	void determineTrialLoop(double dStrain); // Calculate the trail state variables in the loop
-	void determineDownPathPoint( ); //determine key points of down and up path of hysterics loop
-	void determineUpPathPoint( );
+    /*** CONVERGED State Variables ***/    
+    double Cstrain;
+    double Cstress;
+    double Ctangent;
 
-	void downPath( ); 
-	void upPath( );
+    /*** TRIAL History Variables ***/
+    double TminStrain;   // abs of minimum strain
+    double TmaxStrain;   // abs of minimum strain
 
-	void reverseFromTenEnvelope( );
-	void reverseFromComEnvelope( );
+    int Tloading;
+    double TYieldStrain;
+    double TYieldStress;
+    double TReverStrain;
+    double TReverStress;
+    double TPlasticExcursion;
+    
+    /*** TRIAL State Variables ***/
+    double Tstrain;
+    double Tstress;
+    double Ttangent; // Not really a state variable, but declared here
+                     // for convenience
 
-	void reverseLoopSetZero( ); // Loop variables set to zero when merge into envelope
-	
-	double tt1; // for check
-	double tt2;
-	double ttStrain;
+    // Calculates the trial state variables based on the trial strain
+    void determineTrialState (double dStrain);
+    double getR (double x_in);
+
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+    int parameterID;
+	Matrix *SHVs;
+// AddingSensitivity:END ///////////////////////////////////////////
 
 };
 

@@ -171,7 +171,7 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 								   double   XD,     double   YD):
   NDMaterial(tag, ND_TAG_MCFTRCPlaneStress), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), roux(ROU1), rouy(ROU2), db1(DB1), db2(DB2),
-  fpc(FPC), fyx(FYX), fyy(FYY), E0(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
+  fpc(FPC), fyx(FYX), fyy(FYY), Es(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
   lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), tangent_matrix(3,3), strain_vec(3), 
   epsC_vec(3), epsC12p_prevec(2), epsC12p_nowvec(2), epsCp_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
@@ -475,7 +475,7 @@ MCFTRCPlaneStress::getCopy(void)
 					 db1, db2,
 					 fpc, 
 					 fyx, fyy,
-					 E0, 
+					 Es, 
 					 epsc0,
 					 aggr,
 					 xd, yd);
@@ -489,7 +489,7 @@ MCFTRCPlaneStress::getCopy(const char *type)
 	MCFTRCPlaneStress* theModel =
 		new MCFTRCPlaneStress( this->getTag(), 
            rho, theMaterial[0], theMaterial[1], theMaterial[2], theMaterial[3],
-		   angle1, angle2, roux, rouy, db1, db2, fpc, fyx, fyy, E0, epsc0, aggr, xd, yd );
+		   angle1, angle2, roux, rouy, db1, db2, fpc, fyx, fyy, Es, epsc0, aggr, xd, yd );
 	theModel->strain_vec = strain_vec;
 	theModel->stress_vec = stress_vec;
 	return theModel;
@@ -552,28 +552,15 @@ void
 MCFTRCPlaneStress::Print(OPS_Stream &s, int flag )
 {
 	s << "\n\tMCFTRCPlaneStress, material id: " << this->getTag() << endln;
-    /*
+
 	s << "\tRho: " << rho << endln;
-	s << "\tangle1: " << angle1 << endln;
-	s << "\tangle2: " << angle2 << endln;
-	s << "\trou1: " << roux << endln;
-	s << "\trou2: " << rouy << endln;
-	s << "\tfpc: " << fpc << endln;
-	s << "\tfy: " << fy << endln;
-	s << "\tE0: " << E0 << endln;
-	//*/
+	s << "\tangle1: " << angle1 << "\tangle2: " << angle2 << endln;
+	s << "\trou1: " << roux << "\trou2: " << rouy << endln;
+	s << "\tfpc: " << fpc << "\tepsc0: " << "\taggr: " << aggr <<endln;
+	s << "\tfyx: " << fyx << "\tfyy: " << fyy << endln;
+	s << "\tEs: " << Es << endln;
 
-	//s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159*180.0 << endln;
-	//s <<  "Principal Stress: citaStress = "<< citaStress/3.14159*180.0 << endln;
-	//s << " v12 = " << miu12 << " v21 = " << miu21 << endln;	
-	//s << " steelStatus " << steelStatus << endln;
-	//s << " dirStatus " << dirStatus << endln;
-	//s << " Damage DOne = " << DDOne << endln;
-	//s << " Damage DTwo = " << DDTwo << endln;
-	
-	//s << " G12 = " << G12 << endln;
-
-	//int i, j;
+	s << "\tEnd of MCFTPSMatreial print()." << endln << endln;
 
 	s << "\t call the material print() function : "<< endln;
 	
@@ -586,11 +573,11 @@ MCFTRCPlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\t the concrete 2 information is : " << endln;
 	theMaterial[3]->Print(s,flag);
 
-	//s << "\tStrain and stress of the uniaxial materials:"<<endln;
-	//for ( i=0; i<4; i++)
-	//{
-	//	s<< "Uniaxial Material "<<i+1<<" :"<<theMaterial[i]->getStrain()<<"   "<<theMaterial[i]->getStress()<< endln;
-	//}
+	s << "\tStrain and stress of the uniaxial materials:"<<endln;
+	for (int i=0; i<4; i++)
+	{
+	  s<< "Uniaxial Material "<<i+1<<" :"<<theMaterial[i]->getStrain()<<"   "<<theMaterial[i]->getStress()<< endln;
+	}
 }
 
 int
@@ -613,7 +600,7 @@ MCFTRCPlaneStress::sendSelf(int commitTag, Channel &theChannel)
   data(8) = fpc;
   data(9) = fyx;
   data(10) = fyy;
-  data(11) = E0;
+  data(11) = Es;
   data(12) = epsc0;
   data(13) = aggr;
   data(14) = xd;
@@ -690,7 +677,7 @@ MCFTRCPlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker
   fpc    = data(8);
   fyx    = data(9);
   fyy    = data(10);
-  E0     = data(11);
+  Es     = data(11);
   epsc0  = data(12);
   aggr   = data(13);
   xd     = data(14);
@@ -775,14 +762,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   double eC1p=0.0, eC2p=0.0, eC1m=0.0, eC2m=0.0, eT1m=0.0, eT2m=0.0;
   double fC1, fC1a, fC1b, fC2, fSx, fSy; //, fC1c
 
-  double fcr   = 0.65 * pow(-fpc, 0.33); //0.31*sqrt(fpc);      ----ftp
+  double fcr   = 0.31*sqrt(-fpc); //0.65 * pow(-fpc, 0.33);      ----ftp
   double Ec    = 2.0 * fpc/epsc0;
   double epscr = fcr/Ec;
   double vci, vcimax, s_cita, w; //delta_S, gamma_S;
   double Cs, Cd, betaD;
   double Ecx, Ecy;
-
-  double temp, tolNorm = 1.0e-8;
 
   epsC_vec  = CepsC_vec; // initial epsC vector assumptions equal to previous committed value
   epsCp_vec = CepsCp_vec;
@@ -905,8 +890,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	Dcp(1,0) = v*temp;
 	Dcp(2,2) = temp*(1.0-v)/2.0;
 
-	Ds1p(0,0)= E0;
-	Ds2p(0,0)= E0;
+	Ds1p(0,0)= Es;
+	Ds2p(0,0)= Es;
 
 	Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
 	Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
@@ -923,6 +908,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   static Vector errorVec(3); // epsC_vec converge test need a vector to maintain Error
   
   double errNorm;
+  double temp, tolNorm = 1.0e-12;
   bool vCiconverged = false;
   int iteration_counter = 0;
 
@@ -1015,7 +1001,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     
     //fC1 = min(temp, fC1c);
     
-	fC1 = max(fC1a, fC1b);
+	double fC1temp = max(fC1a, fC1b);
 
 	theData(0) = eC1m;  // 
 	theData(1) = eT1m;  // 
@@ -1030,6 +1016,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	  opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	  return ret;
 	}
+	fC1 = theMaterial[2]->getStress();
 
 	theResponses[6]->getResponse();  // C1 getVar to theInfoC03
     epsC12p_nowvec(0) = (*theInfoC03.theVector)(5); // ecp1 
@@ -1106,7 +1093,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     // Calculate local stress at cracks
     int status            = 0; // status to check if iteration satisfied eq.i-7
 
-    double tolerance      = 1.0e-8; // tolerance for iteration
+    double tolerance      = 1.0e-12; // tolerance for iteration
     bool fC1converged     = false;
     double error;
     double fScrx, fScry;
@@ -1185,7 +1172,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	} else {
 	  //Ecx = fC1/(epsC1-eC1p-eSlip1-eC01);
 	  Ecx = fC1/epsC1;
-	  if (Ecx > E0) Ecx = E0;
+	  if (Ecx > Es) Ecx = Es;
 	}
   
     if (abs(epsC2) < DBL_EPSILON) {
@@ -1198,7 +1185,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	//  continue;
 	} else {
 	  Ecy = fC2/epsC2;
-	  if (Ecy > E0) Ecy = E0;
+	  if (Ecy > Es) Ecy = Es;
 	}
   
     Dcp(0,0) = Ecx;
@@ -1213,16 +1200,23 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     if (abs(epsSy) < DBL_EPSILON) Ds2p(0,0) = rouy * (theMaterial[1]->getSecant());
     else              Ds2p(0,0) = rouy * fSy / epsSy;
   
-    //Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
-    //Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
-    //Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
+    Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
+    Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
+    Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
 
-	//tangent_matrix = Dc + Ds1 + Ds2;
+	tangent_matrix = Dc + Ds1 + Ds2;
 
-	//Tstress.addMatrixVector(0.0, tangent_matrix, strain_vec, 1.0);
+    // Calculate pseudo-prestress vector
 
-	//static Matrix tangentInv(3,3);
-	//tangent_matrix.Invert(tangentInv);   //tangent_matrix invert
+    stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
+
+    static Matrix DInv(3,3);  // D invert
+    tangent_matrix.Invert(DInv);
+
+	Vector tempVec(3);
+	tempVec.addMatrixVector(0.0, DInv, stress0_vec, 1.0);
+
+	epsCp_vec -= tempVec;
 
 	errorVec = Tstrain - epsCp_vec - epsC_vec;
 
@@ -1246,11 +1240,6 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	  }
 	}
   }
-
-  // Calculate pseudo-prestress vector
-  //static Matrix DcInv(3,3);  // Dc invert
-  //Dc.Invert(DcInv);
-  stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
 
   // Calculate the tangent matrix.
   tangent_matrix = Dc + Ds1 + Ds2;
