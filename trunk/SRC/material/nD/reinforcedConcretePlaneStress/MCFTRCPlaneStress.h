@@ -123,7 +123,7 @@ class MCFTRCPlaneStress : public NDMaterial
     double   fpc;       // compressive strength of the concrete
     double   fyx;       // yield stress of the bare steel bar x
 	double   fyy;       // yield stress of the bare steel bar y
-    double   E0;        // young's modulus of the steel
+    double   Es;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
 	double   aggr;      // aggregate size
 	double   xd;        // x- crack spacing
