@@ -194,7 +194,6 @@ Matrix::~Matrix()
       delete [] data; 
   //  if (data != 0) free((void *) data);
 }
-    
 
 //
 // METHODS - Zero, Assemble, Solve
@@ -240,7 +239,6 @@ Matrix::Zero(void)
     *dataPtr++ = 0;
 }
 
-
 int
 Matrix::resize(int rows, int cols) {
 
@@ -282,10 +280,6 @@ Matrix::resize(int rows, int cols) {
 
   return 0;
 }
-
-
-
-
 
 int
 Matrix::Assemble(const Matrix &V, const ID &rows, const ID &cols, double fact) 
@@ -437,7 +431,6 @@ Matrix::Solve(const Vector &b, Vector &x) const
     return 0;
 }
 
-
 int
 Matrix::Solve(const Matrix &b, Matrix &x) const
 {
@@ -546,7 +539,6 @@ Matrix::Solve(const Matrix &b, Matrix &x) const
     return info;
 }
 
-
 int
 Matrix::Invert(Matrix &theInverse) const
 {
@@ -644,7 +636,6 @@ Matrix::Invert(Matrix &theInverse) const
     return info;
 }
 
-
 int
 Matrix::addMatrix(double factThis, const Matrix &other, double factOther)
 {
@@ -710,10 +701,9 @@ Matrix::addMatrix(double factThis, const Matrix &other, double factOther)
       }
     } 
 
-    // successfull
+    // successful
     return 0;
 }
-
 
 int
 Matrix::addMatrixTranspose(double factThis, const Matrix &other, double factOther)
@@ -786,10 +776,9 @@ Matrix::addMatrixTranspose(double factThis, const Matrix &other, double factOthe
       }
     } 
 
-    // successfull
+    // successful
     return 0;
 }
-
 
 int
 Matrix::addMatrixProduct(double thisFact, 
@@ -929,7 +918,6 @@ Matrix::addMatrixTransposeProduct(double thisFact,
   return 0;
 }
 
-
 // to perform this += T' * B * T
 int
 Matrix::addMatrixTripleProduct(double thisFact, 
@@ -1023,10 +1011,6 @@ Matrix::addMatrixTripleProduct(double thisFact,
 
     return 0;
 }
-
-
-
-
 
 // to perform this += At * B * C
 int
@@ -1422,7 +1406,6 @@ Matrix::operator/(double fact) const
     return result;
 }
 
-
 //
 // MATRIX_VECTOR OPERATIONS
 //
@@ -1478,12 +1461,10 @@ Matrix::operator^(const Vector &V) const
     return result;
 }
 
-
 //
 // MATRIX - MATRIX OPERATIONS
 //
 	    
-
 Matrix
 Matrix::operator+(const Matrix &M) const
 {
@@ -1499,8 +1480,7 @@ Matrix::operator-(const Matrix &M) const
     result.addMatrix(1.0,M,-1.0);    
     return result;
 }
-	    
-    
+
 Matrix
 Matrix::operator*(const Matrix &M) const
 {
@@ -1536,8 +1516,6 @@ Matrix::operator*(const Matrix &M) const
     return result;
 }
 
-
-
 // Matrix operator^(const Matrix &M) const
 //	We overload the * operator to perform matrix^t-matrix multiplication.
 //	reults = (*this)transposed * M.
@@ -1571,9 +1549,6 @@ Matrix::operator^(const Matrix &M) const
 
     return result;
 }
-    
-
-
 
 Matrix &
 Matrix::operator+=(const Matrix &M)
@@ -1613,7 +1588,6 @@ Matrix::operator-=(const Matrix &M)
   return *this;
 }
 
-
 //
 // Input/Output Methods
 //
@@ -1627,7 +1601,6 @@ Matrix::Output(OPS_Stream &s) const
 	s << endln;
     }
 }
-
 
 /*****************
 void 
@@ -1650,7 +1623,6 @@ OPS_Stream &operator<<(OPS_Stream &s, const Matrix &V)
     s << endln;        
     return s;
 }
-
 	
 /****************	
 istream &operator>>(istream &s, Matrix &V)
@@ -1659,10 +1631,6 @@ istream &operator>>(istream &s, Matrix &V)
     return s;
 }
 ****************/
-
-
-
-
 
 int
 Matrix::Assemble(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1699,8 +1667,6 @@ Matrix::Assemble(const Matrix &V, int init_row, int init_col, double fact)
   return res;
 }
 
-
-
 int
 Matrix::Assemble(const Vector &V, int init_row, int init_col, double fact) 
 {
@@ -1735,9 +1701,6 @@ Matrix::Assemble(const Vector &V, int init_row, int init_col, double fact)
 
   return res;
 }
-
-
-
 
 int
 Matrix::AssembleTranspose(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1774,9 +1737,6 @@ Matrix::AssembleTranspose(const Matrix &V, int init_row, int init_col, double fa
   return res;
 }
 
-
-
-
 int
 Matrix::AssembleTranspose(const Vector &V, int init_row, int init_col, double fact) 
 {
@@ -1811,8 +1771,6 @@ Matrix::AssembleTranspose(const Vector &V, int init_row, int init_col, double fa
 
   return res;
 }
-
-
 
 int
 Matrix::Extract(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1849,13 +1807,11 @@ Matrix::Extract(const Matrix &V, int init_row, int init_col, double fact)
   return res;
 }
 
-
 Matrix
 operator*(double a, const Matrix &V)
 {
   return V * a;
 }
-
 
 // double Norm();
 //	Method to return the norm of  vector. (non-const as may save norm for later)
@@ -1870,4 +1826,3 @@ Matrix::Norm(void) const
   }
   return sqrt(value);
 }
-

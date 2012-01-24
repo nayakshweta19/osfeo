@@ -67,14 +67,14 @@ set rouh1 0.0367;
 # tag fy E0 fpc rou
 #uniaxialMaterial SteelZ01 11 $wfyv $wE $wfc $rouv
 #uniaxialMaterial SteelZ01 12 $wfyh1 $wE $wfc $rouh1
-uniaxialMaterial MCFTSteel01 11 $wfyv $wE $wfc $rouv
-uniaxialMaterial MCFTSteel01 12 $wfyh1 $wE $wfc $rouh1
+uniaxialMaterial MCFTSteel03 11 $wfyv $wE $wfc $rouv
+uniaxialMaterial MCFTSteel03 12 $wfyh1 $wE $wfc $rouh1
 # UniaxialMaterial: concreteZ01
 # ConcreteZ01 tag f¡¯c ec0
 #uniaxialMaterial ConcreteZ01 14 [expr -$wfc] -0.0022
 #uniaxialMaterial ConcreteZ01 15 [expr -$wfc] -0.0022
-uniaxialMaterial MCFTConcrete01 14 [expr -$wfc] -0.0022
-uniaxialMaterial MCFTConcrete01 15 [expr -$wfc] -0.0022
+uniaxialMaterial MCFTConcrete03 14 [expr -$wfc] -0.0022
+uniaxialMaterial MCFTConcrete03 15 [expr -$wfc] -0.0022
 
 # NDMaterial: FAFourSteelPCPlaneStress
 #                                                  tag rho p1 p2 s1 s2 c1 c2 angle1 angle2 angle3 angle4 roup1 roup2 19:52 2011-10-30rous1 rous2 fpc fpy fy E0 epsc0?

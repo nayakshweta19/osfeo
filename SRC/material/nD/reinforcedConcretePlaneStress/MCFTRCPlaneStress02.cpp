@@ -1077,7 +1077,7 @@ MCFTRCPlaneStress02::determineTrialStress(Vector strain)
 }
 
 double
-MCFTRCPlaneStress02::kupferenvelop(double Tstrain, double sig_p, double eps_p)
+MCFTRCPlaneStress02::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
 {
   double sig = 0.0;
   if (Tstrain > eps_p) {

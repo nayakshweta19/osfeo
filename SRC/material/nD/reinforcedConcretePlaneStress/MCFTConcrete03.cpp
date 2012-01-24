@@ -269,7 +269,7 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
     }
   }
 
-  opserr << this->getTag() << "Plastic offset strain: " << epscp << "\t" << ept << endln;
+  //opserr << this->getTag() << "Plastic offset strain: " << epscp << "\t" << ept << endln;
 
   return 0;
 }
@@ -445,7 +445,8 @@ MCFTConcrete03::recvSelf(int commitTag, Channel &theChannel,
 void 
 MCFTConcrete03::Print(OPS_Stream &s, int flag)
 {
-  s << "MCFTConcrete03:(strain, stress, tangent) " << eps << " " << sig << " " << e << endln;
+  s << "\t\t MCFTConcrete03:(strain, stress, tangent) " << eps << " " << sig << " " << e << endln;
+  s << "\t\t  epscp:  " << epscp << endln;
 }
 
 void
