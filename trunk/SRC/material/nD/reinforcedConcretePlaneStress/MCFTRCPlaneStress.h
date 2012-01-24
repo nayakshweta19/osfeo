@@ -169,7 +169,7 @@ class MCFTRCPlaneStress : public NDMaterial
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
  
-	double kupferenvelop(double Tstrain, double sig_p, double eps_p);
+	double kupferEnvelop(double Tstrain, double sig_p, double eps_p);
 	int determineTangent(void);
 };
 

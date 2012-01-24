@@ -127,7 +127,7 @@ node       4 [expr 1000.*$in] [expr 1000.*$in]
 
 # SPC    tag    Dx    Dy    Dz    Rx    Ry    Rz 
 fix       1     1     1       
-fix       2     1     1       
+fix       2     0     1       
 fix       3     0     0       
 fix       4     0     0      
 
@@ -154,11 +154,11 @@ puts "Model Built"
 set displayType "PERSPECTIVE"
 recorder display g3 10 10 800 600 -wipe
 if {$displayType == "PERSPECTIVE"} {
-  prp -1250 -1580 1600
-  vrp 0 -1500 2500
+  prp 200 500 1000
+  vrp 0 -350 450
   vup 0 1 0
   vpn 0.4 0.6 0.8
-  viewWindow -3000 6000 -3000 6000
+  viewWindow -6000 12000 -6000 12000
 }
 port -1 1 -1 1
 projection 1

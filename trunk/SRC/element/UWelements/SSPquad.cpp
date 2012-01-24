@@ -53,7 +53,7 @@ OPS_SSPquad(void)
 {
 	if (num_SSPquad == 0) {
     	num_SSPquad++;
-    	OPS_Error("SSPquad element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    	//OPS_Error("SSPquad element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   	}
 
   	// Pointer to an element that will be returned
@@ -305,7 +305,7 @@ SSPquad::update(void)
 	u(7) = mDisp_4(1);
 
 	Vector strain(3);
-	strain = Mmem*u;
+	strain.addMatrixVector(0.0, Mmem, u, 1.0); // Mmem*u;
 	theMaterial->setTrialStrain(strain);
 
 	return 0;
@@ -730,11 +730,12 @@ SSPquad::displaySelf(Renderer &theViewer, int displayMode, float fact)
 void
 SSPquad::Print(OPS_Stream &s, int flag)
 {
-	opserr << "SSPquad, element id:  " << this->getTag() << endln;
+	opserr << "SSPquad, element id:  " << this->getTag() << "; \t";
 	opserr << "   Connected external nodes:  ";
 	for (int i = 0; i < SSPQ_NUM_NODE; i++) {
 		opserr << mExternalNodes(i) << " ";
 	}
+	opserr << endln;
 	return;
 }
 

@@ -244,17 +244,17 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
     const char **argv = new const char *[1];
 
     argv[0] = "setVar";
-    theResponses[0] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);
-    theResponses[1] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);
+    theResponses[0] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);  //s1
+    theResponses[1] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);  //s2
 	argv[0] = "getVar";
-	theResponses[2] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);
-	theResponses[3] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);
+	theResponses[2] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);  //s1
+	theResponses[3] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);  //s2
     argv[0] = "setVar";
-    theResponses[4] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);
-    theResponses[5] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);
+    theResponses[4] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);  //c1
+    theResponses[5] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);  //c2
     argv[0] = "getVar";
-    theResponses[6] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);
-    theResponses[7] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);    
+    theResponses[6] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);  //c1
+    theResponses[7] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);  //c2
 
     if ((theResponses[0] == 0) || (theResponses[1] == 0) ||
 	(theResponses[2] == 0) || (theResponses[3] == 0) ||
@@ -576,7 +576,8 @@ MCFTRCPlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\tStrain and stress of the uniaxial materials:"<<endln;
 	for (int i=0; i<4; i++)
 	{
-	  s<< "Uniaxial Material "<<i+1<<" :"<<theMaterial[i]->getStrain()<<"   "<<theMaterial[i]->getStress()<< endln;
+	  s << "\tUniaxial Material " << i+1 << " :" << theMaterial[i]->getStrain() << "   " << theMaterial[i]->getStress() << endln;
+	  s << "\t\t 1DMat Tangent : " << theMaterial[i]->getTangent() << endln;
 	}
 }
 
@@ -769,7 +770,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   double Cs, Cd, betaD;
   double Ecx, Ecy;
 
-  epsC_vec  = CepsC_vec; // initial epsC vector assumptions equal to previous committed value
+  epsC_vec  = Tstrain; //CepsC_vec; // initial epsC vector assumptions equal to previous committed value
   epsCp_vec = CepsCp_vec;
 
   // Get citaE based on Tstrain, eq. i-9...
@@ -908,7 +909,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   static Vector errorVec(3); // epsC_vec converge test need a vector to maintain Error
   
   double errNorm;
-  double temp, tolNorm = 1.0e-12;
+  double temp, tolNorm = 1.0e-9;
   bool vCiconverged = false;
   int iteration_counter = 0;
 
@@ -922,7 +923,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 		  - 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
   
     // Get citaS based on epsC_vec, eq.i-11
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < 1e-12 ) {
+    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON) {
       citaS = 0.25*PI;	
     } else {  // epsC_vec(0) != epsC_vec(1) 
       temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
@@ -1093,7 +1094,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     // Calculate local stress at cracks
     int status            = 0; // status to check if iteration satisfied eq.i-7
 
-    double tolerance      = 1.0e-12; // tolerance for iteration
+    double tolerance      = 1.0e-9; // tolerance for iteration
     bool fC1converged     = false;
     double error;
     double fScrx, fScry;
@@ -1226,6 +1227,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	
   	if ( errNorm <= tolNorm) {
 	  vCiconverged = true;
+	  OPS_Stream *output = &opserr;
+	  this->Print(*output,1);
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
@@ -1250,4 +1253,23 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   // determine internal vectors
 
   return Tstress;
+}
+
+double
+MCFTRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
+{
+  double sig;
+  if (Tstrain > eps_p) {
+    double eta = Tstrain/eps_p;
+    sig = sig_p * (2 * eta - eta * eta);
+  }
+  else if (Tstrain > 2.0 * epsc0) {
+	double eta = (Tstrain-eps_p)/(2.0*epsc0-eps_p);
+    sig = sig_p * (1.0 - eta * eta);
+  }
+  else {
+    sig = 1.0e-9 * fpc;
+  }
+  return sig;
+
 }

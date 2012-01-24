@@ -579,15 +579,15 @@ MCFTSteel03::getResponse(int responseID, Information &matInfo)
 void 
 MCFTSteel03::Print(OPS_Stream &s, int flag)
 {
-     s << "MCFTSteel03 tag: " << this->getTag() << endln;
-   s << " fy: " << fy << " ";
-   s << "  E0: " << E0 << " ";
-   s << "  b: " << b << " ";
-   s << "  r0:  " << r0 << endln;
-   s << "  CR1: " << coeffR1 << " ";
-   s << "  CR2: " << coeffR2 << " ";   
-   s << "  a1: " << a1 << " ";
-   s << "  a2: " << a2 << " ";
+   s << "\t\tMCFTSteel03 tag: " << this->getTag() << endln;
+   s << "\t\t  fy: " << fy << " ";
+   s << "\t\t  E0: " << E0 << " ";
+   s << "\t\t  b: " << b << " ";
+   s << "\t\t  r0:  " << r0 << endln;
+   s << "\t\t  CR1: " << coeffR1 << " ";
+   s << "\t\t  CR2: " << coeffR2 << " ";   
+   s << "\t\t  a1: " << a1 << " ";
+   s << "\t\t  a2: " << a2 << " ";
    s << endln;
 }
 
