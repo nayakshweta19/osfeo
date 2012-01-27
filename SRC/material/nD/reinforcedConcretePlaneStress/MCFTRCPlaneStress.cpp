@@ -965,7 +965,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
 	theData(0) = eC2m;  // 
 	theData(1) = eT2m;  // 
-	theData(5) = eC2p;
+	theData(5) = epsC12p_prevec(1);
 	//theData(2) = epsC2;  // 
 
 	int ret = 0;
@@ -1006,7 +1006,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
 	theData(0) = eC1m;  // 
 	theData(1) = eT1m;  // 
-	theData(5) = eC1p;
+	theData(5) = epsC12p_prevec(0);
 	//theData(2) = epsC1;  // 
 
 	ret = 0;
@@ -1018,7 +1018,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	  return ret;
 	}
 	temp = theMaterial[2]->getStress();
-	fC1 = __min(fC1temp, temp);
+	fC1 = min(fC1temp, temp);
 
 	theResponses[6]->getResponse();  // C1 getVar to theInfoC03
     epsC12p_nowvec(0) = (*theInfoC03.theVector)(5); // ecp1 
@@ -1060,14 +1060,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	deltaEpsC1p = epsC12p_nowvec(0) - epsC12p_prevec(0);
 	deltaEpsC2p = epsC12p_nowvec(1) - epsC12p_prevec(1);
   
-    epsCp_vec(0) += (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
-    epsCp_vec(1) += (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
-    epsCp_vec(2) += (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
+    epsC_vec(0) += 0.518 * (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
+    epsC_vec(1) += 0.518 * (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
+    epsC_vec(2) += 0.518 * (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
   
-    eC1p = 0.5 * (epsCp_vec(0)+epsCp_vec(1)) 
-		 + 0.5 * ((epsCp_vec(0)-epsCp_vec(1))*cos(2.0*cita)+epsCp_vec(2)*sin(2.0*cita));
-    eC2p = 0.5 * (epsCp_vec(0)+epsCp_vec(1)) 
-		 - 0.5 * ((epsCp_vec(0)-epsCp_vec(1))*cos(2.0*cita)+epsCp_vec(2)*sin(2.0*cita));
+    //eC1p = 0.5 * (epsCp_vec(0)+epsCp_vec(1)) 
+	//	 + 0.5 * ((epsCp_vec(0)-epsCp_vec(1))*cos(2.0*cita)+epsCp_vec(2)*sin(2.0*cita));
+    //eC2p = 0.5 * (epsCp_vec(0)+epsCp_vec(1)) 
+	//	 - 0.5 * ((epsCp_vec(0)-epsCp_vec(1))*cos(2.0*cita)+epsCp_vec(2)*sin(2.0*cita));
     
 	// Vecchio: Towards Cyclic Load Modeling of Reinforced Concrete
 	// C max
@@ -1153,8 +1153,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   
     // optional 1
     vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
-
-	vci = vci * min(abs(vcimax), abs(vci)) /abs(vci);
+	// if vci > vcimax , decrease fC1
+	if (abs(vci) > vcimax) {
+	  fC1 -= (abs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
+	}
+	fC1 = (fC1 > 0 ? fC1 : 0);
+	//vci = vci * min(abs(vcimax), abs(vci)) /abs(vci);
 
     //need further revision for the initial crack direction, citaIC
     if (rhox > 0.0 && rhoy > 0.0) citaLag = 5./180.*PI;    // eq.i-41~43 
@@ -1211,15 +1215,15 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
     // Calculate pseudo-prestress vector
 
-    stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
+    //stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
 
-    static Matrix DInv(3,3);  // D invert
-    tangent_matrix.Invert(DInv);
+    //static Matrix DInv(3,3);  // D invert
+    //tangent_matrix.Invert(DInv);
 
-	Vector tempVec(3);
-	tempVec.addMatrixVector(0.0, DInv, stress0_vec, 1.0);
+	//Vector tempVec(3);
+	//tempVec.addMatrixVector(0.0, DInv, stress0_vec, 1.0);
 
-	epsCp_vec -= tempVec;
+	//epsCp_vec -= tempVec;
 
 	errorVec = Tstrain - epsCp_vec - epsC_vec;
 
@@ -1233,7 +1237,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
-	  epsC_vec = Tstrain - epsCp_vec;
+	  //epsC_vec = Tstrain - epsCp_vec;
 	  epsC12p_prevec = epsC12p_nowvec;
 	  iteration_counter += 1 ;
 	  if (iteration_counter > 20) {
