@@ -136,28 +136,28 @@ NDMaterial(tag,ND_TAG_NonlinearBS),
 	sigPX = 0.0;
 	epsX = 0.0;
 	sigX = 0.0;
-	eX = 2.0*fc/epsc0;
+	eX = ePX;
 	
 	ePY = 2.0*fc/epsc0;
 	epsPY = 0.0;
 	sigPY = 0.0;
 	epsY = 0.0;
 	sigY = 0.0;
-	eY = 2.0*fc/epsc0;
+	eY = ePY;
 	
-	double Ct = 70.0/2.2337/100;
+	double Ct = 70.0/2.2337/100; //10;
 	Tens_Alpha1 = Ct*(reinfR1*100)/(reinf_dmm1);
 	Tens_Alpha2 = Ct*(reinfR2*100)/(reinf_dmm2);
 	frictionX = ft*Tens_Alpha1;
 	frictionY = ft*Tens_Alpha2;
 	slip = 0.82;
 	
-	//reduced steel stress env.
+	//reduced steel stress envelop.
 	ReducedL = 0.96 - frictionX/mom1p;
 	ReducedT = 0.96 - frictionY/mom1p;
 	
 	//Shear retention
-	ShearBeta = 0.06204; //SW4
+	ShearBeta = 0.08; //SW4
 	
 	//Crack closing curve:
 	M = 0.4; //Multiplier
@@ -189,13 +189,13 @@ NDMaterial(tag,ND_TAG_NonlinearBS),
 		exit(-1);
 	}
 	
-	opserr << mom1p << "\t" << rot1p << endln;
-	opserr << mom2p << "\t" << rot2p << endln;
-	opserr << mom3p << "\t" << rot3p << endln;
-	opserr << mom1n << "\t" << rot1n << endln;
-	opserr << mom2n << "\t" << rot2n << endln;
-	opserr << mom3n << "\t" << rot3n << endln;
-	opserr << pinchX << "\t" << pinchY << endln;
+	//opserr << mom1p << "\t" << rot1p << endln;
+	//opserr << mom2p << "\t" << rot2p << endln;
+	//opserr << mom3p << "\t" << rot3p << endln;
+	//opserr << mom1n << "\t" << rot1n << endln;
+	//opserr << mom2n << "\t" << rot2n << endln;
+	//opserr << mom3n << "\t" << rot3n << endln;
+	//opserr << pinchX << "\t" << pinchY << endln;
 	
 	energyA = 0.5 * (rot1p*mom1p + (rot2p-rot1p)*(mom2p+mom1p) + (rot3p-rot2p)*(mom3p+mom2p) +
 			  rot1n*mom1n + (rot2n-rot1n)*(mom2n+mom1n) + (rot3n-rot2n)*(mom3n+mom2n));
@@ -250,12 +250,13 @@ mom1n(m1n), rot1n(r1n), mom3n(m2n), rot3n(r2n)
 	rot2p = 0.5*(rot1p+rot3p);
 	rot2n = 0.5*(rot1n+rot3n);
 	
-	opserr << mom1p << "\t" << rot1p << endln;
-	opserr << mom2p << "\t" << rot2p << endln;
-	opserr << mom3p << "\t" << rot3p << endln;
-	opserr << mom1n << "\t" << rot1n << endln;
-	opserr << mom2n << "\t" << rot2n << endln;
-	opserr << mom3n << "\t" << rot3n << endln;
+	//opserr << mom1p << "\t" << rot1p << endln;
+	//opserr << mom2p << "\t" << rot2p << endln;
+	//opserr << mom3p << "\t" << rot3p << endln;
+	//opserr << mom1n << "\t" << rot1n << endln;
+	//opserr << mom2n << "\t" << rot2n << endln;
+	//opserr << mom3n << "\t" << rot3n << endln;
+
 	// Set envelope slopes
 	this->setEnv();
 	
@@ -345,7 +346,7 @@ NonlinearBS::setTrialStrain(const Vector &strain_from_element)
 {
 	double ec0 = fc * 2. / epsc0;
 	
-	// retrieve concrete hitory variables
+	// retrieve concrete history variables
 	ecminX = ecminPX;
 	deptX = deptPX;
 	
@@ -365,11 +366,11 @@ NonlinearBS::setTrialStrain(const Vector &strain_from_element)
 	
 	//principal strain dir
 	double ratio, thetaEP;
-	//if ( abs(eOXX-eOYY) < 1e-12 && abs(gOXY) > 1e-12) {
-	//  ratio = 1e12; // for the pure shear state
-	//} else {
+	if ( abs(eOXX-eOYY) < DBL_EPSILON && abs(gOXY) > DBL_EPSILON) {
+	  ratio = 1e12; // for the pure shear state
+	} else {
 	  ratio = gOXY/(eOXX-eOYY);
-	//}
+	}
 	thetaEP = atan(ratio)/2.;
 
 	//<Deviation angle between principal stresses and strains>
@@ -1308,8 +1309,8 @@ NonlinearBS::recvSelf(int commitTag, Channel &theChannel,
 void
 NonlinearBS::Print(OPS_Stream &s, int flag)
 {
-    s << "NonlinearBS:strain:\t" << this->getStrain() << endln;
-    s << "            stress:\t" << stress_vec << endln;
+    s << "NonlinearBS: strain:\t" << strain_vec << endln;
+    s << "             stress:\t" << stress_vec << endln;
     s << "            tangent:\t" << tangent_matrix << endln;
 }
 

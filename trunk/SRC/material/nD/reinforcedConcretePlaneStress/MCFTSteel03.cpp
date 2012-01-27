@@ -190,7 +190,8 @@ MCFTSteel03::setTrialStrain(double strain, double strainRate)
    return 0;
 }
 
-int MCFTSteel03::setTrial (double strain, double &stress, double &tangent, double strainRate)
+int
+MCFTSteel03::setTrial (double strain, double &stress, double &tangent, double strainRate)
 {
    // Reset history variables to last converged state
    TminStrain = CminStrain;
@@ -333,7 +334,7 @@ MCFTSteel03::getTangent(void)
 }
 
 double
-MCFTSteel03::getSecant ()
+MCFTSteel03::getSecant(void)
 {
 	if ( Tstrain == 0.0 ) {
 		return E0;
