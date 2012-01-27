@@ -270,7 +270,9 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
   }
 
   //opserr << this->getTag() << "Plastic offset strain: " << epscp << "\t" << ept << endln;
-
+  if (e> 0.0 && e <DBL_EPSILON) 
+	e = 1.e-10;
+  
   return 0;
 }
 
@@ -305,7 +307,7 @@ MCFTConcrete03::getTangent(void)
 }
 
 double
-MCFTConcrete03::getSecant ()
+MCFTConcrete03::getSecant(void)
 {
   if ( eps == 0.0 ) {
     return e;

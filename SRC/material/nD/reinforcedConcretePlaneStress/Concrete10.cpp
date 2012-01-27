@@ -144,7 +144,7 @@ Concrete10::Concrete10(int tag, double _fc, double _epsc0, double _fcu,
   slip = 0.82;
   M = 0.4;
   Yint = 2.2;
-  epslonTP = 0.0;
+  epslonTP = 0.001;
 
   rot1p = 0.00115;
 

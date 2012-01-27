@@ -116,8 +116,8 @@ class MCFTRCPlaneStress : public NDMaterial
 
     double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
-    double   roux;      // steel ratio of the first steel layer
-    double   rouy;      // steel ratio of the second steel layer
+    double   rhox;      // steel ratio of the first steel layer
+    double   rhoy;      // steel ratio of the second steel layer
 	double   db1;       // steel diameter of the first steel layer
 	double   db2;       // steel diameter of the second steel layer
     double   fpc;       // compressive strength of the concrete
@@ -170,7 +170,8 @@ class MCFTRCPlaneStress : public NDMaterial
     double getAngleError(double inputCita);
  
 	double kupferEnvelop(double Tstrain, double sig_p, double eps_p);
-	int determineTangent(void);
+	int determineTangent(Vector Tstrain);
+	double determinefS(double strain, double fy, double E, double Esh);
 };
 
 #endif

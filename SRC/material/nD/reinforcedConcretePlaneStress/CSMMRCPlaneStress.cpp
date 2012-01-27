@@ -614,11 +614,14 @@ void CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
 	theMaterial[3]->Print(s,flag);
 
 
-	//s << "\tStrain and stress of the uniaxial materials:"<<endln;
-	//for ( i=0; i<4; i++)
-	//{
-	//	s<< "Uniaxial Material "<<i+1<<" :"<<theMaterial[i]->getStrain()<<"   "<<theMaterial[i]->getStress()<< endln;
-	//}
+	s << "\tStrain and stress of the uniaxial materials:"<<endln;
+	for (int i=0; i<4; i++)
+	{
+	  s << "\tUniaxial Material " << i+1 << " :" << endln;
+	  s << "\t            Strain : " << theMaterial[i]->getStrain() << endln;
+	  s << "\t            Stress : " << theMaterial[i]->getStress() << endln;
+	  s << "\t  Uniaxial Tangent : " << theMaterial[i]->getTangent() << endln;
+	}
 
 }
  
