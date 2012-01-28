@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.9 $                                                              
-// $Date: 2006/01/13 01:07:48 $                                                                  
+// $Date: 2006-01-13 01:07:48 $                                                                  
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/CorotCrdTransf3d.h,v $      
 
 
@@ -64,7 +64,7 @@ public:
 	const Vector &getBasicTrialVel(void);
 	const Vector &getBasicTrialAccel(void);
     
-    const Vector &getGlobalResistingForce(const Vector &basicForce, const Vector &uniformLoad);
+    const Vector &getGlobalResistingForce(const Vector &basicForce, const Vector &p0);
     const Matrix &getGlobalStiffMatrix(const Matrix &basicStiff, const Vector &basicForce);
     const Matrix &getInitialGlobalStiffMatrix(const Matrix &basicStiff);
     

@@ -55,6 +55,28 @@ RandomVariable::~RandomVariable()
 }
 
 
+double 
+RandomVariable::transform_x_to_u(void)
+{
+    return 0.0;
+}
+
+
+int 
+RandomVariable::transform_u_to_x(double uVal)
+{
+    return 0;
+}
+
+
+double
+RandomVariable::gradient_x_to_u(double uVal)
+{
+    return 0.0;
+    
+}
+
+
 void
 RandomVariable::Print(OPS_Stream &s, int flag)
 {
@@ -503,5 +525,36 @@ RandomVariable::inverseErrorFunction(double y)
 	
 	return x;
 	
+}
+
+
+double
+RandomVariable::standardNormalPhi(double uValue)
+{
+	static const double oneOverRootTwo = 1.0/sqrt(2.0);
+    
+	//Phi(x) = 0.5 * erfc(-x/sqrt(2))
+	double result = 0.5 * (1.0 + errorFunction( uValue*oneOverRootTwo ));
+    
+	return result;
+}
+
+
+double
+RandomVariable::standardNormalInversePhi(double probValue)
+{
+	double trval = probValue;
+	if (trval <= 0.0) {
+        // technically this should return negative infinity
+		//opserr << "WARNING: Invalid probability value (" << trval << ") input <= 0 to RandomVariable::standardNormalInversePhi()" << endln;
+		trval = 2.0*DBL_EPSILON;
+	} else if (trval >= 1.0) {
+        // technically this should return positive infinity
+		//opserr << "WARNING: Invalid probability value (" << trval << ") input >= 1 to RandomVariable::standardNormalInversePhi()" << endln;
+		trval = 1.0-2.0*DBL_EPSILON;
+	}
+	static const double rootTwo = sqrt(2.0);
+	double result = rootTwo * inverseErrorFunction(2.0*trval-1.0);
+	return result;
 }
 

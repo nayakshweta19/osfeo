@@ -157,11 +157,10 @@ CorrelatedStandardNormal::SimpsonSheppard(double r, double beta1, double beta2)
 
 double
 CorrelatedStandardNormal::getCDFowen(double b1, double b2, int popt)
-{
-	double cdf = 0.0;
-	static NormalRV uRV(1, 0.0, 1.0);
-	
+{	
 	// single integral form by Owen 1956
+    static NormalRV uRV(1, 0.0, 1.0);
+    double cdf = 0.0;
 	double thresh = 0.99;
 	double integral = 0.0;
 	
@@ -177,20 +176,21 @@ CorrelatedStandardNormal::getCDFowen(double b1, double b2, int popt)
 		integral = SimpsonOwen(0,rho,b1,b2);
 	}
 	
-	cdf = uRV.getCDFvalue(b1)*uRV.getCDFvalue(b2) + integral;
+	cdf = uRV.getCDFvalue(b1) * uRV.getCDFvalue(b2) + integral;
 	if (popt == 1)
 		opserr << " Owen = " << cdf;
 		
 	return cdf;
 }
 
+
 double
 CorrelatedStandardNormal::getCDFsheppard(double b1, double b2, int popt)
 {
-	double cdf = 0.0;
-	static NormalRV uRV(1, 0.0, 1.0);
-	
 	// single integral form by Sheppard 1900
+    static NormalRV uRV(1, 0.0, 1.0);
+    double cdf = 0.0;
+    
 	if (b1 >= 0 && b2 >= 0)
 		cdf = 1.0 + SimpsonSheppard(rho,b1,b2) - uRV.getCDFvalue(-b1) - uRV.getCDFvalue(-b2);
 	else if (b1 < 0 && b2 < 0)
@@ -206,19 +206,20 @@ CorrelatedStandardNormal::getCDFsheppard(double b1, double b2, int popt)
 	return cdf;
 }
 
+
 double
 CorrelatedStandardNormal::getCDFadaptive(double b1, double b2, int popt)
 {
+	// adaptive quadrature from Quan
+    static NormalRV uRV(1, 0.0, 1.0);
 	double cdf = 0.0;
-	static NormalRV uRV(1, 0.0, 1.0);
 	double integral = 0.0;
 	
-	// adaptive quadrature from Quan
 	double fa = bivariatePDF(b1,b2,0);
 	double fb = bivariatePDF(b1,b2,rho/2.0);
 	double fc = bivariatePDF(b1,b2,rho);
 	integral = getAdaptiveIntegralValue(1.0e-12, 0.0,rho, fa,fb,fc, b1,b2);
-	cdf = uRV.getCDFvalue(b1)*uRV.getCDFvalue(b2) + integral;
+	cdf = uRV.getCDFvalue(b1) * uRV.getCDFvalue(b2) + integral;
 	
 	if (popt == 1)
 		opserr << " Adaptive = " << cdf;
@@ -230,8 +231,8 @@ CorrelatedStandardNormal::getCDFadaptive(double b1, double b2, int popt)
 double
 CorrelatedStandardNormal::getCDF(double b1, double b2)
 {
+    static NormalRV uRV(1, 0.0, 1.0);
 	double cdf = 0.0;
-	static NormalRV uRV(1, 0.0, 1.0);
 	int popt = 0;
 	
 	// treat several special cases before attempting to integrate numerically
@@ -292,6 +293,7 @@ CorrelatedStandardNormal::getAdaptiveIntegralValue(double tol, double lowerBound
 		return int1+int2;
 	}
 }
+
 
 void
 CorrelatedStandardNormal::testCDF()

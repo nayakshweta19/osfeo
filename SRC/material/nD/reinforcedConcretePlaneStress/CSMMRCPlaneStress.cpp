@@ -599,7 +599,6 @@ void CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
 
 
 	//int i, j;
-    
 
 
 	s << "\t call the material print() function : "<< endln;

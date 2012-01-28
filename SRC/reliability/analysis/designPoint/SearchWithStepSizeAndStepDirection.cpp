@@ -262,7 +262,7 @@ SearchWithStepSizeAndStepDirection::findDesignPoint()
 
 
 		// Gradient in original space
-		result = theGradientEvaluator->computeGradient(gFunctionValue, *x);
+		result = theGradientEvaluator->computeGradient(gFunctionValue);
 		if (result < 0) {
 			opserr << "SearchWithStepSizeAndStepDirection::doTheActualSearch() - " << endln
 				<< " could not compute gradients of the limit-state function. " << endln;
