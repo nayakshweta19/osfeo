@@ -34,8 +34,6 @@
 #ifndef CorrelatedStandardNormal_h
 #define CorrelatedStandardNormal_h
 
-#include <NormalRV.h>
-
 class CorrelatedStandardNormal
 {
 
@@ -61,7 +59,8 @@ private:
 		double fa, double fb, double fc, double beta1, double beta2);
 	void testCDF();
 	
-	double rho; 
+	double rho;
+    
 
 };
 

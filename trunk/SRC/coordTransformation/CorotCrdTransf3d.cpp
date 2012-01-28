@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.2 $                                                              
-// $Date: 2007/08/07 16:52:17 $                                                                  
+// $Date: 2007-08-07 16:52:17 $                                                                  
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/CorotCrdTransf3d.cpp,v $
 
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -169,7 +169,7 @@ nodeIInitialDisp(0), nodeJInitialDisp(0), initialDispChecked(false)
         Tp(3, 2) = -1;
         Tp(4, 5) = -1;
         Tp(5, 0) = -1;
-        Tp(5, 3) =  1;
+	Tp(5, 3) =  1;
     }
     
     //opserr << "Tp: " << Tp;
@@ -1032,7 +1032,7 @@ CorotCrdTransf3d::getBasicTrialAccel(void)
 
 
 const Vector &
-CorotCrdTransf3d::getGlobalResistingForce(const Vector &pb, const Vector &unifLoad)
+CorotCrdTransf3d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
 {
     this->update();
     
@@ -1041,8 +1041,13 @@ CorotCrdTransf3d::getGlobalResistingForce(const Vector &pb, const Vector &unifLo
     static Vector pl(7);
     pl.addMatrixTransposeVector(0.0, Tp, pb, 1.0);    // pl = Tp ^ pb;
     //opserr << "pl: " << pl;
-    
-    // check distributed load is zero (not implemented yet)
+
+    // add P0 (reactions to loads in basic system)
+    pl[0] += p0(0);
+    pl[1] += p0(1);
+    pl[7] += p0(2);
+    pl[2] += p0(3);
+    pl[8] += p0(4);
     
     // transform resisting forces  from local to global coordinates
     static Vector pg(12);

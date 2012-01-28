@@ -944,7 +944,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   	    opserr << " epsC_vec(2) = " << epsC_vec(2) << endln;
   	  }
     }
-    
+
     //cita=citaS;  //eq.i-11    PI/2.0-citaS = citaCrack
     citan1 = citaS - angle1; //angle1-(PI/2.0-citaS); //eq.i-6
 	//if (citan1 < 0.0) citan1 += 2.0*PI;
@@ -1050,19 +1050,23 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
 	// Get cita based on epsC_vec+epsCp_vec=Tstrain
     // epsCp_vec = Tstrain - epsC_vec;
-	epsC12p_prevec(0) = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
-		+ 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
+	//epsC12p_prevec(0)
+	eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
+		 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
 
-	epsC12p_prevec(1) = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
-		- 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
+	//epsC12p_prevec(1)
+	eC2p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
+		 - 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
 
     // deltaEspCp(2),  P. Ceresa 2009, Eq. 4
-	deltaEpsC1p = epsC12p_nowvec(0) - epsC12p_prevec(0);
-	deltaEpsC2p = epsC12p_nowvec(1) - epsC12p_prevec(1);
-  
-    epsC_vec(0) += 0.518 * (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
-    epsC_vec(1) += 0.518 * (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
-    epsC_vec(2) += 0.518 * (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
+	//deltaEpsC1p = epsC12p_nowvec(0) - epsC12p_prevec(0);
+	deltaEpsC1p = 0.5 * (eC1p - epsC12p_nowvec(0));
+	//deltaEpsC2p = epsC12p_nowvec(1) - epsC12p_prevec(1);
+    deltaEpsC2p = 0.5 * (eC2p - epsC12p_nowvec(1));
+
+    epsC_vec(0) += (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
+    epsC_vec(1) += (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
+    epsC_vec(2) += (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
   
     //eC1p = 0.5 * (epsCp_vec(0)+epsCp_vec(1)) 
 	//	 + 0.5 * ((epsCp_vec(0)-epsCp_vec(1))*cos(2.0*cita)+epsCp_vec(2)*sin(2.0*cita));
@@ -1147,6 +1151,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	//vci = (vci < 0 ? 0 : vci);
 
     // Crack slips determine
+	while ( citaS > 0.5*PI ) {
+      citaS -= 0.5*PI;
+    }
+
     // crack spacing // w   
     s_cita = 1.0/(sin(citaS)/xd+cos(citaS)/yd); // eq.i-21,22
     w      = epsC1 * s_cita;
@@ -1233,18 +1241,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	
   	if ( errNorm <= tolNorm) {
 	  vCiconverged = true;
-	  this->Print(opserr,0);
+	//  this->Print(opserr,0);
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
-	  //epsC_vec = Tstrain - epsCp_vec;
-	  epsC12p_prevec = epsC12p_nowvec;
+	  epsCp_vec = Tstrain - epsC_vec;
+	  //epsC12p_prevec = epsC12p_nowvec;
 	  iteration_counter += 1 ;
 	  if (iteration_counter > 20) {
 		iteration_counter = 0;
-		//epsC_vec = 0.83 *(Tstrain - epsCp_vec);
-		epsC12p_prevec *= 0.5;
-		epsC12p_nowvec *= 0.5;
+		epsCp_vec = 0.83 *(Tstrain - epsC_vec);
+		//epsC12p_prevec *= 0.5;
+		//epsC12p_nowvec *= 0.5;
 	  }
 	}
   }
@@ -1294,10 +1302,10 @@ MCFTRCPlaneStress::determineTangent(Vector strain)
 	Tstress2 = determineTrialStress(Tstrain);
 
 	if (Tstrain.pNorm(-1) == 0.0) {
-	  // do nothing
+	  determineTrialStress(strain);
 	} else {
 	  for (int j=0; j<3; j++){
-		tangent_matrix(i,j)=(Tstress1(j)-Tstress2(j))/(0.002*strain(i));
+		tangent_matrix(j,i)=(Tstress1(j)-Tstress2(j))/(0.002*strain(i));
 	  }
 	}
 	
