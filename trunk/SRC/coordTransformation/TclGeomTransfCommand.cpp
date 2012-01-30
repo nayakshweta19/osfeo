@@ -32,6 +32,13 @@
 #include <CorotCrdTransf2d.h>
 #include <CorotCrdTransf3d.h>
 
+#include <RCFTCrdTransf3D.h>
+#include <RCFTMCrdTransf3D.h>
+#include <RCFTCrdLinTransf3D.h>
+#include <RCFTMCrdLinTransf3D.h>
+#include <RCFTSTLCrdTransf3D.h>
+#include <RCFTSTLLinCrdTransf3D.h>
+
 #include <TimoshenkoLinearCrdTransf2d.h>
 
 
@@ -217,6 +224,19 @@ TclCommand_addGeomTransf(ClientData clientData, Tcl_Interp *interp,
     else if (strcmp(argv[1],"Corotational") == 0)
       crdTransf3d = new CorotCrdTransf3d(crdTransfTag, vecxzPlane, jntOffsetI, jntOffsetJ);
     
+	else if (strcmp(argv[1],"RCFTCrd") == 0)
+		crdTransf3d = new RCFTCrdTransf3D(crdTransfTag, vecxzPlane);
+	else if (strcmp(argv[1],"RCFTMCrd") == 0)
+		crdTransf3d = new RCFTMCrdTransf3D(crdTransfTag, vecxzPlane);
+	else if (strcmp(argv[1],"RCFTSTLCrd") == 0)
+		crdTransf3d = new RCFTSTLCrdTransf3D(crdTransfTag, vecxzPlane);
+	else if (strcmp(argv[1],"RCFTCrdLin") == 0)
+		crdTransf3d = new RCFTCrdLinTransf3D(crdTransfTag, vecxzPlane);
+	else if (strcmp(argv[1],"RCFTMCrdLin") == 0)
+		crdTransf3d = new RCFTMCrdLinTransf3D(crdTransfTag, vecxzPlane);
+	else if (strcmp(argv[1],"RCFTSTLLinCrd") == 0)
+		crdTransf3d = new RCFTSTLLinCrdTransf3D(crdTransfTag, vecxzPlane);
+
     else {
       opserr << "WARNING TclElmtBuilder - addGeomTransf - invalid Type\n";
       return TCL_ERROR;

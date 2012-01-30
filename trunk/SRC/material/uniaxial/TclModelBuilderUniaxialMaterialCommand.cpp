@@ -92,12 +92,13 @@
 extern void *OPS_NewBilinMaterial(void);
 extern void *OPS_NewSAWSMaterial(void);
 extern void *OPS_NewSecantConcreteMaterial(void); //
+extern void *OPS_changManderConcrete01(void); //
 extern void *OPS_NewMCFTSteel01Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel02Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel03Material(void); //   for mcft/dsfm
-extern void *OPS_NewMCFTConcrete01Material(void); // form mcft/dsfm
-extern void *OPS_NewMCFTConcrete02Material(void); // form mcft/dsfm
-extern void *OPS_NewMCFTConcrete03Material(void); // form mcft/dsfm
+extern void *OPS_NewMCFTConcrete01Material(void); // for mcft/dsfm
+extern void *OPS_NewMCFTConcrete02Material(void); // for mcft/dsfm
+extern void *OPS_NewMCFTConcrete03Material(void); // for mcft/dsfm
 extern void *OPS_NewConcreteZ01Material(void);
 extern void *OPS_NewConcreteZ02Material(void); //
 extern void *OPS_NewConcreteL01Material(void);
@@ -1849,7 +1850,15 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	return TCL_ERROR;
     }
 	// start neallee@tju.edu.cn added ////////////////////////////////////////////
-    else if ((strcmp(argv[1],"concrete09") == 0) || (strcmp(argv[1],"Concrete09") == 0)) {
+    else if ((strcmp(argv[1],"changManderConcrete01") == 0) || (strcmp(argv[1],"ManderConcrete01") == 0)) {
+	  void *theMat = OPS_changManderConcrete01();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+	}
+	
+	else if ((strcmp(argv[1],"concrete09") == 0) || (strcmp(argv[1],"Concrete09") == 0)) {
 	  void *theMat = OPS_NewConcrete09Material();
 	  if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;

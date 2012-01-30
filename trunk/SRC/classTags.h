@@ -157,6 +157,10 @@
 #define MAT_TAG_SmoothSteel01			21
 #define MAT_TAG_SmoothConcrete01		22
 
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define MAT_TAG_RCFTSlipMaterial                23
+// Adding HAJJAR_COMPOSITE: End /////////
+
 #define MAT_TAG_Concrete02				25
 #define MAT_TAG_Steel02					26
 
@@ -214,6 +218,13 @@
 #define MAT_TAG_SnapCloughDamage	3004
 #define MAT_TAG_SnapPinchingDamage	3005
 
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define MAT_TAG_RCFT_stl                4000
+#define MAT_TAG_RCFT_conc               4001
+#define MAT_TAG_Stl_beam                4002
+#define MAT_TAG_CCFT_stl                4003
+#define MAT_TAG_CCFT_conc               4004
+// Adding HAJJAR_COMPOSITE: End /////////
 
 #define MAT_TAG_ECC01 3010
 #define MAT_TAG_Concrete01WithSITC 3011
@@ -258,6 +269,12 @@
 #define SEC_TAG_FiberSection2dInt		35
 
 #define SEC_TAG_McftSection2dfiber 7601
+
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define SEC_TAG_RCFTFiberSection3D		47
+#define SEC_TAG_RCFTAggregator 				488
+#define SEC_TAG_RCFTSTLFiberSection3D 49
+// Adding HAJJAR_COMPOSITE: End /////////
 
 #define SECTION_INTEGRATION_TAG_WideFlange 1
 #define SECTION_INTEGRATION_TAG_RC 2
@@ -490,7 +507,23 @@
 #define ELE_TAG_ElasticForceBeamColumn2d 98781
 #define ELE_TAG_ElasticForceBeamColumn3d 98791
 
-#define ELE_TAG_DispBeamColumn2dInt 9880
+#define ELE_TAG_DispBeamColumn2dInt 9800
+
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define ELE_TAG_RCFTMBeamColumn3D 9880
+#define ELE_TAG_RCFTDBeamColumn3D 9881
+#define ELE_TAG_RCFTLMBeamColumn3D 9882
+#define ELE_TAG_RCFTSTLBeamColumn3D 9883
+#define ELE_TAG_RCFTSTLMBeamColumn3D 9884
+#define ELE_TAG_RCFTSTLDBeamColumn3D 9885
+#define ELE_TAG_RCFTSTLMFBeamColumn3D 9886
+#define ELE_TAG_RCFTSTLLMBeamColumn3D 9887
+#define ELE_TAG_RCFTSCHBeamColumn3D 9888
+#define ELE_TAG_RCFTMMBeamColumn3D 9889
+#define ELE_TAG_RCFTLMMBeamColumn3D 9890
+#define ELE_TAG_RCFTGMBeamColumn3D 9891
+#define ELE_TAG_RCFTSTLGMBeamColumn3D 9892
+// Adding HAJJAR_COMPOSITE: End /////////
 
 #define ELE_TAG_InternalSpring   9900
 #define ELE_TAG_SimpleJoint2D    9901
@@ -592,6 +625,14 @@
 #define CRDTR_TAG_CorotCrdTransf3d  6
 #define CRDTR_TAG_LinearCrdTransf2dInt 7
 
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define CRDTR_TAG_RCFTCrdTransf3D   8
+#define CRDTR_TAG_RCFTCrdLinTransf3D   9
+#define CRDTR_TAG_RCFTSTLCrdTransf3D 10
+#define CRDTR_TAG_RCFTSTLLinCrdTransf3D 11
+#define CRDTR_TAG_RCFTMCrdTransf3D  12
+#define CRDTR_TAG_RCFTMCrdLinTransf3D   13
+
 #define NOD_TAG_Node      	1
 #define NOD_TAG_DummyNode 	2
 
@@ -608,6 +649,9 @@
 #define CNSTRNT_TAG_MP_Joint2D          5
 #define CNSTRNT_TAG_MP_SimpleJoint2D    6
 #define CNSTRNT_TAG_MP_Joint3D          7
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define CNSTRNT_TAG_MD_Constraint       8
+// Adding HAJJAR_COMPOSITE: End /////////
 
 
 #define MATRIX_TAG_Matrix 	1
@@ -700,6 +744,11 @@
 #define INTEGRATOR_TAGS_TRBDF2                          34
 #define INTEGRATOR_TAGS_GeneralizedAlpha                35
 #define INTEGRATOR_TAGS_DisplacementPath                36
+
+// Adding HAJJAR_COMPOSITE: Begin /////////
+#define INTEGRATOR_TAGS_ArcLengthw              48
+#define INTEGRATOR_TAGS_ArcLengthy              49
+// Adding HAJJAR_COMPOSITE: End /////////
 
 #define LinSOE_TAGS_FullGenLinSOE		1
 #define LinSOE_TAGS_BandGenLinSOE		2

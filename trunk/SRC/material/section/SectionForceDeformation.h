@@ -53,6 +53,21 @@ class Response;
 #define SECTION_RESPONSE_MY		4
 #define SECTION_RESPONSE_VZ		5
 #define SECTION_RESPONSE_T		6	
+#define SECTION_RESPONSE_S              7
+
+#define SECTION_RESPONSE_Pc             8
+#define SECTION_RESPONSE_MYc            9
+#define SECTION_RESPONSE_MZc            10
+#define SECTION_RESPONSE_LYYc           11
+#define SECTION_RESPONSE_LZZc           12
+#define SECTION_RESPONSE_LYZc           13
+
+#define SECTION_RESPONSE_Ps             14
+#define SECTION_RESPONSE_MYs            15
+#define SECTION_RESPONSE_MZs            16
+#define SECTION_RESPONSE_LYYs           17
+#define SECTION_RESPONSE_LZZs           18
+#define SECTION_RESPONSE_LYZs           19
 
 class SectionForceDeformation : public Material
 {
