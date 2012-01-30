@@ -50,7 +50,7 @@ Matrix jacobian_x_u(*n,*n);
 	jacobian_x_u = theSNOPT->theProbabilityTransformation->getJacobian_x_u();
 	*/
 	theSNOPT->theProbabilityTransformation->transform_u_to_x(theSNOPT->u, theSNOPT->reliability_x);
-	theSNOPT->theProbabilityTransformation->getJacobian_x_to_u(theSNOPT->reliability_x, jacobian_x_u);
+	theSNOPT->theProbabilityTransformation->getJacobian_x_to_u(jacobian_x_u); // (theSNOPT->reliability_x, jacobian_x_u)
 
 
 	result = theSNOPT->theGFunEvaluator->runGFunAnalysis(theSNOPT->reliability_x);
@@ -157,7 +157,7 @@ if( *needF > 0 ) {
 	jacobian_x_u = theSNOPT->theProbabilityTransformation->getJacobian_x_u();
 	*/
 	theSNOPT->theProbabilityTransformation->transform_u_to_x(theSNOPT->u, theSNOPT->reliability_x);
-	theSNOPT->theProbabilityTransformation->getJacobian_x_to_u(theSNOPT->reliability_x, jacobian_x_u);
+	theSNOPT->theProbabilityTransformation->getJacobian_x_to_u(jacobian_x_u); // (theSNOPT->reliability_x, jacobian_x_u)
 
 
 
