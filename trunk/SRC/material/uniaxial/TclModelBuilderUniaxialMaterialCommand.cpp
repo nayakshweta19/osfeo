@@ -89,10 +89,22 @@
 
 #include <UniaxialJ2Plasticity.h>   // Quan 
 
+//CompositePackage
+#include <RCFTSlipMaterial.h>   //tort
+#include <RCFT_concMaterial.h>   //tort
+#include <RCFT_stlMaterial.h>    //tort
+#include <CCFT_concMaterial.h>   //Tort & Denavit
+#include <CCFT_stlMaterial.h>    //Tort & Denavit
+#include <Stl_beamMaterial.h>
+
 extern void *OPS_NewBilinMaterial(void);
 extern void *OPS_NewSAWSMaterial(void);
 extern void *OPS_NewSecantConcreteMaterial(void); //
-extern void *OPS_changManderConcrete01(void); //
+extern void *OPS_changManderConcrete01(void);  //   for CompositePackage
+extern void *OPS_sakinoSunConcrete04(void);    //   for CompositePackage
+extern void *OPS_shenSteel01(void);            //   for CompositePackage
+extern void *OPS_shenSteelCCFT(void);          //   for CompositePackage
+extern void *OPS_shenSteelRCFT(void);          //   for CompositePackage
 extern void *OPS_NewMCFTSteel01Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel02Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel03Material(void); //   for mcft/dsfm
@@ -895,7 +907,6 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       
     }
 
-
     else if (strcmp(argv[1],"Steel03") == 0) {
       // Check that there is the minimum number of arguments
       if (argc < 9) {
@@ -1167,8 +1178,6 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       theMaterial = new Concrete02(tag, fpc, epsc0, fpcu, epscu, rat, ft, Ets);
     }
     
-    
-    
     else if (strcmp(argv[1],"Hysteretic") == 0) {
       if (argc != 20 && argc != 19 && argc != 16 && argc != 15) {
 	opserr << "WARNING insufficient arguments\n";
@@ -1394,9 +1403,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	theMaterial = new Concrete04(tag, fpc, epsc0, epscu, Ec0);
       }
     }
-
-
-
+	
     else if (strcmp(argv[1],"Concrete06") == 0) {
 	if (argc < 12) {
 	    opserr << "WARNING insufficient arguments\n";
@@ -1472,9 +1479,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	// Parsing was successful, allocate the material
 	theMaterial = new Concrete06(tag, fc, eo, r, k, alphaC, fcr, ecr, b, alphaT);
     }
-
-    
-    
+	    
     else if (strcmp(argv[1], "Concrete07") == 0) {
       // Check to see if there are enough arquements
       if (argc < 11) {
@@ -1549,8 +1554,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       
       theMaterial = new Concrete07(tag, fpc, epsc0, Ec, fpt, epst0, xcrp, xcrn, r);
     }
-
-    
+	    
     else if (strcmp(argv[1],"Viscous") == 0) {
       if (argc < 5)
 	{
@@ -1810,6 +1814,320 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       
     }
 
+	// for CompositePackage ++ 
+    else if (strcmp(argv[1],"RCFTSlip") == 0) {
+      if (argc < 5) {
+        opserr << "WARNING insufficient arguments\n";
+        printCommand(argc,argv);
+        opserr << "Want: uniaxialMaterial RCFTSlip tag? E? epsy?" << endln;
+        return TCL_ERROR;
+      }
+      int tag;
+	  double E,Fy,Esh;
+	  if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+	    opserr << "WARNING invalid uniaxialMaterial RCFTSlip tag" << endln;
+	    return TCL_ERROR;
+	  }
+      if (Tcl_GetDouble(interp, argv[3], &Fy) != TCL_OK) {
+        opserr << "WARNING invalid Fy\n";
+        opserr << "uniaxialMaterial RCFTSlip: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[4], &E) != TCL_OK) {
+        opserr << "WARNING invalid E\n";
+        opserr << "uniaxialMaterial RCFTSlip: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[5], &Esh) != TCL_OK) {
+	    opserr << "WARNING invalid Esh\n";
+	    opserr << "uniaxialMaterial RCFTSlip: " << tag << endln;
+	    return TCL_ERROR;
+	  }
+	  theMaterial = new RCFTSlipMaterial(tag, Fy, E, Esh);
+    }
+
+    else if (strcmp(argv[1],"RCFT_stl") == 0) {
+        if (argc < 8) {
+            opserr << "WARNING insufficient arguments\n";
+            printCommand(argc,argv);
+            opserr << "Want: uniaxialMaterial RCFT_stl tag? Fy? Fu? es? depth? thickness? epo?" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        int tag;
+        double Fy, Fu, Es, D, t, epo;
+                                                                                                                             
+        if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+            opserr << "WARNING invalid uniaxialMaterial RCFT_stl tag" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[3], &Fy) != TCL_OK) {
+            opserr << "WARNING invalid Fy \n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[4], &Fu) != TCL_OK) {
+            opserr << "WARNING invalid Fu\n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[5], &Es) != TCL_OK) {
+            opserr << "WARNING invalid Es\n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[6], &D) != TCL_OK) {
+            opserr << "WARNING invalid D\n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[7], &t) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[8], &epo) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial RCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        // Parsing was successful, allocate the material
+        theMaterial = new RCFT_stlMaterial (tag, Fy, Fu, Es, D, t, epo);
+    }
+
+    else if (strcmp(argv[1],"CCFT_stl") == 0) {
+        if (argc < 8) {
+            opserr << "WARNING insufficient arguments\n";
+            printCommand(argc,argv);
+            opserr << "Want: uniaxialMaterial CCFT_stl tag? Fy? Fu? es? depth? thickness? epo?" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        int tag;
+        double Fy, Fu, Es, D, t, epo;
+                                                                                                                             
+        if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+            opserr << "WARNING invalid uniaxialMaterial CCFT_stl tag" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[3], &Fy) != TCL_OK) {
+            opserr << "WARNING invalid Fy \n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[4], &Fu) != TCL_OK) {
+            opserr << "WARNING invalid Fu\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[5], &Es) != TCL_OK) {
+            opserr << "WARNING invalid Es\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[6], &D) != TCL_OK) {
+            opserr << "WARNING invalid D\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[7], &t) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[8], &epo) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        // Parsing was successful, allocate the material
+        theMaterial = new CCFT_stlMaterial (tag, Fy, Fu, Es, D, t, epo);
+    }    
+
+    else if (strcmp(argv[1],"Stl_beam") == 0) {
+        if (argc < 10) {
+            opserr << "WARNING insufficient arguments\n";
+            printCommand(argc,argv);
+            opserr << "Want: uniaxialMaterial Stl_beam tag? Fy? Fu? es? depth? thickness? epo?" << endln;
+            return TCL_ERROR;
+        }
+
+        int tag;
+        double Fy, Fu, Es, BF, TF, HW, TW, epo;
+
+        if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+            opserr << "WARNING invalid uniaxialMaterial Stl_beam tag" << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[3], &Fy) != TCL_OK) {
+            opserr << "WARNING invalid Fy \n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[4], &Fu) != TCL_OK) {
+            opserr << "WARNING invalid Fu\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[5], &Es) != TCL_OK) {
+            opserr << "WARNING invalid Es\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[6], &BF) != TCL_OK) {
+            opserr << "WARNING invalid D\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[7], &TF) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[8], &HW) != TCL_OK) {
+            opserr << "WARNING invalid D\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[9], &TW) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetDouble(interp, argv[10], &epo) != TCL_OK) {
+            opserr << "WARNING invalid t\n";
+            opserr << "uniaxialMaterial Stl_beam: " << tag << endln;
+            return TCL_ERROR;
+        }
+
+        // Parsing was successful, allocate the material
+        theMaterial = new Stl_beamMaterial (tag, Fy, Fu, Es, BF, TF, HW, TW, epo);
+
+    }
+    
+	else if (strcmp(argv[1],"RCFT_conc") == 0) {
+        if (argc < 8) {
+            opserr << "WARNING insufficient arguments\n";
+            printCommand(argc,argv);
+	        opserr << "Want: uniaxialMaterial RCFT_conc tag? Fc? D? t? Fy? Es? " << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        int tag;
+        double Fc, D, t, Fy, Es;
+                                                                                                                             
+        if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+            opserr << "WARNING invalid uniaxialMaterial RCFT_conc tag" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[3], &Fc) != TCL_OK) {
+            opserr << "WARNING invalid fc (concrete compressive strength)\n";
+            opserr << "uniaxialMaterial RCFT_conc: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[4], &D) != TCL_OK) {
+            opserr << "WARNING invalid D (tube width)\n";
+            opserr << "uniaxialMaterial RCFT_conc: " << tag << endln;
+            return TCL_ERROR;
+        }
+         
+        if (Tcl_GetDouble(interp, argv[5], &t) != TCL_OK) {
+            opserr << "WARNING invalid t (tube thickness)\n";
+            opserr << "uniaxialMaterial RCFT_conc: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[6], &Fy) != TCL_OK) {
+            opserr << "WARNING invalid Fy (steel yield strength)\n";
+            opserr << "uniaxialMaterial RCFT_conc: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[7], &Es) != TCL_OK) {
+            opserr << "WARNING invalid Es (steel elastic modulus)\n";
+            opserr << "uniaxialMaterial RCFT_conc: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        // Parsing was successful, allocate the material
+        theMaterial = new RCFT_concMaterial (tag, Fc, D, t, Fy, Es);
+    }
+    
+    else if (strcmp(argv[1],"CCFT_conc") == 0) {
+        if (argc < 8) {
+            opserr << "WARNING insufficient arguments\n";
+            printCommand(argc,argv);
+	    opserr << "Want: uniaxialMaterial CCFT_conc tag? Fc? D? t? Fy? Es? " << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        int tag;
+        double Fc, D, t, Fy, Es;
+                                                                                                                             
+        if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+            opserr << "WARNING invalid uniaxialMaterial CCFT_stl tag" << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[3], &Fc) != TCL_OK) {
+            opserr << "WARNING invalid fc (concrete compressive strength)\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[4], &D) != TCL_OK) {
+            opserr << "WARNING invalid D (tube outer diameter)\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+         
+        if (Tcl_GetDouble(interp, argv[5], &t) != TCL_OK) {
+            opserr << "WARNING invalid t (tube thickenss)\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[6], &Fy) != TCL_OK) {
+            opserr << "WARNING invalid Fy (steel yield strength)\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        if (Tcl_GetDouble(interp, argv[7], &Es) != TCL_OK) {
+            opserr << "WARNING invalid Es (steel elastic modulus)\n";
+            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            return TCL_ERROR;
+        }
+                                                                                                                             
+        // Parsing was successful, allocate the material
+        theMaterial = new CCFT_concMaterial (tag, Fc, D, t, Fy, Es);
+    }
+	// for CompositePackages 
+
     else if ((strcmp(argv[1],"SAWSMaterial") == 0) || (strcmp(argv[1],"SAWS") == 0)) {
       void *theMat = OPS_NewSAWSMaterial();
       if (theMat != 0) 
@@ -1857,7 +2175,39 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	  else 
 	return TCL_ERROR;
 	}
+
+	else if ((strcmp(argv[1],"sakinoSunConcrete04") == 0) || (strcmp(argv[1],"sakinoSunConcrete") == 0)) {
+	  void *theMat = OPS_sakinoSunConcrete04();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+	}
+
+	else if ((strcmp(argv[1],"shenSteel01") == 0) || (strcmp(argv[1],"shenSteel") == 0)) {
+	  void *theMat = OPS_shenSteel01();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+	}
 	
+	else if ((strcmp(argv[1],"shenSteelCCFT") == 0) || (strcmp(argv[1],"CCFTSteel") == 0)) {
+	  void *theMat = OPS_shenSteelCCFT();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+	}
+
+	else if ((strcmp(argv[1],"shenSteelRCFT") == 0) || (strcmp(argv[1],"RCFTSteel") == 0)) {
+	  void *theMat = OPS_shenSteelRCFT();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+	}
+
 	else if ((strcmp(argv[1],"concrete09") == 0) || (strcmp(argv[1],"Concrete09") == 0)) {
 	  void *theMat = OPS_NewConcrete09Material();
 	  if (theMat != 0) 

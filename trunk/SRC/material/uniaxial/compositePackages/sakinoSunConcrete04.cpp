@@ -44,14 +44,15 @@
 #elif _MACOSX
 #define OPS_Export extern "C" __attribute__((visibility("default")))
 #else
-#define OPS_Export extern "C"
+//#define OPS_Export extern "C"
+#define OPS_Export
 #endif
 
-OPS_Export void
-localInit() 
-{
-  OPS_Error("sakinoSunConcrete04 unaxial material \nWritten by Mark D Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
-}
+//OPS_Export void
+//localInit() 
+//{
+//  OPS_Error("sakinoSunConcrete04 unaxial material \nWritten by Mark D Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
+//}
 
 // Documentation: Sakino and Sun Concrete Model
 // uniaxialMaterial sakinoSunConcrete04 $tag $fcc $ecc $Ec $W <$ft $et> <$beta>
