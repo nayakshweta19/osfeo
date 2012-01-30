@@ -41,12 +41,16 @@
 #include <GenericSection1d.h>
 //#include <GenericSectionNd.h>
 #include <SectionAggregator.h>
+#include <RCFTAggregator.h>
 //#include <FiberSection.h>
 #include <FiberSection2d.h>
 #include <FiberSection2dInt.h>
 #include <FiberSection3d.h>
 #include <FiberSectionGJ.h>
 #include <FiberSectionRepr.h>
+
+#include <RCFTFiberSection3D.h>
+#include <RCFTSTLFiberSection3D.h>
 
 //////////////////////////////////////////////////////////////////////////
 #include <RASTMFiberSection2d.h>
@@ -70,6 +74,26 @@
 #include <StraightReinfLayer.h>
 #include <CircReinfLayer.h>
 #include <ReinfBar.h>
+
+// compositePackage
+#include <tubePatch.h>
+#include <tubecornerPatch.h>
+#include <tubeflatPatch.h>
+#include <corePatch.h>
+#include <iPatch.h>
+#include <iwPatch.h>
+#include <ifPatch.h>
+#include <isPatch.h>
+#include <icPatch.h>
+#include <tubeCell.h>
+#include <tubecornerCell.h>
+#include <tubeflatCell.h>
+#include <coreCell.h>
+#include <iCell.h>
+#include <iwCell.h>
+#include <ifCell.h>
+#include <isCell.h>
+#include <icCell.h>
 
 #include <UniaxialFiber2d.h>
 #include <UniaxialFiber3d.h>
@@ -701,24 +725,24 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
     }
 
     else if (strcmp(argv[1],"AddDeformation") == 0 || strcmp(argv[1],"Aggregator") == 0) {
-	if (argc < 5) {
+	  if (argc < 5) {
 	    opserr << "WARNING insufficient arguments\n";
 	    opserr << "Want: section Aggregator tag? uniTag1? code1? ... <-section secTag?>" << endln;
 	    return TCL_ERROR;
 	}
-	    
-	int tag;
-	int secTag;
-	SectionForceDeformation *theSec = 0;
-	    
-	if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+	      
+	  int tag;
+	  int secTag;
+	  SectionForceDeformation *theSec = 0;
+	      
+	  if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
 	    opserr << "WARNING invalid Aggregator tag" << endln;
 	    return TCL_ERROR;		
 	}
-
-	int nArgs = argc-3;
-	
-	for (int ii = 5; ii < argc; ii++) {
+	  
+	  int nArgs = argc-3;
+	  
+	  for (int ii = 5; ii < argc; ii++) {
 	    if (strcmp(argv[ii],"-section") == 0 && ++ii < argc) {
 		if (Tcl_GetInt(interp, argv[ii], &secTag) != TCL_OK) {
 		    opserr << "WARNING invalid Aggregator tag" << endln;
@@ -737,28 +761,28 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
 		nArgs -= 2;
 	    }
 	}
-	
-	int nMats = nArgs / 2;
-	
-	if (nArgs%2 != 0) {
+	  
+	  int nMats = nArgs / 2;
+	  
+	  if (nArgs%2 != 0) {
 	    opserr << "WARNING improper number of arguments for Aggregator" << endln;
 	    return TCL_ERROR;
 	}
-	
-	UniaxialMaterial **theMats = 0;
-	ID codes(nMats);
-	
-	theMats = new UniaxialMaterial *[nMats];
-	
-	if (theMats == 0) {
+	  
+	  UniaxialMaterial **theMats = 0;
+	  ID codes(nMats);
+	  
+	  theMats = new UniaxialMaterial *[nMats];
+	  
+	  if (theMats == 0) {
 	    opserr << "TclModelBuilderSection (Aggregator) -- unable to create uniaxial array" << endln;
 	    return TCL_ERROR;
 	}	
-	
-	int tagI;
-	int i, j;
-	
-	for (i = 3, j = 0; j < nMats; i++, j++) {
+	  
+	  int tagI;
+	  int i, j;
+	  
+	  for (i = 3, j = 0; j < nMats; i++, j++) {
 	    if (Tcl_GetInt(interp, argv[i], &tagI) != TCL_OK) {
 		opserr << "WARNING invalid Aggregator matTag" << endln;
 		return TCL_ERROR;		
@@ -793,15 +817,118 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
 		return TCL_ERROR;		
 	    }
 	}
-	
-	if (theSec)
-	    theSection = new SectionAggregator (tag, *theSec, nMats, theMats, codes);
-	else
-	    theSection = new SectionAggregator (tag, nMats, theMats, codes);
-	
-	delete [] theMats;
+	  
+	  if (theSec)
+	      theSection = new SectionAggregator (tag, *theSec, nMats, theMats, codes);
+	  else
+	      theSection = new SectionAggregator (tag, nMats, theMats, codes);
+	  
+	  delete [] theMats;
     }		
     
+	// for CompositePackage
+    else if (strcmp(argv[1],"RCFTAggregator") == 0) {
+	  if (argc < 5) {
+	      opserr << "WARNING insufficient arguments\n";
+	      opserr << "Want: section RCFTAggregator tag? uniTag1? code1? ... <-section secTag?>" << endln;
+	      return TCL_ERROR;
+	  }
+	      
+	  int tag;
+	  int secTag;
+	  SectionForceDeformation *theSec = 0;
+	      
+	  if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+	    opserr << "WARNING invalid Aggregator tag" << endln;
+	    return TCL_ERROR;		
+	}
+	  
+	  int nArgs = argc-3;
+	  
+	  for (int ii = 5; ii < argc; ii++) {
+	    if (strcmp(argv[ii],"-section") == 0 && ++ii < argc) {
+		if (Tcl_GetInt(interp, argv[ii], &secTag) != TCL_OK) {
+		    opserr << "WARNING invalid Aggregator tag" << endln;
+		    return TCL_ERROR;		
+		}
+		
+		theSec = theTclBuilder->getSection(secTag);
+		
+		if (theSec == 0) {
+		    opserr << "WARNING section does not exist\n";
+		    opserr << "section: " << secTag; 
+		    opserr << "\nsection Aggregator: " << tag << endln;
+		    return TCL_ERROR;
+		}
+		
+		nArgs -= 2;
+	    }
+	}
+	  
+	  int nMats = nArgs / 2;
+	  
+	  if (nArgs%2 != 0) {
+	    opserr << "WARNING improper number of arguments for Aggregator" << endln;
+	    return TCL_ERROR;
+	}
+	  
+	  UniaxialMaterial **theMats = 0;
+	  ID codes(nMats);
+	  
+	  theMats = new UniaxialMaterial *[nMats];
+	  
+	  if (theMats == 0) {
+	    opserr << "TclModelBuilderSection (Aggregator) -- unable to create uniaxial array" << endln;
+	    return TCL_ERROR;
+	}	
+	  
+	  int tagI;
+	  int i, j;
+	  
+	  for (i = 3, j = 0; j < nMats; i++, j++) {
+	    if (Tcl_GetInt(interp, argv[i], &tagI) != TCL_OK) {
+		opserr << "WARNING invalid Aggregator matTag" << endln;
+		return TCL_ERROR;		
+	    }
+	    
+	    theMats[j] = OPS_getUniaxialMaterial(tagI);
+	    
+	    if (theMats[j] == 0) {
+		opserr << "WARNING uniaxial material does not exist\n";
+		opserr << "uniaxial material: " << tagI; 
+		opserr << "\nsection Aggregator: " << tag << endln;
+		return TCL_ERROR;
+	    }
+	    
+	    i++;
+	    
+	    if (strcmp(argv[i],"Mz") == 0)
+		codes(j) = SECTION_RESPONSE_MZ;
+	    else if (strcmp(argv[i],"P") == 0)
+		codes(j) = SECTION_RESPONSE_P;
+	    else if (strcmp(argv[i],"Vy") == 0)
+		codes(j) = SECTION_RESPONSE_VY;
+	    else if (strcmp(argv[i],"My") == 0)
+		codes(j) = SECTION_RESPONSE_MY;
+	    else if (strcmp(argv[i],"Vz") == 0)
+		codes(j) = SECTION_RESPONSE_VZ;
+	    else if (strcmp(argv[i],"T") == 0)
+		codes(j) = SECTION_RESPONSE_T;
+	    else if (strcmp(argv[i],"S") == 0)
+		codes(j) = SECTION_RESPONSE_S;
+	    else {
+		opserr << "WARNING invalid code" << endln;
+		opserr << "\nsection Aggregator: " << tag << endln;
+		return TCL_ERROR;		
+	    }
+	}
+	  
+	  if (theSec){
+	    theSection = new RCFTAggregator(tag, *theSec, nMats, theMats, codes);
+	}
+	  delete [] theMats;
+    }	
+
     else if (strcmp(argv[1],"Fiber") == 0 || strcmp(argv[1],"fiberSec") == 0)
 	    return TclCommand_addFiberSection (clientData, interp, argc, argv,
 						theTclBuilder);
@@ -1075,7 +1202,8 @@ static int currentSectionTag = 0;
     
 int
 buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
-	     int secTag, bool isTorsion, double GJ);
+	     int secTag, bool isTorsion, bool isRCFT, bool isRCFTSTL,
+		 double GJ, double D, double B, double T);
 
 int
 buildSectionInt(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
@@ -1142,6 +1270,9 @@ TclCommand_addFiberSection (ClientData clientData, Tcl_Interp *interp, int argc,
     int brace = 3; // Start of recursive parse
     double GJ = 1.0;
     bool isTorsion = false;
+	bool isRCFT = false;
+	bool isRCFTSTL = false;
+	double D, B, T;
     if (strcmp(argv[3],"-GJ") == 0) {
       if (Tcl_GetDouble(interp, argv[4], &GJ) != TCL_OK) {
 	interp->result = "WARNING invalid GJ";
@@ -1151,16 +1282,46 @@ TclCommand_addFiberSection (ClientData clientData, Tcl_Interp *interp, int argc,
       brace = 5;
     }
 
-    // parse the information inside the braces (patches and reinforcing layers)
-    if (Tcl_Eval(interp, argv[brace]) != TCL_OK) {
-	opserr << "WARNING - error reading information in { } \n";
+    if (strcmp(argv[3],"-RCFTSTL") == 0) {
+      if (Tcl_GetDouble(interp, argv[4], &GJ) != TCL_OK) {
+	interp->result = "WARNING invalid GJ";
 	return TCL_ERROR;
+      }
+      isRCFTSTL = true;
+      brace = 5;
+    }
+    
+    if (strcmp(argv[3],"-RCFT") == 0) {
+      if (Tcl_GetDouble(interp, argv[4], &GJ) != TCL_OK) {
+        interp->result = "WARNING invalid GJ";
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[5], &D) != TCL_OK) {
+	interp->result = "WARNING invalid D";
+	return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[6], &B) != TCL_OK) {
+	interp->result = "WARNING invalid B";
+	return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[7], &T) != TCL_OK) {
+	interp->result = "WARNING invalid t";
+	return TCL_ERROR;
+      }
+      isRCFT = true;
+      brace = 8;
+    }
+    
+	// parse the information inside the braces (patches and reinforcing layers)
+    if (Tcl_Eval(interp, argv[brace]) != TCL_OK) {
+	  opserr << "WARNING - error reading information in { } \n";
+	  return TCL_ERROR;
     }
 
     // build the fiber section (for analysis)
-    if (buildSection(interp, theTclModelBuilder, secTag, isTorsion, GJ) != TCL_OK) {
-	opserr << "WARNING - error constructing the section\n";
-	return TCL_ERROR;
+    if (buildSection(interp, theTclModelBuilder, secTag, isTorsion, isRCFT, isRCFTSTL, GJ, D, B, T) != TCL_OK) {
+	  opserr << "WARNING - error constructing the section\n";
+	  return TCL_ERROR;
     }
     
 //    currentSectionTag = 0;
@@ -1697,20 +1858,20 @@ int
 TclCommand_addPatch(ClientData clientData, Tcl_Interp *interp, int argc, 
 			     TCL_Char **argv, TclModelBuilder *theTclModelBuilder)
 {
-    // check if a section is being processed
-    if (currentSectionTag == 0) {
-	opserr <<  "WARNING subcommand 'patch' is only valid inside a 'section' command\n";
-	return TCL_ERROR;
+   // check if a section is being processed
+   if (currentSectionTag == 0) {
+	  opserr <<  "WARNING subcommand 'patch' is only valid inside a 'section' command\n";
+	  return TCL_ERROR;
     }	   
-    
-    // make sure at least one other argument to contain patch type
-    if (argc < 2) {
-	opserr <<  "WARNING need to specify a patch type \n";
-	return TCL_ERROR;
+   
+   // make sure at least one other argument to contain patch type
+   if (argc < 2) {
+	  opserr <<  "WARNING need to specify a patch type \n";
+	  return TCL_ERROR;
     }    
 
-    // check argv[1] for type of patch  and create the object
-    if (strcmp(argv[1], "quad") == 0 || strcmp(argv[1], "quadr") == 0) {
+   // check argv[1] for type of patch  and create the object
+   if (strcmp(argv[1], "quad") == 0 || strcmp(argv[1], "quadr") == 0) {
 	int numSubdivIJ, numSubdivJK, matTag, secTag;
 	double vertexCoordY, vertexCoordZ;
 	static Matrix vertexCoords(4,2);
@@ -1805,10 +1966,10 @@ TclCommand_addPatch(ClientData clientData, Tcl_Interp *interp, int argc,
          return TCL_ERROR;
       }  
   }
-    
-    
-    // check argv[1] for type of patch  and create the object
-    else if (strcmp(argv[1], "rect") == 0 || 
+   
+   
+   // check argv[1] for type of patch  and create the object
+   else if (strcmp(argv[1], "rect") == 0 || 
 	     strcmp(argv[1], "rectangular") == 0) {
 	
 	int numSubdivIJ, numSubdivJK, matTag, secTag;
@@ -1896,11 +2057,8 @@ TclCommand_addPatch(ClientData clientData, Tcl_Interp *interp, int argc,
          return TCL_ERROR;
       }  
   }    
-    
-    
-    
-         
-    else if (strcmp(argv[1], "circ") == 0) {
+            
+   else if (strcmp(argv[1], "circ") == 0) {
 	int numSubdivRad, numSubdivCirc, matTag, secTag;
 	double yCenter, zCenter;
 	static Vector centerPosition(2);
@@ -2025,6 +2183,833 @@ TclCommand_addPatch(ClientData clientData, Tcl_Interp *interp, int argc,
          return TCL_ERROR;
       }
    }
+
+   // CompositePakcage
+   else if (strcmp(argv[1], "tube") == 0) {
+	
+	int sfl_d, sfl_b, swl_d, swl_b, matTag, secTag;
+	double D, B, t;
+	int j, argi;
+
+	if (argc < 10) {
+	    opserr <<  "WARNING invalid number of parameters: patch  tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &D) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivIJ: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &B) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &t) != TCL_OK) {
+            opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+        }
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      tubePatch *patch = new tubePatch(matTag, D, B, t, sfl_d, sfl_b, swl_d, swl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      //opserr << "\n\tpatch: " << *patch;
+      
+      // add patch to section representation
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "tubecorner") == 0) {
+	
+	int sfl_d,  matTag, secTag;
+	double D, B, t;
+	int j, argi;
+
+	if (argc < 7) {
+	    opserr <<  "WARNING invalid number of parameters: patch  tubecorner  matTag  D  B  t  sfl_d \n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch tube  matTag  D  B  t  sfl_d \n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &D) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivIJ: patch tube  matTag  D  B  t  sfl_d  \n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &B) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  \n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &t) != TCL_OK) {
+            opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  \n";
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  sfl_d  \n";
+	    return TCL_ERROR;
+	}
+
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      tubecornerPatch *patch = new tubecornerPatch(matTag, D, B, t, sfl_d);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      //opserr << "\n\tpatch: " << *patch;
+      
+      // add patch to section representation
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "tubeflat") == 0) {
+	
+	int sfl_d, sfl_b, swl_d, swl_b, matTag, secTag;
+	double D, B, t;
+	int j, argi;
+
+	if (argc < 10) {
+	    opserr <<  "WARNING invalid number of parameters: patch  tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &D) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivIJ: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &B) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &t) != TCL_OK) {
+            opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tubeflat  matTag  D  B  t  sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+        }
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      tubeflatPatch *patch = new tubeflatPatch(matTag, D, B, t, sfl_d, sfl_b, swl_d, swl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      // add patch to section representation
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+  
+   else if (strcmp(argv[1], "i-section") == 0) {
+	
+	int sfl_d, sfl_b, swl_d, swl_b, matTag, secTag;
+	double d, b, tf, tw, fillet;
+	int j, argi;
+
+	if (argc < 12) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-section  matTag  D  B  tf tw fillet  sfl_d sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &d) != TCL_OK) {
+	    opserr <<  "WARNING invalid D: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &b) != TCL_OK) {
+	    opserr <<  "WARNING invalid B: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &tf) != TCL_OK) {
+            opserr <<  "WARNING invalid tf: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+            return TCL_ERROR;
+        }
+
+	if (Tcl_GetDouble(interp, argv[argi++], &tw) != TCL_OK) {
+	    opserr <<  "WARNING invalid tw: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+	 
+	if (Tcl_GetDouble(interp, argv[argi++], &fillet) != TCL_OK) {
+	   opserr <<  "WARNING invalid fillet: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	   return TCL_ERROR;
+	}
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+        }
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      iPatch *patch = new iPatch(matTag, d, b, tf, tw, fillet, sfl_d, sfl_b, swl_d, swl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "i-fsection") == 0) {
+	
+	int sfl_d, sfl_b, swl_d, swl_b, matTag, secTag;
+	double d, b, tf, tw, fillet;
+	int j, argi;
+
+	if (argc < 12) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-section  matTag  D  B  tf tw fillet  sfl_d sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &d) != TCL_OK) {
+	    opserr <<  "WARNING invalid D: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &b) != TCL_OK) {
+	    opserr <<  "WARNING invalid B: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &tf) != TCL_OK) {
+            opserr <<  "WARNING invalid tf: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+            return TCL_ERROR;
+        }
+
+	if (Tcl_GetDouble(interp, argv[argi++], &tw) != TCL_OK) {
+	    opserr <<  "WARNING invalid tw: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+	 
+	if (Tcl_GetDouble(interp, argv[argi++], &fillet) != TCL_OK) {
+	   opserr <<  "WARNING invalid fillet: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	   return TCL_ERROR;
+	}
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+        }
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      ifPatch *patch = new ifPatch(matTag, d, b, tf, tw, fillet, sfl_d, sfl_b, swl_d, swl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "i-wsection") == 0) {
+	
+	int sfl_d, sfl_b, swl_d, swl_b, matTag, secTag;
+	double d, b, tf, tw, fillet;
+	int j, argi;
+
+	if (argc < 12) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-section  matTag  D  B  tf tw fillet  sfl_d sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &d) != TCL_OK) {
+	    opserr <<  "WARNING invalid D: patch i-section  matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &b) != TCL_OK) {
+	    opserr <<  "WARNING invalid B: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &tf) != TCL_OK) {
+            opserr <<  "WARNING invalid tf: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+            return TCL_ERROR;
+        }
+
+	if (Tcl_GetDouble(interp, argv[argi++], &tw) != TCL_OK) {
+	    opserr <<  "WARNING invalid tw: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+	 
+	if (Tcl_GetDouble(interp, argv[argi++], &fillet) != TCL_OK) {
+	   opserr <<  "WARNING invalid fillet: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	   return TCL_ERROR;
+	}
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid sfl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_d: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &swl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid swl_b: patch i-section matTag  D  B  tf tw fillet sfl_d  sfl_b  swl_d  swl_b\n";
+	    return TCL_ERROR;
+        }
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      iwPatch *patch = new iwPatch(matTag, d, b, tf, tw, fillet, sfl_d, sfl_b, swl_d, swl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "i-ssection") == 0) {
+	
+	int n, matTag, secTag;
+	double d, b, tf, area;
+	int j, argi;
+
+	if (argc < 8) {
+	    opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &d) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &b) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &tf) != TCL_OK) {
+            opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+            return TCL_ERROR;
+        }
+
+	if (Tcl_GetInt(interp, argv[argi++], &n) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	    return TCL_ERROR;
+	}
+	 
+	if (Tcl_GetDouble(interp, argv[argi++], &area) != TCL_OK) {
+	   opserr <<  "WARNING invalid matTag: patch i-ssection  matTag  D  B  tf n area\n";
+	   return TCL_ERROR;
+	}
+
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      isPatch *patch = new isPatch(matTag, d, b, tf, n, area);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }
+   
+   else if (strcmp(argv[1], "i-csection") == 0) {
+	
+	int sfl_d, sfl_b, matTag, secTag;
+	double d, b, tf;
+	int j, argi;
+
+	if (argc < 8) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &d) != TCL_OK) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &b) != TCL_OK) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &tf) != TCL_OK) {
+            opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &sfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &sfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid number of parameters: patch  i-csection  matTag  D  B  tf  sfl_d  sfl_b\n";
+	    return TCL_ERROR;
+	}
+
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      icPatch *patch = new icPatch(matTag, d, b, tf, sfl_d, sfl_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }  
+
+   else if (strcmp(argv[1], "core") == 0) {
+	
+	int cfl_d, cfl_b, cwl_d, cwl_b, matTag, secTag, cc_d, cc_b;
+	double D, B, t;
+	int j, argi;
+
+	if (argc < 12) {
+	    opserr <<  "WARNING invalid number of parameters: patch  tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b  cc_d  cc_b\n";
+	    return TCL_ERROR;
+	}
+  
+	argi = 2;
+      
+	if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK) {
+	    opserr <<  "WARNING invalid matTag: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b  cc_d  cc_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[argi++], &D) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivIJ: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d  cc_b\n";
+	    return TCL_ERROR;
+	}
+ 
+	if (Tcl_GetDouble(interp, argv[argi++], &B) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+
+        if (Tcl_GetDouble(interp, argv[argi++], &t) != TCL_OK) {
+            opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+            return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &cfl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+
+
+	if (Tcl_GetInt(interp, argv[argi++], &cfl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &cwl_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &cwl_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+        }
+
+        if (Tcl_GetInt(interp, argv[argi++], &cc_d) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &cc_b) != TCL_OK) {
+	    opserr <<  "WARNING invalid numSubdivJK: patch tube  matTag  D  B  t  cfl_d  cfl_b  cwl_d  cwl_b cc_d cc_b\n";
+	    return TCL_ERROR;
+	}
+	 
+      // get section representation
+      secTag = currentSectionTag;
+      
+      SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
+      if (sectionRepres == 0) {
+         opserr <<  "WARNING cannot retrieve section\n";
+         return TCL_ERROR;
+      }    
+     
+      if (sectionRepres->getType() != SEC_TAG_FiberSection) {
+         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         return TCL_ERROR;
+      }
+
+      FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
+
+      // create patch
+
+      corePatch *patch = new corePatch(matTag, D, B, t, cfl_d, cfl_b, cwl_d, cwl_b, cc_d, cc_b);
+      
+      if (!patch)
+      {
+         opserr <<  "WARNING cannot alocate patch\n";
+         return TCL_ERROR;
+      }
+
+      //opserr << "\n\tpatch: " << *patch;
+      
+      // add patch to section representation
+
+      int error = fiberSectionRepr->addPatch(*patch);
+      delete patch;
+      
+      if (error)
+      {
+         opserr <<  "WARNING cannot add patch to section\n";
+         return TCL_ERROR;
+      }  
+  }    
 
    else
    {
@@ -3293,7 +4278,8 @@ TclCommand_add3dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
 // build the section
 int 
 buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
-	     int secTag, bool isTorsion, double GJ)
+	     int secTag, bool isTorsion, bool isRCFT, bool isRCFTSTL, 
+		 double GJ, double D, double B, double T)
 {
    SectionRepres *sectionRepres = theTclModelBuilder->getSectionRepres(secTag);
    if (sectionRepres == 0) 
@@ -3366,12 +4352,12 @@ buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
       
          for (j = 0; j < numCells; j++)
          {
-	    fibersMaterial(k) = matTag;
+	        fibersMaterial(k) = matTag;
             fibersArea(k)     = cell[j]->getArea();
             fiberPosition     = cell[j]->getCentroidPosition();
 
             fibersPosition(0,k) = fiberPosition(0);
-	    fibersPosition(1,k) = fiberPosition(1);
+	        fibersPosition(1,k) = fiberPosition(1);
 	      
             k++;
          }
@@ -3393,12 +4379,12 @@ buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
    
          for (j = 0; j < numReinfBars; j++)
          {
-	    fibersMaterial(k) = matTag; 
+	        fibersMaterial(k) = matTag; 
             fibersArea(k)     = reinfBar[j].getArea();
             fiberPosition     = reinfBar[j].getPosition();
      
-	    fibersPosition(0,k) = fiberPosition(0);
-	    fibersPosition(1,k) = fiberPosition(1);
+	        fibersPosition(0,k) = fiberPosition(0);
+	        fibersPosition(1,k) = fiberPosition(1);
 	
             k++;
          }
@@ -3412,8 +4398,8 @@ buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
       Fiber **fiber = new Fiber *[numFibers];
       if (fiber == 0) {
-	  opserr <<  "WARNING unable to allocate fibers \n";
-	  return TCL_ERROR;
+	    opserr <<  "WARNING unable to allocate fibers \n";
+	    return TCL_ERROR;
       }          
       
       // copy the section repres fibers
