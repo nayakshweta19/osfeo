@@ -51,7 +51,7 @@
 #include <FEM_ObjectBroker.h>
 #include <PenaltySP_FE.h>
 #include <PenaltyMP_FE.h>
-
+#include <PenaltyMD_FE.h>
 
 PenaltyConstraintHandler::PenaltyConstraintHandler(double sp, double mp)
 :ConstraintHandler(HANDLER_TAG_PenaltyConstraintHandler),
@@ -200,12 +200,23 @@ PenaltyConstraintHandler::handle(const ID *nodesLast)
 
     MP_ConstraintIter &theMPs = theDomain->getMPs();
     while ((mpPtr = theMPs()) != 0) {
+   	  if( mpPtr->getNodeConstrained() != mpPtr->getNodeRetained() ) {
 	if ((fePtr = new PenaltyMP_FE(numFeEle, *theDomain, *mpPtr, alphaMP)) == 0) {
 	    opserr << "WARNING PenaltyConstraintHandler::handle()";
 	    opserr << " - ran out of memory";
 	    opserr << " creating PenaltyMP_FE " << endln; 
 	    return -5;
-	}		
+	}
+	  }
+	  else if( mpPtr->getNodeConstrained() == mpPtr->getNodeRetained() ) {
+	if ((fePtr = new PenaltyMD_FE(numFeEle, *theDomain, *mpPtr, alphaMP)) == 0) {
+		opserr << "WARNING PenaltyConstraintHandler::handle()";
+		opserr << " - ran out of memory";
+		opserr << " creating PenaltyMD_FE " << endln;
+		return -5;
+	}
+	  }
+	
 	theModel->addFE_Element(fePtr);
 	numFeEle++;
     }	        

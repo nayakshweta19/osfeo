@@ -762,14 +762,14 @@ RCFTGMBeamColumn3D::commitState()
 
 int RCFTGMBeamColumn3D::revertToLastCommit()
 {
-   ofstream DU;
-   DU.open("DU.dat",ios::app);
+   //ofstream DU;
+   //DU.open("DU.dat",ios::app);
 
-   ofstream FS;
-   FS.open("integrator.dat",ios::app);
+   //ofstream FS;
+   //FS.open("integrator.dat",ios::app);
 
-   ofstream mdc;
-   mdc.open("mdc.dat",ios::app);
+   //ofstream mdc;
+   //mdc.open("mdc.dat",ios::app);
 
    int err;
    int i = 0;
@@ -1081,7 +1081,7 @@ RCFTGMBeamColumn3D::getTangentStiff(void)
   //ofstream gstf;
   //gstf.open("gstf2.dat",ios::app);
 
-  int i;  
+  //int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
 
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
@@ -1154,47 +1154,47 @@ RCFTGMBeamColumn3D::initializeSectionHistoryVariables (void)
 /********* NEWTON , SUBDIVIDE AND INITIAL ITERATIONS *********************/
 int RCFTGMBeamColumn3D::update()
 {
-  ofstream geom;
-  geom.open("geom.dat",ios::app);
-
-  ofstream unbal;
-  unbal.open("unbal.dat",ios::app);
-
-  ofstream mpls;
-  mpls.open("mpls.dat",ios::app);
-
-  ofstream lstiff;
-  lstiff.open("lstiff.dat",ios::app);
-
-  ofstream newton19;
-  newton19.open("newton19.dat",ios::app);
-
-  ofstream FS;
-  FS.open("FS.dat",ios::app);
-
-  ofstream FN;
-  FN.open("FN.dat",ios::app);
-   
-  ofstream VV;
-  VV.open("VV.dat",ios::app);
-
-  ofstream dq;
-  dq.open("DQ.dat",ios::app);
-
-  ofstream DH;
-  DH.open("DH.dat",ios::app);
-
-  ofstream DU;
-  DU.open("DU.dat",ios::app);
-
-  ofstream check3;
-  check3.open("check3.dat",ios::app);
-
-  ofstream integrator;
-  integrator.open("integrator.dat",ios::app);
-
-  ofstream eig;
-  eig.open("eig.dat",ios::app);
+  //ofstream geom;
+  //geom.open("geom.dat",ios::app);
+  //
+  //ofstream unbal;
+  //unbal.open("unbal.dat",ios::app);
+  //
+  //ofstream mpls;
+  //mpls.open("mpls.dat",ios::app);
+  //
+  //ofstream lstiff;
+  //lstiff.open("lstiff.dat",ios::app);
+  //
+  //ofstream newton19;
+  //newton19.open("newton19.dat",ios::app);
+  //
+  //ofstream FS;
+  //FS.open("FS.dat",ios::app);
+  //
+  //ofstream FN;
+  //FN.open("FN.dat",ios::app);
+  // 
+  //ofstream VV;
+  //VV.open("VV.dat",ios::app);
+  //
+  //ofstream dq;
+  //dq.open("DQ.dat",ios::app);
+  //
+  //ofstream DH;
+  //DH.open("DH.dat",ios::app);
+  //
+  //ofstream DU;
+  //DU.open("DU.dat",ios::app);
+  //
+  //ofstream check3;
+  //check3.open("check3.dat",ios::app);
+  //
+  //ofstream integrator;
+  //integrator.open("integrator.dat",ios::app);
+  //
+  //ofstream eig;
+  //eig.open("eig.dat",ios::app);
 
   if( cnvg == 1 ){
     cnvg = 0;
@@ -1209,9 +1209,9 @@ int RCFTGMBeamColumn3D::update()
 
   intgr = 0;
 
-  mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+  //mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
-  dq<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+  //dq<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
   //FS<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
@@ -1221,8 +1221,8 @@ int RCFTGMBeamColumn3D::update()
 
   double L = getDeformedLength();
 
-  mpls<<"Length"<<endl;
-  mpls<<L<<endl;
+  //mpls<<"Length"<<endl;
+  //mpls<<L<<endl;
 
   double oneOverL  = 1.0/L;
 
@@ -1301,9 +1301,9 @@ int RCFTGMBeamColumn3D::update()
 
   if( recoveryflag == 0 ){
 
-  mpls<<"Nd2"<<endl;	   
+  //mpls<<"Nd2"<<endl;	   
   for ( i = 0; i < numSections; i++ ){
-      eig<<xi[i]<<endl;
+      //eig<<xi[i]<<endl;
       nldhat[i] = this->getNld_hat(i, ub);
       nldhatsc[i] = this->getNld_hatsc(i, ub);
       dhat[i] = this->getd_hat(i, ub);
@@ -1340,8 +1340,8 @@ int RCFTGMBeamColumn3D::update()
 
   V.Zero();
   
-  double temp_x, temp_A, temp_B, temp_C, temp_D;
-  double d_d[6];
+  double temp_x, temp_A, temp_B;
+//  double d_d[6];, temp_C, temp_D
 
   for( i = 0; i < numSections; i++ ){
        V = V + L * wt[i] * nd1T[i] * (dhat[i] - duhat[i] -  ( fs[i] * ( DQ[i] - DSQ[i] ) ) );
@@ -1761,7 +1761,7 @@ int RCFTGMBeamColumn3D::update()
   {
       double temp_x,temp_A,temp_B;
       double slp_strn;
-      double slp_force;
+//      double slp_force;
       temp_x = L * xi[i];
       temp_A = - temp_x/L + 2 * temp_x * temp_x / ( L * L );
       temp_B = - 4 * temp_x * temp_x / ( L * L ) + 4 * temp_x / L;
@@ -2503,8 +2503,8 @@ Vector
 RCFTGMBeamColumn3D::getLocalIncrDeltaDisp(void)
 {
 
-    ofstream newton;
-    newton.open("newton.dat",ios::app);
+    //ofstream newton;
+    //newton.open("newton.dat",ios::app);
 	
     const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();
     const Vector &disp2 = theNodes[1]->getIncrDeltaDisp();
@@ -2900,8 +2900,8 @@ RCFTGMBeamColumn3D::getNd2(int sec)
     double wt[maxNumSections];
     beamIntegr->getSectionWeights(numSections, L, wt);
 
-    double temp_x, temp_A, temp_B, temp_C, temp_D;
-
+    double temp_x, temp_A, temp_B;
+//, temp_C, temp_D
     temp_x = L * xi[sec];
 
     Matrix Nd2(6,13);
@@ -2994,8 +2994,8 @@ RCFTGMBeamColumn3D::getKg(int sec)
 Matrix
 RCFTGMBeamColumn3D::getNd1(int sec, const Vector &v)
 {
-    ofstream newton;
-    newton.open("newton.dat",ios::app);
+    //ofstream newton;
+    //newton.open("newton.dat",ios::app);
 
     double L = getDeformedLength();
     double oneOverL  = 1.0/L;

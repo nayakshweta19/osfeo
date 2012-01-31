@@ -378,11 +378,11 @@ RCFTDBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTDBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
 
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
    
    int err = 0;
    int i = 0;
@@ -395,7 +395,7 @@ RCFTDBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -907,7 +907,7 @@ RCFTDBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTDBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+  //int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
 	
@@ -1010,7 +1010,7 @@ int RCFTDBeamColumn3D::update()
   {
       double temp_x,temp_A,temp_B;
       double slp_strn;
-      double slp_force;
+//      double slp_force;
       temp_x = L * xi[i];
       temp_A = - temp_x/L + 2 * temp_x * temp_x / ( L * L );
       temp_B = - 4 * temp_x * temp_x / ( L * L ) + 4 * temp_x / L;
@@ -2419,7 +2419,8 @@ RCFTDBeamColumn3D::getNd2(int sec)
     double wt[maxNumSections];
     beamIntegr->getSectionWeights(numSections, L, wt);
 
-    double temp_x, temp_A, temp_B, temp_C, temp_D;
+    double temp_x, temp_A, temp_B;
+//	, temp_C, temp_D
 
     temp_x = L * xi[sec];
 
@@ -2449,8 +2450,8 @@ RCFTDBeamColumn3D::getNd2(int sec)
 Matrix
 RCFTDBeamColumn3D::getNd1(int sec, const Vector &v)
 {
-    ofstream newton;
-    newton.open("newton.dat",ios::app);
+    //ofstream newton;
+    //newton.open("newton.dat",ios::app);
 
     //double L = crdTransf->getInitialLength();
 
@@ -2510,8 +2511,8 @@ RCFTDBeamColumn3D::getNd1(int sec, const Vector &v)
 void RCFTDBeamColumn3D::calcDeformedLength(void)
 {
 
-   ofstream uiuc;
-   uiuc.open("uiuc.dat",ios::app);
+   //ofstream uiuc;
+   //uiuc.open("uiuc.dat",ios::app);
 
    const Vector &dispi = theNodes[0]->getTrialDisp();
    const Vector &dispj = theNodes[1]->getTrialDisp();

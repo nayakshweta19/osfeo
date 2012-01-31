@@ -1010,7 +1010,7 @@ RCFTMBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTMBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
 	
@@ -1199,8 +1199,8 @@ int RCFTMBeamColumn3D::update()
 
   V.Zero();
   
-  double temp_x, temp_A, temp_B, temp_C, temp_D;
-  double d_d[6];
+  double temp_x, temp_A, temp_B;
+//  double d_d[6];, temp_C, temp_D
 
   for( i = 0; i < numSections; i++ ){
        V = V + L * wt[i] * nd1T[i] * (dhat[i] - duhat[i] -  ( fs[i] * ( DQ[i] - DSQ[i] ) ) );
@@ -1545,7 +1545,7 @@ int RCFTMBeamColumn3D::update()
   {
       double temp_x,temp_A,temp_B;
       double slp_strn;
-      double slp_force;
+//      double slp_force;
       temp_x = L * xi[i];
       temp_A = - temp_x/L + 2 * temp_x * temp_x / ( L * L );
       temp_B = - 4 * temp_x * temp_x / ( L * L ) + 4 * temp_x / L;
@@ -3077,8 +3077,8 @@ RCFTMBeamColumn3D::getNd2(int sec)
     double wt[maxNumSections];
     beamIntegr->getSectionWeights(numSections, L, wt);
 
-    double temp_x, temp_A, temp_B, temp_C, temp_D;
-
+    double temp_x, temp_A, temp_B;
+//, temp_C, temp_D
     temp_x = L * xi[sec];
 
     Matrix Nd2(6,12);
@@ -3107,8 +3107,8 @@ RCFTMBeamColumn3D::getNd2(int sec)
 Matrix
 RCFTMBeamColumn3D::getNd1(int sec, const Vector &v)
 {
-    ofstream newton;
-    newton.open("newton.dat",ios::app);
+    //ofstream newton;
+    //newton.open("newton.dat",ios::app);
 
     //double L = crdTransf->getInitialLength();
 
@@ -3173,8 +3173,8 @@ RCFTMBeamColumn3D::getNd1(int sec, const Vector &v)
 void RCFTMBeamColumn3D::calcDeformedLength(void)
 {
 
-   ofstream uiuc;
-   uiuc.open("uiuc.dat",ios::app);
+   //ofstream uiuc;
+   //uiuc.open("uiuc.dat",ios::app);
 
    const Vector &dispi = theNodes[0]->getTrialDisp();
    const Vector &dispj = theNodes[1]->getTrialDisp();

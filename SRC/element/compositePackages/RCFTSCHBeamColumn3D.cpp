@@ -333,17 +333,17 @@ RCFTSCHBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSCHBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
 
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
 
-   ofstream cont1;
-   cont1.open("cont1.dat",ios::app);
+   //ofstream cont1;
+   //cont1.open("cont1.dat",ios::app);
 
-   ofstream cont2;
-   cont2.open("cont2.dat",ios::app);
+   //ofstream cont2;
+   //cont2.open("cont2.dat",ios::app);
    
    int err = 0;
    int i = 0;
@@ -356,7 +356,7 @@ RCFTSCHBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -377,67 +377,67 @@ RCFTSCHBeamColumn3D::commitState()
    }
    slp_strn = 0.0;
 
-   if( Tagg == 1 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 2 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 3 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 4 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 5 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 6 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 7 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 8 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 9 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   }
-   if( Tagg == 10 ){
-    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<endl;
-   }
-
-   if( Tagg == 1 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 2 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 3 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 4 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 5 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 6 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 7 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 8 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 9 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   }
-   if( Tagg == 10 ){
-    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<endl;
-   }
+   //if( Tagg == 1 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 2 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 3 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 4 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 5 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 6 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 7 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 8 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 9 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   //}
+   //if( Tagg == 10 ){
+   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<endl;
+   //}
+   //
+   //if( Tagg == 1 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 2 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 3 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 4 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 5 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 6 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 7 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 8 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 9 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   //}
+   //if( Tagg == 10 ){
+   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<endl;
+   //}
 
    return err;
 }
@@ -753,7 +753,7 @@ RCFTSCHBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTSCHBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
 	

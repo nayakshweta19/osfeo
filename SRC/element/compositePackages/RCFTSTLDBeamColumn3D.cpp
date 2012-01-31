@@ -322,11 +322,11 @@ RCFTSTLDBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLDBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
 
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
    
    int err = 0;
    int i = 0;
@@ -339,7 +339,7 @@ RCFTSTLDBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -725,7 +725,7 @@ RCFTSTLDBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTSTLDBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
   //ofstream output;

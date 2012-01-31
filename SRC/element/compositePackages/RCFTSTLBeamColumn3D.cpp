@@ -308,11 +308,11 @@ RCFTSTLBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
 
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
    
    int err = 0;
    int i = 0;
@@ -325,7 +325,7 @@ RCFTSTLBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -409,11 +409,11 @@ int RCFTSTLBeamColumn3D::revertToStart()
 const Matrix &
 RCFTSTLBeamColumn3D::getInitialStiff(void)
 {
-  ofstream newton; 
-  newton.open("newton.dat",ios::app);
+  //ofstream newton; 
+  //newton.open("newton.dat",ios::app);
 
-  ofstream lstiff;
-  lstiff.open("lstiff.dat",ios::app);
+  //ofstream lstiff;
+  //lstiff.open("lstiff.dat",ios::app);
  
   if (Ki != 0)
     return *Ki;
@@ -666,12 +666,12 @@ RCFTSTLBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTSTLBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
-  ofstream output;
-  output.open("tangentstiff.dat", ios::app);
-  output<<"\n number of element"<<Tagg<<endl;
+  //ofstream output;
+  //output.open("tangentstiff.dat", ios::app);
+  //output<<"\n number of element"<<Tagg<<endl;
 
   //for(i=0; i<12; i++){
   //  output<<kv(i,0)<<"  "<<kv(i,1)<<"  "<<kv(i,2)<<"  "<<kv(i,3)<<"  "<<kv(i,4)<<"   "
@@ -704,7 +704,7 @@ void
 RCFTSTLBeamColumn3D::initializeSectionHistoryVariables (void)
 {
     for (int i = 0; i < numSections; i++){
-	ks[i]       = Matrix(3,3);
+	    ks[i]       = Matrix(3,3);
         ksa[i]      = Matrix(4,4);
         dhat[i]     = Vector(3);
         DSQ[i]      = Vector(3);

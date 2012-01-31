@@ -155,10 +155,10 @@ TclModelBuilder_addRCFTDBeamColumn(ClientData clientData, Tcl_Interp *interp,
     
     //SectionForceDeformation **sections = new SectionForceDeformation *[nIP];
 
-    ofstream output;
-    output.open("newton.dat",ios::app);
+    //ofstream output;
+    //output.open("newton.dat",ios::app);
 
-    output<<"\n TclRCFTDBeamColumn \n"<<endl;
+    //output<<"\n TclRCFTDBeamColumn \n"<<endl;
 
     RCFTAggregator **sections = new RCFTAggregator *[nIP];
     
@@ -179,7 +179,7 @@ TclModelBuilder_addRCFTDBeamColumn(ClientData clientData, Tcl_Interp *interp,
       return TCL_ERROR;
     }
     
-    output<<"\n TclDomain->addElement \n"<<endl;
+    //output<<"\n TclDomain->addElement \n"<<endl;
 
     if (theTclDomain->addElement(theElement) == false) {
       opserr << "WARNING could not add element to the domain\n";

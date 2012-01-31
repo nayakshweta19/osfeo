@@ -324,11 +324,11 @@ RCFTSTLMFBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLMFBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
 
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
    
    int err = 0;
    int i = 0;
@@ -341,7 +341,7 @@ RCFTSTLMFBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -727,7 +727,7 @@ RCFTSTLMFBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTSTLMFBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
   //ofstream output;
@@ -1651,7 +1651,7 @@ Vector
 RCFTSTLMFBeamColumn3D::getLocalIncrDeltaDisp(void)
 {
 
-   // ofstream newton;
+    //ofstream newton;
     //newton.open("newton.dat",ios::app);
 	
     const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();

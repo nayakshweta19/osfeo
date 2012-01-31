@@ -974,9 +974,9 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	tmp[i][15] = kl(i,15)*R[0][0] + kl(i,16)*R[1][0] + kl(i,17)*R[2][0];
 	tmp[i][16] = kl(i,15)*R[0][1] + kl(i,16)*R[1][1] + kl(i,17)*R[2][1];
 	tmp[i][17] = kl(i,15)*R[0][2] + kl(i,16)*R[1][2] + kl(i,17)*R[2][2];
-  }
-  // Now compute T'_{lg}*(kl*T_{lg})
-  for (i = 0; i < 18; i++) {
+   }
+   // Now compute T'_{lg}*(kl*T_{lg})
+   for (i = 0; i < 18; i++) {
 	kg(0,i) = R[0][0]*tmp[0][i] + R[1][0]*tmp[1][i] + R[2][0]*tmp[2][i];
 	kg(1,i) = R[0][1]*tmp[0][i] + R[1][1]*tmp[1][i] + R[2][1]*tmp[2][i];
 	kg(2,i) = R[0][2]*tmp[0][i] + R[1][2]*tmp[1][i] + R[2][2]*tmp[2][i];
