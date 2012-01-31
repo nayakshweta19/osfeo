@@ -863,18 +863,18 @@ RCFTSTLGMBeamColumn3D::getInitialStiff(void)
 
 const Matrix &
 RCFTSTLGMBeamColumn3D::getTangentStiff(void){
-  ofstream stf;
-  stf.open("stf.dat",ios::app);
-  int i,j;  
+  //ofstream stf;
+  //stf.open("stf.dat",ios::app);
+//  int i,j;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
-  for( i = 0; i < 12; i++ ){
-     for( j = 0; j < 12; j++ ){
-     //stf<<setprecision(15)<<KV(i,j)<<"  ";
-     stf<<KV(i,j)<<"  ";
-     }
-     stf<<"\n";
-  }
+  //for( i = 0; i < 12; i++ ){
+  //   for( j = 0; j < 12; j++ ){
+  //   //stf<<setprecision(15)<<KV(i,j)<<"  ";
+  //   stf<<KV(i,j)<<"  ";
+  //   }
+  //   stf<<"\n";
+  //}
   return KV;
 }
 
@@ -988,7 +988,7 @@ int RCFTSTLGMBeamColumn3D::update()
   beamIntegr->getSectionWeights(numSections, L, wt);
 
   double temp_x, temp_A, temp_B;
-  double d_d[3];
+//  double d_d[3];
 
   //mpls<<"dhat[i]"<<endl;
   for ( i = 0; i < numSections; i++ ){
@@ -1926,8 +1926,8 @@ RCFTSTLGMBeamColumn3D::getNd2(int sec){
    double wt[maxNumSections];
    beamIntegr->getSectionWeights(numSections, L, wt);
 
-   double temp_x, temp_A, temp_B, temp_C, temp_D;
-
+   double temp_x, temp_A, temp_B;
+//, temp_C, temp_D
    temp_x = L * xi[sec];
 
    Matrix Nd2(3,6);

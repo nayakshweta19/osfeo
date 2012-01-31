@@ -73,7 +73,10 @@ class FE_Element: public TaggedObject
     // methods to allow integrator to build residual    
     virtual void  zeroResidual(void);    
     virtual void  addRtoResidual(double fact = 1.0);
-    virtual void  addRIncInertiaToResidual(double fact = 1.0);    
+    virtual void  addRIncInertiaToResidual(double fact = 1.0);
+
+	virtual void  addRCFTtoResidual(double fact = 1.0);
+	virtual void  addRCFTIncInertiaToResidual(double fact = 1.0); 
 
     // methods for ele-by-ele strategies
     virtual const Vector &getTangForce(const Vector &x, double fact = 1.0);

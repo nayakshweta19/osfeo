@@ -86,13 +86,14 @@ Matrix *mixedBeamColumn3d::nd2T = 0;
 #elif _MACOSX
 #define OPS_Export extern "C" __attribute__((visibility("default")))
 #else
-#define OPS_Export extern "C"
+//#define OPS_Export extern "C"
+#define OPS_Export
 #endif
 
 
-OPS_Export void localInit() {
-  OPS_Error("mixedBeamColumn3d element \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
-}
+//OPS_Export void localInit() {
+//  OPS_Error("mixedBeamColumn3d element \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
+//}
 
 // Documentation: Three Dimensional Mixed Beam Column Element
 // element mixedBeamColumn3d $tag $iNode $jNode $numIntgrPts $secTag $transfTag <-mass $massDens>

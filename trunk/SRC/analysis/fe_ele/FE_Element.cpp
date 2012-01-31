@@ -479,6 +479,87 @@ FE_Element::addRIncInertiaToResidual(double fact)
     }    	        
 }
 
+void
+FE_Element::addRCFTtoResidual(double fact)
+{
+    //ofstream unbal;
+    //unbal.open("unbal.dat",ios::app);    
+    if (myEle != 0) {
+	// check for a quick return
+        if (fact == 0.0)
+	   return;
+	else if (myEle->isSubdomain() == false) {
+	   const Vector &eleResisting = myEle->getResistingForce();
+	   //unbal<<"\nGLOBAL ELE RESISTING FORCE"<<endl;
+	   //unbal>>eleResisting;
+	   Vector a(18);
+	   for(int i = 0; i < 18; i++)
+	      a(i) = eleResisting(i);
+	   
+	   for( int i = 6; i < 9; i++){
+		a(i-6) = a(i-6) + a(i);
+	        a(i) = 0.0;
+	   }
+           for( int i = 15; i < 18; i++){
+	        a(i-6) = a(i-6) + a(i);
+	        a(i) = 0.0;
+	   }
+
+	   const Vector &b = a;
+	   
+	   theResidual->addVector(1.0, b, -fact);
+	}
+	else {
+	   opserr << "WARNING FE_Element::addRtoResidual() - ";
+	   opserr << "- this should not be called on a Subdomain!\n";
+	}
+    }
+    else {
+        opserr << "WARNING FE_Element::addRtoResidual() - no Element *given ";
+        opserr << "- subclasses must provide implementation\n";
+    }
+}
+
+void
+FE_Element::addRCFTIncInertiaToResidual(double fact)
+{
+    //ofstream unbal;
+    //unbal.open("unbal.dat",ios::app);
+    if (myEle != 0) {
+           if (fact == 0.0)
+              return;
+           else if (myEle->isSubdomain() == false) {
+              const Vector &eleResisting = myEle->getResistingForceIncInertia();
+              //unbal<<"\nGLOBAL ELE RESISTING FORCE"<<endl;
+              //unbal>>eleResisting;
+              Vector a(18);
+              for(int i = 0; i < 18; i++)
+                 a(i) = eleResisting(i);
+
+              for( int i = 6; i < 9; i++){
+                 a(i-6) = a(i-6) + a(i);
+                 a(i) = 0.0;
+              }
+              for( int i = 15; i < 18; i++){
+                 a(i-6) = a(i-6) + a(i);
+                 a(i) = 0.0;
+              }
+
+              const Vector &b = a;
+
+              theResidual->addVector(1.0, b, -fact);
+          }
+          else {
+              opserr << "WARNING FE_Element::addRIncInertiaToResidual() - ";
+              opserr << "- this should not be called on a Subdomain!\n";
+          }
+     }
+     else {
+          opserr << "WARNING FE_Element::addRIncInertialToResidual() - no Element *given ";
+          opserr << "- subclasses must provide implementation\n";
+    }
+}
+
 
 const Vector &
 FE_Element::getTangForce(const Vector &disp, double fact)

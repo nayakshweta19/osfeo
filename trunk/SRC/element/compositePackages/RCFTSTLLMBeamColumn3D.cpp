@@ -381,59 +381,59 @@ RCFTSTLLMBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLLMBeamColumn3D::commitState()
 {
-   ofstream dunhat;
-   dunhat.open("dunhat.dat",ios::app); 
-
-   ofstream output;
-   output.open("stlcon.dat",ios::app);
- 
-   ofstream crv11;
-   crv11.open("crrv11.dat",ios::app);
-
-   ofstream crv12;
-   crv12.open("crrv12.dat",ios::app);
-
-   ofstream crv13;
-   crv13.open("crrv13.dat",ios::app);
-
-   ofstream crv14;
-   crv14.open("crrv14.dat",ios::app);
-
-   ofstream crv21;
-   crv21.open("crrv21.dat",ios::app);
-
-   ofstream crv22;
-   crv22.open("crrv22.dat",ios::app);
-
-   ofstream crv23;
-   crv23.open("crrv23.dat",ios::app);
-
-   ofstream crv24;
-   crv24.open("crrv24.dat",ios::app);
-
-   ofstream crv31;
-   crv31.open("crrv31.dat",ios::app);
-
-   ofstream crv32;
-   crv32.open("crrv32.dat",ios::app);
-
-   ofstream crv33;
-   crv33.open("crrv33.dat",ios::app);
-
-   ofstream crv34;
-   crv34.open("crrv34.dat",ios::app);
-
-   ofstream crv41;
-   crv41.open("crrv41.dat",ios::app);
-
-   ofstream crv42;
-   crv42.open("crrv42.dat",ios::app);
-
-   ofstream crv43;
-   crv43.open("crrv43.dat",ios::app);
-
-   ofstream crv44;
-   crv44.open("crrv44.dat",ios::app);
+   //ofstream dunhat;
+   //dunhat.open("dunhat.dat",ios::app); 
+   //
+   //ofstream output;
+   //output.open("stlcon.dat",ios::app);
+   //
+   //ofstream crv11;
+   //crv11.open("crrv11.dat",ios::app);
+   //
+   //ofstream crv12;
+   //crv12.open("crrv12.dat",ios::app);
+   //
+   //ofstream crv13;
+   //crv13.open("crrv13.dat",ios::app);
+   //
+   //ofstream crv14;
+   //crv14.open("crrv14.dat",ios::app);
+   //
+   //ofstream crv21;
+   //crv21.open("crrv21.dat",ios::app);
+   //
+   //ofstream crv22;
+   //crv22.open("crrv22.dat",ios::app);
+   //
+   //ofstream crv23;
+   //crv23.open("crrv23.dat",ios::app);
+   //
+   //ofstream crv24;
+   //crv24.open("crrv24.dat",ios::app);
+   //
+   //ofstream crv31;
+   //crv31.open("crrv31.dat",ios::app);
+   //
+   //ofstream crv32;
+   //crv32.open("crrv32.dat",ios::app);
+   //
+   //ofstream crv33;
+   //crv33.open("crrv33.dat",ios::app);
+   //
+   //ofstream crv34;
+   //crv34.open("crrv34.dat",ios::app);
+   //
+   //ofstream crv41;
+   //crv41.open("crrv41.dat",ios::app);
+   //
+   //ofstream crv42;
+   //crv42.open("crrv42.dat",ios::app);
+   //
+   //ofstream crv43;
+   //crv43.open("crrv43.dat",ios::app);
+   //
+   //ofstream crv44;
+   //crv44.open("crrv44.dat",ios::app);
   
    int err = 0;
    int i = 0;
@@ -446,7 +446,7 @@ RCFTSTLLMBeamColumn3D::commitState()
    }
 
    do {
-      output<<"section #"<<i<<endl;	   
+      //output<<"section #"<<i<<endl;	   
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -474,30 +474,30 @@ RCFTSTLLMBeamColumn3D::commitState()
         CDSQa[i] = DSQa[i];
    }
 
-   if( Tagg == 1 ){
-   crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
-   crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
-   crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
-   crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
-   }
-   if( Tagg == 2 ){ 
-   crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
-   crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
-   crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
-   crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
-   }
-   if( Tagg == 3 ){ 
-   crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
-   crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
-   crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
-   crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
-   }
-   if( Tagg == 4 ){ 
-   crv41<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
-   crv42<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
-   crv43<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
-   crv44<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
-   }
+   //if( Tagg == 1 ){
+   //crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
+   //crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
+   //crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
+   //crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
+   //}
+   //if( Tagg == 2 ){ 
+   //crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
+   //crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
+   //crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
+   //crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
+   //}
+   //if( Tagg == 3 ){ 
+   //crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
+   //crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
+   //crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
+   //crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
+   //}
+   //if( Tagg == 4 ){ 
+   //crv41<<sduhat[0](1)<<"  "<<DSQa[0](1)<<endl;
+   //crv42<<sduhat[1](1)<<"  "<<DSQa[1](1)<<endl;
+   //crv43<<sduhat[2](1)<<"  "<<DSQa[2](1)<<endl;
+   //crv44<<sduhat[3](1)<<"  "<<DSQa[3](1)<<endl;
+   //}
 
    //this->calcDeformedLength();
 
@@ -779,9 +779,9 @@ RCFTSTLLMBeamColumn3D::getInitialStiff(void)
 
 const Matrix &
 RCFTSTLLMBeamColumn3D::getTangentStiff(void){
-  ofstream mpls;
-  mpls.open("mpls.dat",ios::app);
-  int i;  
+  //ofstream mpls;
+  //mpls.open("mpls.dat",ios::app);
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
   //mpls>>KV;
@@ -882,7 +882,7 @@ int RCFTSTLLMBeamColumn3D::update()
   //const Vector &wts = quadRule.getIntegrPointWeights(numSections);
 
   double temp_x, temp_A, temp_B;
-  double d_d[3];
+//  double d_d[3];
 
   //mpls<<"dhat[i]"<<endl;
   for ( i = 0; i < numSections; i++ ){
@@ -1802,8 +1802,8 @@ RCFTSTLLMBeamColumn3D::getNd2(int sec){
    //const Matrix &pts = quadRule.getIntegrPointCoords(numSections);
    //const Vector &wts = quadRule.getIntegrPointWeights(numSections);
 
-   double temp_x, temp_A, temp_B, temp_C, temp_D;
-
+   double temp_x, temp_A, temp_B;
+//, temp_C, temp_D
    temp_x = L * xi[sec];
 
    Matrix Nd2(3,6);

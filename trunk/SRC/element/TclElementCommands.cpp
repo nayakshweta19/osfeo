@@ -112,6 +112,10 @@ extern void *OPS_SSPbrickUP(void);
 extern void *OPS_NewShellMITC4(void);
 extern void *OPS_NewShell02(void);
 extern void *OPS_NewShellNL(void);
+//////////////////////////////////////////////////////////////////////////
+extern void * OPS_mixedBeamColumn3d(void);
+extern void * OPS_mixedBeamColumn2d(void);
+//////////////////////////////////////////////////////////////////////////
 
 extern int TclModelBuilder_addFeapTruss(ClientData clientData, Tcl_Interp *interp,  int argc,
 					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
@@ -364,7 +368,6 @@ extern int
 TclModelBuilder_addTwoNodeLink(ClientData clientData, Tcl_Interp *interp,  int argc,
 			       TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
-//////////////////////////////////////////////////////////////////////////
 extern int
 TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp,  int argc, 
 					TCL_Char **argv, Domain*, TclModelBuilder *);
@@ -730,6 +733,7 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
 
   } 
   
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   else if ((strcmp(argv[1],"shell02") == 0) || (strcmp(argv[1],"Shell02") == 0)) {
     
     void *theEle = OPS_NewShell02();
@@ -745,6 +749,29 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
   else if ((strcmp(argv[1],"shellNL") == 0) || (strcmp(argv[1],"ShellNL") == 0)) {
     
     void *theEle = OPS_NewShellNL();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }    
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  else if ((strcmp(argv[1],"mixedBeamColumn3d") == 0) || (strcmp(argv[1],"mixedBC3d") == 0)) {
+    
+    void *theEle = OPS_mixedBeamColumn3d();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }    
+  }
+
+  else if ((strcmp(argv[1],"mixedBeamColumn2d") == 0) || (strcmp(argv[1],"mixedBC2d") == 0)) {
+    
+    void *theEle = OPS_mixedBeamColumn2d();
     if (theEle != 0) 
       theElement = (Element *)theEle;
     else {
@@ -1190,7 +1217,9 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     int result = TclModelBuilder_addRCFTSCHBeamColumn(clientData, interp, argc, argv,
 			                                          theTclDomain, theTclBuilder);
     return result;
-  } else if (strcmp(argv[1],"RCFTDBeamColumn") == 0) {
+  } 
+  
+  else if (strcmp(argv[1],"RCFTDBeamColumn") == 0) {
     int result = TclModelBuilder_addRCFTDBeamColumn(clientData, interp, argc, argv,
 			                                        theTclDomain, theTclBuilder);
     return result;

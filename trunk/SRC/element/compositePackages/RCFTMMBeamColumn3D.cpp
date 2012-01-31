@@ -467,32 +467,32 @@ RCFTMMBeamColumn3D::commitState()
 
    cnvg = 0;
 
-   ofstream crv11;
-   crv11.open("crv11.dat",ios::app);
-
-   ofstream crv12;
-   crv12.open("crv12.dat",ios::app);
-
-   ofstream crv13;
-   crv13.open("crv13.dat",ios::app);
-
-   ofstream crv21;
-   crv21.open("crv21.dat",ios::app);
-
-   ofstream crv22;
-   crv22.open("crv22.dat",ios::app);
-    
-   ofstream crv23;
-   crv23.open("crv23.dat",ios::app);
-
-   ofstream crv31;
-   crv31.open("crv31.dat",ios::app);
-
-   ofstream crv32;
-   crv32.open("crv32.dat",ios::app);
-
-   ofstream crv33;
-   crv33.open("crv33.dat",ios::app);
+   //ofstream crv11;
+   //crv11.open("crv11.dat",ios::app);
+   //
+   //ofstream crv12;
+   //crv12.open("crv12.dat",ios::app);
+   //
+   //ofstream crv13;
+   //crv13.open("crv13.dat",ios::app);
+   //
+   //ofstream crv21;
+   //crv21.open("crv21.dat",ios::app);
+   //
+   //ofstream crv22;
+   //crv22.open("crv22.dat",ios::app);
+   // 
+   //ofstream crv23;
+   //crv23.open("crv23.dat",ios::app);
+   //
+   //ofstream crv31;
+   //crv31.open("crv31.dat",ios::app);
+   //
+   //ofstream crv32;
+   //crv32.open("crv32.dat",ios::app);
+   //
+   //ofstream crv33;
+   //crv33.open("crv33.dat",ios::app);
 
    // call element commitState to do any base class stuff
    if ((err = this->Element::commitState()) != 0) {
@@ -544,41 +544,41 @@ RCFTMMBeamColumn3D::commitState()
    for( i = 0; i < numSections; i++){
         sduhat[i] = sduhat[i] + duhat[i];
         duhatcommit[i] = duhat[i];
-	duhat[i].Zero();
+	    duhat[i].Zero();
         dhat[i].Zero();
-	DSQ[i].Zero();
+	    DSQ[i].Zero();
         DQ[i].Zero();
         f4[i].Zero();
         sf4[i].Zero();
         d4[i].Zero(); 
-	CDSQa[i] = DSQa[i];
-        if( ( Tagg == 1 ) && ( i == 0 ) ){
-           crv11<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        } 
-        if( ( Tagg == 1 ) && ( i == 1 ) ){
-           crv12<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 1 ) && ( i == 2 ) ){
-           crv13<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 2 ) && ( i == 0 ) ){
-           crv21<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 2 ) && ( i == 1 ) ){
-           crv22<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 2 ) && ( i == 2 ) ){
-           crv23<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 3 ) && ( i == 0 ) ){
-           crv31<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 3 ) && ( i == 1 ) ){
-           crv32<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
-        if( ( Tagg == 3 ) && ( i == 2 ) ){
-           crv33<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        }
+	    CDSQa[i] = DSQa[i];
+        //if( ( Tagg == 1 ) && ( i == 0 ) ){
+        //   crv11<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //} 
+        //if( ( Tagg == 1 ) && ( i == 1 ) ){
+        //   crv12<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 1 ) && ( i == 2 ) ){
+        //   crv13<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 2 ) && ( i == 0 ) ){
+        //   crv21<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 2 ) && ( i == 1 ) ){
+        //   crv22<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 2 ) && ( i == 2 ) ){
+        //   crv23<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 3 ) && ( i == 0 ) ){
+        //   crv31<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 3 ) && ( i == 1 ) ){
+        //   crv32<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
+        //if( ( Tagg == 3 ) && ( i == 2 ) ){
+        //   crv33<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        //}
    }
 
    itr = 0;
@@ -884,7 +884,7 @@ RCFTMMBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTMMBeamColumn3D::getTangentStiff(void)
 {
-  int i;  
+//  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
   return KV;
@@ -911,12 +911,12 @@ RCFTMMBeamColumn3D::initializeSectionHistoryVariables (void)
 {
     for (int i = 0; i < numSections; i++)
     {
-	fs[i]       = Matrix(6,6);
-	ks[i]       = Matrix(6,6);
+	    fs[i]       = Matrix(6,6);
+	    ks[i]       = Matrix(6,6);
         fsa[i]      = Matrix(12,12);
         ksa[i]      = Matrix(12,12);
-	dhat[i]     = Vector(6);
-	nldhat[i]   = Matrix(6,13);
+	    dhat[i]     = Vector(6);
+	    nldhat[i]   = Matrix(6,13);
         nldhatT[i]  = Matrix(13,6);
         nldhatsc[i] = Matrix(1,13);
         nldhatscT[i]= Matrix(13,1);
@@ -1061,8 +1061,8 @@ int RCFTMMBeamColumn3D::update()
 
   V.Zero();
   
-  double temp_x, temp_A, temp_B, temp_C, temp_D;
-  double d_d[6];
+  double temp_x, temp_A, temp_B;
+//  double d_d[6];, temp_C, temp_D
 
   for( i = 0; i < numSections; i++ ){
        V = V + L * wt[i] * nd1T[i] * (dhat[i] - duhat[i] -  ( fs[i] * ( DQ[i] - DSQ[i] ) ) );
@@ -1459,7 +1459,7 @@ int RCFTMMBeamColumn3D::update()
   {
       double temp_x,temp_A,temp_B;
       double slp_strn;
-      double slp_force;
+//      double slp_force;
       temp_x = L * xi[i];
       temp_A = - temp_x/L + 2 * temp_x * temp_x / ( L * L );
       temp_B = - 4 * temp_x * temp_x / ( L * L ) + 4 * temp_x / L;
@@ -2557,8 +2557,8 @@ RCFTMMBeamColumn3D::getNd2(int sec)
     double wt[maxNumSections];
     beamIntegr->getSectionWeights(numSections, L, wt);
 
-    double temp_x, temp_A, temp_B, temp_C, temp_D;
-
+    double temp_x, temp_A, temp_B;
+//, temp_C, temp_D
     temp_x = L * xi[sec];
 
     Matrix Nd2(6,13);
