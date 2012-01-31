@@ -37,11 +37,11 @@
 #ifndef RCFTSTLCrdTransf3D_h
 #define RCFTSTLCrdTransf3D_h
 
-#include <CrdTransf3d.h>
+#include <CrdTransf.h>
 #include <Vector.h>
 #include <Matrix.h>
 
-class RCFTSTLCrdTransf3D: public CrdTransf3d
+class RCFTSTLCrdTransf3D: public CrdTransf
 {
   public:
     RCFTSTLCrdTransf3D (int tag, const Vector &vecInLocXZPlane);
@@ -69,7 +69,7 @@ class RCFTSTLCrdTransf3D: public CrdTransf3d
     const Matrix &getGlobalStiffMatrix    (const Matrix &basicStiff, const Vector &basicForce);
     const Matrix &getInitialGlobalStiffMatrix(const Matrix &kb);
 
-    CrdTransf3d *getCopy(void);
+    CrdTransf *getCopy3d(void);
     
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker);

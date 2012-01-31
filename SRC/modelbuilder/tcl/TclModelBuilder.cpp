@@ -51,6 +51,7 @@
 #include <SP_Constraint.h>
 #include <SP_ConstraintIter.h>
 #include <MP_Constraint.h>
+#include <MD_Constraint.h>
 
 #include <RigidRod.h>
 #include <RigidBeam.h>
@@ -202,6 +203,10 @@ TclCommand_addHomogeneousBC_Z(ClientData clientData, Tcl_Interp *interp, int arg
 int
 TclCommand_addEqualDOF_MP (ClientData clientData, Tcl_Interp *interp,
 			   int argc, TCL_Char **argv);
+
+int
+TclCommand_addRCFTDOF_MP (ClientData clientData, Tcl_Interp *interp,
+		       int argc, TCL_Char **argv);
 
 int 
 TclCommand_RigidLink(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
@@ -550,6 +555,10 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   Tcl_CreateCommand(interp, "equalDOF", TclCommand_addEqualDOF_MP,
 		    (ClientData)NULL, NULL);
 
+  // CompositePackage
+  Tcl_CreateCommand(interp, "rcftequalDOF", TclCommand_addRCFTDOF_MP,
+            (ClientData)NULL, NULL);
+  
   Tcl_CreateCommand(interp, "rigidLink", &TclCommand_RigidLink, 
 		    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);                
 
@@ -733,6 +742,7 @@ TclModelBuilder::~TclModelBuilder()
   Tcl_DeleteCommand(theInterp, "imposedSupportMotion");
   Tcl_DeleteCommand(theInterp, "groundMotion");
   Tcl_DeleteCommand(theInterp, "equalDOF");
+  Tcl_DeleteCommand(theInterp, "rcftequalDOF");  // CompositePackage
   Tcl_DeleteCommand(theInterp, "mp");
   Tcl_DeleteCommand(theInterp, "PySimple1Gen");  // Added by Scott J. Brandenberg
   Tcl_DeleteCommand(theInterp, "TzSimple1Gen");  // Added by Scott J. Brandenberg
@@ -2642,7 +2652,6 @@ TclCommand_addImposedMotionSP(ClientData clientData,
 }
 
 
-
 int
 TclCommand_addEqualDOF_MP (ClientData clientData, Tcl_Interp *interp,
                                 int argc, TCL_Char **argv)
@@ -2722,6 +2731,90 @@ TclCommand_addEqualDOF_MP (ClientData clientData, Tcl_Interp *interp,
         }
 
         return TCL_OK;
+}
+
+// CompositePakcage
+int
+TclCommand_addRCFTDOF_MP (ClientData clientData, Tcl_Interp *interp,
+                                int argc, TCL_Char **argv)
+{
+    // Ensure the destructor has not been called
+    if (theTclBuilder == 0) {
+	  opserr << "WARNING builder has been destroyed - rcftequalDOF \n";
+	  return TCL_ERROR;
+    }
+
+    // Check number of arguments
+    if (argc < 7) {
+	  opserr << "WARNING bad command - want: rcftequalDOF RnodeID? DOF1? X? Y? Z? ";
+	  printCommand (argc, argv);
+	  return TCL_ERROR;
+    }
+
+    // Read in the node IDs and the DOF
+    int RnodeID, CnodeID, dofID;
+	double vector;
+
+    if (Tcl_GetInt (interp, argv[1], &RnodeID) != TCL_OK) {
+	  opserr << "WARNING invalid RnodeID: " << argv[1]
+	       << " rcftequalDOF RnodeID? DOF1? X? Y? Z? ";
+	  return TCL_ERROR;
+    }
+
+	CnodeID = RnodeID;
+
+    // The number of DOF to be coupled
+    int numDOF = 2;
+
+    // The vector containing the retained and constrained DOFs
+    ID rcDOF (numDOF);
+
+    int i, j;
+    // Read the degrees of freedom which are to be coupled
+	for( i = 0, j = 2; i < 2; i++, j++){
+	  if (Tcl_GetInt (interp, argv[j], &dofID) != TCL_OK) {
+	    opserr << "WARNING invalid dofID: " << argv[j]
+		     << " rcftequalDOF RnodeID? DOF1? DOF2? X? Y? Z? ";
+	    return TCL_ERROR;
+	  }
+
+	  rcDOF (i) = --dofID;    // Decrement for C++ indexing
+	}
+
+	Vector gv(3);
+
+	// Read the degrees of freedom which are to be coupled
+	for (i = argc - 3, j = 0 ; i < argc; i++, j++) {
+	  if (Tcl_GetDouble (interp, argv[i], &vector) != TCL_OK) {
+	     opserr << "WARNING invalid vector: " << argv[4] <<"  "<< argv[5]<<"   "<< argv[6]
+	            << " rcftequalDOF RnodeID? DOF1? DOF2? X? Y? Z?";
+	     return TCL_ERROR;
+	  }
+	
+      gv(j) = vector;    // Decrement for C++ indexing
+    }
+                                                                                  
+
+    // Use this for the MP tag
+    int numMPs = theTclDomain->getNumMPs();
+
+    // Create the multi-point constraint
+    MD_Constraint *theMD = new MD_Constraint (theTclDomain, numMPs, RnodeID, CnodeID, rcDOF, rcDOF, gv);
+    if (theMD == 0) {
+	  opserr << "WARNING ran out of memory for rcftequalDOF MD_Constraint ";
+	  printCommand (argc, argv);
+	  return TCL_ERROR;
+    }
+
+    // Add the multi-point constraint to the domain
+    if (theTclDomain->addMP_Constraint (theMD) == false) {
+	  opserr << "WARNING could not add rcftequalDOF MD_Constraint to domain ";
+	  printCommand(argc, argv);
+	  delete theMD;
+	  return TCL_ERROR;
+    }
+
+    return TCL_OK;
 }
 
 

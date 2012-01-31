@@ -70,7 +70,7 @@ class RCFTSTLLinCrdTransf3D: public CrdTransf
     const Matrix &getLocalStiffMatrix (void);
     const Matrix &getInitialGlobalStiffMatrix(const Matrix &kb);
 
-    CrdTransf *getCopy(void);
+    CrdTransf *getCopy3d(void);
     
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker);

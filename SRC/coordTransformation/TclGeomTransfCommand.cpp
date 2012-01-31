@@ -153,7 +153,7 @@ TclCommand_addGeomTransf(ClientData clientData, Tcl_Interp *interp,
     }
   }
 
-  else if  (NDM == 3 && NDF == 6) {
+  else if  ( (NDM == 3 && NDF == 6) | ( NDM == 3 && NDF == 9  ) ) {
     int crdTransfTag;
     Vector vecxzPlane(3);                  // vector that defines local xz plane
     Vector jntOffsetI(3), jntOffsetJ(3);   // joint offsets in global coordinates

@@ -46,7 +46,7 @@
 
 // constructor:
 RCFTSTLCrdTransf3D::RCFTSTLCrdTransf3D(int tag, const Vector &vecInLocXZPlane):
-  CrdTransf3d(tag, CRDTR_TAG_RCFTSTLCrdTransf3D),
+  CrdTransf(tag, CRDTR_TAG_RCFTSTLCrdTransf3D),
   nodeIPtr(0), nodeJPtr(0), L(0), kl(12,12), pg(12)
 {
   	for (int i = 0; i < 3; i++){
@@ -70,7 +70,7 @@ RCFTSTLCrdTransf3D::RCFTSTLCrdTransf3D(int tag, const Vector &vecInLocXZPlane):
 // constructor:
 // invoked by a FEM_ObjectBroker, recvSelf() needs to be invoked on this object.
 RCFTSTLCrdTransf3D::RCFTSTLCrdTransf3D():
-  CrdTransf3d(0, CRDTR_TAG_RCFTSTLCrdTransf3D),
+  CrdTransf(0, CRDTR_TAG_RCFTSTLCrdTransf3D),
   nodeIPtr(0), nodeJPtr(0), L(0), kl(12,12), pg(12)
 {
 	for (int i = 0; i < 3; i++){
@@ -822,8 +822,8 @@ RCFTSTLCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 }
 
 
-CrdTransf3d *
-RCFTSTLCrdTransf3D::getCopy(void)
+CrdTransf *
+RCFTSTLCrdTransf3D::getCopy3d(void)
 {
   // create a new instance of PDeltaCrdTransf3d
 

@@ -120,7 +120,7 @@ ks(0), Ki(0), XAxis(3), YAxis(3), ZAxis(3), sr(1,6), ss(1,1), fk(6), fk_incr(6),
    
    //crdTransf = coordTransf.getCopy();
 
-   crdTransf = (RCFTSTLCrdTransf3D*) coordTransf.getCopy();
+   crdTransf = (RCFTSTLCrdTransf3D*) coordTransf.getCopy3d();
 
    //deflength = crdTransf->getInitialLength();
    

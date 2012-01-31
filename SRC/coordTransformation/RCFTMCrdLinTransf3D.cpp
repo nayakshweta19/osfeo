@@ -718,7 +718,7 @@ RCFTMCrdLinTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 
 
 CrdTransf *
-RCFTMCrdLinTransf3D::getCopy(void)
+RCFTMCrdLinTransf3D::getCopy3d(void)
 {
   // create a new instance of PDeltaCrdTransf3d
 

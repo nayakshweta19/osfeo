@@ -68,10 +68,10 @@ RCFTAggregator::RCFTAggregator (int tag, SectionForceDeformation &theSec,
   e(0), s(0), ks(0), ksCommit(0), fs(0), fsCommit(0), theCode(0),
   otherDbTag(0)
 {
-    RCFTFiberSection3D &rcftsec = dynamic_cast<RCFTFiberSection3D&>(theSec);
+    //RCFTFiberSection3D &rcftsec = dynamic_cast<RCFTFiberSection3D&>(theSec);
 
-    theSection = rcftsec.getCopy();
-
+    //theSection = rcftsec.getCopy();
+    theSection = theSec.getCopy();
     if (!theSection) {
       opserr << "SectionAggregator::SectionAggregator -- failed to get copy of section\n";
       exit(-1);
@@ -102,7 +102,7 @@ RCFTAggregator::RCFTAggregator (int tag, SectionForceDeformation &theSec,
       }
     }
 
-    int order = rcftsec.getOrder()+numAdds;
+    int order = theSection->getOrder()+numAdds;
 
     if (order > maxOrder) {
       opserr << "SectionAggregator::SectionAggregator -- order too big, need to modify the #define in SectionAggregator.cpp to " <<

@@ -100,17 +100,17 @@ MD_Constraint::~MD_Constraint()
 {
     // invoke the destructor on the matrix and the two ID objects
     if (constraint != 0)
-	delete constraint;
+	  delete constraint;
     if (commit_constraint != 0)
-        delete commit_constraint;
+      delete commit_constraint;
     if (constrDOF != 0)
-	delete constrDOF;
+	  delete constrDOF;
     if (retainDOF != 0)
-	delete retainDOF;  
+	  delete retainDOF;  
     if(global_vector != 0) 
-	delete global_vector;  
+	  delete global_vector;  
     if(commit_global_vector != 0)
-        delete commit_global_vector;  
+      delete commit_global_vector;  
 }
 
 

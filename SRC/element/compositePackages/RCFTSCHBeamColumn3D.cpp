@@ -129,7 +129,7 @@ sr(2,12), ss(2,2), fk(24), ub(12), df_i(18), slp_strn(0.0), str_f4(0), f4(0), st
 
    // get copy of the transformation object
    
-   crdTransf = (RCFTCrdTransf3D*) coordTransf.getCopy();
+   crdTransf = (RCFTCrdTransf3D*) coordTransf.getCopy3d();
 
    //deflength = crdTransf->getInitialLength();
    
