@@ -51,8 +51,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -126,6 +126,7 @@
     <ClCompile Include="..\..\..\SRC\analysis\analysis\StaticAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\TransientAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\VariableTimeStepDirectIntegrationAnalysis.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\..\..\SRC\analysis\analysis\StaticAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\TransientAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\VariableTimeStepDirectIntegrationAnalysis.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.h" />

@@ -107,6 +107,9 @@
     <Filter Include="nD\UWmaterials">
       <UniqueIdentifier>{b9f1e3a8-5af9-4027-bb98-e40ab9904b55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="uniaxial\compositePackages">
+      <UniqueIdentifier>{3cf252d3-6d52-4c0d-8013-5f7a68feb4ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp">
@@ -1190,6 +1193,102 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ElasticMultiLinear.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\changManderConcrete01.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\sakinoSunConcrete04.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteel01.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelCCFT.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelRCFT.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\Stl_beamMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFTSlipMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_stlMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_concMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_stlMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.cpp">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTAggregator.cpp">
+      <Filter>section</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTFiberSection3D.cpp">
+      <Filter>section</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTSTLFiberSection3D.cpp">
+      <Filter>section</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\corePatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\icPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\ifPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\iPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\isPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\iwPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubecornerPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubeflatPatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubePatch.cpp">
+      <Filter>section\repres\patch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\coreCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\icCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\iCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\ifCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\isCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\iwCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubeCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubecornerCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubeflatCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2203,6 +2302,102 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ElasticMultiLinear.h">
       <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\changManderConcrete01.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\sakinoSunConcrete04.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteel01.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelCCFT.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelRCFT.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\Stl_beamMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFTSlipMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_stlMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_concMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_stlMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.h">
+      <Filter>uniaxial\compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTAggregator.h">
+      <Filter>section</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTFiberSection3D.h">
+      <Filter>section</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTSTLFiberSection3D.h">
+      <Filter>section</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubePatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\corePatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\icPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\ifPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\iPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\isPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\iwPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubecornerPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubeflatPatch.h">
+      <Filter>section\repres\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\coreCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\icCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\iCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\ifCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\isCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\iwCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubeCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubecornerCell.h">
+      <Filter>section\repres\cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubeflatCell.h">
+      <Filter>section\repres\cell</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

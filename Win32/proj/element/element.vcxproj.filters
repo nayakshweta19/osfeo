@@ -120,6 +120,9 @@
     <Filter Include="triangle">
       <UniqueIdentifier>{2e1d27e6-ffdc-4b1f-9788-f68d10f13bb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="compositePackages">
+      <UniqueIdentifier>{b1d2addb-3e64-483f-b7c2-966c6779e36f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\element\Element.cpp">
@@ -192,12 +195,6 @@
       <Filter>crdTransf</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf.cpp">
-      <Filter>crdTransf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf2d.cpp">
-      <Filter>crdTransf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf3d.cpp">
       <Filter>crdTransf</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.cpp">
@@ -701,6 +698,108 @@
     <ClCompile Include="..\..\..\SRC\element\simpleContact\BeamContact2Dp.cpp">
       <Filter>simpleContact</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn2d.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn3d.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTDBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTGMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTLMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTLMMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTMMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSCHBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLDBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLGMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLLMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLMBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLMFBeamColumn3D.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTDBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTGMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTLMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTLMMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTMMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSCHBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLDBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLGMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLLMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMFBeamColumnCommand.cpp">
+      <Filter>compositePackages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTCrdLinTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTCrdTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTMCrdLinTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTMCrdTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTSTLCrdTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTSTLLinCrdTransf3D.cpp">
+      <Filter>crdTransf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -758,12 +857,6 @@
       <Filter>crdTransf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf.h">
-      <Filter>crdTransf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf2d.h">
-      <Filter>crdTransf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf3d.h">
       <Filter>crdTransf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.h">
@@ -1149,6 +1242,69 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\simpleContact\BeamContact2Dp.h">
       <Filter>simpleContact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn2d.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn3d.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTDBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTGMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTLMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTLMMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTMMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSCHBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLDBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLGMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLLMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMFBeamColumn3D.h">
+      <Filter>compositePackages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTCrdLinTransf3D.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTCrdTransf3D.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTMCrdLinTransf3D.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTMCrdTransf3D.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTSTLCrdTransf3D.h">
+      <Filter>crdTransf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTSTLLinCrdTransf3D.h">
+      <Filter>crdTransf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

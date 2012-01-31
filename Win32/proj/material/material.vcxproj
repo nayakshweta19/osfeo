@@ -51,13 +51,13 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\material\nd\uwmaterials\;..\..\..\src\material\section\repres\3dLayer;..\..\..\src\material\section\repres\2dLayer;..\..\..\src\domain\pattern;..\..\..\src\analysis\integrator;..\..\..\src\convergenceTest;..\..\..\src\domain\subdomain;..\..\..\src\material\nd\reinforcedconcreteplanestress;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\Timoshenko;..\..\..\src\material\section\integration;..\..\..\SRC\material\nD\NewTemplate3Dep;..\..\..\SRC\tagged\storage;..\..\..\SRC\domain\node;..\..\..\SRC\material\uniaxial\limitState\limitCurve;..\..\..\SRC\material\uniaxial\limitState;..\..\..\SRC\package;..\..\..\src\material\nd\cyclicSoil;..\..\..\src\damage;..\..\..\src\material\nd\FiniteDeformation\fdEvolution;..\..\..\src\material\nd\FiniteDeformation\fdFlow;..\..\..\src\material\nd\FiniteDeformation\fdYield;..\..\..\src\material\nd\finitedeformation;..\..\..\src\element\fournodequad;..\..\..\src\material\uniaxial\fedeas;..\..\..\src\material\uniaxial\drain;..\..\..\src\domain\domain;..\..\..\src\renderer;..\..\..\src\material\nD\soil;..\..\..\src\material\nD\template3dep;..\..\..\src\recorder\response;..\..\..\src\material\backbone;..\..\..\src\material\state;..\..\..\src\material\state\strength;..\..\..\src\material\state\deformation;..\..\..\src\material\state\stiffness;..\..\..\src\material\section\repres\section;..\..\..\src\material\section\repres\cell;..\..\..\src\material\section\repres\patch;..\..\..\src\material\section\repres\reinfBar;..\..\..\src\material\section\repres\reinfLayer;..\..\..\src\material\section\fiber;..\..\..\src\element\nonlinearBeamColumn\fiber;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\material\section;..\..\..\src\handler;..\..\..\src\material\uniaxial;..\..\..\src\material\uniaxial\backbone;..\..\..\src\material\nD;..\..\..\src\element;..\..\..\src\element\up-ucsd;..\..\..\src\actor\channel;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\api;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\modelbuilder;..\..\..\src\domain\component;..\..\..\src\material;..\..\..\src\modelbuilder\tcl;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\material\uniaxial\py;..\..\..\src\material\uniaxial\snap;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\material\section\yieldSurface;..\..\..\src\material\nd\feap;c:\Program Files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\material\nd\uwmaterials\;..\..\..\src\material\section\repres\3dLayer;..\..\..\src\material\section\repres\2dLayer;..\..\..\src\domain\pattern;..\..\..\src\analysis\integrator;..\..\..\src\convergenceTest;..\..\..\src\domain\subdomain;..\..\..\src\material\nd\reinforcedconcreteplanestress;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\Timoshenko;..\..\..\src\material\section\integration;..\..\..\SRC\material\nD\NewTemplate3Dep;..\..\..\SRC\tagged\storage;..\..\..\SRC\domain\node;..\..\..\SRC\material\uniaxial\limitState\limitCurve;..\..\..\SRC\material\uniaxial\limitState;..\..\..\SRC\package;..\..\..\src\material\nd\cyclicSoil;..\..\..\src\damage;..\..\..\src\material\nd\FiniteDeformation\fdEvolution;..\..\..\src\material\nd\FiniteDeformation\fdFlow;..\..\..\src\material\nd\FiniteDeformation\fdYield;..\..\..\src\material\nd\finitedeformation;..\..\..\src\element\fournodequad;..\..\..\src\material\uniaxial\fedeas;..\..\..\src\material\uniaxial\drain;..\..\..\src\domain\domain;..\..\..\src\renderer;..\..\..\src\material\nD\soil;..\..\..\src\material\nD\template3dep;..\..\..\src\recorder\response;..\..\..\src\material\backbone;..\..\..\src\material\state;..\..\..\src\material\state\strength;..\..\..\src\material\state\deformation;..\..\..\src\material\state\stiffness;..\..\..\src\material\section\repres\section;..\..\..\src\material\section\repres\cell;..\..\..\src\material\section\repres\patch;..\..\..\src\material\section\repres\reinfBar;..\..\..\src\material\section\repres\reinfLayer;..\..\..\src\material\section\fiber;..\..\..\src\element\nonlinearBeamColumn\fiber;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\material\section;..\..\..\src\handler;..\..\..\src\material\uniaxial;..\..\..\src\material\uniaxial\backbone;..\..\..\src\material\nD;..\..\..\src\element;..\..\..\src\element\up-ucsd;..\..\..\src\actor\channel;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\api;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\modelbuilder;..\..\..\src\domain\component;..\..\..\src\material;..\..\..\src\modelbuilder\tcl;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\material\uniaxial\py;..\..\..\src\material\uniaxial\snap;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\material\section\yieldSurface;..\..\..\src\material\nd\feap;c:\Program Files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;MHS_INSURE;_TCL85;_LIMITSTATEMATERIAL;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -169,9 +169,30 @@
     <ClCompile Include="..\..\..\SRC\material\section\ElasticTubeSection3d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\fiber\BiaxialFiber2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\fiber\BiaxialFiber3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTAggregator.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTFiberSection3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\RCFTSTLFiberSection3D.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\Circ2dLayer.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\Straight2dLayer.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\TwoDLayer.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\coreCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\icCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\iCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\ifCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\isCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\iwCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubeCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubecornerCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\tubeflatCell.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\corePatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\icPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\ifPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\iPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\isPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\iwPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubecornerPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubeflatPatch.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubePatch.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\TimoshenkoSection2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\WSection2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp" />
@@ -180,6 +201,17 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\CableMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Cast.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_stlMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\changManderConcrete01.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFTSlipMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_concMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_stlMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\sakinoSunConcrete04.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteel01.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelCCFT.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelRCFT.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\Stl_beamMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete01WithSITC.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete02.cpp" />
@@ -532,9 +564,30 @@
     <ClInclude Include="..\..\..\SRC\material\section\ElasticTubeSection3d.h" />
     <ClInclude Include="..\..\..\SRC\material\section\fiber\BiaxialFiber2d.h" />
     <ClInclude Include="..\..\..\SRC\material\section\fiber\BiaxialFiber3d.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTAggregator.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTFiberSection3D.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\RCFTSTLFiberSection3D.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\Circ2dLayer.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\Straight2dLayer.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\TwoDLayer.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\coreCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\icCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\iCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\ifCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\isCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\iwCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubeCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubecornerCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\tubeflatCell.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\corePatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\icPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\ifPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\iPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\isPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\iwPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubecornerPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubeflatPatch.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubePatch.h" />
     <ClInclude Include="..\..\..\SRC\material\section\TimoshenkoSection2d.h" />
     <ClInclude Include="..\..\..\SRC\material\section\WSection2d.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h" />
@@ -543,6 +596,17 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\CableMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Cast.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_stlMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\changManderConcrete01.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFTSlipMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_concMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\RCFT_stlMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\sakinoSunConcrete04.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteel01.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelCCFT.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\shenSteelRCFT.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\Stl_beamMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete01.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete01WithSITC.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete02.h" />
