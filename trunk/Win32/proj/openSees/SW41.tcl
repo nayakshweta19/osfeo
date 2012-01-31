@@ -1,7 +1,6 @@
 # Create ModelBuilder with 2 dimensions and 2 DOF/node
 # 修改自 SW4 for nonlinearBS material
 # 改为一个单元水平荷载
-# 英制
 # 为了对比弹性多轴本构对quad单元的刚度，增加了弹性多轴本构
 
 wipe;
@@ -101,14 +100,14 @@ set SR2 0.06;
 nDMaterial NonlinearBS $IDMat $fclU $epslU $fc2U $eps2U $lambda $ftU $Ets $rD1 $rR1 $rdmm1 $rD2 $rR2 $rdmm2 \
 						$Fy $epsY $Fy1 $epsY1 $Fu $epsU -$Fy -$epsY -$Fy1 -$epsY1 -$Fu -$epsU $pinchX $pinchY $damage1 $damage2 $betaMUsteel;
 
-nDMaterial NonlinearBS $IDMatFlg $fclU $epslU $fc2U $eps2U $lambda $ftU $Ets $rD1 $FrR1 $Frd1 $rD2 $FrR2 $Frd2 \
-						$Fy $epsY $Fy1 $epsY1 $Fu $epsU -$Fy -$epsY -$Fy1 -$epsY1 -$Fu -$epsU $pinchX $pinchY $damage1 $damage2 $betaMUsteel;
+#nDMaterial NonlinearBS $IDMatFlg $fclU $epslU $fc2U $eps2U $lambda $ftU $Ets $rD1 $FrR1 $Frd1 $rD2 $FrR2 $Frd2 \
+#						$Fy $epsY $Fy1 $epsY1 $Fu $epsU -$Fy -$epsY -$Fy1 -$epsY1 -$Fu -$epsU $pinchX $pinchY $damage1 $damage2 $betaMUsteel;
 
-nDMaterial NonlinearBS $IDMatSlab $fclU $epslU $fc2U $eps2U $lambda $ftU $Ets $rD1 $SR1 $rdmm1 $rD2 $SR2 $rdmm2 \
-						$Fy $epsY $Fy1 $epsY1 $Fu $epsU -$Fy -$epsY -$Fy1 -$epsY1 -$Fu -$epsU $pinchX $pinchY $damage1 $damage2 $betaMUsteel;
+#nDMaterial NonlinearBS $IDMatSlab $fclU $epslU $fc2U $eps2U $lambda $ftU $Ets $rD1 $SR1 $rdmm1 $rD2 $SR2 $rdmm2 \
+#						$Fy $epsY $Fy1 $epsY1 $Fu $epsU -$Fy -$epsY -$Fy1 -$epsY1 -$Fu -$epsU $pinchX $pinchY $damage1 $damage2 $betaMUsteel;
 
 # Material "Steel":    matTag    E    v    rho 
-nDMaterial  ElasticIsotropic3D 6 30000 0.2  0 
+#nDMaterial  ElasticIsotropic3D 6 30000 0.2  0 
 # Section "ElaMembranePlateSec":    secTag    E    v    h    rho 
 #section  ElasticMembranePlateSection       4  +2.000000E+005  +2.500000E-001  +1.000000E-001  0.0
 
@@ -121,21 +120,21 @@ if { $Quad == "quad" } {
 
 # Node    tag    xCrd    yCrd 
 node       1       0       0
-node       2 [expr 1000.*$in] 0
-node       3       0 [expr 1000.*$in]
-node       4 [expr 1000.*$in] [expr 1000.*$in] 
+node       2 [expr 1000.]  0; #  *$in
+node       3       0 [expr 1000.]; #*$in]
+node       4 [expr 1000.] [expr 1000.] 
 
 # SPC    tag    Dx    Dy    Dz    Rx    Ry    Rz 
 fix       1     1     1       
 fix       2     0     1       
-fix       3     0     0       
-fix       4     0     0      
+#fix       3     0     0       
+#fix       4     0     0      
 
 # Node    tag    mx    my    mz    mIx    mIy    mIz 
-mass       1 [expr 1000.*$lbf] [expr 1000.*$lbf]
-mass       2 [expr 1000.*$lbf] [expr 1000.*$lbf]
-mass       3 [expr 1000.*$lbf] [expr 1000.*$lbf]
-mass       4 [expr 1000.*$lbf] [expr 1000.*$lbf]
+mass       1 [expr 1000.] [expr 1000.]; #*$lbf]
+mass       2 [expr 1000.] [expr 1000.]; #*$lbf]
+mass       3 [expr 1000.] [expr 1000.]; #*$lbf]
+mass       4 [expr 1000.] [expr 1000.]; #*$lbf]
 
 # ELEMENT DEFINITION
 element quad     1       1       2       4       3     [expr 12.*$in]  "PlaneStress2D"   $IDMat
@@ -152,18 +151,19 @@ puts "Model Built"
 
 ## create the display
 set displayType "PERSPECTIVE"
-recorder display g3 10 10 800 600 -wipe
+recorder display g3 10 10 800 800 -wipe
 if {$displayType == "PERSPECTIVE"} {
-  prp 200 500 1000
-  vrp 0 -350 450
+  prp 0 0 1300
+  vrp 0 0 0
   vup 0 1 0
-  vpn 0.4 0.6 0.8
-  viewWindow -6000 12000 -6000 12000
+  vpn 0.0 0.0 0.0
+  viewWindow -500 1500 -500 1500
 }
 port -1 1 -1 1
 projection 1
 fill 0
 display 1 -1 1
+
 
 #
 # Apply the displacement history and Perform a transient analysis
@@ -172,7 +172,7 @@ display 1 -1 1
 timeSeries  Linear       1  -factor  +1.000000E+000 
 
 # LoadPattern "PlainDefault":    patternTag    tsTag 
-pattern  Plain       1       1  { 
+pattern  Plain       2       1  { 
     # Load    nodeTag    LoadValues 
     load       3  1.000000E+000   0.000000E+000 
     load       4  1.000000E+000   0.000000E+000 
@@ -208,14 +208,14 @@ algorithm  KrylovNewton
 # DOF Numberer 
 numberer  Plain 
 # System of Equations 
-system  SparseGEN; #UmfPack 
+system  UmfPack; # SparseGEN
 # Analysis Type 
 analysis  Static 
 
 # perform the analysis
 # analyze 17380
-set numSteps   {  1000     4000   3000    4000   6000    8000 12000  16000  20500  25000 29600  34700 10000    10 };    #}
-set numIters   {  200     200   200    200   200    100  100   100   100   100  500   500  500   300 };    #}
+set numSteps   {  100     400   300    400   600    800 1200  1600  2050  2500 2960  3470 1000    10 };    #}
+set numIters   {  200     200   200    200   500    500  500   500   100   100  500   500  500   300 };    #}
 set increments {  0.1 -0.05  .1   -0.1  0.1  -0.1 0.1 -0.1  0.1 -0.1 0.1 -0.1 0.1 -0.1 };     #}
 
 for { set i 0 } { $i<14 } { incr i 1 } {
@@ -230,6 +230,6 @@ for { set i 0 } { $i<14 } { incr i 1 } {
     test NormDispIncr 1e-3 $numIter 5
     analyze $numStep
     puts $i
-    print ele
+    print
 }
-remove recorders;
+#remove recorders;

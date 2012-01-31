@@ -50,8 +50,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;D:\MATLAB\R2011b\extern\include\win64;D:\MATLAB\R2011b\extern\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;D:\MATLAB\R2011b\extern\lib\win32\microsoft;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;D:\MATLAB\R2011b\extern\include\win64;D:\MATLAB\R2011b\extern\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;D:\MATLAB\R2011b\extern\lib\win32\microsoft;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;D:\MATLAB\R2011b\extern\include\win64;D:\MATLAB\R2011b\extern\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;D:\MATLAB\R2011b\extern\lib\win32\microsoft;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,7 +145,7 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\stepSize\ArmijoStepSizeRule.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\analysis\stepSize\FixedStepSizeRule.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\analysis\stepSize\StepSizeRule.cpp" />
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\AllIndependentTransformation.cpp" />
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\NatafProbabilityTransformation.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\ProbabilityTransformation.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\BivariateDecomposition.cpp" />
@@ -330,7 +330,7 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\stepSize\ArmijoStepSizeRule.h" />
     <ClInclude Include="..\..\..\SRC\reliability\analysis\stepSize\FixedStepSizeRule.h" />
     <ClInclude Include="..\..\..\SRC\reliability\analysis\stepSize\StepSizeRule.h" />
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\AllIndependentTransformation.h" />
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.h" />
     <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\NatafProbabilityTransformation.h" />
     <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\ProbabilityTransformation.h" />
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\BivariateDecomposition.h" />

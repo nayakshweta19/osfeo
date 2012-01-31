@@ -613,16 +613,17 @@ puts "Model Built"
 set displayType "PERSPECTIVE"
 recorder display g3 10 10 800 600 -wipe
 if {$displayType == "PERSPECTIVE"} {
-  prp -12500 -25000 30000
-  #vrp 0 -500 250
-  vup 0 0 1
-  #vpn -1 -1 0.5
-  viewWindow -2000 2000 -2000 2000
+  prp 0 0 200
+  vrp 0 0 0
+  vup 0 1 0
+  vpn 0 0 1
+  viewWindow -20 60 -5 72
 }
 port -1 1 -1 1
 projection 1
 fill 0
-display 1 1 10
+display 1 -1 1
+
 
 #
 # Apply the displacement history and Perform a transient analysis

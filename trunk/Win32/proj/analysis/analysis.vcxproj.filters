@@ -326,6 +326,9 @@
     <ClCompile Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.cpp">
       <Filter>integrator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.cpp">
+      <Filter>fe_ele</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h">
@@ -612,6 +615,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.h">
       <Filter>integrator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.h">
+      <Filter>fe_ele</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

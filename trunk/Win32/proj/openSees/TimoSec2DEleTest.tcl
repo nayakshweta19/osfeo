@@ -76,7 +76,8 @@ section Timoshenko $beamSecTag { ;
 };
 
 # --------------------------------------------------------------------------------------------------
-
+set iNode 1001
+set jNode 1002
 # Define two nodes
 node 1001 0.0 0.0;
 node 1002 0.0 200.0;
@@ -90,6 +91,7 @@ set transfTag 1;
 geomTransf Linear $transfTag;
 set np 5; # int. points
 # Define element
+set eleTag 2001
 #                         tag ndI ndJ  secTag
 #element zeroLengthSection  2001   1001   1002  $secTag
 #forceBeamColumn $eleTag $iNode $jNode $numIntgrPts $secTag $transfTag

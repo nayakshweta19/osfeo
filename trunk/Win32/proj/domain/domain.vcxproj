@@ -51,8 +51,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -119,6 +119,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\domain\constraints\MD_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\load\SelfWeight.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\load\SurfaceLoader.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\node\NodalLoad.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="..\..\..\SRC\domain\region\TclRegionCommands.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\domain\constraints\MD_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\domain\load\SelfWeight.h" />
     <ClInclude Include="..\..\..\SRC\domain\load\SurfaceLoader.h" />
     <ClInclude Include="..\..\..\SRC\domain\node\NodalLoad.h" />

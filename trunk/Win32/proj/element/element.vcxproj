@@ -51,13 +51,13 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\material\nD\UWmaterials;..\..\..\src\tagged\storage;..\..\..\src\actor\message;..\..\..\src\element\Timoshenko;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\adapter;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\src\package;..\..\..\src\damage;..\..\..\src\element\material\nd\template3dep;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\coordTransformation;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\api;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\domain\load;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\element\compositePackages;..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\material\nD\UWmaterials;..\..\..\src\tagged\storage;..\..\..\src\actor\message;..\..\..\src\element\Timoshenko;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\adapter;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\src\package;..\..\..\src\damage;..\..\..\src\element\material\nd\template3dep;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\coordTransformation;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\api;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\domain\load;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_WGL;_COROTATIONAL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -119,8 +119,42 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTCrdLinTransf3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTCrdTransf3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTMCrdLinTransf3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTMCrdTransf3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTSTLCrdTransf3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\coordTransformation\RCFTSTLLinCrdTransf3D.cpp" />
     <ClCompile Include="..\..\..\SRC\element\brick\TclTwenty_Node_BrickCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\brick\Twenty_Node_Brick.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTDBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTGMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTLMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTLMMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTMMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSCHBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLDBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLGMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLLMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLMBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\RCFTSTLMFBeamColumn3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTDBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTGMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTLMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTLMMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTMMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSCHBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLDBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLGMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLLMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMFBeamColumnCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.cpp" />
     <ClCompile Include="..\..\..\SRC\element\Element.cpp" />
     <ClCompile Include="..\..\..\SRC\element\ElementalLoad.cpp" />
@@ -174,8 +208,6 @@
     <ClCompile Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\CorotCrdTransf3d.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf.cpp" />
-    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf2d.cpp" />
-    <ClCompile Include="..\..\..\SRC\coordTransformation\CrdTransf3d.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\LinearCrdTransf3d.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf2d.cpp" />
@@ -318,7 +350,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf3d.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTCrdLinTransf3D.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTCrdTransf3D.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTMCrdLinTransf3D.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTMCrdTransf3D.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTSTLCrdTransf3D.h" />
+    <ClInclude Include="..\..\..\SRC\coordTransformation\RCFTSTLLinCrdTransf3D.h" />
     <ClInclude Include="..\..\..\SRC\element\brick\Twenty_Node_Brick.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\mixedBeamColumn3d.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTDBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTGMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTLMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTLMMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTMMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSCHBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLDBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLGMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLLMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMBeamColumn3D.h" />
+    <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMFBeamColumn3D.h" />
     <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.h" />
     <ClInclude Include="..\..\..\SRC\element\Element.h" />
     <ClInclude Include="..\..\..\SRC\element\ElementalLoad.h" />
@@ -364,8 +417,6 @@
     <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf3d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf.h" />
-    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf2d.h" />
-    <ClInclude Include="..\..\..\SRC\coordTransformation\CrdTransf3d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\LinearCrdTransf2d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\LinearCrdTransf3d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\PDeltaCrdTransf2d.h" />

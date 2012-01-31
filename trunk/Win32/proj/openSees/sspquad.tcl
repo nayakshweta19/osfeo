@@ -105,13 +105,13 @@ recorder Element -eleRange 1 $nElemT -time -file results/e1p1m1.out  -dT $step  
 
 ## create the display
 set displayType "PERSPECTIVE"
-recorder display g3 10 10 800 600 -wipe
+recorder display g3 10 10 800 800 -wipe
 if {$displayType == "PERSPECTIVE"} {
-  prp 0 0 1000
-  #vrp 0 -500 250
+  prp 0 0 1300
+  vrp 0 0 1
   vup 1 0 0
-  #vpn -1 -1 0.5
-  viewWindow -400 800 -400 800
+  vpn 0 0 -1
+  viewWindow -500 1500 -500 1500
 }
 port -1 1 -1 1
 projection 1
