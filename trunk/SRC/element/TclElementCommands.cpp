@@ -376,6 +376,63 @@ TclModelBuilder_Pipe3(ClientData clientData, Tcl_Interp *interp, int argc,
 extern int
 TclModelBuilder_Pipelin2(ClientData clientData, Tcl_Interp *interp, int argc,
 					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
+
+extern int
+TclModelBuilder_addRCFTMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                           Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSCHBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                             Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTDBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                           Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTMMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                            Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTGMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                            Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTLMMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                            Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTLMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                            Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSCHBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                            Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                             Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                              Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLLMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                               Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLMFBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                               Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLGMBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                               Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addRCFTSTLDBeamColumn(ClientData, Tcl_Interp *, int, TCL_Char **,
+		                              Domain*, TclModelBuilder *);
+
 //////////////////////////////////////////////////////////////////////////
 
 int
@@ -1103,6 +1160,82 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 	  int eleArgStart = 1;
 	  int result = TclModelBuilder_Pipelin2(clientData, interp, argc, argv, theTclDomain, theTclBuilder, eleArgStart);
 	  return result;
+  }
+
+  else if (strcmp(argv[1],"RCFTMBeamColumn") == 0) {
+	int result = TclModelBuilder_addRCFTMBeamColumn(clientData, interp, argc, argv,
+			                                        theTclDomain, theTclBuilder);
+    return result;
+  }
+
+  else if (strcmp(argv[1],"RCFTMMBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTMMBeamColumn(clientData, interp, argc, argv,
+			                                         theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTGMBeamColumn") == 0) {
+	int result = TclModelBuilder_addRCFTGMBeamColumn(clientData, interp, argc, argv,
+			                                         theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTLMMBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTLMMBeamColumn(clientData, interp, argc, argv,
+			                                          theTclDomain, theTclBuilder);
+    return result;
+  }
+  
+  else if (strcmp(argv[1],"RCFTSCHBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTSCHBeamColumn(clientData, interp, argc, argv,
+			                                          theTclDomain, theTclBuilder);
+    return result;
+  } else if (strcmp(argv[1],"RCFTDBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTDBeamColumn(clientData, interp, argc, argv,
+			                                        theTclDomain, theTclBuilder);
+    return result;
+  }
+  
+  else if (strcmp(argv[1],"RCFTLMBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTLMBeamColumn(clientData, interp, argc, argv,
+			                                         theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLBeamColumn") == 0) {
+	int result = TclModelBuilder_addRCFTSTLBeamColumn(clientData, interp, argc, argv,
+			                                          theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLMBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTSTLMBeamColumn(clientData, interp, argc, argv,
+                                                       theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLLMBeamColumn") == 0) {
+              int result = TclModelBuilder_addRCFTSTLLMBeamColumn(clientData, interp, argc, argv,
+                                                                  theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLMFBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTSTLMFBeamColumn(clientData, interp, argc, argv,
+                                                        theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLGMBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTSTLGMBeamColumn(clientData, interp, argc, argv,
+                                                        theTclDomain, theTclBuilder);
+    return result;
+  } 
+  
+  else if (strcmp(argv[1],"RCFTSTLDBeamColumn") == 0) {
+    int result = TclModelBuilder_addRCFTSTLDBeamColumn(clientData, interp, argc, argv,
+                                                       theTclDomain, theTclBuilder);
+    return result;
   }
   //////////////////////////////////////////////////////////////////////////
   else {
