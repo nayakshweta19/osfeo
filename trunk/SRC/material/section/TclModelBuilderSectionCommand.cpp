@@ -4486,6 +4486,10 @@ buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 	 SectionForceDeformation *section = 0;
 	 if (isTorsion)
 	   section = new FiberSectionGJ(secTag, numFibers, fiber, GJ);
+	 else if (isRCFTSTL)
+		 section = new RCFTSTLFiberSection3D(secTag, numFibers, fiber, GJ);
+	 else if (isRCFT)
+		 section = new RCFTFiberSection3D(secTag, numFibers, fiber, GJ, D, B, T);
 	 else
 	   section = new FiberSection3d(secTag, numFibers, fiber);
    
