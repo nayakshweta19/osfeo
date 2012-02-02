@@ -58,7 +58,8 @@ class FE_Element: public TaggedObject
     virtual const ID &getID(void) const;
     void setAnalysisModel(AnalysisModel &theModel);
     virtual int  setID(void);
-    
+    int getnumdof(void); //cenk
+
     // methods to form and obtain the tangent and residual
     virtual const Matrix &getTangent(Integrator *theIntegrator);
     virtual const Vector &getResidual(Integrator *theIntegrator);
