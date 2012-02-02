@@ -76,7 +76,13 @@ StaticIntegrator::formEleResidual(FE_Element *theEle)
 {
     // only elements residual needed
     theEle->zeroResidual();
-    theEle->addRtoResidual();
+	int numdof = theEle->getnumdof();
+	if( numdof == 18 ){
+		theEle->addRCFTtoResidual();
+	}
+	else{    
+		theEle->addRtoResidual();
+	}
     return 0;
 }    
 

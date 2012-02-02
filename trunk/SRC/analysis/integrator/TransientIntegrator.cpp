@@ -106,7 +106,13 @@ int
 TransientIntegrator::formEleResidual(FE_Element *theEle)
 {
   theEle->zeroResidual();
-  theEle->addRIncInertiaToResidual();
+  int numdof = theEle->getnumdof();
+  if( numdof == 18 ){
+	  theEle->addRCFTIncInertiaToResidual();
+  }
+  else{
+	  theEle->addRIncInertiaToResidual();
+  }
   return 0;
 }    
 
