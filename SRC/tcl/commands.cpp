@@ -6771,7 +6771,7 @@ int
 eleResponse(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
     // make sure at least one other argument to contain type of system
-    if (argc < 2) {
+    if (argc < 3) {
 	  opserr << "WARNING want - eleResponse eleTag? eleArgs...\n";
 	  return TCL_ERROR;
     }    

@@ -318,13 +318,15 @@ CSMMRCPlaneStress::~CSMMRCPlaneStress()
 }
 
 
-double CSMMRCPlaneStress::getRho(void)
+double 
+CSMMRCPlaneStress::getRho(void)
 {
 	return rho;
 }
 
 
-int CSMMRCPlaneStress::setTrialStrain(const Vector &v)
+int 
+CSMMRCPlaneStress::setTrialStrain(const Vector &v)
 {
 
   // Set values for strain_vec
@@ -346,58 +348,67 @@ int CSMMRCPlaneStress::setTrialStrain(const Vector &v)
   return 0;
 }
 
-int CSMMRCPlaneStress::setTrialStrain(const Vector &v, const Vector &r)
+int 
+CSMMRCPlaneStress::setTrialStrain(const Vector &v, const Vector &r)
 {
   opserr << "error: CSMMRCPlaneStress::setTrialStrain(&v, &r) -- not really responsibility" << endln;
   return 0;
 }
 
 
-int CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
+int 
+CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
 {
   opserr << "error: CSMMRCPlaneStress::setTrialStrainIncr(&v) -- not really responsibility" << endln;
   return 0;
 }
 
 
-int CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
+int 
+CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
 {
   opserr << "error: CSMMRCPlaneStress::setTrialStrainIncr(&v, &r) -- not really responsibility" << endln;
   return 0;
 }
 
 
-const Matrix& CSMMRCPlaneStress::getTangent(void)
+const Matrix& 
+CSMMRCPlaneStress::getTangent(void)
 {
   return tangent_matrix;
 }
 
-const Vector& CSMMRCPlaneStress::getStress(void)
+const Vector& 
+CSMMRCPlaneStress::getStress(void)
 {
 
   return stress_vec;
 }
 
 
-const Vector& CSMMRCPlaneStress :: getStrain()
+const Vector& 
+CSMMRCPlaneStress :: getStrain()
 {
   return strain_vec;
 }
     
 
-const Vector& CSMMRCPlaneStress::getCommittedStress(void)
+const Vector& 
+CSMMRCPlaneStress::getCommittedStress(void)
 {
   return stress_vec;
 }
 
 
-const Vector& CSMMRCPlaneStress::getCommittedStrain(void)
+const Vector& 
+CSMMRCPlaneStress::getCommittedStrain(void)
 {
   return strain_vec;
 }
     
 
-int CSMMRCPlaneStress::commitState(void)
+int 
+CSMMRCPlaneStress::commitState(void)
 {
   for (int i=0; i<4; i++)
   {
@@ -418,7 +429,8 @@ int CSMMRCPlaneStress::commitState(void)
 }
 
 
-int CSMMRCPlaneStress::revertToLastCommit(void)
+int 
+CSMMRCPlaneStress::revertToLastCommit(void)
 {
 
   for (int i=0; i<4; i++)
@@ -438,7 +450,8 @@ int CSMMRCPlaneStress::revertToLastCommit(void)
 }
 
 
-int CSMMRCPlaneStress::revertToStart(void)
+int 
+CSMMRCPlaneStress::revertToStart(void)
 {
   int i;
   for (i=0; i<4; i++)
@@ -474,7 +487,8 @@ int CSMMRCPlaneStress::revertToStart(void)
   return 0;
 }
 
-NDMaterial* CSMMRCPlaneStress::getCopy(void)
+NDMaterial* 
+CSMMRCPlaneStress::getCopy(void)
 {
   CSMMRCPlaneStress* theCopy =
     new CSMMRCPlaneStress( this->getTag(), 
@@ -496,7 +510,8 @@ NDMaterial* CSMMRCPlaneStress::getCopy(void)
 }
 
 
-NDMaterial* CSMMRCPlaneStress::getCopy(const char *type)
+NDMaterial* 
+CSMMRCPlaneStress::getCopy(const char *type)
 {
 	CSMMRCPlaneStress* theModel =
 		new CSMMRCPlaneStress( this->getTag(), 
@@ -545,7 +560,8 @@ CSMMRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 		return 0;
 }
 
-int CSMMRCPlaneStress::getResponse (int responseID, Information &matInfo)
+int 
+CSMMRCPlaneStress::getResponse (int responseID, Information &matInfo)
 {
 #ifdef DEBUG
 	opserr << "CSMMRCPlaneStress::getResponse(...)" << endln;
@@ -573,7 +589,8 @@ int CSMMRCPlaneStress::getResponse (int responseID, Information &matInfo)
 //end by LN
 
 
-void CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
+void 
+CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
 {
 	s << "\n\tCSMMRCPlaneStress, material id: " << this->getTag() << endln;
     /*
@@ -623,9 +640,9 @@ void CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
 	}
 
 }
- 
 
-int CSMMRCPlaneStress::sendSelf(int commitTag, Channel &theChannel)
+int 
+CSMMRCPlaneStress::sendSelf(int commitTag, Channel &theChannel)
 {
   int res = 0;
   
@@ -688,7 +705,8 @@ int CSMMRCPlaneStress::sendSelf(int commitTag, Channel &theChannel)
   return res;
 }
  
-int CSMMRCPlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+int 
+CSMMRCPlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
   int res = 0;
   
@@ -777,8 +795,8 @@ int CSMMRCPlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBr
   return res;
 }
 
-
-int CSMMRCPlaneStress::determineTrialStress(void)
+int 
+CSMMRCPlaneStress::determineTrialStress(void)
 { 
   // Get Principal strain direction first
   
@@ -880,9 +898,8 @@ int CSMMRCPlaneStress::determineTrialStress(void)
   return 0;
 }
 
-
-
-double CSMMRCPlaneStress::getAngleError(double inputCita)
+double 
+CSMMRCPlaneStress::getAngleError(double inputCita)
 {
 	double outputCita;
 	outputCita = getPrincipalStressAngle(inputCita);
@@ -904,9 +921,8 @@ double CSMMRCPlaneStress::getAngleError(double inputCita)
 	return error;
 }
 
-
-
-double CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
+double 
+CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 {   
     double citaIn; // Trial principal stress direction, obtained from input
     citaIn = inputAngle;

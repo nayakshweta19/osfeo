@@ -51,6 +51,7 @@
 #include <BeamFiberMaterial.h>
 #include <BeamFiberMaterial2d.h> //neallee@tju.edu.cn
 #include <PlaneStressFiberMaterial.h> //neallee@tju.edu.cn
+#include <PlaneStressRCFiberMaterial.h> //neallee@tju.edu.cn
 
 #include <PressureIndependMultiYield.h>
 #include <PressureDependMultiYield.h>
@@ -615,7 +616,6 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  theMaterial = new ElasticCrossAnisotropic(tag, Eh, Ev, nuhv, nuhh, Ghv, rho);
     }
 
-
     // Check argv[1] for J2PlaneStrain material type
     else if ((strcmp(argv[1],"J2Plasticity") == 0)  ||
 	     (strcmp(argv[1],"J2") == 0)) {
@@ -678,7 +678,6 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	theMaterial = new J2Plasticity (tag, 0, K, G, sig0, sigInf,
 					delta, H, eta);
     }
-
 
     //
     //  MultiAxialCyclicPlasticity Model   by Gang Wang
@@ -770,7 +769,6 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
       theMaterial = new MultiaxialCyclicPlasticity (tag, 0, rho, K, G, Su, Ho, h,m,
 						    beta, Kcoeff, eta);
     }
-
 
     // Pressure Independend Multi-yield, by ZHY
     else if (strcmp(argv[1],"PressureIndependMultiYield") == 0) {
@@ -1173,8 +1171,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 						    theTclBuilder, 2);
     }
 
-
-     else if (strcmp(argv[1],"PlaneStressMaterial") == 0 ||
+    else if (strcmp(argv[1],"PlaneStressMaterial") == 0 ||
  	     strcmp(argv[1],"PlaneStress") == 0) {
  	if (argc < 4) {
  	    opserr << "WARNING insufficient arguments\n";
@@ -1208,7 +1205,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
      }
 
     // PlaneStrainMaterial
-     else if (strcmp(argv[1],"PlaneStrainMaterial") == 0 ||
+    else if (strcmp(argv[1],"PlaneStrainMaterial") == 0 ||
 	      strcmp(argv[1],"PlaneStrain") == 0) {
        if (argc < 4) {
 	 opserr << "WARNING insufficient arguments\n";
@@ -1241,7 +1238,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
        theMaterial = new PlaneStrainMaterial( tag, *threeDMaterial );
      }
     
-     else if (strcmp(argv[1],"PlateFiberMaterial") == 0 ||
+    else if (strcmp(argv[1],"PlateFiberMaterial") == 0 ||
 	      strcmp(argv[1],"PlateFiber") == 0) {
  	if (argc < 4) {
  	    opserr << "WARNING insufficient arguments\n";
@@ -1274,7 +1271,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  	theMaterial = new PlateFiberMaterial( tag, *threeDMaterial );
      }
 
-     else if (strcmp(argv[1],"BeamFiberMaterial") == 0 ||
+    else if (strcmp(argv[1],"BeamFiberMaterial") == 0 ||
  	     strcmp(argv[1],"BeamFiber") == 0) {
  	if (argc < 4) {
  	    opserr << "WARNING insufficient arguments\n";
@@ -1307,7 +1304,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  	theMaterial = new BeamFiberMaterial( tag, *threeDMaterial );
      }
 
-	 else if (strcmp(argv[1],"BeamFiberMaterial2d") == 0 ||
+	else if (strcmp(argv[1],"BeamFiberMaterial2d") == 0 ||
  	     strcmp(argv[1],"BeamFiber2d") == 0) {
  	if (argc < 4) {
  	    opserr << "WARNING insufficient arguments\n";
@@ -1340,7 +1337,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  	theMaterial = new BeamFiberMaterial2d( tag, *threeDMaterial );
      }
 
-	 else if (strcmp(argv[1],"PlaneStressFiberMaterial") == 0 ||
+	else if (strcmp(argv[1],"PlaneStressFiberMaterial") == 0 ||
  	     strcmp(argv[1],"PlaneStressFiber") == 0) {
  	if (argc < 4) {
  	    opserr << "WARNING insufficient arguments\n";
@@ -1362,7 +1359,7 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  	    return TCL_ERROR;
  	}
 
- 	NDMaterial *twoDMaterial = theTclBuilder->getNDMaterial(matTag);
+ 	NDMaterial *twoDMaterial = OPS_GetNDMaterial(matTag);
  	if (twoDMaterial == 0) {
  	    opserr << "WARNING nD material does not exist\n";
  	    opserr << "nD material: " << matTag;
@@ -1371,6 +1368,39 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
  	}
 
  	theMaterial = new PlaneStressFiberMaterial( tag, *twoDMaterial );
+     }
+
+	else if (strcmp(argv[1],"PlaneStressRCFiberMaterial") == 0 ||
+ 	     strcmp(argv[1],"PlaneStressRCFiber") == 0) {
+ 	if (argc < 4) {
+ 	    opserr << "WARNING insufficient arguments\n";
+ 	    printCommand(argc,argv);
+ 	    opserr << "Want: nDMaterial PlaneStressFiber tag? matTag?" << endln;
+ 	    return TCL_ERROR;
+ 	}
+
+ 	int tag, matTag;
+
+ 	if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+ 	    opserr << "WARNING invalid nDMaterial PlaneStressFiber tag" << endln;
+ 	    return TCL_ERROR;
+ 	}
+
+ 	if (Tcl_GetInt (interp, argv[3], &matTag) != TCL_OK) {
+ 	    opserr << "WARNING invalid matTag" << endln;
+ 	    opserr << "PlaneStressFiber: " << matTag << endln;
+ 	    return TCL_ERROR;
+ 	}
+
+ 	NDMaterial *twoDMaterial = OPS_GetNDMaterial(matTag);
+ 	if (twoDMaterial == 0) {
+ 	    opserr << "WARNING nD material does not exist\n";
+ 	    opserr << "nD material: " << matTag;
+ 	    opserr << "\nPlaneStressFiber nDMaterial: " << tag << endln;
+ 	    return TCL_ERROR;
+ 	}
+
+ 	theMaterial = new PlaneStressRCFiberMaterial( tag, *twoDMaterial );
      }
 
     else if (strcmp(argv[1],"Bidirectional") == 0) {

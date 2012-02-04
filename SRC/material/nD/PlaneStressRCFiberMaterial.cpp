@@ -20,57 +20,60 @@
 
 // $Revision: 1.4 $
 // $Date: 2003-02-14 23:01:24 $
-// $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlaneStressFiberMaterial.cpp,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlaneStressRCFiberMaterial.cpp,v $
 
 // Written: MHS
 // Created: Aug 2001
 //
-// Description: This file contains the class definition of PlaneStressFiberMaterial.
-// The PlaneStressFiberMaterial class is a wrapper class that performs static
+// Description: This file contains the class definition of PlaneStressRCFiberMaterial.
+// The PlaneStressRCFiberMaterial class is a wrapper class that performs static
 // condensation on a three-dimensional material model to give the 11 and 12
 // stress components which can then be integrated over an area to model a
 // shear flexible 2D beam.
 
-#include <PlaneStressFiberMaterial.h>
+#include <PlaneStressRCFiberMaterial.h>
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
 #include <string.h>
 #include <float.h>
 
-Vector PlaneStressFiberMaterial::stress(2);
-Matrix PlaneStressFiberMaterial::tangent(2,2);
+Vector PlaneStressRCFiberMaterial::stress(2);
+Matrix PlaneStressRCFiberMaterial::tangent(2,2);
 
-PlaneStressFiberMaterial::PlaneStressFiberMaterial(void)
-: NDMaterial(0, ND_TAG_PlaneStressFiberMaterial),
-Tstrain22(0.0), Cstrain22(0.0), twoDtgLastCommit(3,3), theMaterial(0), strain(2)
+#define ND_TAG_PlaneStressRCFiberMaterial 265891
+
+
+PlaneStressRCFiberMaterial::PlaneStressRCFiberMaterial(void)
+: NDMaterial(0, ND_TAG_PlaneStressRCFiberMaterial),
+Tstrain22(0.0), Cstrain22(0.0), twoDtgLastCommit(3,3), theMaterial(0)
 {
 	// Nothing to do
 }
 
-PlaneStressFiberMaterial::PlaneStressFiberMaterial(int tag, NDMaterial &theMat)
-: NDMaterial(tag, ND_TAG_PlaneStressFiberMaterial),
+PlaneStressRCFiberMaterial::PlaneStressRCFiberMaterial(int tag, NDMaterial &theMat)
+: NDMaterial(tag, ND_TAG_PlaneStressRCFiberMaterial),
 Tstrain22(0.0), Cstrain22(0.0), twoDtgLastCommit(3,3), theMaterial(0), strain(2)
 {
   // Get a copy of the material
   theMaterial = theMat.getCopy();
   
   if (theMaterial == 0) {
-    opserr << "PlaneStressFiberMaterial::PlaneStressFiberMaterial -- failed to get copy of material\n";
+    opserr << "PlaneStressRCFiberMaterial::PlaneStressRCFiberMaterial -- failed to get copy of material\n";
     exit(-1);
   }
 }
 
-PlaneStressFiberMaterial::~PlaneStressFiberMaterial(void) 
+PlaneStressRCFiberMaterial::~PlaneStressRCFiberMaterial(void) 
 { 
   if (theMaterial != 0)
     delete theMaterial;
 } 
 
 NDMaterial*
-PlaneStressFiberMaterial::getCopy(void) 
+PlaneStressRCFiberMaterial::getCopy(void) 
 {
-	PlaneStressFiberMaterial *theCopy =
-		new PlaneStressFiberMaterial(this->getTag(), *theMaterial);
+	PlaneStressRCFiberMaterial *theCopy =
+		new PlaneStressRCFiberMaterial(this->getTag(), *theMaterial);
 
 	theCopy->Tstrain22 = this->Tstrain22;
 	theCopy->Cstrain22 = this->Cstrain22;
@@ -80,7 +83,7 @@ PlaneStressFiberMaterial::getCopy(void)
 }
 
 NDMaterial* 
-PlaneStressFiberMaterial::getCopy(const char *type)
+PlaneStressRCFiberMaterial::getCopy(const char *type)
 {
 	if (strcmp(type, "BeamFiber2d") == 0)
 		return this->getCopy();
@@ -89,19 +92,19 @@ PlaneStressFiberMaterial::getCopy(const char *type)
 }
 
 int 
-PlaneStressFiberMaterial::getOrder(void) const
+PlaneStressRCFiberMaterial::getOrder(void) const
 {
 	return 2;
 }
 
 const char*
-PlaneStressFiberMaterial::getType(void) const 
+PlaneStressRCFiberMaterial::getType(void) const 
 {
 	return "BeamFiber2d";
 }
 
 int 
-PlaneStressFiberMaterial::commitState(void)
+PlaneStressRCFiberMaterial::commitState(void)
 {
   Cstrain22 = Tstrain22;
   if (theMaterial->commitState() != 0)
@@ -112,7 +115,7 @@ PlaneStressFiberMaterial::commitState(void)
 }
 
 int 
-PlaneStressFiberMaterial::revertToLastCommit(void)
+PlaneStressRCFiberMaterial::revertToLastCommit(void)
 {
   Tstrain22 = Cstrain22;
   if (theMaterial->revertToLastCommit() != 0)
@@ -122,7 +125,7 @@ PlaneStressFiberMaterial::revertToLastCommit(void)
 }
 
 int
-PlaneStressFiberMaterial::revertToStart()
+PlaneStressRCFiberMaterial::revertToStart()
 {
   this->Tstrain22 = 0.0;
   this->Cstrain22 = 0.0;
@@ -132,18 +135,18 @@ PlaneStressFiberMaterial::revertToStart()
 }
 
 double
-PlaneStressFiberMaterial::getRho(void)
+PlaneStressRCFiberMaterial::getRho(void)
 {
   return theMaterial->getRho();
 }
 
 //receive the strain
 //2D Plane Stress Material strain order = 11, 22, 12
-//PlaneStressFiberMaterial strain order = 11, 12, 22
+//PlaneStressRCFiberMaterial strain order = 11, 12, 22
 //11, 22, 33, 12, 23, 31
 //11, 12, 31, 22, 33, 23
 int 
-PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
+PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 {
 
   this->strain(0) = strainFromElement(0);
@@ -151,7 +154,7 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 
   //newton loop to solve for out-of-plane strains
   int i, j, ii, jj;
-  double norm;
+  double norm, dd23, dd21, dd22;
   static double factor = 10;
  
   static Vector condensedStress(1);
@@ -161,7 +164,7 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   static Matrix twoDtangent(3,3);
   static Vector twoDstressCopy(3); 
   static Matrix twoDtangentCopy(3,3);
-  static Matrix dd22(1,1);
+  //static Matrix dd22(1,1);
 
   static Vector twoDstrainTrial(3);
   static Vector twoDstrainToDo(3);
@@ -175,12 +178,9 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 
   //set two dimensional strain
   
-  twoDstrain(0) = this->strain(0); //Tstrain11
-  twoDstrain(1) = this->Tstrain22; //Tstrain22;
-  twoDstrain(2) = this->strain(1); //Tstrain33;
-  //twoDstrain(3) = this->Tgamma12; 
-  //twoDstrain(4) = this->Tgamma23;
-  //twoDstrain(5) = this->Tgamma31;
+  twoDstrain(0) = this->strain(0); //Tstrain11    eps_xx
+  twoDstrain(1) = this->Tstrain22; //Tstrain22;   eps_yy
+  twoDstrain(2) = this->strain(1); //Tstrain12;   gamma_xy
 
   twoDstrainToDo = twoDstrain;
   twoDstrainTrial = twoDstrainToDo;
@@ -218,6 +218,7 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	twoDtangent = twoDtgLastCommit;
   } else {
 	twoDtangent = theMaterial->getTangent();
+
   }
 
 	} else {
@@ -230,9 +231,9 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
     // two dimensional stress
     twoDstress = theMaterial->getStress();
     
-	// PlaneStressRC NDmaterial strain order   = 11, 22, 12;  ##, 33, 23, 31
-	// PlaneStressRCFiberMaterial strain order = 11, 12, 22;  ##, 31, 33, 23
-	// swap matrix indices to sort out-of-plane components 
+    // PlaneStressRC NDmaterial strain order   = 11, 22, 12;  ##, 33, 23, 31
+    // PlaneStressRCFiberMaterial strain order = 11, 12, 22;  ##, 31, 33, 23
+    // swap matrix indices to sort out-of-plane components 
     for (i=0; i<3; i++) {
     
       ii = this->indexMap(i);
@@ -246,24 +247,31 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
     twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     
       }//end for j
+       
     }//end for i
     
     //out of plane stress and tangents
     condensedStress(0) = twoDstressCopy(2);
-    dd22(0,0) = twoDtangentCopy(2,2);
-    
+
+    dd22 = twoDtangent(1,1);
+    dd23 = twoDtangent(1,2);
+	dd21 = twoDtangent(1,0);
+
     //set norm
-    norm = condensedStress.Norm();
+    norm = condensedStress.Norm(); //abs(twoDstress(1));
     
     //condensation 
-    dd22.Solve(condensedStress, strainIncrement);
-    
+    //dd22.Solve(condensedStress, strainIncrement);
+    //strainIncrement(0) = -(dd23*twoDstrain(1)+dd21*twoDstrain(0))/dd22; // -(k23*gamma+k21*eps_x)/k22
+
     //update out of plane strains
+	this->Tstrain22 = -(dd23*twoDstrain(2)+dd21*twoDstrain(0))/dd22;;
+
     //this->Tgamma31  -= strainIncrement(0);
-    this->Tstrain22 -= strainIncrement(0);
+    //this->Tstrain22 -= strainIncrement(0);
     //this->Tstrain33 -= strainIncrement(2);
     //this->Tgamma23  -= strainIncrement(3);
-    
+
     if (norm <= tol) {
 	  converged = true;
 	  //twoDstrainToDo -= twoDstrainTrial;
@@ -271,9 +279,9 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	  // break out of cnt & l loops
 	  cnt = numIters+1;
 	  l   = 4;
+
     } else {
 	  // for next iteration
-	  
 	  twoDstrainTrial(1) = this->Tstrain22;
 
 	  // if we have failed to converge for all of our newton schemes
@@ -283,105 +291,51 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	    twoDstrainTrial /= factor;
 	    numSubdivide++;
 	  }
+
     } // test norm <? tol
-
   }  // for (cnt=0; cnt<numIters; cnt++)
-
     } // for (int l=0; l<2; l++)
-
   } // (converged == false && numSubdivide <= maxSubdivisions)
   
-    // if fail to converge we return an error flag & print an error message
-
+  // if fail to converge we return an error flag & print an error message
   if (converged == false) {
-    opserr << "WARNING - PlaneStressFiberMaterial::setTrialStrain - failed to get compatible ";
-    opserr << "inter-fiber forces & deformations FiberMaterial: " << endln;
+    opserr << "WARNING - PlaneStressRCFiberMaterial::setTrialStrain - failed to get compatible ";
+    opserr << "inter-fiber forces & deformations PlaneStressRCFiberMaterial: " << endln;
     opserr << this->getTag() << "(norm: << " << norm << ")" << endln;
-    return -1;
+    //return -1;
   }
+
+  stress(0) = twoDstress(0) - twoDtangent(0,1)/dd22 * twoDstress(1);
+  stress(1) = twoDstress(2) - twoDtangent(2,1)/dd22 * twoDstress(1);
+
+  this->tangent(0,0) = twoDtangent(0,0) - twoDtangent(0,1)*twoDtangent(1,0)/dd22; 
+  this->tangent(0,1) = twoDtangent(0,2) - twoDtangent(0,1)*twoDtangent(1,2)/dd22;
+  this->tangent(1,0) = twoDtangent(2,0) - twoDtangent(2,1)*twoDtangent(1,0)/dd22;
+  this->tangent(1,1) = twoDtangent(2,2) - twoDtangent(2,1)*twoDtangent(1,2)/dd22;
 
   return 0;
 }
 
 const Vector& 
-PlaneStressFiberMaterial::getStrain(void)
+PlaneStressRCFiberMaterial::getStrain(void)
 {
   return this->strain;
 }
 
 const Vector&  
-PlaneStressFiberMaterial::getStress()
+PlaneStressRCFiberMaterial::getStress()
 {
-  //two dimensional stress
-  const Vector &twoDstress = theMaterial->getStress();
-  static Vector twoDstressCopy(3);
-
-  //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-  //PlaneStressFiberMaterial strain order = 11, 12, 31, 22, 33, 23
-
-  //swap matrix indices to sort out-of-plane components 
-  int i, ii;
-  
-  for (i=0; i<3; i++) {
-
-    ii = this->indexMap(i);
-    
-    twoDstressCopy(ii) = twoDstress(i);
-
-  }//end for i
-
-  for (i=0; i<2; i++) 
-    this->stress(i) = twoDstressCopy(i);
-
   return this->stress;
 }
 
 const Matrix&  
-PlaneStressFiberMaterial::getTangent()
+PlaneStressRCFiberMaterial::getTangent()
 {
-  static Matrix dd11(2,2);
-  static Matrix dd12(2,1);
-  static Matrix dd21(1,2);
-  static Matrix dd22(1,1);
-  static Matrix dd22invdd21(1,2);
-  static Matrix twoDtangentCopy(3,3);
-
-  const Matrix &twoDtangent = theMaterial->getTangent();
-
-  //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
-  for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
-    for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
-      twoDtangentCopy(ii,jj) = twoDtangent(i,j);
-    }//end for j
-  }//end for i
-
-  for (i=0; i<2; i++) 
-    for (j=0; j<2; j++) 
-      dd11(i,j) = twoDtangentCopy(i,j);
-
-  for (int i = 0; i < 2; i++)
-    dd12(i,0) = twoDtangentCopy(i,2);
-
-  for (int j = 0; j < 2; j++)
-    dd21(0,j) = twoDtangentCopy(2,j);
-
-  dd22(0,0)   = twoDtangentCopy(2,2);
-
-  //int Solve(const Vector &V, Vector &res) const;
-  //int Solve(const Matrix &M, Matrix &res) const;
-  //condensation 
-  dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
-
   return this->tangent;
 }
 
 const Matrix&  
-PlaneStressFiberMaterial::getInitialTangent()
+PlaneStressRCFiberMaterial::getInitialTangent()
 {
   static Matrix dd11(2,2);
   static Matrix dd12(2,1);
@@ -414,8 +368,6 @@ PlaneStressFiberMaterial::getInitialTangent()
 
   dd22(0,0)   = twoDtangentCopy(2,2);
 
-  //int Solve(const Vector &V, Vector &res) const;
-  //int Solve(const Matrix &M, Matrix &res) const;
   //condensation 
   dd22.Solve(dd21, dd22invdd21);
   this->tangent   = dd11; 
@@ -425,9 +377,9 @@ PlaneStressFiberMaterial::getInitialTangent()
 }
 
 //2D material strain order        = 11, 22, 12
-//PlaneStressFiberMaterial strain order = 11, 12, 22
+//PlaneStressRCFiberMaterial strain order = 11, 12, 22
 int 
-PlaneStressFiberMaterial::indexMap(int i)
+PlaneStressRCFiberMaterial::indexMap(int i)
 {
   int ii;
 
@@ -442,16 +394,16 @@ PlaneStressFiberMaterial::indexMap(int i)
 }
 
 void  
-PlaneStressFiberMaterial::Print(OPS_Stream &s, int flag)
+PlaneStressRCFiberMaterial::Print(OPS_Stream &s, int flag)
 {
-	s << "PlaneStressFiberMaterial, tag: " << this->getTag() << endln;
+	s << "PlaneStressRCFiberMaterial, tag: " << this->getTag() << endln;
 	s << "\tWrapped material: "<< theMaterial->getTag() << endln;
 
 	theMaterial->Print(s, flag);
 }
 
 int 
-PlaneStressFiberMaterial::sendSelf(int commitTag, Channel &theChannel) 
+PlaneStressRCFiberMaterial::sendSelf(int commitTag, Channel &theChannel) 
 {
   int res = 0;
 
@@ -468,7 +420,7 @@ PlaneStressFiberMaterial::sendSelf(int commitTag, Channel &theChannel)
 
   res = theChannel.sendID(this->getDbTag(), commitTag, idData);
   if (res < 0) {
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send id data\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send id data\n";
     return res;
   }
 
@@ -478,20 +430,20 @@ PlaneStressFiberMaterial::sendSelf(int commitTag, Channel &theChannel)
 
   res = theChannel.sendVector(this->getDbTag(), commitTag, vecData);
   if (res < 0) {
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send vector data\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send vector data\n";
     return res;
   }
 
   // now send the materials data
   res = theMaterial->sendSelf(commitTag, theChannel);
   if (res < 0) 
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send vector material\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send vector material\n";
 
   return res;
 }
 
 int 
-PlaneStressFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+PlaneStressRCFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
   int res = 0;
 
@@ -499,7 +451,7 @@ PlaneStressFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_Objec
   static ID idData(3);
   res = theChannel.sendID(this->getDbTag(), commitTag, idData);
   if (res < 0) {
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send id data\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send id data\n";
     return res;
   }
 
@@ -513,7 +465,7 @@ PlaneStressFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_Objec
       delete theMaterial;
     theMaterial = theBroker.getNewNDMaterial(matClassTag);
     if (theMaterial == 0) {
-      opserr << "PlaneStressFiberMaterial::recvSelf() - failed to get a material of type: " << matClassTag << endln;
+      opserr << "PlaneStressRCFiberMaterial::recvSelf() - failed to get a material of type: " << matClassTag << endln;
       return -1;
     }
   }
@@ -523,7 +475,7 @@ PlaneStressFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_Objec
   static Vector vecData(1);
   res = theChannel.recvVector(this->getDbTag(), commitTag, vecData);
   if (res < 0) {
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send vector data\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send vector data\n";
     return res;
   }
 
@@ -534,7 +486,7 @@ PlaneStressFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_Objec
   // now receive the materials data
   res = theMaterial->recvSelf(commitTag, theChannel, theBroker);
   if (res < 0) 
-    opserr << "PlaneStressFiberMaterial::sendSelf() - failed to send vector material\n";
+    opserr << "PlaneStressRCFiberMaterial::sendSelf() - failed to send vector material\n";
   
   return res;
 }

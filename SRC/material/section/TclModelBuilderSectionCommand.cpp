@@ -1272,7 +1272,7 @@ TclCommand_addFiberSection (ClientData clientData, Tcl_Interp *interp, int argc,
     bool isTorsion = false;
 	bool isRCFT = false;
 	bool isRCFTSTL = false;
-	double D, B, T;
+	double D = 0.0, B = 0.0, T = 0.0;
     if (strcmp(argv[3],"-GJ") == 0) {
       if (Tcl_GetDouble(interp, argv[4], &GJ) != TCL_OK) {
 	interp->result = "WARNING invalid GJ";
