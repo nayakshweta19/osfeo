@@ -20,13 +20,13 @@
                                                                         
 // $Revision: 1.4 $
 // $Date: 2003/02/14 23:01:24 $
-// $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlaneStressFiberMaterial.h,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlaneStressRCFiberMaterial.h,v $
 
 // Written: MHS
 // Created: Aug 2001
 //
-// Description: This file contains the class definition of PlaneStressFiberMaterial.
-// The PlaneStressFiberMaterial class is a wrapper class that performs static
+// Description: This file contains the class definition of PlaneStressRCFiberMaterial.
+// The PlaneStressRCFiberMaterial class is a wrapper class that performs static
 // condensation on a three-dimensional material model to give the 11, 12
 // stress components which can then be integrated over an area to model a
 // shear flexible 2D beam.
@@ -40,12 +40,12 @@
 #include <ID.h> 
 #include <NDMaterial.h>
 
-class PlaneStressFiberMaterial: public NDMaterial {
+class PlaneStressRCFiberMaterial: public NDMaterial {
 
   public:
-    PlaneStressFiberMaterial(int tag, NDMaterial &theMat);
-    PlaneStressFiberMaterial(void);
-    virtual ~PlaneStressFiberMaterial(void);
+    PlaneStressRCFiberMaterial(int tag, NDMaterial &theMat);
+    PlaneStressRCFiberMaterial(void);
+    virtual ~PlaneStressRCFiberMaterial(void);
 
     int setTrialStrain( const Vector &strainFromElement);
     const Vector& getStrain(void);

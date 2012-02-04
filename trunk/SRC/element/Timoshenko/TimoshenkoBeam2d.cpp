@@ -618,10 +618,10 @@ TimoshenkoBeam2d::addLoad(ElementalLoad *theLoad, double loadFactor)
 	// Reactions in basic system
 	p0[0] -= P;
 	p0[1] -= V;
-	p0[2] -= V;
+	p0[2] -= M;
 	p0[3] -= P;
 	p0[4] -= V;
-	p0[5] -= -V; //add and modified
+	p0[5] -= -M; //add and modified
 
     // Fixed end forces in basic system
     q0[0] += wa*L*0.5;
