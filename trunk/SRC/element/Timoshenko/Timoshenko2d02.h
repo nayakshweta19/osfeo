@@ -1,14 +1,14 @@
-// $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/Timoshenko2d01.h,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/Timoshenko2d02.h,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
 // Modified by: Li Ning 
-// Description: This file contains the class implementation of TimoshenkoBeam.Based on Timoshenko2d01.cpp.
+// Description: This file contains the class implementation of TimoshenkoBeam.Based on Timoshenko2d02.cpp.
 
   
-#ifndef Timoshenko2d01_h
-#define Timoshenko2d01_h
+#ifndef Timoshenko2d02_h
+#define Timoshenko2d02_h
 
 #ifndef _bool_h
 #include "bool.h"
@@ -30,20 +30,20 @@ class CrdTransf;
 class TimoshenkoLinearCrdTransf2d;
 class Response;
 
-class Timoshenko2d01 : public Element
+class Timoshenko2d02 : public Element
 {
   public:
-    Timoshenko2d01(int tag, 
+    Timoshenko2d02(int tag, 
 			int nd1, 
 			int nd2,
+			int numSec, 
 			SectionForceDeformation **s,
 			CrdTransf &coordTransf, 
 			BeamIntegration &bi,
-			double rho,
-			double c);
+			double rho = 0.0);
 
-    Timoshenko2d01();
-    virtual ~Timoshenko2d01();
+    Timoshenko2d02();
+    virtual ~Timoshenko2d02();
 
     int getNumExternalNodes(void) const;
     const ID &getExternalNodes(void);
@@ -93,7 +93,6 @@ class Timoshenko2d01 : public Element
   private:
     const Matrix &getInitialBasicStiff(void);
     int numSections;
-	double C1;
     SectionForceDeformation **theSections; // pointer to the ND material objects
     TimoshenkoLinearCrdTransf2d *crdTransf;          // pointer to coordinate transformation object 
     ID connectedExternalNodes; // Tags of quad nodes

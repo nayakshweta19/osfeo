@@ -220,7 +220,7 @@ TimoshenkoSection2d::getSectionTangent(void)
   for (int i = 0; i < numFibers; i++) {
     
     y = matData[i*3] - yBar;
-    z = 0.0 - zBar; //matData[i*3+1] - zBar;
+    z = matData[i*3+1] - zBar;
     w = matData[i*3+2];
 
     y2 = y*y;
@@ -232,21 +232,22 @@ TimoshenkoSection2d::getSectionTangent(void)
 	d00 = Dt(0,0)*w; d01 = Dt(0,1)*w; 
 	d10 = Dt(1,0)*w; d11 = Dt(1,1)*w; 
     
-    // Bending terms
-    kData[0] += d00;  //0,0
-    kData[4] += y2*d00; //1,1
-    kData[8] += d11; //2,2
+    kData[0] += d00;    //0,0           P
+    kData[4] += y2*d00; //1,1           M
+    kData[8] += d11;    //2,2 five6*    V
 
     tmp = -y*d00;
     kData[1] += tmp; // 0,1
-    kData[3] += tmp; //1,0
-    // Shear terms
+    kData[3] += tmp; // 1,0
+    
+	// Hit tangent terms with root56
+	//d01 *= root56; d10 *= root56;
+
     kData[2] += d01; //0,2
     kData[6] += d10; //2,0
-    tmp = -y*d01;
-    kData[5] += tmp; //1,2
-	tmp = -y*d10;
-    kData[7] += tmp; //2,1
+
+    kData[5] -= y*d01; //1,2
+    kData[7] -= y*d10; //2,1
     
   }
 
@@ -273,7 +274,7 @@ TimoshenkoSection2d::getStressResultant(void)
   for (int i = 0; i < numFibers; i++) {
     
     y = matData[i*3];
-    z = 0.0; //matData[i*3+1];
+    z = matData[i*3+1];
     w = matData[i*3+2];
     
     const Vector &sig = theMaterials[i]->getStress();

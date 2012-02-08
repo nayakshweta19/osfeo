@@ -84,9 +84,6 @@ TimoshenkoLinearCrdTransf2d::TimoshenkoLinearCrdTransf2d(int tag,
 	}
 }
 
-
-
- 
 // constructor:
 // invoked by a FEM_ObjectBroker, recvSelf() needs to be invoked on this object.
 TimoshenkoLinearCrdTransf2d::TimoshenkoLinearCrdTransf2d():
@@ -98,8 +95,6 @@ TimoshenkoLinearCrdTransf2d::TimoshenkoLinearCrdTransf2d():
 
 }
 
-
-
 // destructor:
 TimoshenkoLinearCrdTransf2d::~TimoshenkoLinearCrdTransf2d() 
 {
@@ -109,13 +104,11 @@ TimoshenkoLinearCrdTransf2d::~TimoshenkoLinearCrdTransf2d()
 		delete [] nodeJOffset;
 }
 
-
 int
 TimoshenkoLinearCrdTransf2d::commitState(void)		
 {
    return 0;
 }
-
 
 int
 TimoshenkoLinearCrdTransf2d::revertToLastCommit(void)	
@@ -123,13 +116,11 @@ TimoshenkoLinearCrdTransf2d::revertToLastCommit(void)
    return 0;
 }
 
-
 int
 TimoshenkoLinearCrdTransf2d::revertToStart(void)	
 {
    return 0;
 }
-
 
 int 
 TimoshenkoLinearCrdTransf2d::initialize(Node *nodeIPointer, Node *nodeJPointer)	
@@ -153,13 +144,11 @@ TimoshenkoLinearCrdTransf2d::initialize(Node *nodeIPointer, Node *nodeJPointer)
    return 0;
 }
 
-
 int
 TimoshenkoLinearCrdTransf2d::update(void)	
 {       
    return 0;
 }
-
 
 int 
 TimoshenkoLinearCrdTransf2d::computeElemtLengthAndOrient()
@@ -200,23 +189,17 @@ TimoshenkoLinearCrdTransf2d::computeElemtLengthAndOrient()
    return 0;
 }
 
-
-
-
-
 double 
 TimoshenkoLinearCrdTransf2d::getInitialLength(void)	
 {
    return L;
 }
 
-
 double 
 TimoshenkoLinearCrdTransf2d::getDeformedLength(void)
 {
    return L;
 }
-
 
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicTrialDisp (void)
@@ -262,8 +245,6 @@ TimoshenkoLinearCrdTransf2d::getBasicTrialDisp (void)
   return ub;
 }
 
-
-
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicTrialDispInt (void)	//LMS
 {
@@ -293,9 +274,6 @@ TimoshenkoLinearCrdTransf2d::getBasicTrialDispInt (void)	//LMS
  
   return ub;
 }
-
-
-
 
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicTrialDispShapeSensitivity (void)
@@ -367,7 +345,6 @@ TimoshenkoLinearCrdTransf2d::getBasicTrialDispShapeSensitivity (void)
 	return ub;
 }
 
-
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicIncrDisp (void)
 {
@@ -412,7 +389,6 @@ TimoshenkoLinearCrdTransf2d::getBasicIncrDisp (void)
 	return dub;
 }
 
-
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicIncrDeltaDisp(void)
 {
@@ -456,7 +432,6 @@ TimoshenkoLinearCrdTransf2d::getBasicIncrDeltaDisp(void)
 
 	return Dub;
 }
-
 
 const Vector &
 TimoshenkoLinearCrdTransf2d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
@@ -512,8 +487,6 @@ TimoshenkoLinearCrdTransf2d::getGlobalResistingForce(const Vector &pb, const Vec
 	return pg;
 }
 
-
-
 const Vector &
 TimoshenkoLinearCrdTransf2d::getGlobalResistingForceInt(const Vector &pb, const Vector &p0)	//LMS
 {
@@ -543,9 +516,6 @@ TimoshenkoLinearCrdTransf2d::getGlobalResistingForceInt(const Vector &pb, const 
 
 	return pg;
 }
-
-
-
 
 const Vector &
 TimoshenkoLinearCrdTransf2d::getGlobalResistingForceShapeSensitivity(const Vector &pb, const Vector &p0)
@@ -751,9 +721,6 @@ TimoshenkoLinearCrdTransf2d::getGlobalStiffMatrix (const Matrix &kb, const Vecto
 	return kg;
 }
 
-
-
-
 const Matrix &
 TimoshenkoLinearCrdTransf2d::getGlobalStiffMatrixInt (const Matrix &kb, const Vector &pb)	//LMS
 {
@@ -817,10 +784,6 @@ TimoshenkoLinearCrdTransf2d::getGlobalStiffMatrixInt (const Matrix &kb, const Ve
 
 	return kg;
 }
-
-
-
-
 
 const Matrix &
 TimoshenkoLinearCrdTransf2d::getInitialGlobalStiffMatrix (const Matrix &kb)
@@ -944,10 +907,6 @@ TimoshenkoLinearCrdTransf2d::getInitialGlobalStiffMatrix (const Matrix &kb)
   
   return kg;
 }
-  
-
-
-
 
 const Matrix &
 TimoshenkoLinearCrdTransf2d::getInitialGlobalStiffMatrixInt (const Matrix &kb)	//LMS
@@ -1010,10 +969,6 @@ TimoshenkoLinearCrdTransf2d::getInitialGlobalStiffMatrixInt (const Matrix &kb)	/
   
   return kg;
 }
-  
-
-
-
 
 CrdTransf *
 TimoshenkoLinearCrdTransf2d::getCopy(void)		
@@ -1110,8 +1065,6 @@ TimoshenkoLinearCrdTransf2d::sendSelf(int cTag, Channel &theChannel)
   return res;
 }
 
-    
-
 int 
 TimoshenkoLinearCrdTransf2d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker)	
 {
@@ -1147,7 +1100,6 @@ TimoshenkoLinearCrdTransf2d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectB
 
   return res;
 }
- 	
 
 const Vector &
 TimoshenkoLinearCrdTransf2d::getPointGlobalCoordFromLocal(const Vector &xl)	
@@ -1169,7 +1121,6 @@ TimoshenkoLinearCrdTransf2d::getPointGlobalCoordFromLocal(const Vector &xl)
      
    return xg;  
 }
-
     
 const Vector &
 TimoshenkoLinearCrdTransf2d::getPointGlobalDisplFromBasic (double xi, const Vector &uxb)	
@@ -1235,7 +1186,6 @@ TimoshenkoLinearCrdTransf2d::Print(OPS_Stream &s, int flag)
      s << "\tnodeJ Offset: " << nodeJOffset[0] << ' ' << nodeJOffset[1] << endln;
 
 }
-
 
 // AddingSensitivity:BEGIN ///////////////////////////////
 const Vector &
@@ -1329,7 +1279,6 @@ TimoshenkoLinearCrdTransf2d::getBasicTrialVel(void)
 	return vb;
 }
 
-
 const Vector &
 TimoshenkoLinearCrdTransf2d::getBasicTrialAccel(void)
 {
@@ -1373,5 +1322,3 @@ TimoshenkoLinearCrdTransf2d::getBasicTrialAccel(void)
 	
 	return ab;
 }
-
-
