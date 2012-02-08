@@ -40,6 +40,7 @@ class TimoshenkoBeam2d : public Element
 			SectionForceDeformation **s,
 			CrdTransf &coordTransf, 
 			BeamIntegration &bi,
+			double C,
 			double rho = 0.0);
 
     TimoshenkoBeam2d();
@@ -95,7 +96,8 @@ class TimoshenkoBeam2d : public Element
     int numSections;
     SectionForceDeformation **theSections; // pointer to the ND material objects
     TimoshenkoLinearCrdTransf2d *crdTransf;          // pointer to coordinate transformation object 
-    ID connectedExternalNodes; // Tags of quad nodes
+    double C1;
+	ID connectedExternalNodes; // Tags of quad nodes
     Node *theNodes[2];
     static Matrix K;		// Element stiffness, damping, and mass Matrix
     static Vector P;		// Element resisting force vector

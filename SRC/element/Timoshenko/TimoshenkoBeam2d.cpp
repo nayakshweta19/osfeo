@@ -18,6 +18,7 @@
 #include <FASTMFiberSection2d.h>
 #include <CSMMFiberSection2d.h>
 #include <MCFTFiberSection2d.h>
+#include <TimoshenkoSection2d.h>
 #include <CrdTransf.h>
 #include <TimoshenkoLinearCrdTransf2d.h>
 #include <Matrix.h>
@@ -44,10 +45,10 @@ TimoshenkoBeam2d::TimoshenkoBeam2d(int tag,
 					 SectionForceDeformation **s,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
-					 double r)
+					 double C, double r)
   :Element (tag, ELE_TAG_TimoshenkoBeam2d), 
   numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
-  connectedExternalNodes(2),
+  connectedExternalNodes(2), C1(C),
   Q(6), q(6), rho(r)
 {
   // Allocate arrays of pointers to SectionForceDeformations
@@ -74,6 +75,9 @@ TimoshenkoBeam2d::TimoshenkoBeam2d(int tag,
 		break;
 	case SEC_TAG_MCFTFiberSection2d:
 		theSections[i] = (MCFTFiberSection2d *)theSection;
+		break;
+	case SEC_TAG_TimoshenkoSection2d:
+		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
 	default:
 		opserr << "TimoshenkoBeam2d::TimoshenkoBeam2d() --default secTag at sec " << i+1 << endln;
@@ -303,7 +307,7 @@ int
 TimoshenkoBeam2d::update(void)
 {
   int err = 0;
-  double C1 = 0.5;
+
   // Update the transformation
   crdTransf->update();
   
@@ -331,7 +335,7 @@ TimoshenkoBeam2d::update(void)
       case SECTION_RESPONSE_P:   // axial strain
 	e(j) = oneOverL*(-v(0)+v(3)); break;
       case SECTION_RESPONSE_MZ:	// curvature
-	e(j) = oneOverL*(-1.0+3.0*(1.0-2.0*C1)*xi)*(v(2)- v(5)); break;
+	e(j) = oneOverL*(-1.0+3.0*(1.0-2.0*C1)*xi)*(v(2)-v(5)); break;
 	  case SECTION_RESPONSE_VY:	// shear strain
 	e(j) = oneOverL*(-v(1)+v(4))-C1*v(2)+(C1-1.0)*v(5); break;
 	  default:
@@ -363,10 +367,10 @@ TimoshenkoBeam2d::getTangentStiff(void)
   double L = crdTransf->getInitialLength();
   double oneOverL = 1.0/L;
   
-  //double pts[maxNumSections];
-  //beamInt->getSectionLocations(numSections, L, pts);
-  //double wts[maxNumSections];
-  //beamInt->getSectionWeights(numSections, L, wts);
+  double pts[maxNumSections];
+  beamInt->getSectionLocations(numSections, L, pts);
+  double wts[maxNumSections];
+  beamInt->getSectionWeights(numSections, L, wts);
   
   // Loop over the integration points
   for (int i = 0; i < numSections; i++) {
@@ -377,7 +381,7 @@ TimoshenkoBeam2d::getTangentStiff(void)
 	//Matrix ka(workArea, order, 3);
 	//ka.Zero();
 
-    double xi = 0.; //2.0*pts[i]-1.0;
+    double xi = 2.0*pts[i]-1.0;
 
     // Get the section tangent stiffness and stress resultant
     const Matrix &ks = theSections[i]->getSectionTangent();			
@@ -386,12 +390,11 @@ TimoshenkoBeam2d::getTangentStiff(void)
     // Perform numerical integration
 	//kb.addMatrixTripleProduct(1.0, *B, ks, wts(i)/L);
     double wti = 2.*oneOverL; //wts[i]*oneOverL;
-	double C1 = 0.5;
 	double d11, d12, d13, d21, d22, d23, d31, d32, d33;
 
-	d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	
-	d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	
-	d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	
+	d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	//P
+	d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	//M
+	d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	//V
 
 	kb(0,0) += wti*(d11);
 	kb(0,1) += wti*(d13);
@@ -436,7 +439,7 @@ TimoshenkoBeam2d::getTangentStiff(void)
 	kb(5,5) +=wti*(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi) + (-1.0 + C1)*L*((-1.0 + C1)*d33*L + d32*(1.0 - 3.0*xi + 6.0*C1*xi) + d23*(1.0 + (-3.0 + 6.0*C1)*xi)));
    
     double s1, s2, s3;
-    double wto = 2.0; //wts[i];
+    double wto = wts[i];
 
 	s1=s(0);	s2=s(1);	s3=s(2);
 

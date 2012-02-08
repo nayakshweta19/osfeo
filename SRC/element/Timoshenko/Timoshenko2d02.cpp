@@ -1,17 +1,17 @@
-// $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko2d01.cpp,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko2d02.cpp,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
 // Modified by: Li Ning 
-// Description: This file contains the class implementation of Timoshenko2d01.Based on Timoshenko2d01.cpp.
+// Description: This file contains the class implementation of Timoshenko2d02.Based on Timoshenko2d02.cpp.
 // Referred to R.L. Taylor FEM 6th Ed. Timoshenko Rod Element with Constant STrain
 //
 // 1 the strain matrix need to including the element length L. so the CrdTransf object is created, which named as
 //   TimoshenkoCrdTransf.
 
 
-#include <Timoshenko2d01.h>
+#include <Timoshenko2d02.h>
 #include <Node.h>
 #include <FiberSection2d.h>
 #include <RASTMFiberSection2d.h>
@@ -34,33 +34,32 @@
 #include <ElementalLoad.h>
 #include <BeamIntegration.h>
 
-Matrix Timoshenko2d01::K(6,6);
-Vector Timoshenko2d01::P(6);
-double Timoshenko2d01::workArea[100];
+Matrix Timoshenko2d02::K(6,6);
+Vector Timoshenko2d02::P(6);
+double Timoshenko2d02::workArea[100];
 
-Timoshenko2d01::Timoshenko2d01(int tag, 
+Timoshenko2d02::Timoshenko2d02(int tag, 
 					 int nd1, 
 					 int nd2,	
+					 int numSec,
 					 SectionForceDeformation **s,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
-					 double c,
-					 double r = 0.0)
-    :Element (tag, ELE_TAG_Timoshenko2d01), 
-    numSections(1), theSections(0), crdTransf(0), beamInt(0),
+					 double r)
+    :Element (tag, ELE_TAG_Timoshenko2d02), 
+    numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2),
-    Q(6), q(6), C1(c), rho(r)
+    Q(6), q(6), rho(r)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
     
   if (theSections == 0) {
-    opserr << "Timoshenko2d01::Timoshenko2d01 - failed to allocate section model pointer\n";
+    opserr << "Timoshenko2d02::Timoshenko2d02 - failed to allocate section model pointer\n";
     exit(-1);
   }
 
-  int i = 0;
-    
+  for (int i = 0; i< numSections; i++){
     // Get copies of the material model for each integration point
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
@@ -79,17 +78,16 @@ Timoshenko2d01::Timoshenko2d01(int tag,
 	case SEC_TAG_TimoshenkoSection2d:
 		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
-
 	default:
-		opserr << "Timoshenko2d01::Timoshenko2d01() --default secTag at sec " << i+1 << endln;
+		opserr << "Timoshenko2d02::Timoshenko2d02() --default secTag at sec " << i+1 << endln;
 		theSections[i] = theSection;
 		break;
     }
-      
+  }
 
   CrdTransf *theCoord = coordTransf.getCopy2d();
   if (theCoord == 0 || theCoord->getClassTag() != CRDTR_TAG_TimoshenkoLinearCrdTransf2d) {
-    opserr << "Timoshenko2d01::Timoshenko2d01 -- failed to get a copy of coordinate transformation\n";
+    opserr << "Timoshenko2d02::Timoshenko2d02 -- failed to get a copy of coordinate transformation\n";
     if (theCoord == 0)
       opserr << "COPY ZERO\n";
     else
@@ -100,14 +98,14 @@ Timoshenko2d01::Timoshenko2d01(int tag,
   crdTransf = (TimoshenkoLinearCrdTransf2d *)theCoord;
   
   if (crdTransf == 0) {
-    opserr << "Timoshenko2d01::Timoshenko2d01 - failed to copy coordinate transformation\n";
+    opserr << "Timoshenko2d02::Timoshenko2d02 - failed to copy coordinate transformation\n";
     exit(-1);
   }
   
   beamInt = bi.getCopy();
 
   if (beamInt == 0) {
-	  opserr << "Timoshenko2d01::Timoshenko2d01() - failed to copy beam integration\n";
+	  opserr << "Timoshenko2d02::Timoshenko2d02() - failed to copy beam integration\n";
 	  exit(-1);
   }
 
@@ -137,11 +135,11 @@ Timoshenko2d01::Timoshenko2d01(int tag,
 // AddingSensitivity:END //////////////////////////////////////
 }
 
-Timoshenko2d01::Timoshenko2d01()
-	:Element (0, ELE_TAG_Timoshenko2d01),
+Timoshenko2d02::Timoshenko2d02()
+	:Element (0, ELE_TAG_Timoshenko2d02),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
 	connectedExternalNodes(2),
-	Q(6), q(6), C1(0.0), rho(0.0)
+	Q(6), q(6), rho(0.0)
 {
     q0[0] = 0.0;
     q0[1] = 0.0;
@@ -165,7 +163,7 @@ Timoshenko2d01::Timoshenko2d01()
 // AddingSensitivity:END //////////////////////////////////////
 }
 
-Timoshenko2d01::~Timoshenko2d01()
+Timoshenko2d02::~Timoshenko2d02()
 {    
     int i = 0;
 	if (theSections[i])
@@ -183,37 +181,37 @@ Timoshenko2d01::~Timoshenko2d01()
 }
 
 int
-Timoshenko2d01::getNumExternalNodes() const
+Timoshenko2d02::getNumExternalNodes() const
 {
     return 2;
 }
 
 const ID&
-Timoshenko2d01::getExternalNodes()
+Timoshenko2d02::getExternalNodes()
 {
     return connectedExternalNodes;
 }
 
 Node **
-Timoshenko2d01::getNodePtrs()
+Timoshenko2d02::getNodePtrs()
 {
     return theNodes;
 }
 
 int
-Timoshenko2d01::getNumDOF()
+Timoshenko2d02::getNumDOF()
 {
     return 6;
 }
 
 void
-Timoshenko2d01::setDomain(Domain *theDomain)
+Timoshenko2d02::setDomain(Domain *theDomain)
 {
 	// Check Domain is not null - invoked when object removed from a domain
     if (theDomain == 0) {
-	theNodes[0] = 0;
-	theNodes[1] = 0;
-	return;
+	  theNodes[0] = 0;
+	  theNodes[1] = 0;
+	  return;
     }
 
     int Nd1 = connectedExternalNodes(0);
@@ -223,15 +221,14 @@ Timoshenko2d01::setDomain(Domain *theDomain)
     theNodes[1] = theDomain->getNode(Nd2);
 
     if (theNodes[0] == 0 || theNodes[1] == 0) {
-
-	return;
+      return;
     }
 
     int dofNd1 = theNodes[0]->getNumberDOF();
     int dofNd2 = theNodes[1]->getNumberDOF();
     
     if (dofNd1 != 3 || dofNd2 != 3) {
-		//opserr << "FATAL ERROR Timoshenko2d01 (tag: %d), has differing number of DOFs at its nodes",
+		//opserr << "FATAL ERROR Timoshenko2d02 (tag: %d), has differing number of DOFs at its nodes",
 		//	this->getTag());
 		return;
     }
@@ -252,18 +249,18 @@ Timoshenko2d01::setDomain(Domain *theDomain)
 }
 
 int
-Timoshenko2d01::commitState()
+Timoshenko2d02::commitState()
 {
     int retVal = 0;
 
     // call element commitState to do any base class stuff
     if ((retVal = this->Element::commitState()) != 0) {
-      opserr << "Timoshenko2d01::commitState () - failed in base class";
+      opserr << "Timoshenko2d02::commitState () - failed in base class";
     }    
 
     // Loop over the integration points and commit the material states
-    int i = 0;
-	retVal += theSections[i]->commitState();
+    for (int i = 0; i<numSections; i++)
+	  retVal += theSections[i]->commitState();
 
     retVal += crdTransf->commitState();					
 
@@ -271,15 +268,15 @@ Timoshenko2d01::commitState()
 }
 
 int
-Timoshenko2d01::revertToLastCommit()
+Timoshenko2d02::revertToLastCommit()
 {
     int retVal = 0;
 
 	double L = crdTransf->getInitialLength();
 
     // Loop over the integration points and revert to last committed state
-    int i = 0;
-	retVal += theSections[i]->revertToLastCommit(L);
+    for (int i = 0; i<numSections; i++)
+	  retVal += theSections[i]->revertToLastCommit(L);
 
     retVal += crdTransf->revertToLastCommit();
 
@@ -287,15 +284,15 @@ Timoshenko2d01::revertToLastCommit()
 }
 
 int
-Timoshenko2d01::revertToStart()
+Timoshenko2d02::revertToStart()
 {
     int retVal = 0;
 	
     //crdTransf->getInitialLength();
 
     // Loop over the integration points and revert states to start
-    int i = 0;
-	retVal += theSections[i]->revertToStart();
+    for (int i = 0; i<numSections; i++) 
+	  retVal += theSections[i]->revertToStart();
 
     retVal += crdTransf->revertToStart();
 
@@ -303,7 +300,7 @@ Timoshenko2d01::revertToStart()
 }
 
 int
-Timoshenko2d01::update(void)
+Timoshenko2d02::update(void)
 {
   int err = 0;
 
@@ -316,15 +313,14 @@ Timoshenko2d01::update(void)
   double oneOverL = 1.0/L;
 
   double pts[maxNumSections];
-  beamInt->getSectionLocations(numSections, L, pts);
+  beamInt->getSectionLocations(numSections, L, pts);  // pts and wts is none of L business
 
   // Loop over the integration points
-  int i = 0;
+  for (int i = 0; i<numSections; i++) {
     
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
- 
-	double xi = 2.0*pts[i]-1.0;
+
     Vector e(workArea, order);
 
     for (int j = 0; j < order; j++) {
@@ -332,9 +328,9 @@ Timoshenko2d01::update(void)
       case SECTION_RESPONSE_P:   // axial strain
 	e(j) = oneOverL*(-v(0) + v(3)); break;
       case SECTION_RESPONSE_MZ:	// curvature
-	e(j) = oneOverL*(-1.0+3.0*(1.0-2.0*C1)*xi)*(v(2)- v(5)); break;
-	  case SECTION_RESPONSE_VY:	// shear strain
-	e(j) = oneOverL*(-v(1)+v(4))-C1*v(2)+(C1-1.0)*v(5); break;
+	e(j) = oneOverL*(-v(2) + v(5)); break;
+	  case SECTION_RESPONSE_VY:	// shear strain   // should be modified
+	e(j) = oneOverL*(-v(1) + v(4))-0.5*v(2)-0.5*v(5); break;
 	  default:
 	break;
       }
@@ -343,9 +339,10 @@ Timoshenko2d01::update(void)
     // Set the section deformations
     //err += theSections[i]->setTrialSectionDeformation(e,L);
 	err += theSections[i]->setTrialSectionDeformation(e);
+  }
 
   if (err != 0) {
-    opserr << "Timoshenko2d01::update() - failed setTrialSectionDeformations(e,L)\n";
+    opserr << "Timoshenko2d02::update() - failed setTrialSectionDeformations(e,L)\n";
 	return err;
   }
 
@@ -353,7 +350,7 @@ Timoshenko2d01::update(void)
 }
 
 const Matrix&
-Timoshenko2d01::getTangentStiff(void)
+Timoshenko2d02::getTangentStiff(void)
 {
   static Matrix kb(6,6);
 
@@ -370,7 +367,7 @@ Timoshenko2d01::getTangentStiff(void)
   beamInt->getSectionWeights(numSections, L, wts);
   
   // Loop over the integration points
-  int i = 0;
+  for (int i = 0; i<numSections; i++){
     
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
@@ -378,7 +375,7 @@ Timoshenko2d01::getTangentStiff(void)
 	//Matrix ka(workArea, order, 6);
 	//ka.Zero();
 
-    double xi = 2.0*pts[i]-1.0; //pts[i];
+    double xi =pts[i]; //2.0*pts[i]-1.0; 
 
     // Get the section tangent stiffness and stress resultant
     const Matrix &ks = theSections[i]->getSectionTangent();			
@@ -387,68 +384,96 @@ Timoshenko2d01::getTangentStiff(void)
     // Perform numerical integration
 	//kb.addMatrixTripleProduct(1.0, *B, ks, wts(i)/L);
     
-	double wti = wts[i]*oneOverL;
-	
-	double d11, d12, d13, d21, d22, d23, d31, d32, d33;
+	double wti = wts[i];
+	//double d11, d12, d13, d21, d22, d23, d31, d32, d33;
 
-	d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	//P
-	d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	//M
-	d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	//V
+	//d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	//P
+	//d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	//M
+	//d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	//V
 
-	kb(0,0) += wti*(d11);
-	kb(0,1) += wti*(d13);
-	kb(0,2) += wti*(d21 + C1*d13*L - 3.0*d21*xi + 6.0*C1*d21*xi);
-	kb(0,3) += wti*(-d11);
-	kb(0,4) += wti*(-d13);
-	kb(0,5) += wti*(-((-1 + C1)*d13*L) + d21*(-1.0 + (3.0 - 6.0*C1)*xi));
+	Matrix B(3,6);  //P V M
+	B(0,0) = -1.0; B(0,1) =  0.0; B(0,2) =  0.0;  B(0,3) = 1.0; B(0,4) = 0.0; B(0,5) =  0.0;
+	B(1,0) =  0.0; B(1,1) = -1.0; B(1,2) =-0.5*L;  B(1,3) = 0.0; B(1,4) = 1.0; B(1,5) =-0.5*L;
+	B(2,0) =  0.0; B(2,1) =  0.0; B(2,2) = -1.0;  B(2,3) = 0.0; B(2,4) = 0.0; B(2,5) =  1.0;
+	B *= oneOverL;
 
-	kb(1,0) += wti*(d31);
-	kb(1,1) += wti*(d33);
-	kb(1,2) += wti*(d32 + C1*d33*L - 3.0*d32*xi + 6.0*C1*d32*xi);
-	kb(1,3) += wti*(-d31);
-	kb(1,4) += wti*(-d33);
-	kb(1,5) += wti*(-((-1.0 + C1)*d33*L) + d32*(-1.0 + (3.0 - 6.0*C1)*xi));
-
-	kb(2,0) +=wti*(d21 + C1*d31*L - 3.0*d21*xi + 6.0*C1*d21*xi);
-	kb(2,1) +=wti*(d23 + C1*d33*L - 3.0*d23*xi + 6.0*C1*d23*xi);
-	kb(2,2) +=wti*(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi) + C1*L*(d23 + d32 + C1*d33*L - 3.0*d23*xi + 6.0*C1*d23*xi - 3.0*d32*xi + 6.0*C1*d32*xi));
-	kb(2,3) +=wti*(-d21 - C1*d31*L + 3.0*d21*xi - 6.0*C1*d21*xi);
-	kb(2,4) +=wti*(-d23 - C1*d33*L + 3.0*d23*xi - 6.0*C1*d23*xi);
-	kb(2,5) +=wti*(-(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi)) - L*((-1.0 + C1)*d23*(1.0 + (-3.0 + 6.0*C1)*xi) + C1*((-1.0 + C1)*d33*L + d32*(1.0 - 3.0*xi + 6.0*C1*xi))));
-
-	kb(3,0) +=wti*(-d11);
-	kb(3,1) +=wti*(-d13);
-	kb(3,2) +=wti*(-d21 - C1*d13*L + 3.0*d21*xi - 6.0*C1*d21*xi);
-	kb(3,3) +=wti*(d11);
-	kb(3,4) +=wti*(d13);
-	kb(3,5) +=wti*((-1.0 + C1)*d13*L + d21*(1.0 + (-3.0 + 6.0*C1)*xi));
-
-	kb(4,0) +=wti*(-d31);
-	kb(4,1) +=wti*(-d33);
-	kb(4,2) +=wti*(-d32 - C1*d33*L + 3.0*d32*xi - 6.0*C1*d32*xi);
-	kb(4,3) +=wti*(d31);
-	kb(4,4) +=wti*(d33);
-	kb(4,5) +=wti*((-1.0 + C1)*d33*L + d32*(1.0 + (-3.0 + 6.0*C1)*xi));
-
-	kb(5,0) +=wti*(-((-1.0 + C1)*d31*L) + d21*(-1.0 + (3.0 - 6.0*C1)*xi));
-	kb(5,1) +=wti*(-((-1.0 + C1)*d33*L) + d23*(-1.0 + (3.0 - 6.0*C1)*xi));
-	kb(5,2) +=wti*(-(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi)) - L*(d32*(-1.0 + 3.0*xi) + C1*(d23 + d32 - d33*L - 3.0*d23*xi - 9.0*d32*xi) + C1*C1*(d33*L + 6.0*(d23 + d32)*xi)));
-	kb(5,3) +=wti*((-1.0 + C1)*d31*L + d21*(1.0 + (-3.0 + 6.0*C1)*xi));
-	kb(5,4) +=wti*((-1.0 + C1)*d33*L + d23*(1.0 + (-3.0 + 6.0*C1)*xi));
-	kb(5,5) +=wti*(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi) + (-1.0 + C1)*L*((-1.0 + C1)*d33*L + d32*(1.0 - 3.0*xi + 6.0*C1*xi) + d23*(1.0 + (-3.0 + 6.0*C1)*xi)));
-
-	double s1, s2, s3;
-    double wto = wts[i];
+	//Matrix Ba(3,6); // swap order based on section order
+	Matrix ksa(3,3);
+	int j,k;
+	for (j = 0; j < order; j++) {
+      switch(code(j)) {
+      case SECTION_RESPONSE_P:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+      case SECTION_RESPONSE_P:
+		  ksa(0, 0) = ks(j, k  );
+		  break;
+      case SECTION_RESPONSE_MZ:
+		  ksa(0, 2) = ks(j, k  ); //* oneOverL
+		  break;
+      case SECTION_RESPONSE_VY:
+		  ksa(0, 1) = ks(j, k  ); //* oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+	  case SECTION_RESPONSE_MZ:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+	  case SECTION_RESPONSE_P:
+		  ksa(2, 0) = ks(j, k  );
+		  break;
+	  case SECTION_RESPONSE_MZ:
+		  ksa(2, 2) = ks(j, k  );// * oneOverL
+		  break;
+	  case SECTION_RESPONSE_VY:
+		  ksa(2, 1) = ks(j, k  );// * oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+      case SECTION_RESPONSE_VY:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+	  case SECTION_RESPONSE_P:
+		  ksa(1, 0) = ks(j, k  );
+		  break;
+	  case SECTION_RESPONSE_MZ:
+		  ksa(1, 2) = ks(j, k  ); //* oneOverL
+		  break;
+	  case SECTION_RESPONSE_VY:
+		  ksa(1, 1) = ks(j, k  ); //* oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+      default:
+	break;
+      }
+    }
+	kb.addMatrixTripleProduct(1.0, B, ksa, wti*L);
 
     //q.addMatrixTransposeVector(1.0, *B, s, wts(i));
-	s1=s(0);	s2=s(1);	s3=s(2);
-   q(0)+= wto*(-s1);
-   q(1)+= wto*(-s3);
-   q(2)+= wto*(-s2 - C1*L*s3 + 3.0*s2*xi - 6.0*C1*s2*xi);
-   q(3)+= wto*(s1);
-   q(4)+= wto*(s3);
-   q(5)+= wto*((-1.0 + C1)*L*s3 + s2*(1.0 + (-3.0 + 6.0*C1)*xi));
-  
+    double wto = wts[i];
+    double s1, s2, s3;
+
+	s1=s(0);	
+	s2=s(1);	
+	s3=s(2);
+
+	q(0)+= wto*(-s1);
+	q(1)+= wto*(-s3);
+	q(2)+= wto*(-s2 - 0.5 *L*s3);
+	q(3)+= wto*(s1);
+	q(4)+= wto*(s3);
+	q(5)+= wto*(-0.5*L*s3 + s2);
+  }
   
   // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
@@ -465,7 +490,7 @@ Timoshenko2d01::getTangentStiff(void)
 }
 
 const Matrix&
-Timoshenko2d01::getInitialBasicStiff()
+Timoshenko2d02::getInitialBasicStiff()
 {
   static Matrix kb(6,6);
 
@@ -481,7 +506,7 @@ Timoshenko2d01::getInitialBasicStiff()
   beamInt->getSectionWeights(numSections, L, wts);
   
   // Loop over the integration points
-  int i = 0;
+  for (int i = 0; i<numSections; i++) {
     
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
@@ -489,7 +514,7 @@ Timoshenko2d01::getInitialBasicStiff()
 	//Matrix ka(workArea, order, 6);
 	//ka.Zero();
 
-    double xi = 2.0*pts[i]-1.0; //pts[i];
+    double xi = pts[i];
 
     // Get the section tangent stiffness and stress resultant
     const Matrix &ks = theSections[i]->getInitialTangent();
@@ -497,61 +522,88 @@ Timoshenko2d01::getInitialBasicStiff()
     // Perform numerical integration
     //kb.addMatrixTripleProduct(1.0, *B, ks, wts(i)/L);
 
-	double wti = wts[i]*oneOverL;;
+	double wti = wts[i];
 
-	double d11, d12, d13, d21, d22, d23, d31, d32, d33;
-	
-	d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	
-	d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	
-	d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	
+	//double d11, d12, d13, d21, d22, d23, d31, d32, d33;
 
-	kb(0,0) += wti*(d11);
-	kb(0,1) += wti*(d13);
-	kb(0,2) += wti*(d21 + C1*d13*L - 3.0*d21*xi + 6.0*C1*d21*xi);
-	kb(0,3) += wti*(-d11);
-	kb(0,4) += wti*(-d13);
-	kb(0,5) += wti*(-((-1.0 + C1)*d13*L) + d21*(-1.0 + (3.0 - 6.0*C1)*xi));
+	//d11 = ks(0,0);	d12 = ks(0,1);	d13 = ks(0,2);	
+	//d21 = ks(1,0);	d22 = ks(1,1);	d23 = ks(1,2);	
+	//d31 = ks(2,0);	d32 = ks(2,1);	d33 = ks(2,2);	
 
-	kb(1,0) += wti*(d31);
-	kb(1,1) += wti*(d33);
-	kb(1,2) += wti*(d32 + C1*d33*L - 3.0*d32*xi + 6.0*C1*d32*xi);
-	kb(1,3) += wti*(-d31);
-	kb(1,4) += wti*(-d33);
-	kb(1,5) += wti*(-((-1.0 + C1)*d33*L) + d32*(-1.0 + (3.0 - 6.0*C1)*xi));
+	Matrix B(3,6);  // P V M
+	B(0,0) = -1.0; B(0,1) =  0.0; B(0,2) =  0.0;  B(0,3) = 1.0; B(0,4) = 0.0; B(0,5) = 0.0;
+	B(1,0) =  0.0; B(1,1) = -1.0; B(1,2) =-0.5*L;  B(1,3) = 0.0; B(1,4) = 1.0; B(1,5) = -0.5*L;
+	B(2,0) =  0.0; B(2,1) =  0.0; B(2,2) = -1.0;  B(2,3) = 0.0; B(2,4) = 0.0; B(2,5) = 1.0;
+	B *= oneOverL;
 
-	kb(2,0) +=wti*(d21 + C1*d31*L - 3.0*d21*xi + 6.0*C1*d21*xi);
-	kb(2,1) +=wti*(d23 + C1*d33*L - 3.0*d23*xi + 6.0*C1*d23*xi);
-	kb(2,2) +=wti*(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi) + C1*L*(d23 + d32 + C1*d33*L - 3.0*d23*xi + 6.0*C1*d23*xi - 3.0*d32*xi + 6.0*C1*d32*xi));
-	kb(2,3) +=wti*(-d21 - C1*d31*L + 3.0*d21*xi - 6.0*C1*d21*xi);
-	kb(2,4) +=wti*(-d23 - C1*d33*L + 3.0*d23*xi - 6.0*C1*d23*xi);
-	kb(2,5) +=wti*(-(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi)) - L*((-1.0 + C1)*d23*(1.0 + (-3.0 + 6.0*C1)*xi) + C1*((-1.0 + C1)*d33*L + d32*(1.0 - 3.0*xi + 6.0*C1*xi))));
-
-	kb(3,0) +=wti*(-d11);
-	kb(3,1) +=wti*(-d13);
-	kb(3,2) +=wti*(-d21 - C1*d13*L + 3.0*d21*xi - 6.0*C1*d21*xi);
-	kb(3,3) +=wti*(d11);
-	kb(3,4) +=wti*(d13);
-	kb(3,5) +=wti*((-1.0 + C1)*d13*L + d21*(1.0 + (-3.0 + 6.0*C1)*xi));
-
-	kb(4,0) +=wti*(-d31);
-	kb(4,1) +=wti*(-d33);
-	kb(4,2) +=wti*(-d32 - C1*d33*L + 3.0*d32*xi - 6.0*C1*d32*xi);
-	kb(4,3) +=wti*(d31);
-	kb(4,4) +=wti*(d33);
-	kb(4,5) +=wti*((-1.0 + C1)*d33*L + d32*(1.0 + (-3.0 + 6.0*C1)*xi));
-
-	kb(5,0) +=wti*(-((-1.0 + C1)*d31*L) + d21*(-1.0 + (3.0 - 6.0*C1)*xi));
-	kb(5,1) +=wti*(-((-1.0 + C1)*d33*L) + d23*(-1.0 + (3.0 - 6.0*C1)*xi));
-	kb(5,2) +=wti*(-(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi)) - L*(d32*(-1.0 + 3.0*xi) + C1*(d23 + d32 - d33*L - 3.0*d23*xi - 9.0*d32*xi) + C1*C1*(d33*L + 6.0*(d23 + d32)*xi)));
-	kb(5,3) +=wti*((-1.0 + C1)*d31*L + d21*(1.0 + (-3.0 + 6.0*C1)*xi));
-	kb(5,4) +=wti*((-1.0 + C1)*d33*L + d23*(1.0 + (-3.0 + 6.0*C1)*xi));
-	kb(5,5) +=wti*(d22*(1.0 + (-3.0 + 6.0*C1)*xi)*(1.0 + (-3.0 + 6.0*C1)*xi) + (-1.0 + C1)*L*((-1.0 + C1)*d33*L + d32*(1.0 - 3.0*xi + 6.0*C1*xi) + d23*(1.0 + (-3.0 + 6.0*C1)*xi)));
+	//Matrix Ba(3,6); // swap order based on section order
+	Matrix ksa(3,3);
+	int j,k;
+	for (j = 0; j < order; j++) {
+      switch(code(j)) {
+      case SECTION_RESPONSE_P:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+      case SECTION_RESPONSE_P:
+		  ksa(0, 0) = ks(j, k  );
+		  break;
+      case SECTION_RESPONSE_MZ:
+		  ksa(0, 2) = ks(j, k  ); //* oneOverL
+		  break;
+      case SECTION_RESPONSE_VY:
+		  ksa(0, 1) = ks(j, k  ); //* oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+	  case SECTION_RESPONSE_MZ:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+	  case SECTION_RESPONSE_P:
+		  ksa(2, 0) = ks(j, k  );
+		  break;
+	  case SECTION_RESPONSE_MZ:
+		  ksa(2, 2) = ks(j, k  ); //* oneOverL
+		  break;
+	  case SECTION_RESPONSE_VY:
+		  ksa(2, 1) = ks(j, k  ); //* oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+      case SECTION_RESPONSE_VY:
+	for (k = 0; k < order; k++) {
+      switch(code(k)) {
+	  case SECTION_RESPONSE_P:
+		  ksa(1, 0) = ks(j, k  );
+		  break;
+	  case SECTION_RESPONSE_MZ:
+		  ksa(1, 2) = ks(j, k  ); //* oneOverL
+		  break;
+	  case SECTION_RESPONSE_VY:
+		  ksa(1, 1) = ks(j, k  ); //* oneOverL
+		  break;
+      default:
+		  break;
+	}
+	  }
+	break;
+      default:
+	break;
+      }
+    }
+	kb.addMatrixTripleProduct(1.0, B, ksa, wti*L);
+  }
 
   return kb;
 }
 
 const Matrix&
-Timoshenko2d01::getInitialStiff()
+Timoshenko2d02::getInitialStiff()
 {
   const Matrix &kb = this->getInitialBasicStiff();
 
@@ -562,7 +614,7 @@ Timoshenko2d01::getInitialStiff()
 }
 
 const Matrix&
-Timoshenko2d01::getMass()
+Timoshenko2d02::getMass()
 {
   K.Zero();
 
@@ -578,7 +630,7 @@ Timoshenko2d01::getMass()
 }
 
 void
-Timoshenko2d01::zeroLoad(void)
+Timoshenko2d02::zeroLoad(void)
 {
   Q.Zero();
 
@@ -600,7 +652,7 @@ Timoshenko2d01::zeroLoad(void)
 }
 
 int 
-Timoshenko2d01::addLoad(ElementalLoad *theLoad, double loadFactor)
+Timoshenko2d02::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
   int type;
   const Vector &data = theLoad->getData(type, loadFactor);
@@ -630,7 +682,9 @@ Timoshenko2d01::addLoad(ElementalLoad *theLoad, double loadFactor)
     q0[4] += wt*L*0.5;
     q0[5] += -wt*L*L/12.0;
 
-  } else if (type == LOAD_TAG_Beam2dPointLoad) {
+  } 
+  
+  else if (type == LOAD_TAG_Beam2dPointLoad) {
     double V = data(0)*loadFactor;
     double N = data(1)*loadFactor;
     double aOverL = data(2);					
@@ -659,9 +713,10 @@ Timoshenko2d01::addLoad(ElementalLoad *theLoad, double loadFactor)
     q0[5] += -M1;
 
   }
+
   else {
-    opserr << "Timoshenko2d01::Timoshenko2d01 -- load type unknown for element with tag: "
-	   << this->getTag() << "Timoshenko2d01::addLoad()\n"; 
+    opserr << "Timoshenko2d02::Timoshenko2d02 -- load type unknown for element with tag: "
+	   << this->getTag() << "Timoshenko2d02::addLoad()\n"; 
 			    
     return -1;
   }
@@ -670,7 +725,7 @@ Timoshenko2d01::addLoad(ElementalLoad *theLoad, double loadFactor)
 }
 
 int 
-Timoshenko2d01::addInertiaLoadToUnbalance(const Vector &accel)
+Timoshenko2d02::addInertiaLoadToUnbalance(const Vector &accel)
 {
 	// Check for a quick return
 	if (rho == 0.0) 
@@ -681,7 +736,7 @@ Timoshenko2d01::addInertiaLoadToUnbalance(const Vector &accel)
 	const Vector &Raccel2 = theNodes[1]->getRV(accel);
 
     if (3 != Raccel1.Size() || 3 != Raccel2.Size()) {
-      opserr << "Timoshenko2d01::addInertiaLoadToUnbalance matrix and vector sizes are incompatable\n";
+      opserr << "Timoshenko2d02::addInertiaLoadToUnbalance matrix and vector sizes are incompatable\n";
       return -1;
     }
 
@@ -699,7 +754,7 @@ Timoshenko2d01::addInertiaLoadToUnbalance(const Vector &accel)
 }
 
 const Vector&
-Timoshenko2d01::getResistingForce()
+Timoshenko2d02::getResistingForce()
 {
   double L = crdTransf->getInitialLength();
 
@@ -712,12 +767,12 @@ Timoshenko2d01::getResistingForce()
   q.Zero();
   
   // Loop over the integration points
-  int i = 0;
+  for (int i = 0; i<numSections; i++) {
     
     //int order = theSections[i]->getOrder();
     //const ID &code = theSections[i]->getType();
   
-    double xi = 2.0*pts[i]-1.0; //pts[i];
+    double xi = pts[i];
 
     // Get section stress resultant
     const Vector &s = theSections[i]->getStressResultant();
@@ -735,19 +790,20 @@ Timoshenko2d01::getResistingForce()
 
 	q(0)+= wto*(-s1);
 	q(1)+= wto*(-s3);
-	q(2)+= wto*(-s2 - C1*L*s3 + 3.0*s2*xi - 6.0*C1*s2*xi);
+	q(2)+= wto*(-s2 - 0.5*L*s3);
 	q(3)+= wto*(s1);
 	q(4)+= wto*(s3);
-	q(5)+= wto*((-1.0 + C1)*L*s3 + s2*(1.0 + (-3.0 + 6.0*C1)*xi));
-
-    // Add effects of element loads, q = q(v) + q0		
+	q(5)+= wto*(-0.5*L*s3 + s2);
+  }
+  
+  // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
   q(1) += q0[1];
   q(2) += q0[2];
   q(3) += q0[3];
   q(4) += q0[4];
   q(5) += q0[5];
-  
+
   // Vector for reactions in basic system
   Vector p0Vec(p0, 6);
   P = crdTransf->getGlobalResistingForceInt(q, p0Vec);	
@@ -764,7 +820,7 @@ Timoshenko2d01::getResistingForce()
 }
 
 const Vector&
-Timoshenko2d01::getResistingForceIncInertia()
+Timoshenko2d02::getResistingForceIncInertia()
 {
 
   this->getResistingForce();
@@ -799,7 +855,7 @@ Timoshenko2d01::getResistingForceIncInertia()
 }
 
 int
-Timoshenko2d01::sendSelf(int commitTag, Channel &theChannel)
+Timoshenko2d02::sendSelf(int commitTag, Channel &theChannel)
 {
   // place the integer data into an ID
 
@@ -822,18 +878,17 @@ Timoshenko2d01::sendSelf(int commitTag, Channel &theChannel)
   idData(5) = crdTransfDbTag;
   
   if (theChannel.sendID(dbTag, commitTag, idData) < 0) {
-    opserr << "Timoshenko2d01::sendSelf() - failed to send ID data\n";
+    opserr << "Timoshenko2d02::sendSelf() - failed to send ID data\n";
      return -1;
   }    
 
   // send the coordinate transformation
   
   if (crdTransf->sendSelf(commitTag, theChannel) < 0) {
-     opserr << "Timoshenko2d01::sendSelf() - failed to send crdTranf\n";
+     opserr << "Timoshenko2d02::sendSelf() - failed to send crdTranf\n";
      return -1;
   }      
 
-  
   //
   // send an ID for the sections containing each sections dbTag and classTag
   // if section ha no dbTag get one and assign it
@@ -863,7 +918,7 @@ Timoshenko2d01::sendSelf(int commitTag, Channel &theChannel)
   
   for (j = 0; j<numSections; j++) {
     if (theSections[j]->sendSelf(commitTag, theChannel) < 0) {
-      opserr << "Timoshenko2d01::sendSelf() - section " << 
+      opserr << "Timoshenko2d02::sendSelf() - section " << 
 	j << "failed to send itself\n";
       return -1;
     }
@@ -873,18 +928,17 @@ Timoshenko2d01::sendSelf(int commitTag, Channel &theChannel)
 }
 
 int
-Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
+Timoshenko2d02::recvSelf(int commitTag, Channel &theChannel,
 			   FEM_ObjectBroker &theBroker)
 {
   // receive the integer data containing tag, numSections and coord transformation info
  
-	int dbTag = this->getDbTag();
-  int i;
+  int dbTag = this->getDbTag();
   
   static ID idData(7); // one bigger than needed so no clash with section ID
 
   if (theChannel.recvID(dbTag, commitTag, idData) < 0)  {
-    opserr << "Timoshenko2d01::recvSelf() - failed to recv ID data\n";
+    opserr << "Timoshenko2d02::recvSelf() - failed to recv ID data\n";
     return -1;
   }    
 
@@ -913,7 +967,7 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
 
   // invoke recvSelf on the crdTransf object
   if (crdTransf->recvSelf(commitTag, theChannel, theBroker) < 0) {
-    opserr << "Timoshenko2d01::sendSelf() - failed to recv crdTranf\n";
+    opserr << "Timoshenko2d02::sendSelf() - failed to recv crdTranf\n";
     return -3;
   }      
   
@@ -925,7 +979,7 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
   int loc = 0;
 
   if (theChannel.recvID(dbTag, commitTag, idSections) < 0)  {
-    opserr << "Timoshenko2d01::recvSelf() - failed to recv ID data\n";
+    opserr << "Timoshenko2d02::recvSelf() - failed to recv ID data\n";
     return -1;
   }    
 
@@ -948,7 +1002,7 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
     // create a new array to hold pointers
     theSections = new SectionForceDeformation *[idData(3)];
     if (theSections == 0) {
-      opserr << "Timoshenko2d01::recvSelf() - out of memory creating sections array of size " <<
+      opserr << "Timoshenko2d02::recvSelf() - out of memory creating sections array of size " <<
       idData(3) << endln;
       return -1;
     }    
@@ -957,39 +1011,39 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
     numSections = idData(3);
     loc = 0;
     
-    for (i=0; i<numSections; i++) {
+    for (int j=0; j<numSections; j++) {
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
 	  switch (sectClassTag) {
 	  case SEC_TAG_RASTMFiberSection2d:
-		  theSections[i] = new RASTMFiberSection2d();
+		  theSections[j] = new RASTMFiberSection2d();
 		  break;
 	  case SEC_TAG_FASTMFiberSection2d:
-		  theSections[i] = new FASTMFiberSection2d();
+		  theSections[j] = new FASTMFiberSection2d();
 		  break;
 	  case SEC_TAG_CSMMFiberSection2d:
-		  theSections[i] = new CSMMFiberSection2d();
+		  theSections[j] = new CSMMFiberSection2d();
 		  break;
 	  case SEC_TAG_MCFTFiberSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
+		  theSections[j] = new MCFTFiberSection2d();
 		  break;
 	  case SEC_TAG_TimoshenkoSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
+		  theSections[j] = new MCFTFiberSection2d();
 		  break;
 	  default:
-		  opserr << "Timoshenko2d01::recvSelf() --default secTag at sec " << i+1 << endln;
-		  theSections[i] = new FiberSection2d();
+		  opserr << "Timoshenko2d02::recvSelf() --default secTag at sec " << j+1 << endln;
+		  theSections[j] = new FiberSection2d();
 		  break;
 	  }
-      if (theSections[i] == 0) {
-	opserr << "Timoshenko2d01::recvSelf() - Broker could not create Section of class type " <<
+      if (theSections[j] == 0) {
+	opserr << "Timoshenko2d02::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
 	exit(-1);
       }
-      theSections[i]->setDbTag(sectDbTag);
-      if (theSections[i]->recvSelf(commitTag, theChannel, theBroker) < 0) {
-	opserr << "Timoshenko2d01::recvSelf() - section " << i << " failed to recv itself\n";
+      theSections[j]->setDbTag(sectDbTag);
+      if (theSections[j]->recvSelf(commitTag, theChannel, theBroker) < 0) {
+	opserr << "Timoshenko2d02::recvSelf() - section " << j << " failed to recv itself\n";
 	return -1;
       }     
     }
@@ -1000,47 +1054,47 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
     // (if not delete old & create a new one) then recvSelf on it
       
     loc = 0;
-    for (i=0; i<numSections; i++) {
+    for (int j=0; j<numSections; j++) {
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
 
       // check of correct type
-      if (theSections[i]->getClassTag() !=  sectClassTag) {
+      if (theSections[j]->getClassTag() !=  sectClassTag) {
 	// delete the old section[i] and create a new one
-	delete theSections[i];
+	delete theSections[j];
 	switch (sectClassTag) {
 	case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = new RASTMFiberSection2d();
+		theSections[j] = new RASTMFiberSection2d();
 		break;
 	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = new FASTMFiberSection2d();
+		theSections[j] = new FASTMFiberSection2d();
 		break;
 	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = new CSMMFiberSection2d();
+		theSections[j] = new CSMMFiberSection2d();
 		break;
 	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = new MCFTFiberSection2d();
+		theSections[j] = new MCFTFiberSection2d();
 		break;
 	case SEC_TAG_TimoshenkoSection2d:
-		theSections[i] = new MCFTFiberSection2d();
+		theSections[j] = new MCFTFiberSection2d();
 		break;
 	default:
-		opserr << "Timoshenko2d01::recvSelf() --default secTag at sec " << i+1 << endln;
-		theSections[i] = new FiberSection2d();
+		opserr << "Timoshenko2d02::recvSelf() --default secTag at sec " << j+1 << endln;
+		theSections[j] = new FiberSection2d();
 		break;
 	}
-	if (theSections[i] == 0) {
-	opserr << "Timoshenko2d01::recvSelf() - Broker could not create Section of class type " <<
+	if (theSections[j] == 0) {
+	opserr << "Timoshenko2d02::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
 	exit(-1);
 	}
       }
 
       // recvSelf on it
-      theSections[i]->setDbTag(sectDbTag);
-      if (theSections[i]->recvSelf(commitTag, theChannel, theBroker) < 0) {
-	opserr << "Timoshenko2d01::recvSelf() - section " << i << " failed to recv itself\n";
+      theSections[j]->setDbTag(sectDbTag);
+      if (theSections[j]->recvSelf(commitTag, theChannel, theBroker) < 0) {
+	opserr << "Timoshenko2d02::recvSelf() - section " << j << " failed to recv itself\n";
 	return -1;
       }     
     }
@@ -1050,9 +1104,9 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
 }
 
 void
-Timoshenko2d01::Print(OPS_Stream &s, int flag)		
+Timoshenko2d02::Print(OPS_Stream &s, int flag)		
 {
-  s << "\nTimoshenko2d01, element id:  " << this->getTag() << endln;
+  s << "\nTimoshenko2d02, element id:  " << this->getTag() << endln;
   s << "\tConnected external nodes:  " << connectedExternalNodes;
   s << "\tCoordTransf: " << crdTransf->getTag() << endln;
   s << "\tmass density:  " << rho << endln;
@@ -1075,7 +1129,7 @@ Timoshenko2d01::Print(OPS_Stream &s, int flag)
 }
 
 int
-Timoshenko2d01::displaySelf(Renderer &theViewer, int displayMode, float fact)
+Timoshenko2d02::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
     // first determine the end points of the quad based on
     // the display factor (a measure of the distorted image)
@@ -1097,7 +1151,7 @@ Timoshenko2d01::displaySelf(Renderer &theViewer, int displayMode, float fact)
 }
 
 Response*
-Timoshenko2d01::setResponse(const char **argv, int argc, OPS_Stream &s)
+Timoshenko2d02::setResponse(const char **argv, int argc, OPS_Stream &s)
 {
     // global force - 
     if (strcmp(argv[0],"forces") == 0 || strcmp(argv[0],"force") == 0
@@ -1134,7 +1188,7 @@ Timoshenko2d01::setResponse(const char **argv, int argc, OPS_Stream &s)
 }
 
 int 
-Timoshenko2d01::getResponse(int responseID, Information &eleInfo)		//L modify
+Timoshenko2d02::getResponse(int responseID, Information &eleInfo)		//L modify
 {
   //double V;
   double L = crdTransf->getInitialLength();
@@ -1174,21 +1228,21 @@ Timoshenko2d01::getResponse(int responseID, Information &eleInfo)		//L modify
 // AddingSensitivity:BEGIN ///////////////////////////////////
 
 const Matrix &
-Timoshenko2d01::getKiSensitivity(int gradNumber)
+Timoshenko2d02::getKiSensitivity(int gradNumber)
 {
 	K.Zero();
 	return K;
 }
 
 const Matrix &
-Timoshenko2d01::getMassSensitivity(int gradNumber)
+Timoshenko2d02::getMassSensitivity(int gradNumber)
 {
 	K.Zero();
 	return K;
 }
 
 const Vector &
-Timoshenko2d01::getResistingForceSensitivity(int gradNumber)
+Timoshenko2d02::getResistingForceSensitivity(int gradNumber)
 {
 	static Vector dummy(3);		// No distributed loads
 	return dummy;
@@ -1196,7 +1250,7 @@ Timoshenko2d01::getResistingForceSensitivity(int gradNumber)
 
 // NEW METHOD
 int
-Timoshenko2d01::commitSensitivity(int gradNumber, int numGrads)
+Timoshenko2d02::commitSensitivity(int gradNumber, int numGrads)
 {
  	return 0;
 }

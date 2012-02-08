@@ -877,20 +877,33 @@
 #define SPECTRUM_constant                 2
 #define SPECTRUM_points                   3
 
-
-#define ELE_TAG_TimoshenkoBeam2d 102001
-#define CRDTR_TAG_TimoshenkoLinearCrdTransf2d 102002
+//////////////////////////////////////////////////////////////////////////
+#define ND_TAG_NonlinearBS 198112
 
 #define SEC_TAG_RASTMFiberSection2d 102003
 #define SEC_TAG_FASTMFiberSection2d 102004
 #define SEC_TAG_CSMMFiberSection2d 102005
 #define SEC_TAG_MCFTFiberSection2d 102006
 
-#define ELE_TAG_Timoshenko2d01 102007
-
-#define ND_TAG_NonlinearBS 198112
-
 #define SEC_TAG_TimoshenkoSection2d 191275
 #define SEC_TAG_TimoshenkoSection3d 191276
 
+#define ELE_TAG_Timoshenko2d01 102007
+#define ELE_TAG_Timoshenko2d02 102008
+#define ELE_TAG_Timoshenko2d03 102009
+#define ELE_TAG_Timoshenko2d04 102010
+
+
+#define ELE_TAG_TimoshenkoBeam2d 102001
+
+#define CRDTR_TAG_TimoshenkoLinearCrdTransf2d 102002
+
+#define ELE_TAG_mixedBeamColumn3d 30765
+#define ELE_TAG_mixedBeamColumn2d 30766
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
 #endif
