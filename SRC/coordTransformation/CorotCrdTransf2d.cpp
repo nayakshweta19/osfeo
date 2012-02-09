@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.4 $
-// $Date: 2008/12/03 23:40:07 $
+// $Date: 2008-12-03 23:40:07 $
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/CorotCrdTransf2d.cpp,v $
 
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -974,7 +974,7 @@ CorotCrdTransf2d::getCopy2d(void)
     if (!theCopy)
     {
         opserr << "CorotCrdTransf2d::getCopy() - out of memory creating copy\n";
-        return 0;
+	return 0;
     }    
     
     theCopy->nodeIPtr = nodeIPtr;

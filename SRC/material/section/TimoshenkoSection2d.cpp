@@ -176,7 +176,7 @@ int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
 
   for (int i = 0; i < numFibers; i++) {
     y = matData[i*3] - yBar;
-    z = 0.0 - zBar; //matData[i*3+1] - zBar;
+    z = matData[i*3+1] - zBar;
       
     eps(0) = e(0) - y*e(1);
     eps(1) = e(2);

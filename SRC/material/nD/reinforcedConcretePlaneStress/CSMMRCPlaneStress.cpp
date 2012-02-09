@@ -317,13 +317,11 @@ CSMMRCPlaneStress::~CSMMRCPlaneStress()
   }
 }
 
-
 double 
 CSMMRCPlaneStress::getRho(void)
 {
 	return rho;
 }
-
 
 int 
 CSMMRCPlaneStress::setTrialStrain(const Vector &v)
@@ -355,7 +353,6 @@ CSMMRCPlaneStress::setTrialStrain(const Vector &v, const Vector &r)
   return 0;
 }
 
-
 int 
 CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
 {
@@ -363,14 +360,12 @@ CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
   return 0;
 }
 
-
 int 
 CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
 {
   opserr << "error: CSMMRCPlaneStress::setTrialStrainIncr(&v, &r) -- not really responsibility" << endln;
   return 0;
 }
-
 
 const Matrix& 
 CSMMRCPlaneStress::getTangent(void)
@@ -385,20 +380,17 @@ CSMMRCPlaneStress::getStress(void)
   return stress_vec;
 }
 
-
 const Vector& 
-CSMMRCPlaneStress :: getStrain()
+CSMMRCPlaneStress::getStrain()
 {
   return strain_vec;
 }
     
-
 const Vector& 
 CSMMRCPlaneStress::getCommittedStress(void)
 {
   return stress_vec;
 }
-
 
 const Vector& 
 CSMMRCPlaneStress::getCommittedStrain(void)
@@ -406,7 +398,6 @@ CSMMRCPlaneStress::getCommittedStrain(void)
   return strain_vec;
 }
     
-
 int 
 CSMMRCPlaneStress::commitState(void)
 {
@@ -428,7 +419,6 @@ CSMMRCPlaneStress::commitState(void)
   return 0;
 }
 
-
 int 
 CSMMRCPlaneStress::revertToLastCommit(void)
 {
@@ -448,7 +438,6 @@ CSMMRCPlaneStress::revertToLastCommit(void)
   
   return 0;
 }
-
 
 int 
 CSMMRCPlaneStress::revertToStart(void)
@@ -508,7 +497,6 @@ CSMMRCPlaneStress::getCopy(void)
   theCopy->strain_vec = strain_vec;
   return theCopy;
 }
-
 
 NDMaterial* 
 CSMMRCPlaneStress::getCopy(const char *type)
@@ -1036,12 +1024,10 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 	TST_One(2,1) = cos(citaT-citaIn)*sin(citaT-citaIn);
 	TST_One(2,2) = pow(cos(citaT-citaIn),2)-pow(sin(citaT-citaIn),2);
 
-
     // Get strain values from strain of element in x y directions
 	Tstrain(0) = strain_vec(0);
 	Tstrain(1) = strain_vec(1);
 	Tstrain(2) = 0.5*strain_vec(2);
-	
 	
 	//calculate tempStrain: epslon1,epslon2, 0.5*gamma12 in trial principal stress direction
 	tempStrain.addMatrixVector(0.0, TOne, Tstrain, 1.0);
@@ -1074,14 +1060,12 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
       steelStatus = 1;
     }
     
-
     //set v12 and v21 obtained from strain
     double strainSL, strainST; //Biaxial strain of steel in L, T
     double strainSF;           //larger one of strainSL, strainST
     
 	strainSL= pow(cos(citaL),2)*Tstrain(0) + pow(sin(citaL),2)*Tstrain(1) + 2.0*sin(citaL)*cos(citaL)*Tstrain(2);
 	strainST= pow(cos(citaT),2)*Tstrain(0) + pow(sin(citaT),2)*Tstrain(1) + 2.0*sin(citaT)*cos(citaT)*Tstrain(2);
-    
     
 	if (strainSL > strainST) {
 	  strainSF = strainSL;
@@ -1156,8 +1140,7 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
     
     miu12 = v12; // record the value for output in screen
     miu21 = v21; // record the value for output in screen
-    
-    
+
     //set values of matrix V(3,3)
 	V.Zero();
     if ( v12*v21==1.0 ) {
@@ -1493,4 +1476,23 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
     citaStress = citaOut; // assign value for screen output 
 
 	return citaOut;
+}
+
+double
+CSMMRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
+{
+  double sig;
+  if (Tstrain > eps_p) {
+    double eta = Tstrain/eps_p;
+    sig = sig_p * (2 * eta - eta * eta);
+  }
+  else if (Tstrain > 2.0 * epsc0) {
+	double eta = (Tstrain-eps_p)/(2.0*epsc0-eps_p);
+    sig = sig_p * (1.0 - eta * eta);
+  }
+  else {
+    sig = 1.0e-9 * fpc;
+  }
+  return sig;
+
 }

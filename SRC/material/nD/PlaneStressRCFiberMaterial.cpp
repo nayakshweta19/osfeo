@@ -170,14 +170,14 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   int maxSubdivisions = 4;
   int numSubdivide    = 1;
   bool converged      = false;
-  maxIters            = 100;
-  tol                 = 2.0e-3;
+  maxIters            = 20;
+  tol                 = 1.0e-5;
 
   //set two dimensional strain
   
-  twoDstrain(0) = this->strain(0); //Tstrain11    eps_xx
-  twoDstrain(1) = this->Tstrain22; //Tstrain22;   eps_yy
-  twoDstrain(2) = this->strain(1); //Tstrain12;   gamma_xy
+  twoDstrain(0) = this->strain(0);     //Tstrain11    eps_xx
+  twoDstrain(1) = this->Tstrain22;     //Tstrain22;   eps_yy
+  twoDstrain(2) = this->strain(1)*2.0; //Tstrain12;   gamma_xy -> eps_xy
 
   while (converged == false && numSubdivide <= maxSubdivisions) {
 	
@@ -193,79 +193,27 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	numIters = 10*maxIters; // allow 10 times more iterations for initial tangent
 
   for (int cnt=0; cnt <numIters; cnt++) {
-
     if (theMaterial->setTrialStrain(twoDstrain) < 0) {
       opserr << "PlaneStressRCFiberMaterial::setTrialStrain - setStrain failed in material with strain " << twoDstrain;
       return -1;
     }
-
-	/*if (l == 0)	{
-
-  // regular newton
-  twoDtangent = theMaterial->getTangent();
-
-	} else if (l == 2) {
-
-  // newton with initial tangent in first iteration
-  // otherwise regular newton
-  if (cnt == 0) {
-	twoDtangent = twoDtgLastCommit;
-  } else {
-	twoDtangent = theMaterial->getTangent();
-  }
-
-	} else {
-
-  //  newton with initial tangent
-  twoDtangent = twoDtgLastCommit;
-
-	} */
-
-	twoDtangent = theMaterial->getTangent();
-
-    // two dimensional stress
+	
     twoDstress = theMaterial->getStress();
-    
-    // PlaneStressRC NDmaterial strain order   = 11, 22, 12;  ##, 33, 23, 31
-    // PlaneStressRCFiberMaterial strain order = 11, 12, 22;  ##, 31, 33, 23
-    // swap matrix indices to sort out-of-plane components 
-    //for (i=0; i<3; i++) {
-    //
-    //  ii = this->indexMap(i);
-    //
-    //  twoDstressCopy(ii) = twoDstress(i);
-    //
-    //  for (j=0; j<3; j++) {
-    //
-    //jj = this->indexMap(j);
-    //
-    //twoDtangentCopy(ii,jj) = twoDtangent(i,j);
-    //
-    //  }//end for j
-    //   
-    //}//end for i
     
     //out of plane stress and tangents
     condensedStress(0) = twoDstress(1);
 
-    dd22(0,0) = twoDtangent(1,1);
-    dd23 = twoDtangent(2,1);
-	dd21 = twoDtangent(0,1);
-
     //set norm
     norm = condensedStress.Norm(); //abs(twoDstress(1));
-    
-    //condensation 
-    //dd22.Solve(condensedStress, strainIncrement);
-    strainIncrement(0) = -(dd21*twoDstrain(0)+dd23*twoDstrain(2))/dd22(0,0); // -(k23*gamma+k21*eps_x)/k22
-
-    //update out of plane strains
-	this->Tstrain22 = strainIncrement(0);
-
     //this->Tgamma31  -= strainIncrement(0);
     //this->Tstrain22 -= strainIncrement(0);
     //this->Tstrain33 -= strainIncrement(2);
     //this->Tgamma23  -= strainIncrement(3);
+
+	twoDtangent = theMaterial->getTangent();
+	dd22(0,0) = twoDtangent(1,1);
+	dd23 = twoDtangent(2,1);
+	dd21 = twoDtangent(1,0);
 
     if (norm <= tol) {
 	  converged = true;
@@ -277,19 +225,29 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 
     } else {
 	  // for next iteration
+
+	  //condensation
+	  if (l<2) {
+        //update out of new strains
+	    this->Tstrain22 = -(dd21*twoDstrain(0)+dd23*twoDstrain(2))/dd22(0,0); // -(k23*gamma+k21*eps_x)/k22
+
+		if ((cnt == (numIters-1)) && (l == 1)) {
+		  cnt = 0; //reset iteration num
+		  l = 2;
+		}
+	  } 
+	  else { // l=2
+	  // if we have failed to converge for all of our schemes
+	    dd22.Solve(condensedStress, strainIncrement);
+		this->Tstrain22 -= strainIncrement(0);
+	  }
 	  twoDstrain(1) = this->Tstrain22;
-
-	  // if we have failed to converge for all of our newton schemes
-	  // - reduce step size by the factor specified
-	  
-      //if ((cnt == (numIters-1)) && (l == 2)) {
-	  //  twoDstrainTrial /= factor;
-	  //  numSubdivide++;
-	  //}
-
     } // test norm <? tol
+
   }  // for (cnt=0; cnt<numIters; cnt++)
+
     } // for (int l=0; l<2; l++)
+
   } // (converged == false && numSubdivide <= maxSubdivisions)
   
   // if fail to converge we return an error flag & print an error message
@@ -297,7 +255,7 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
     opserr << "WARNING - PlaneStressRCFiberMaterial::setTrialStrain - failed to get compatible " << endln;
     opserr << "inter-fiber forces & deformations PlaneStressRCFiberMaterial: " << endln;
     opserr << this->getTag() << "(norm: " << norm << ")" << endln;
-    //return -1;
+    return -1;
   }
 
   this->tangent(0,0) = twoDtangent(0,0) - (twoDtangent(0,1)-twoDtangent(1,0))/dd22(0,0); 
