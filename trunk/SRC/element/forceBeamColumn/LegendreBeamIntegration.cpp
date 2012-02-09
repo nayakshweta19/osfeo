@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.1 $
-// $Date: 2006/01/17 21:12:56 $
+// $Date: 2006-01-17 21:12:56 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/forceBeamColumn/LegendreBeamIntegration.cpp,v $
 
 #include <LegendreBeamIntegration.h>
@@ -42,7 +42,8 @@ LegendreBeamIntegration::getCopy(void)
 }
 
 void
-LegendreBeamIntegration::getSectionLocations(int numSections, double L,
+LegendreBeamIntegration::getSectionLocations(int numSections, 
+					     double L,
 					     double *xi)
 {
   switch(numSections) {
@@ -133,6 +134,7 @@ LegendreBeamIntegration::getSectionLocations(int numSections, double L,
     break;
 
   default:
+    opserr << "LegendreBeamIntegration -- max # integration points is 10\n";
     break;
   }
 
@@ -232,6 +234,7 @@ LegendreBeamIntegration::getSectionWeights(int numSections, double L,
     break;
 
   default:
+    opserr << "LegendreBeamIntegration -- max # integration points is 10\n";
     break;
   }
   
