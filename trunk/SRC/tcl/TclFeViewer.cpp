@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.12 $
-// $Date: 2008/02/15 23:46:34 $
+// $Date: 2008-02-15 23:46:34 $
 // $Source: /usr/local/cvs/OpenSees/SRC/tcl/TclFeViewer.cpp,v $
                                                                         
 // Written: fmk 
@@ -33,6 +33,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include <Domain.h>
 #include <Element.h>

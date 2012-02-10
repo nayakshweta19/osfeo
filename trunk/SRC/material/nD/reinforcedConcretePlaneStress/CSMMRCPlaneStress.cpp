@@ -800,7 +800,7 @@ CSMMRCPlaneStress::determineTrialStress(void)
   //double eps = 1e-12;
   
   
-  if ( fabs(Tstrain(0)-Tstrain(1)) < 1e-7 ) {
+  if ( fabs(Tstrain(0)-Tstrain(1)) < 1e-7 && Tstrain.pNorm(-1) > 1e-7 ) {
     citaR = 0.25*PI;	
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_citaR = 0.5 * atan(fabs(2.0*1.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 

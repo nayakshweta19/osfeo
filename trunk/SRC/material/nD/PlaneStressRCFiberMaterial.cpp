@@ -167,8 +167,8 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   static Matrix dd22(1,1);
 
   //double dW;                    // section strain energy (work) norm 
-  int maxSubdivisions = 4;
-  int numSubdivide    = 1;
+  int maxSubdivisions = 2;
+  int numSubdivide    = 0;
   bool converged      = false;
   maxIters            = 20;
   tol                 = 1.0e-5;
@@ -235,11 +235,12 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 		  cnt = 0; //reset iteration num
 		  l = 2;
 		}
+		numSubdivide ++;
 	  } 
 	  else { // l=2
 	  // if we have failed to converge for all of our schemes
-	    dd22.Solve(condensedStress, strainIncrement);
-		this->Tstrain22 -= strainIncrement(0);
+	    //dd22.Solve(condensedStress, strainIncrement);
+	    //this->Tstrain22 -= strainIncrement(0);
 	  }
 	  twoDstrain(1) = this->Tstrain22;
     } // test norm <? tol
@@ -254,17 +255,17 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   if (converged == false) {
     opserr << "WARNING - PlaneStressRCFiberMaterial::setTrialStrain - failed to get compatible " << endln;
     opserr << "inter-fiber forces & deformations PlaneStressRCFiberMaterial: " << endln;
-    opserr << this->getTag() << "(norm: " << norm << ")" << endln;
-    return -1;
+    opserr << "matTag = " << this->getTag() << "( norm: " << norm << ")" << endln;
+    //return -1;
   }
 
   this->tangent(0,0) = twoDtangent(0,0) - (twoDtangent(0,1)-twoDtangent(1,0))/dd22(0,0); 
   this->tangent(0,1) = twoDtangent(0,2) - (twoDtangent(0,1)-twoDtangent(1,2))/dd22(0,0);
   this->tangent(1,0) = twoDtangent(2,0) - (twoDtangent(2,1)-twoDtangent(1,0))/dd22(0,0);
   this->tangent(1,1) = twoDtangent(2,2) - (twoDtangent(2,1)-twoDtangent(1,2))/dd22(0,0);
+  
   stress(0) = twoDstress(0) - twoDtangent(0,1)/dd22(0,0) * twoDstress(1);
   stress(1) = twoDstress(2) - twoDtangent(2,1)/dd22(0,0) * twoDstress(1);
-  //tangent.Solve(strain, stress);
 
   return 0;
 }
