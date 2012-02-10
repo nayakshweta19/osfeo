@@ -164,6 +164,7 @@ class MCFTRCPlaneStress : public NDMaterial
 	Vector stress0_vec;
 	Vector stress_vec;
 	Matrix tangent_matrix;
+	Matrix secant_matrix;
 
     Vector determineTrialStress(Vector strain);
     double getPrincipalStressAngle(double inputAngle);

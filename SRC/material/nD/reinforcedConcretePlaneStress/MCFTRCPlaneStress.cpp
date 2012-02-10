@@ -172,7 +172,7 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
   NDMaterial(tag, ND_TAG_MCFTRCPlaneStress), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rhox(ROU1), rhoy(ROU2), db1(DB1), db2(DB2),
   fpc(FPC), fyx(FYX), fyy(FYY), Es(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
-  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), tangent_matrix(3,3), strain_vec(3), 
+  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), secant_matrix(3,3), strain_vec(3), 
   epsC_vec(3), epsC12p_prevec(2), epsC12p_nowvec(2), epsCp_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
   CepsC_vec(3), CepsCp_vec(3), CepsC12cm_vec(2), CepsCcm_vec(3), CepsC12tm_vec(2), CepsCtm_vec(3)
@@ -273,7 +273,7 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 
 MCFTRCPlaneStress::MCFTRCPlaneStress()
   :NDMaterial(0, ND_TAG_MCFTRCPlaneStress),
-  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), tangent_matrix(3,3), strain_vec(3), 
+  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), secant_matrix(3,3), strain_vec(3), 
   epsC12p_prevec(2), epsC12p_nowvec(2), epsC_vec(3), epsCp_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3)
 {
@@ -363,7 +363,7 @@ MCFTRCPlaneStress::getTangent(void)
   //determineTrialStress(strain_vec);
   //determineTangent();
 
-  return tangent_matrix;
+  return secant_matrix;
 }
 
 const Vector& 
@@ -763,18 +763,19 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   double epsC1, epsC2, epsSx, epsSy, epsts;
   double eC1p=0.0, eC2p=0.0, eC1m=0.0, eC2m=0.0, eT1m=0.0, eT2m=0.0;
   double fC1, fC1a, fC1b, fC2, fSx, fSy; //, fC1c
+  double halfGammaOneTwo;
 
   double fcr   = 0.65 * pow(-fpc, 0.33); //0.31*sqrt(-fpc);      ----ftp
   double Ec    = 2.0 * fpc/epsc0;
   double epscr = fcr/Ec;
-  double vci, vcimax, s_cita, w; //delta_S, gamma_S;
+  double vcxy, vci, vcimax, s_cita, w; //delta_S, gamma_S;
   double Cs, Cd, betaD;
   double Ecx, Ecy;
 
   static Vector tempStrain(3); // maintain main strain vector 
 
     // Get citaE based on Tstrain, eq. i-9...
-  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON ) {
+  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON && Tstrain.pNorm(-1) >= 1e-9) {
     citaE = 0.25*PI;
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_cita = 0.5 * atan(fabs(1.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 
@@ -864,16 +865,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	Dcp(1,0) = v*temp;
 	Dcp(2,2) = temp*(1.0-v)/2.0;
 
-	Ds1p(0,0)= Es;
-	Ds2p(0,0)= Es;
+	Ds1p(0,0)= Es * rhox;
+	Ds2p(0,0)= Es * rhoy;
 
 	Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
 	Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
 	Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
 
-	tangent_matrix = Dc + Ds1 + Ds2;
+	secant_matrix = Dc + Ds1 + Ds2;
+	tangent_matrix = secant_matrix;
 
-	Tstress.addMatrixVector(0.0, tangent_matrix, Tstrain, 1.0);
+	//Tstress.addMatrixVector(0.0, tangent_matrix, Tstrain, 1.0);
+	Tstress.Zero();
 
 	return Tstress;
   }
@@ -915,7 +918,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   static Vector errorVec(3); // epsC_vec converge test need a vector to maintain Error
   static Vector theData(7); // data for materials passed in 
   double errNorm;
-  double temp, tolNorm = 1.0e-5;
+  double temp, tolNorm = 1.0e-6;
   bool vCiconverged = false;
   int iteration_counter = 0;
   double deltaEpsC1p, deltaEpsC2p, deltaEpsCm1, deltaEpsCm2, deltaEpsTm1, deltaEpsTm2;
@@ -925,17 +928,16 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     // Get epsC1,epsC2 and citaS based on Tstrain, eq.i-10
     //epsC1 = 0.5*(epsC_vec(0)+epsC_vec(1)) 
 	//	  + 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
-
     //epsC2 = 0.5*(epsC_vec(0)+epsC_vec(1)) 
 	//	  - 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
     
 	tempStrain.addMatrixVector(0.0, Tc, epsC_vec, 1.0);
 	epsC1 = tempStrain(0);
 	epsC2 = tempStrain(1);
-	double halfGammaOneTwo = tempStrain(2);  // should be a minor value
+	halfGammaOneTwo = tempStrain(2);  // should be a minor value
 
     // Get citaS based on epsC_vec, eq.i-11
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON) {
+    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON && epsC_vec.pNorm(-1) >= 1e-9) {
       citaS = 0.25*PI;	
     } else {  // epsC_vec(0) != epsC_vec(1) 
       temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
@@ -974,7 +976,6 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   
     // Calculate average concrete stress
     // C2 --compression for fc2, epsC2 incorporate steel offset strains
-
 	theData(0) = eC2m;  // 
 	theData(1) = eT2m;  // 
 	//theData(2) = epsC2;  // 
@@ -994,8 +995,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	theResponses[7]->getResponse(); // C2 getVar to theInfoC04
     epsC12p_nowvec(1) = (*theInfoC04.theVector)(5); // ecp2 
     
-    // C1 -- tensile for fc1, epsC1
-    //  case 1: eq.i-33,34
+    // C1 -- tensile for fc1, epsC1    
+	//  case 1: eq.i-33,34
     epsts = 2.0 * 7.5e-3 / fcr / 750.; //eq. i-33
     temp  = (epsC1 - epscr) / (epsts - epscr);
 
@@ -1009,7 +1010,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   
     //temp = max(fC1a,fC1b); // eq.i-38 /fC1
   
-    // eq.i=5   // for positive value
+    // eq.i-5   // for positive value
     //fC1c = max(rhox* (fyx - fSx) * pow(cos(citan1), 2.0), 0.0)
   	//     + max(rhoy* (fyy - fSy) * pow(cos(citan2), 2.0), 0.0);
     
@@ -1040,7 +1041,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     if (epsC12p_nowvec(0) > 0) epsC12p_nowvec(0) = 0.0;
 
 	// MCFT cita corresponding strain field, DSFM cita corresponding stress field
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON ) {
+    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON && epsC_vec.pNorm(-1) >= 1e-9) {
       cita = 0.25*PI;	
     } else {  // epsC_vec(0) != epsC_vec(1) 
       temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
@@ -1077,7 +1078,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     // epsCp_vec = Tstrain - epsC_vec;
 	//epsC12p_prevec(0)
 	//eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
-		 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
+	//	 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
 	//epsC12p_prevec(1)
 	//eC2p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
 	//	 - 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
@@ -1088,9 +1089,9 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
     // deltaEspCp(2),  P. Ceresa 2009, Eq. 4
 	//deltaEpsC1p = epsC12p_nowvec(0) - epsC12p_prevec(0);
-	deltaEpsC1p = 0.5 * (eC1p - epsC12p_nowvec(0));
+	deltaEpsC1p = eC1p - epsC12p_nowvec(0);
 	//deltaEpsC2p = epsC12p_nowvec(1) - epsC12p_prevec(1);
-    deltaEpsC2p = 0.5 * (eC2p - epsC12p_nowvec(1));
+    deltaEpsC2p = eC2p - epsC12p_nowvec(1);
 
     epsC_vec(0) += (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
     epsC_vec(1) += (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
@@ -1131,7 +1132,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
     // Calculate local stress at cracks
     int status            = 0; // status to check if iteration satisfied eq.i-7
-    double tolerance      = 1.0e-5; // tolerance for iteration
+    double tolerance      = 1.0e-6; // tolerance for iteration
     bool fC1converged     = false;
     double error;
     double fScrx, fScry;
@@ -1139,7 +1140,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     double epsScry        = epsSy;
     double epsIncr        = 0.0;
   
-    while ( fC1converged == false ) {
+    while ( fC1converged == false && status == 0 ) {
+	  if(epsScrx > 0.5 || epsScry > 0.5) { // for even large strain at cracks
+	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
+		opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
+		opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
+		status = 1;
+	  }
       // eq.i-20
   	  epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
   	  epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
@@ -1148,14 +1155,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    opserr << "DSFMRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	    return -1;
 	  }
-  	  fScrx = theMaterial[0]->getStress();
+  	  //fScrx = theMaterial[0]->getStress();
   	  fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 
   	  if( theMaterial[1]->setTrialStrain(epsScry) != 0) {
 	    opserr << "DSFMRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	    return -1;
 	  }
-  	  fScry = theMaterial[1]->getStress();
+  	  //fScry = theMaterial[1]->getStress();
   	  fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
   	  
 	  // eq.i-7
@@ -1252,7 +1259,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
     Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
 
-	tangent_matrix = Dc + Ds1 + Ds2;
+	secant_matrix = Dc + Ds1 + Ds2;
 
     // Calculate pseudo-prestress vector
 
@@ -1291,12 +1298,21 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   }
 
   // Calculate the tangent matrix.
-  tangent_matrix = Dc + Ds1 + Ds2;
+  secant_matrix = Dc + Ds1 + Ds2;
 
   // Calculate total stress from steel and concrete
-  Tstress.addMatrixVector(0.0, tangent_matrix, Tstrain, 1.0);
-
-  // determine internal vectors
+  if (abs(abs(cita)-PI/2.0) <= 1.e-12) vcxy = 0.0;
+  else                                 vcxy = (fC1 - fC2) * tan(cita) /(1+pow(tan(cita),2));
+  
+  if (abs(cita) <= 10* DBL_EPSILON) {
+	Tstress(0) = fC1 + rhox * fSx;
+	Tstress(1) = fC2 + rhoy * fSy;
+	Tstress(2) = 0.0;
+  } else {
+    Tstress(0) = fC1 - vcxy / tan(cita) + rhox * fSx;
+    Tstress(1) = fC1 - vcxy * tan(cita) + rhoy * fSy;
+    Tstress(2) = vcxy;
+  }
 
   return Tstress;
 }
@@ -1323,22 +1339,24 @@ MCFTRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
 int
 MCFTRCPlaneStress::determineTangent(Vector strain)
 {
-  Vector Tstrain = strain;
+  Vector Tstrain;
   Vector Tstress1(3), Tstress2(3);
-  //Matrix D(3,3);
+  double dEps = 1.0e-9;
 
   for (int i=0; i<3; i++) {
-	Tstrain(i) = 1.001*strain(i);
+	Tstrain = strain;
+
+	Tstrain(i) = strain(i)+dEps;
 	Tstress1 = determineTrialStress(Tstrain);
 	
-	Tstrain(i) = 0.999*strain(i);
+	Tstrain(i) = strain(i)-dEps;
 	Tstress2 = determineTrialStress(Tstrain);
 
 	if (Tstrain.pNorm(-1) == 0.0) {
 	  determineTrialStress(strain);
 	} else {
 	  for (int j=0; j<3; j++){
-		tangent_matrix(j,i)=(Tstress1(j)-Tstress2(j))/(0.002*strain(i));
+		tangent_matrix(i,j)=(Tstress1(j)-Tstress2(j))/(2*dEps);
 	  }
 	}
 	
