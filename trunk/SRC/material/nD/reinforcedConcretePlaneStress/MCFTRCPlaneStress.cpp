@@ -172,7 +172,8 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
   NDMaterial(tag, ND_TAG_MCFTRCPlaneStress), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rhox(ROU1), rhoy(ROU2), db1(DB1), db2(DB2),
   fpc(FPC), fyx(FYX), fyy(FYY), Es(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
-  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), secant_matrix(3,3), strain_vec(3), 
+  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), strain_vec(3),
+  secant_matrix(3,3), tangent_matrix(3,3),
   epsC_vec(3), epsC12p_prevec(2), epsC12p_nowvec(2), epsCp_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
   CepsC_vec(3), CepsCp_vec(3), CepsC12cm_vec(2), CepsCcm_vec(3), CepsC12tm_vec(2), CepsCtm_vec(3)
@@ -273,7 +274,8 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 
 MCFTRCPlaneStress::MCFTRCPlaneStress()
   :NDMaterial(0, ND_TAG_MCFTRCPlaneStress),
-  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), secant_matrix(3,3), strain_vec(3), 
+  lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3),  strain_vec(3),
+  secant_matrix(3,3),tangent_matrix(3,3),
   epsC12p_prevec(2), epsC12p_nowvec(2), epsC_vec(3), epsCp_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3)
 {
@@ -775,8 +777,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   static Vector tempStrain(3); // maintain main strain vector 
 
     // Get citaE based on Tstrain, eq. i-9...
-  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON && Tstrain.pNorm(-1) >= 1e-9) {
-    citaE = 0.25*PI;
+  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON ) {
+	if (fabs(Tstrain(2)) < 1e-9) {
+	  citaE = 0;
+	} else {
+	  citaE = 0.25*PI;
+	}
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_cita = 0.5 * atan(fabs(1.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 
     if ( fabs(Tstrain(2)) < 1e-9 ) {
@@ -937,8 +943,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	halfGammaOneTwo = tempStrain(2);  // should be a minor value
 
     // Get citaS based on epsC_vec, eq.i-11
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON && epsC_vec.pNorm(-1) >= 1e-9) {
-      citaS = 0.25*PI;	
+    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON) {
+      if (fabs(epsC_vec(2)) < 1e-9) {
+	    citaS = 0;
+	  } else {
+	    citaS = 0.25*PI;
+	  }
     } else {  // epsC_vec(0) != epsC_vec(1) 
       temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
       if ( fabs(epsC_vec(2)) < 1e-9 ) {
@@ -1041,8 +1051,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     if (epsC12p_nowvec(0) > 0) epsC12p_nowvec(0) = 0.0;
 
 	// MCFT cita corresponding strain field, DSFM cita corresponding stress field
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON && epsC_vec.pNorm(-1) >= 1e-9) {
-      cita = 0.25*PI;	
+    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON) {
+      if (fabs(epsC_vec(2)) < 1e-9) {
+	    cita = 0;
+	  } else {
+	    cita = 0.25*PI;
+	  }
     } else {  // epsC_vec(0) != epsC_vec(1) 
       temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
       if ( fabs(epsC_vec(2)) < 1e-9 ) {
@@ -1093,9 +1107,9 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	//deltaEpsC2p = epsC12p_nowvec(1) - epsC12p_prevec(1);
     deltaEpsC2p = eC2p - epsC12p_nowvec(1);
 
-    epsC_vec(0) += (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
-    epsC_vec(1) += (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
-    epsC_vec(2) += (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
+    epsCp_vec(0) += (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
+    epsCp_vec(1) += (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
+    epsCp_vec(2) += (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
   
 	// Vecchio: Towards Cyclic Load Modeling of Reinforced Concrete
 	// C max
@@ -1285,12 +1299,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
-	  epsCp_vec = Tstrain - epsC_vec;
+	  epsC_vec = Tstrain - epsCp_vec;
 	  //epsC12p_prevec = epsC12p_nowvec;
 	  iteration_counter += 1 ;
 	  if (iteration_counter > 20) {
 		iteration_counter = 0;
-		epsCp_vec = 0.83 *(Tstrain - epsC_vec);
+		epsC_vec = 0.83 *(Tstrain - epsCp_vec);
 		//epsC12p_prevec *= 0.5;
 		//epsC12p_nowvec *= 0.5;
 	  }
