@@ -800,8 +800,12 @@ CSMMRCPlaneStress::determineTrialStress(void)
   //double eps = 1e-12;
   
   
-  if ( fabs(Tstrain(0)-Tstrain(1)) < 1e-7 && Tstrain.pNorm(-1) > 1e-7 ) {
-    citaR = 0.25*PI;	
+  if ( fabs(Tstrain(0)-Tstrain(1)) < 1e-7 ) {
+    if (fabs(Tstrain(2)) < 1e-7) {
+	  citaR = 0;
+	} else {
+	  citaR = 0.25*PI;
+	}	
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_citaR = 0.5 * atan(fabs(2.0*1.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 
     if ( fabs(Tstrain(2)) < 1e-7 ) {
@@ -1448,7 +1452,11 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 	double temp_citaOut;
 
     if ( fabs(Tstress(0)-Tstress(1)) < 1e-7 ) {
-	  citaOut = 0.25*PI;	
+	  if (fabs(Tstress(2)) < 1e-7) {
+	    citaR = 0;
+	  } else {
+	    citaR = 0.25*PI;
+	  }	
 	} else {    // Tstrain(0) != Tstrain(1)
 	  temp_citaOut = 0.5 * atan(fabs(2.0*1.0e6*Tstress(2)/(1.0e6*Tstress(0)-1.0e6*Tstress(1)))); 
 	  if ( fabs(Tstress(2)) < 1e-7 ) {
