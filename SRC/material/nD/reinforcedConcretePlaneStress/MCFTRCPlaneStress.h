@@ -167,8 +167,10 @@ class MCFTRCPlaneStress : public NDMaterial
 	Matrix secant_matrix;
 
     Vector determineTrialStress(Vector strain);
-    double getPrincipalStressAngle(double inputAngle);
-    double getAngleError(double inputCita);
+	Vector determineMCFTStress(double epsC1, double epsC2);
+	
+	double calcBetaD(double epsC1, double epsC2);
+	int checkAtCrack();
  
 	double kupferEnvelop(double Tstrain, double sig_p, double eps_p);
 	int determineTangent(Vector Tstrain);
