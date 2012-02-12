@@ -333,7 +333,7 @@ MCFTRCPlaneStress::setTrialStrain(const Vector &v)
 
   Tstress = determineTrialStress(strain_vec);
   
-  determineTangent(strain_vec);
+  //determineTangent(strain_vec);
 
   return 0;
 }
@@ -863,12 +863,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
   //for small strain return quickly
   if (Tstrain.pNorm(-1) <= DBL_EPSILON) {
-	double v = 0.2;
+	double v = 0.22;
 	double temp = Ec/(1.0-v*v);
 
 	Dcp(0,0) = temp;
 	Dcp(0,1) = v*temp;
 	Dcp(1,0) = v*temp;
+	Dcp(1,1) = temp;
 	Dcp(2,2) = temp*(1.0-v)/2.0;
 
 	Ds1p(0,0)= Es * rhox;
@@ -1155,7 +1156,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     double epsIncr        = 0.0;
   
     while ( fC1converged == false && status == 0 ) {
-	  if(epsScrx > 0.5 || epsScry > 0.5) { // for even large strain at cracks
+	  if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
 	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
 		opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
 		opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
@@ -1192,7 +1193,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   	  // the iterative parameter should include citan1/citan2 angle chosen. 
       // like: if (citan1 > PI/2 && citan2 > PI/2)...
   	  // which would improve the converge ratio
-  	    temp = 0.5 * (theMaterial[0]->getSecant() + theMaterial[1]->getSecant());
+  	    temp = rhox * theMaterial[0]->getSecant() * pow(cos(citan1), 2.0)
+			 + rhoy * theMaterial[1]->getSecant() * pow(cos(citan2), 2.0);
   	    epsIncr += error/temp;
 	  }
   	  //opserr << "error for the fc1 and steel in cracks is: " << error << endln;
@@ -1312,7 +1314,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   }
 
   // Calculate the tangent matrix.
-  secant_matrix = Dc + Ds1 + Ds2;
+  tangent_matrix = secant_matrix;
 
   // Calculate total stress from steel and concrete
   if (abs(abs(cita)-PI/2.0) <= 1.e-12) vcxy = 0.0;
@@ -1393,7 +1395,7 @@ MCFTRCPlaneStress::determinefS(double strain, double fy, double E, double Esh)
 	}
 	else {
 	  if (strain <= -epsy) fS = -fy;
-	  else                 fS =strain*E;
+	  else                 fS = strain*E;
 	}
   } else {
     if (strain >= epssh ){

@@ -1453,9 +1453,9 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 
     if ( fabs(Tstress(0)-Tstress(1)) < 1e-7 ) {
 	  if (fabs(Tstress(2)) < 1e-7) {
-	    citaR = 0;
+	    citaOut = 0;
 	  } else {
-	    citaR = 0.25*PI;
+	    citaOut = 0.25*PI;
 	  }	
 	} else {    // Tstrain(0) != Tstrain(1)
 	  temp_citaOut = 0.5 * atan(fabs(2.0*1.0e6*Tstress(2)/(1.0e6*Tstress(0)-1.0e6*Tstress(1)))); 
