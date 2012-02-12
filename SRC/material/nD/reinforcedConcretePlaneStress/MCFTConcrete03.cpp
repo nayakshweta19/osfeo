@@ -309,7 +309,7 @@ MCFTConcrete03::getTangent(void)
 double
 MCFTConcrete03::getSecant(void)
 {
-  if ( eps == 0.0 ) {
+  if ( abs(eps) <= DBL_EPSILON ) {
     return e;
   } else {
     return sig/(eps-ept);
