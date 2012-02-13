@@ -141,6 +141,7 @@ class MCFTRCPlaneStress : public NDMaterial
 	Vector strain_vec;
 	Vector epsC_vec;
 	Vector epsCp_vec;
+	Vector epsSlip_vec;
 	Vector epsC12p_prevec; // pre time step eps
 	Vector epsC12p_nowvec; // this time step eps
 	
@@ -152,7 +153,7 @@ class MCFTRCPlaneStress : public NDMaterial
     // Converged values
 	Vector CepsC_vec;
 	Vector CepsCp_vec;
-
+	Vector CepsSlip_vec;
 	Vector CepsCcm_vec;
 	Vector CepsCtm_vec;
     Vector CepsC12cm_vec;
@@ -172,7 +173,7 @@ class MCFTRCPlaneStress : public NDMaterial
 	double calcBetaD(double epsC1, double epsC2);
 	int checkAtCrack();
  
-	double kupferEnvelop(double Tstrain, double sig_p, double eps_p);
+	int kupferEnvelop(double Tstrain, double sig_p, double eps_p);
 	int determineTangent(Vector Tstrain);
 	double determinefS(double strain, double fy, double E, double Esh);
 };
