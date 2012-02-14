@@ -20,30 +20,30 @@
                                                                         
 // $Revision: 1.1 $
 // $Date: 2010-05-04 17:14:45 $
-// $Source: /scratch/slocal/chroot/cvsroot/openseescomp/CompositePackages/ManderConcreteB01/ManderConcreteB01.h,v $
+// $Source: ManderConcreteM01.h,v $
                                                                         
-#ifndef ManderConcreteB01_h
-#define ManderConcreteB01_h
+#ifndef ManderConcreteM01_h
+#define ManderConcreteM01_h
 
 // Written: Mark D. Denavit 
 //
 // Description: This file contains the class definition for 
-// ManderConcreteB01. ManderConcreteB01 provides the abstraction
+// ManderConcreteM01. ManderConcreteM01 provides the abstraction
 // of the Chang and Mander cyclic uniaxial concrete material, 
 //
-// What: "@(#) ManderConcreteB01.h, revA"
+// What: "@(#) ManderConcreteM01.h, revA"
 
 #include <UniaxialMaterial.h>
 
-#define MAT_TAG_ManderConcreteB01 58645
+#define MAT_TAG_ManderConcreteM01 58698
 
-class ManderConcreteB01 : public UniaxialMaterial
+class ManderConcreteM01 : public UniaxialMaterial
 {
   public:
-	ManderConcreteB01(int tag, double ifcc, double iecc, double iEc, double irn_pre, double irn_post, double ift, double iet, double irp, double ixp_cr, double ixn_cr);
-    ManderConcreteB01();    
+	ManderConcreteM01(int tag, double ifcc, double iecc, double iEc, double irn_pre, double irn_post, double ift, double iet, double irp, double ixp_cr, double ixn_cr);
+    ManderConcreteM01();    
 
-    ~ManderConcreteB01();
+    ~ManderConcreteM01();
 
     int setTrialStrain(double strain, double strainRate = 0.0); 
     double getStrain(void);          
@@ -51,9 +51,6 @@ class ManderConcreteB01 : public UniaxialMaterial
     double getTangent(void);
 
     double getInitialTangent(void);
-	
-	double getZeta(void);
-	double getPD(void); // Get partial differentiation of stress to epslonTP (strain in perpendicular direction)
 
     int commitState(void);
     int revertToLastCommit(void);    
@@ -67,7 +64,7 @@ class ManderConcreteB01 : public UniaxialMaterial
     
 	Response *setResponse (const char **argv, int argc, 
 		OPS_Stream &theOutputStream);
-	int getResponse (int responseID, Information &matInformation);      
+	int getResponse (int responseID, Information &matInformation);   
 
     void Print(OPS_Stream &s, int flag =0);
     
@@ -133,17 +130,6 @@ class ManderConcreteB01 : public UniaxialMaterial
 	  double Cer2, Cer4, Cer9, Cer10, Cea;
 	  double Esec_p, CEsec_p; // Secant tangent of unloading (rule 4) (3-160)
 	  
-	  double zeta;     // Softening effect
-	  double beta;     // Parameter needed for calculating zeta
-	  double fbeta;    // function of beta
-	  double Wp;       // prestressing factor
-	  double epslonTP; // Strain in the perpendicular direction, needed to get the zeta
-	  double epslonCI; // initial prestressing strain
-	  double sigmaCI;  // initial prestress
-	  double D;        // Damage factor for strength, get from parameter
-	  double X;        // for normal stresses 
-	  double K;        // for normal stresses
-
 	  // Useful Function
 	  void transitionCurve(double Tstrain, double &Tstress, double &Ttangent, double ei, double fi, double Ei, double ef, double ff, double Ef, int rule);
 	  void positiveEnvelope(double strain, double &stress, double &tangent);

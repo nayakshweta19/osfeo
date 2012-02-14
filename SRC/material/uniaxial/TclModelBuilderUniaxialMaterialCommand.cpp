@@ -119,7 +119,8 @@ extern void *OPS_NewSteelZ01Material(void);
 extern void *OPS_NewSteelZ02Material(void);       //
 extern void *OPS_NewConcrete09Material(void);     //
 extern void *OPS_NewConcrete10Material(void);     //
-extern void *OPS_ManderConcreteB01(void);         //
+extern void *OPS_ManderConcreteC01(void);         // for CSMM 
+extern void *OPS_ManderConcreteM01(void);         // for MCFT/DFSM
 extern void *OPS_NewTendonL01Material(void);
 extern void *OPS_NewConfinedConcrete01Material(void);
 extern void *OPS_NewElasticBilin(void);
@@ -2322,7 +2323,15 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
   	}
 
 	else if (strcmp(argv[1],"ManderConcreteB01") == 0) {
-  	  void *theMat = OPS_ManderConcreteB01();
+  	  void *theMat = OPS_ManderConcreteC01();
+      if (theMat != 0) 
+    theMaterial = (UniaxialMaterial *)theMat;
+      else 
+    return TCL_ERROR;
+  	}
+
+	else if (strcmp(argv[1],"ManderConcreteM01") == 0) {
+  	  void *theMat = OPS_ManderConcreteM01();
       if (theMat != 0) 
     theMaterial = (UniaxialMaterial *)theMat;
       else 

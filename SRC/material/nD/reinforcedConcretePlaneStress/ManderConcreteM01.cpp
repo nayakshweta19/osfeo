@@ -20,10 +20,10 @@
                                                                         
 // $Revision: 1.1 $
 // $Date: 2010-05-04 17:14:45 $
-// $Source: /scratch/slocal/chroot/cvsroot/openseescomp/CompositePackages/ManderConcreteB01/ManderConcreteB01.cpp,v $
+// $Source: ManderConcreteM01.cpp,v $
                                                                         
 // Documentation: Chang and Mander Concrete Model
-// uniaxialMaterial ManderConcreteB01 $tag $fcc $ecc $Ec $rn_pre $rn_post $ft $et $rp $xp_cr <options>
+// uniaxialMaterial ManderConcreteM01 $tag $fcc $ecc $Ec $rn_pre $rn_post $ft $et $rp $xp_cr <options>
 //
 // Required Input Parameters:
 //   $tag           integer tag identifying material
@@ -51,15 +51,14 @@
 //      Urbana-Champaign, Urbana, Illinois, March.
 
 #include <elementAPI.h>
-#include <Information.h>
-#include <MaterialResponse.h>
-
-#include "ManderConcreteB01.h"
+#include "ManderConcreteM01.h"
 
 #include <Vector.h>
 #include <Channel.h>
 #include <math.h>
 #include <float.h>
+#include <Information.h>
+#include <MaterialResponse.h>
 
 #define SMALL_STRAIN 1.0e-20
 //#define SMALL_STRESS 1.0e-16
@@ -73,18 +72,11 @@
 #elif _MACOSX
 #define OPS_Export extern "C" __attribute__((visibility("default")))
 #else
-//#define OPS_Export extern "C"
 #define OPS_Export
 #endif
 
-//OPS_Export void
-//localInit() 
-//{
-//	  OPS_Error("shenSteelRCFT uniaxial material written by Mark D Denavit, University of Illinois at Urbana-Champaign \n", 1);
-//}
-
 OPS_Export void *
-OPS_ManderConcreteB01()
+OPS_ManderConcreteM01()
 {
   // Pointer to a uniaxial material that will be returned
   UniaxialMaterial *theMaterial = 0;
@@ -96,13 +88,13 @@ OPS_ManderConcreteB01()
 
   numData = 1;
   if (OPS_GetIntInput(&numData, iData) != 0) {
-    opserr << "WARNING invalid uniaxialMaterial ManderConcreteB01 tag \n" << endln;
+    opserr << "WARNING invalid uniaxialMaterial ManderConcreteM01 tag \n" << endln;
     return 0;
   }
 
   numData = 9;
   if (OPS_GetDoubleInput(&numData, dData) != 0) {
-    opserr << "WARNING invalid input, want: uniaxialMaterial ManderConcreteB01 tag fcc ecc Ec rn_pre rn_post ft et rp xp_cr \n";
+    opserr << "WARNING invalid input, want: uniaxialMaterial ManderConcreteM01 tag fcc ecc Ec rn_pre rn_post ft et rp xp_cr \n";
     return 0;	
   }
   
@@ -171,19 +163,18 @@ OPS_ManderConcreteB01()
   }
 
 
-  theMaterial = new ManderConcreteB01(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6], dData[7], dData[8], xn_cr);
+  theMaterial = new ManderConcreteM01(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6], dData[7], dData[8], xn_cr);
 
   if (theMaterial == 0) {
-    opserr << "WARNING could not create uniaxialMaterial of type ManderConcreteB01\n";
+    opserr << "WARNING could not create uniaxialMaterial of type ManderConcreteM01\n";
     return 0;
   }
 
   return theMaterial;
 }
 
-
-ManderConcreteB01::ManderConcreteB01(int tag, double i1, double i2, double i3, double i4, double i5, double i6, double i7, double i8, double i9, double i10)
-:UniaxialMaterial(tag,MAT_TAG_ManderConcreteB01),
+ManderConcreteM01::ManderConcreteM01(int tag, double i1, double i2, double i3, double i4, double i5, double i6, double i7, double i8, double i9, double i10)
+:UniaxialMaterial(tag,MAT_TAG_ManderConcreteM01),
  Fc_n(i1), ec_n(i2), Ec(i3), r_n_pre(i4), r_n_post(i5), 
  Fc_p(i6), ec_p(i7), r_p(i8), x_p_cr(i9), x_n_cr(i10)
 {
@@ -209,8 +200,8 @@ ManderConcreteB01::ManderConcreteB01(int tag, double i1, double i2, double i3, d
 	this->revertToStart();
 }
 
-ManderConcreteB01::ManderConcreteB01()
-:UniaxialMaterial(0,MAT_TAG_ManderConcreteB01),
+ManderConcreteM01::ManderConcreteM01()
+:UniaxialMaterial(0,MAT_TAG_ManderConcreteM01),
 Fc_n(0.0), ec_n(0.0), Ec(0.0), r_n_pre(0.0), r_n_post(0.0), 
 Fc_p(0.0), ec_p(0.0), r_p(0.0), x_p_cr(0.0), x_n_cr(0.0)
 {
@@ -223,36 +214,14 @@ Fc_p(0.0), ec_p(0.0), r_p(0.0), x_p_cr(0.0), x_n_cr(0.0)
 	this->revertToStart();
 }
 
-ManderConcreteB01::~ManderConcreteB01()
+ManderConcreteM01::~ManderConcreteM01()
 {
   // does nothing
 }
 
 int 
-ManderConcreteB01::setTrialStrain(double strain, double strainRate)
+ManderConcreteM01::setTrialStrain(double strain, double strainRate)
 {
-    fbeta = 1 - fabs(beta)/24;
-    Wp = 1.15 + fabs(beta) * (0.09 * fabs(beta) - 1) / 6;
-   
-    //Calculate softening effect: zeta if epslonTP >0 
-    if (epslonTP > 0.0)
-	{
-	    // add K into zeta, K is delta
-		zeta =  (K) * 5.8 / sqrt( -Fc_n * ( 1.0 + 400.0 * epslonTP) ) * fbeta * Wp;
-		if ( zeta >= 0.9 )
-		{ 
-			zeta = 0.9;
-		}
-		if ( zeta <= 0.25 ) //min zeta
-		{
-			zeta = 0.25;
-		}
-	}
-    else
-	{
-		zeta = 1.0;
-    }
-
 	// Return state variables to last commited values
 	backToCommitStateVar();		
 		
@@ -1217,50 +1186,49 @@ ManderConcreteB01::setTrialStrain(double strain, double strainRate)
 			break;			
 	}
 	
-	//opserr << Trule << endln;
 	return 0;
 }
 
 double 
-ManderConcreteB01::getStrain(void)
+ManderConcreteM01::getStrain(void)
 {
   return Tstrain;
 }
 
 double 
-ManderConcreteB01::getStress(void)
+ManderConcreteM01::getStress(void)
 {
   return Tstress;
 }
 
 double 
-ManderConcreteB01::getTangent(void)
+ManderConcreteM01::getTangent(void)
 {
   return Ttangent;
 }
 
 double 
-ManderConcreteB01::getInitialTangent(void)
+ManderConcreteM01::getInitialTangent(void)
 {
   return Ec;
 }
 
 int 
-ManderConcreteB01::commitState(void)
+ManderConcreteM01::commitState(void)
 {
 	this->commitStateVar();
 	return 0;
 }	
 
 int 
-ManderConcreteB01::revertToLastCommit(void)
+ManderConcreteM01::revertToLastCommit(void)
 {
 	this->backToCommitStateVar();
 	return 0;
 }
 
 int 
-ManderConcreteB01::revertToStart(void)
+ManderConcreteM01::revertToStart(void)
 {
 	isCracked = false;	CisCracked = false;
 	isSpalled = false;	CisSpalled = false;
@@ -1309,21 +1277,13 @@ ManderConcreteB01::revertToStart(void)
 	Esec_p = 0.0; CEsec_p = 0.0; 
 	ea = 0.0; Cea = 0.0;
 
-	// State variables
-	zeta = 1.0;
-	beta = 1.0;
-	epslonTP = 0.0;
-	D = 1.0-0.4*(epslonTP/ec_n);
-	X = 2.0;
-	K = 1.0;
-
 	return 0;
 }
 
 UniaxialMaterial *
-ManderConcreteB01::getCopy(void)
+ManderConcreteM01::getCopy(void)
 {
-  ManderConcreteB01 *theCopy = new ManderConcreteB01(this->getTag(), Fc_n, ec_n, Ec, r_n_pre, r_n_post, Fc_p, ec_p, r_p, x_p_cr, x_n_cr);
+  ManderConcreteM01 *theCopy = new ManderConcreteM01(this->getTag(), Fc_n, ec_n, Ec, r_n_pre, r_n_post, Fc_p, ec_p, r_p, x_p_cr, x_n_cr);
   
   theCopy->isCracked = this->isCracked;
   theCopy->CisCracked = this->CisCracked;
@@ -1426,7 +1386,7 @@ ManderConcreteB01::getCopy(void)
 }
 
 int 
-ManderConcreteB01::sendSelf(int cTag, Channel &theChannel)
+ManderConcreteM01::sendSelf(int cTag, Channel &theChannel)
 {
   int res = 0;
   static Vector data(106);
@@ -1548,19 +1508,20 @@ ManderConcreteB01::sendSelf(int cTag, Channel &theChannel)
 
   res = theChannel.sendVector(this->getDbTag(), cTag, data);
   if (res < 0) 
-    opserr << "ManderConcreteB01::sendSelf() - failed to send data\n";
+    opserr << "ManderConcreteM01::sendSelf() - failed to send data\n";
 
   return res;
 }
 
 int 
-ManderConcreteB01::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+ManderConcreteM01::recvSelf(int cTag, Channel &theChannel, 
+				 FEM_ObjectBroker &theBroker)
 {
   int res = 0;
   static Vector data(6);
   res = theChannel.recvVector(this->getDbTag(), cTag, data);
   if (res < 0) 
-    opserr << "ManderConcreteB01::recvSelf() - failed to recv data\n";
+    opserr << "ManderConcreteM01::recvSelf() - failed to recv data\n";
   else {
     this->setTag(data(0));
     
@@ -1684,9 +1645,9 @@ ManderConcreteB01::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &the
 }
 
 void 
-ManderConcreteB01::Print(OPS_Stream &s, int flag)
+ManderConcreteM01::Print(OPS_Stream &s, int flag)
 {
-	s<<"ManderConcreteB01, tag: "<<this->getTag()<<endln;
+	s<<"ManderConcreteM01, tag: "<<this->getTag()<<endln;
 	s<<" Ec:      "<<Ec<<endln;
 	s<<" Fcn:     "<<Fc_n<<endln;
 	s<<" ecn:     "<<ec_n<<endln;
@@ -1701,7 +1662,7 @@ ManderConcreteB01::Print(OPS_Stream &s, int flag)
 }
 
 void 
-ManderConcreteB01::negativeEnvelope(double strain, double &stress, double &tangent)
+ManderConcreteM01::negativeEnvelope(double strain, double &stress, double &tangent)
 {	
 	double x_n, n_n, y, z;
 	x_n = strain/ec_n;
@@ -1735,7 +1696,7 @@ ManderConcreteB01::negativeEnvelope(double strain, double &stress, double &tange
 }
 
 void 
-ManderConcreteB01::positiveEnvelope(double strain, double &stress, double &tangent)
+ManderConcreteM01::positiveEnvelope(double strain, double &stress, double &tangent)
 {
 	double n_p, x_p;
 	n_p = fabs(Ec * ec_p / Fc_p);
@@ -1766,7 +1727,7 @@ ManderConcreteB01::positiveEnvelope(double strain, double &stress, double &tange
 }
 
 void 
-ManderConcreteB01::transitionCurve(double Tstrain, double &Tstress, double &Ttangent, 
+ManderConcreteM01::transitionCurve(double Tstrain, double &Tstress, double &Ttangent, 
 		double ei, double fi, double Ei, double ef, double ff, double Ef, int rule)
 {
 	double R, A, Esec;
@@ -1800,7 +1761,7 @@ ManderConcreteB01::transitionCurve(double Tstrain, double &Tstress, double &Ttan
 }
 
 void 
-ManderConcreteB01::tsaiEquation(double x, double r, double n, double &y, double &z)
+ManderConcreteM01::tsaiEquation(double x, double r, double n, double &y, double &z)
 {
 	double D;
 	if( r == 1 ) {
@@ -1814,7 +1775,7 @@ ManderConcreteB01::tsaiEquation(double x, double r, double n, double &y, double 
 }
 
 void
-ManderConcreteB01::backToCommitStateVar(void){
+ManderConcreteM01::backToCommitStateVar(void){
 	isCracked = CisCracked;
 	isSpalled = CisSpalled;
 	Trule = Crule;	
@@ -1866,7 +1827,7 @@ ManderConcreteB01::backToCommitStateVar(void){
 }
 
 void
-ManderConcreteB01::commitStateVar(void){
+ManderConcreteM01::commitStateVar(void){
 	CisCracked = isCracked;
 	CisSpalled = isSpalled;
 	Crule = Trule;	
@@ -1917,92 +1878,46 @@ ManderConcreteB01::commitStateVar(void){
 	Cea = ea;
 }
 
-double 
-ManderConcreteB01::getPD ()
-{
-  double PD; 
-  PD = 0.0;
-  
-  double tempRatio;	
-  if ( epslonTP <= 0.0 )
-  {
-    // Added by Ln, neallee@tju.edu.cn
-    D = 1.0-0.4*(epslonTP/ec_n);
-	// end by Ln, neallee@tju.edu.cn
-	PD = 0.0;
-  }
-  else
-  {
-    if ( Trule == 1 )
-	{
-	  tempRatio = Tstrain/(zeta*ec_n);
-	  PD = - D * fbeta * Wp * 1160.0 * sqrt(-Fc_n)* pow((1+400.0*epslonTP), -1.5)
-		  * pow(tempRatio,2.0);
-	}
-    else if ( Trule == 2 )
-	{
-	  if ( Ttangent == 0.0 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
-	  {
-	    PD = 0.0;
-	  }
-	  else
-	  {
-	      tempRatio = Tstrain/(zeta*ec_n);
-	      PD = - D * fbeta * Wp *1160.0 * sqrt(-Fc_n)* pow((1+400.0*epslonTP), -1.5) 
-		* (1.0 -(tempRatio-1)/pow(4.0/zeta-1.0,3.0)*(1.0-12.0/zeta+(4.0/zeta+1.0)*tempRatio)); 
-	      // 1160, 400
-	  }
-	}		
-    else
-	{
-	  PD = 0.0;
-	}
-    if ( (zeta == 0.9) || (zeta == 0.25)) // zeta = max or min value
-	{
-	  PD = 0.0;
-	}
-  }
-  
-  return PD;
-}
-
-double 
-ManderConcreteB01::getZeta ()
-{
-	return zeta;
-}
-
 Response* 
-ManderConcreteB01::setResponse(const char **argv, int argc,
+ManderConcreteM01::setResponse(const char **argv, int argc,
 			 OPS_Stream &theOutput)
 {
-	Response *theResponse = 0;
+  Response *theResponse = 0;
 
-	if (strcmp(argv[0],"getPD") == 0) {
-		double data = 0.0;
-		theResponse = new MaterialResponse(this, 100, data);
-	} else if (strcmp(argv[0],"setWallVar") == 0) {
-		theResponse = new MaterialResponse(this, 101, Vector(5));
-	} else
-		return this->UniaxialMaterial::setResponse(argv, argc, theOutput);
+  if (strcmp(argv[0],"setVar") == 0) {
+    theResponse = new MaterialResponse(this, 100, Vector(6));
+  } else if (strcmp(argv[0],"getVar") == 0) {
+    theResponse = new MaterialResponse(this, 101, Vector(6));
+  } else
+    return this->UniaxialMaterial::setResponse(argv, argc, theOutput);
 
-	return theResponse;
+  return theResponse;
 }
  
 int 
-ManderConcreteB01::getResponse(int responseID, Information &matInfo)
+ManderConcreteM01::getResponse(int responseID, Information &matInfo)
 {
-	if (responseID == 100) {
-		matInfo.theDouble = this->getPD();
-	} else if (responseID == 101){
-		Vector *theVector = matInfo.theVector;
-		X = (*theVector)(0);
-		K = (*theVector)(1);
-		D = (*theVector)(2);
-		beta = (*theVector)(3);
-		epslonTP = (*theVector)(4);   
-	} else
-		return this->UniaxialMaterial::getResponse(responseID, matInfo);
+  if (responseID == 100) { // setVar
+    //matInfo.theDouble = 0.0;
+	Vector *theVector = matInfo.theVector;
+	ecminP  = (*theVector)(0);
+	ecmaxP  = (*theVector)(1);
+	sigminP = (*theVector)(2);
+	sigmaxP = (*theVector)(3);
+	eptP    = (*theVector)(4); 
+	epscp   = (*theVector)(5); 
 
-	return 0;
+  } else if (responseID == 101){ // get var
+    Vector *theVector = matInfo.theVector;
+	(*theVector)(0) = ecminP;
+	(*theVector)(1) = ecmaxP;
+	(*theVector)(2) = sigminP;
+	(*theVector)(3) = sigmaxP;
+	(*theVector)(4) = eptP;
+	(*theVector)(5) = epscp;
+
+  } else
+    return this->UniaxialMaterial::getResponse(responseID, matInfo);
+
+  return 0;
 }
