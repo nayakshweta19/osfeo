@@ -1898,23 +1898,22 @@ int
 ManderConcreteM01::getResponse(int responseID, Information &matInfo)
 {
   if (responseID == 100) { // setVar
-    //matInfo.theDouble = 0.0;
 	Vector *theVector = matInfo.theVector;
-	ecminP  = (*theVector)(0);
-	ecmaxP  = (*theVector)(1);
-	sigminP = (*theVector)(2);
-	sigmaxP = (*theVector)(3);
-	eptP    = (*theVector)(4); 
-	epscp   = (*theVector)(5); 
+	//  = (*theVector)(0);//ecminP
+	//  = (*theVector)(1);//ecmaxP
+	//  = (*theVector)(2);//sigminP
+	//  = (*theVector)(3);//sigmaxP
+	//  = (*theVector)(4);// eptP
+	//  = (*theVector)(5); //epscp
 
   } else if (responseID == 101){ // get var
     Vector *theVector = matInfo.theVector;
-	(*theVector)(0) = ecminP;
-	(*theVector)(1) = ecmaxP;
-	(*theVector)(2) = sigminP;
-	(*theVector)(3) = sigmaxP;
-	(*theVector)(4) = eptP;
-	(*theVector)(5) = epscp;
+	//(*theVector)(0) = //ecminP;
+	//(*theVector)(1) = //ecmaxP;
+	//(*theVector)(2) = //sigminP;
+	//(*theVector)(3) = //sigmaxP;
+	//(*theVector)(4) = //eptP;
+	//(*theVector)(5) = //epscp;
 
   } else
     return this->UniaxialMaterial::getResponse(responseID, matInfo);

@@ -102,6 +102,9 @@ MCFTConcrete03::MCFTConcrete03(int tag, double _fc, double _epsc0, double _fcu,
   e = 2.0*fc/epsc0;
 
   epscp = 0.0;
+  betaD = 1.0;
+  K = 1.0;
+
   ept = 0.0;
   epsro = 0.0;
   sigro =0.0;
@@ -189,7 +192,7 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
 	/*this->determineCompEpscp(ecmin);*/
 	ept = epscp;
 
-    if (eps <= epscp) {
+    if (eps <= ept) {
 	  
 	  // if the current strain is between the minimum strain and ept 
 	  // (which corresponds to zero stress) the material is in the unloading- 
@@ -209,8 +212,8 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
     //  }
 	  if (deps >= 0) { //unloading
     
-	double slop2 = ec0;
-	double slop3 = 0.071 * ec0;
+	double slop2 = ec0*K*betaD;
+	double slop3 = 0.071 * ec0*K*betaD;
 	double N = (slop2-slop3)*(epscp-ecmin)/(sigmm+slop2*(epscp-ecmin));
 	//N = (N < 0.0 ? 0 : N);
 	double dStrain = eps - ecmin;
@@ -224,11 +227,11 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
 
       } else { //reloading
 
-    double betaD;  
-	if (abs(eps) < abs(epsc0)) betaD = 1./(1.+0.1*pow((ecmin-epsro)/epsc0,0.5));
-    else                       betaD = 1./(1.+0.175*pow((ecmin-epsro)/epsc0,0.6));
+    double beta;  
+	if (abs(eps) < abs(epsc0)) beta = 1./(1.+0.1*pow((ecmin-epsro)/epsc0,0.5));
+    else                       beta = 1./(1.+0.175*pow((ecmin-epsro)/epsc0,0.6));
 
-	e = (betaD*sigmm-sigro)/(ecmin-epsro);
+	e = (beta*sigmm-sigro)/(ecmin-epsro);
 	sig = sigro+e*(eps-epsro);
 
 	  }
@@ -279,6 +282,7 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
 void
 MCFTConcrete03::determineCompEpscp(double eps)
 {
+  //epscp = eps - epsc0*K*betaD*(0.868*(eps/epsc0/K/betaD)-0.166*pow(eps/epsc0/K/betaD, 2.0));
   epscp = eps - epsc0*(0.868*(eps/epsc0)-0.166*pow(eps/epsc0, 2.0));
 }
 
@@ -306,7 +310,7 @@ MCFTConcrete03::getTangent(void)
   return e;
 }
 
-double
+/*double
 MCFTConcrete03::getSecant(void)
 {
   if ( abs(eps) <= DBL_EPSILON ) {
@@ -314,7 +318,7 @@ MCFTConcrete03::getSecant(void)
   } else {
     return sig/(eps-ept);
   }
-}
+}*/
 
 int 
 MCFTConcrete03::commitState(void)
@@ -365,6 +369,9 @@ MCFTConcrete03::revertToStart(void)
 
   ept = 0.0;
 
+  betaD = 1.0;
+  K = 1.0;
+
   eP = 2.0*fc/epsc0;
   epsP = 0.0;
   sigP = 0.0;
@@ -378,7 +385,7 @@ MCFTConcrete03::revertToStart(void)
 int 
 MCFTConcrete03::sendSelf(int commitTag, Channel &theChannel)
 {
-  static Vector data(18);
+  static Vector data(20);
   data(0)  = fc;    
   data(1)  = epsc0; 
   data(2)  = fcu;   
@@ -396,7 +403,9 @@ MCFTConcrete03::sendSelf(int commitTag, Channel &theChannel)
   data(14) = sigP; 
   data(15) = eP;
   data(16) = epscp;
-  data(17) = this->getTag();
+  data(17) = betaD;
+  data(18) = K;
+  data(19) = this->getTag();
 
   if (theChannel.sendVector(this->getDbTag(), commitTag, data) < 0) {
     opserr << "MCFTConcrete03::sendSelf() - failed to sendSelf\n";
@@ -411,7 +420,7 @@ MCFTConcrete03::recvSelf(int commitTag, Channel &theChannel,
 	     FEM_ObjectBroker &theBroker)
 {
 
-  static Vector data(18);
+  static Vector data(20);
 
   if (theChannel.recvVector(this->getDbTag(), commitTag, data) < 0) {
     opserr << "MCFTConcrete03::recvSelf() - failed to recvSelf\n";
@@ -435,7 +444,9 @@ MCFTConcrete03::recvSelf(int commitTag, Channel &theChannel,
   sigP    = data(14);
   eP      = data(15);
   epscp   = data(16);
-  this->setTag(int(data(17)));
+  betaD   = data(17);
+  K       = data(18);
+  this->setTag(int(data(19)));
 
   e = eP;
   sig = sigP;
@@ -468,9 +479,9 @@ MCFTConcrete03::Tens_Envlp (double epsc, double &sigc, double &Ect)
 !-----------------------------------------------------------------------*/
   
   double Ec0  = 2.0*fc/epsc0;
-
   double eps0 = ft/Ec0;
   double epsu = ft*(1.0/Ets+1.0/Ec0);
+
   if (epsc<=eps0) {
     sigc = epsc*Ec0;
     Ect  = Ec0;
@@ -479,8 +490,7 @@ MCFTConcrete03::Tens_Envlp (double epsc, double &sigc, double &Ect)
       Ect  = -Ets;
       sigc = ft-Ets*(epsc-eps0);
     } else {
-      //      Ect  = 0.0
-      Ect  = 1.0e-10;
+      Ect  = 1.0e-10; //   Ect  = 0.0
       sigc = 0.0;
     }
   }
@@ -506,24 +516,20 @@ MCFTConcrete03::Compr_Envlp (double epsc, double &sigc, double &Ect)
 -----------------------------------------------------------------------*/
 
   double Ec0  = 2.0*fc/epsc0;
-
-  double ratLocal = epsc/epsc0;
-  if (epsc>=epsc0) {
-    sigc = fc*ratLocal*(2.0-ratLocal);
+  double ratLocal = epsc/epsc0/K/betaD;
+  
+  if (epsc>=epsc0*K*betaD) {
+    sigc = fc*K*betaD*ratLocal*(2.0-ratLocal);
     Ect  = Ec0*(1.0-ratLocal);
   } else {
-    
     //   linear descending branch between epsc0 and epscu
     if (epsc>epscu) {
-      sigc = (fcu-fc)*(epsc-epsc0)/(epscu-epsc0)+fc;
-      Ect  = (fcu-fc)/(epscu-epsc0);
+      sigc = (fcu-fc*K*betaD)*(epsc-epsc0*K*betaD)/(epscu-epsc0*K*betaD)+fc*K*betaD;
+      Ect  = (fcu-fc*K*betaD)/(epscu-epsc0*K*betaD);
     } else {
-	   
       // flat friction branch for strains larger than epscu
-      
       sigc = fcu;
-      Ect  = 1.0e-10;
-      //       Ect  = 0.0
+      Ect  = 1.0e-10; //Ect  = 0.0
     }
   }
   return;
@@ -536,9 +542,9 @@ MCFTConcrete03::setResponse(const char **argv, int argc,
   Response *theResponse = 0;
 
   if (strcmp(argv[0],"setVar") == 0) {
-    theResponse = new MaterialResponse(this, 100, Vector(6));
+    theResponse = new MaterialResponse(this, 100, Vector(8));
   } else if (strcmp(argv[0],"getVar") == 0) {
-    theResponse = new MaterialResponse(this, 101, Vector(6));
+    theResponse = new MaterialResponse(this, 101, Vector(8));
   } else
     return this->UniaxialMaterial::setResponse(argv, argc, theOutput);
 
@@ -557,7 +563,8 @@ MCFTConcrete03::getResponse(int responseID, Information &matInfo)
 	sigmaxP = (*theVector)(3);
 	eptP    = (*theVector)(4); 
 	epscp   = (*theVector)(5); 
-
+	betaD   = (*theVector)(6); 
+	K       = (*theVector)(7); 
   } else if (responseID == 101){ // get var
     Vector *theVector = matInfo.theVector;
 	(*theVector)(0) = ecminP;
@@ -567,7 +574,8 @@ MCFTConcrete03::getResponse(int responseID, Information &matInfo)
 	(*theVector)(4) = eptP;
 	this->determineCompEpscp(eps);
 	(*theVector)(5) = epscp;
-
+	(*theVector)(6) = betaD;
+	(*theVector)(7) = K;
   } else
     return this->UniaxialMaterial::getResponse(responseID, matInfo);
 

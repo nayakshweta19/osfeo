@@ -51,7 +51,7 @@ class MCFTConcrete03 : public UniaxialMaterial
     double getStrain(void);      
     double getStress(void);
     double getTangent(void);
-	double getSecant(void);
+	//double getSecant(void);
 
     int commitState(void);
     int revertToLastCommit(void);    
@@ -112,6 +112,8 @@ class MCFTConcrete03 : public UniaxialMaterial
     double eps;   
 
 	double epscp; // plastic strain offset
+	double betaD; // betaD considering the softened effect on the orthogonal direction tension strain
+	double K;     // kupfer enhancement effect
 };
 
 
