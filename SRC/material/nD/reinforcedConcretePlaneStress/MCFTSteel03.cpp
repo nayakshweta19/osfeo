@@ -1,9 +1,33 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+                                                                        
+// $Revision: 1.4 $
+// $Date: 2006/05/24 21:44:31 $
+// $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/Steel03.cpp,v $
 // MCFTSteel03.cpp
+
 // Written: neallee@tju.edu.cn
 // Created: 2011.7
-//
+
 // Description: This file contains the class implementation for
-// MCFTSteel03, Based on MCFTSteel03
+// MCFTSteel03, Based on Steel03
 
 
 #include "MCFTSteel03.h"
@@ -27,14 +51,14 @@ OPS_NewMCFTSteel03Material(void)
   UniaxialMaterial *theMaterial = 0;
 
   int numRemainingArgs = OPS_GetNumRemainingInputArgs();
-  if (numRemainingArgs < 4 || numRemainingArgs > 8) {
+  if (numRemainingArgs < 4 || numRemainingArgs > 11) {
     opserr << "Invalid Args want: uniaxialMaterial MCFTSteel03 tag? fy? E0? b? "
-		   << "<coeffR1? coeffR2? a1? a2?>" << endln;
+		   << "<r0£¿ coeffR1? coeffR2? a1? a2? a3? a4?>" << endln;
     return 0;	
   }
 
   int    iData[1];
-  double dData[8];
+  double dData[10];
   int numData = 1;
 
   if (OPS_GetIntInput(&numData, iData) != 0) {
@@ -48,22 +72,23 @@ OPS_NewMCFTSteel03Material(void)
       opserr << "Invalid Args want: uniaxialMaterial MCFTSteel03 tag? fy? E? b? " << endln;
       return 0;	
     } else {
-	  double r, coeffR1, coeffR2, a1, a2;
-      r=20.0;
-      coeffR1 =18.5;
+	  double r, coeffR1, coeffR2;
+      r=18.0;
+      coeffR1 = 0.925;
       coeffR2 =.15;
-      a1=0;
-      a2=0;
-      theMaterial = new MCFTSteel03(iData[0], dData[0], dData[1], dData[2], r, coeffR1,coeffR2, a1, a2);
+      theMaterial = new MCFTSteel03(iData[0], dData[0], dData[1], dData[2], r, coeffR1, coeffR2);
 	}
-  } else if (numRemainingArgs == 8) {
+  } else if (numRemainingArgs == 10) {
     if (OPS_GetDoubleInput(&numRemainingArgs, dData) != 0) {
       opserr << "Invalid Args want: uniaxialMaterial MCFTSteel03 tag? fy? E? b? "
-		     << "r? coeffR1? coeffR2? a1? a2? " << endln;
+		     << "r? coeffR1? coeffR2? a1? a2? a3? a4?" << endln;
       return 0;	
     } else
-      theMaterial = new MCFTSteel03(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6], dData[7]);
+      theMaterial = new MCFTSteel03(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6], dData[7],
+	                                dData[8], dData[9]);
   } else {
+    opserr << "Invalid Args want: uniaxialMaterial MCFTSteel03 tag? fy? E? b? "
+		   << "r? coeffR1? coeffR2? a1? a2? a3? a4?" << endln;
 	return 0;
   }
 
@@ -75,16 +100,18 @@ OPS_NewMCFTSteel03Material(void)
   return theMaterial;
 }
 
-MCFTSteel03::MCFTSteel03(int tag, 
-	double FY, double E, double B, 
-	double R,  double CR1, double CR2, double A1, double A2):
+MCFTSteel03::MCFTSteel03(
+  int tag, double FY, double E, double B, double R,  double CR1, double CR2,
+  double A1, double A2, double A3, double A4):
 UniaxialMaterial(tag, MAT_TAG_MCFTSteel03),
-	fy(FY), E0(E), b(B), r0(R),  coeffR1(CR1), coeffR2(CR2), a1(A1), a2(A2)
+	fy(FY), E0(E), b(B), r0(R),  coeffR1(CR1), coeffR2(CR2), a1(A1), a2(A2), a3(A3), a4(A4)
 {
-// Sets all history and state variables to initial values
+   // Sets all history and state variables to initial values
    // History variables
-   CminStrain = -fy/E0;
-   CmaxStrain = fy/E0;
+   CminStrain = 0;
+   CmaxStrain = 0;
+   CshiftP = 1.0;
+   CshiftN = 1.0;
    Cloading = 0;
    CYieldStrain = 0.0;
    CYieldStress = 0.0;
@@ -92,8 +119,10 @@ UniaxialMaterial(tag, MAT_TAG_MCFTSteel03),
    CReverStress = 0.0;
    CPlasticExcursion = 0.0;
 
-   TminStrain = -fy/E0;
-   TmaxStrain = fy/E0;
+   TminStrain = 0;
+   TmaxStrain = 0;
+   TshiftP = 1.0;
+   TshiftN = 1.0;
    Tloading = 0;
    TYieldStrain = 0.0;
    TYieldStress = 0.0;
@@ -105,10 +134,12 @@ UniaxialMaterial(tag, MAT_TAG_MCFTSteel03),
    Cstrain = 0.0;
    Cstress = 0.0;
    Ctangent = E0;
+   CcurR = getR(0);
 
    Tstrain = 0.0;
    Tstress = 0.0;
    Ttangent = E0;
+   TcurR = getR(0);
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
 	SHVs = 0;
@@ -116,7 +147,8 @@ UniaxialMaterial(tag, MAT_TAG_MCFTSteel03),
 }
 
 MCFTSteel03::MCFTSteel03(void):
-UniaxialMaterial(0, MAT_TAG_MCFTSteel03)
+UniaxialMaterial(0, MAT_TAG_MCFTSteel03),
+ fy(0.0), E0(0.0), b(0.0), r0(0.0), coeffR1(0.0), coeffR2(0.0), a1(0.0), a2(0.0), a3(0.0), a4(0.0)
 {
 
 }
@@ -170,12 +202,15 @@ MCFTSteel03::setTrialStrain(double strain, double strainRate)
    // Reset history variables to last converged state
    TminStrain = CminStrain;
    TmaxStrain = CmaxStrain;
+   TshiftP = CshiftP;
+   TshiftN = CshiftN;
    Tloading = Cloading;
    TYieldStrain = CYieldStrain;
    TYieldStress = CYieldStress;
    TReverStrain = CReverStrain;
    TReverStress = CReverStress;
    TPlasticExcursion = CPlasticExcursion;
+   TcurR = CcurR;
 
    // Set trial strain
    Tstrain = strain;
@@ -196,13 +231,16 @@ MCFTSteel03::setTrial (double strain, double &stress, double &tangent, double st
    // Reset history variables to last converged state
    TminStrain = CminStrain;
    TmaxStrain = CmaxStrain;
+   TshiftP = CshiftP;
+   TshiftN = CshiftN;
    Tloading = Cloading;
    TYieldStrain = CYieldStrain;
    TYieldStress = CYieldStress;
    TReverStrain = CReverStrain;
    TReverStress = CReverStress;
    TPlasticExcursion = CPlasticExcursion;
- 
+   TcurR = CcurR;
+
    // Set trial strain
    Tstrain = strain;
 
@@ -220,99 +258,115 @@ MCFTSteel03::setTrial (double strain, double &stress, double &tangent, double st
    return 0;
 }
 
+double 
+MCFTSteel03::getR (double x_in)
+{
+    // maybe modify this later, but it gives us better degradation at smaller strains
+    x_in = fabs(x_in);
+    double temp_r = r0;
+    
+    // new input parameters are supposed to match Steel02 which look like 
+    // Dhakal and Maekawa values: cr1 = 0.925, cr2 = 0.15
+    // where 0.925 comes from 18.5/20.0 where R0=20 and 18.5 is the old coefficient provided
+    //
+    // so for old Dhakal and Maekawa R0 = 20, cr1 = 18.5/R0 = 0.925, cr2 = 0.15
+    // so for old Gomes and Appleton R0 = 20, cr1 = 19.0/R0 = 0.95, cR2 = 0.3
+    // so for my old model, now just use R0 = 20, cR1 = 0, cR2 = 0
+    if (coeffR1 < 0.1 && coeffR2 < 0.1) {
+        // Mackie, rough trilinear fit to the tangent to the x_in-r first 
+        // quadrant circle.  Try using with values of R0 like 20 to 30
+        temp_r = r0*2.0/20.0;
+        double t1 = -x_in/7+15/7*temp_r;
+        double t2 = -4*x_in+6*temp_r;
+        if (t1 > temp_r)
+            temp_r = t1;
+        if (t2 > temp_r)
+            temp_r = t2;
+        //opserr << "xin = " << x_in << " rout = " << temp_r << endln;
+    } else {
+    	temp_r = r0 * (1.0 - coeffR1*x_in/(coeffR2+x_in));
+        if (temp_r < 0)
+            temp_r = 1.0e-8;
+    }
+    
+    return temp_r;
+}
+
 void 
 MCFTSteel03::determineTrialState (double dStrain)
 {
-//      double fyOneMinusB = fy * (1.0 - b);
+      double fyOneMinusB = fy * (1.0 - b);
       double Esh = b*E0;
 	  double epsy = fy/E0;
 
+      double c1 = Esh*Tstrain;
+      double c2 = TshiftN*fyOneMinusB;
+      double c3 = TshiftP*fyOneMinusB;
+      double c = Cstress + E0*dStrain;
+
       // Determine initial loading condition
       if (Tloading == 0 && dStrain != 0.0) {
-		  if (dStrain > 0.0) {
-			Tloading = 1;
-				TYieldStrain = TmaxStrain;
-				TYieldStress = fy;
-				TPlasticExcursion = TmaxStrain;
-			  }
-		  else {
-			Tloading = -1;
-				TYieldStrain = TminStrain;
-				TYieldStress = -fy;
-				TPlasticExcursion = TminStrain;
-			  }
+		TmaxStrain = epsy;
+        TminStrain = -epsy;
+        if (dStrain > 0.0) {
+	  Tloading = 1;
+	  TYieldStrain = TmaxStrain;
+	  TYieldStress = fy;
+	  TPlasticExcursion = TmaxStrain;
+		}
+		else {
+	  Tloading = -1;
+	  TYieldStrain = TminStrain;
+	  TYieldStress = -fy;
+	  TPlasticExcursion = TminStrain;
+		}
 
-		  	
-		  double epStar = Tstrain/TYieldStrain;
-		  double sigmaStar = b * epStar+(1-b)*epStar/pow((1+pow(fabs(epStar),r0)),1/r0);
-		  Tstress = sigmaStar * TYieldStress;
-
-		  double temp = b+(1-b)*(1-pow(fabs(epStar),r0)/(1+pow(fabs(epStar),r0)))/pow((1+pow(fabs(epStar),r0)),1/r0);
-		  Ttangent = temp*TYieldStress/TYieldStrain;
+        double intval = 1+pow(fabs(Tstrain/epsy),TcurR);
+        Tstress = c1+(1-b)*E0*Tstrain/pow(intval,1/TcurR);
+        Ttangent = Esh+E0*(1-b)/pow(intval,1+1/TcurR);
 	 }
 
       // Transition from loading to unloading, i.e. positive strain increment
       // to negative strain increment
       if (Tloading == 1 && dStrain < 0.0) {
-		  Tloading = -1;
-		  
-		  TReverStrain = Cstrain;
-		  TReverStress = Cstress;
-		  
-		  if (Cstrain > CmaxStrain)
-			TmaxStrain = Cstrain;
+	    Tloading = -1;
+	    if (Cstrain > TmaxStrain)
+          TmaxStrain = Cstrain;
 
-		  double epMax;
-		  if (fabs(CminStrain)>fabs(TmaxStrain))
-			 epMax = fabs(CminStrain);
-		  else  epMax = fabs(TmaxStrain);
-
-
-		  double sigmaShift = fy * a1 *(epMax/epsy-a2);
-		  if (sigmaShift <0) sigmaShift = 0;
-		
-		  TYieldStrain = (Cstress+fy+sigmaShift-(E0*Cstrain+Esh*epsy))/(Esh-E0);
-		  TYieldStress = Esh * (TYieldStrain+epsy)-fy-sigmaShift;
-		  TPlasticExcursion=CminStrain;
+		TPlasticExcursion=TminStrain;
+	    TshiftN = 1 + a1*pow((TmaxStrain-TminStrain)/(2.0*a2*epsy),0.8);
+	    TReverStrain = Cstrain;
+	    TReverStress = Cstress;
+		TYieldStrain = (c2+c)/E0/(b-1)+Tstrain/(1-b);
+		TYieldStress = 1/(b-1)*(b*c2+b*c-c1)-c2;
+        TcurR = getR((TYieldStrain-TminStrain)/epsy);
       }
 
       // Transition from unloading to loading, i.e. negative strain increment
       // to positive strain increment
       if (Tloading == -1 && dStrain > 0.0) {
-		  Tloading = 1;
+	    Tloading = 1;
+        if (Cstrain < CminStrain)
+		  TminStrain = Cstrain;
 
-		  TReverStrain = Cstrain;
-		  TReverStress = Cstress;
-
-		  if (Cstrain < CminStrain)
-			TminStrain = Cstrain;
-		  
-		  double epMax;
-		  if (fabs(TminStrain)>fabs(CmaxStrain))
-			 epMax = fabs(TminStrain);
-		  else  epMax = fabs(CmaxStrain);
-
-
-		  double sigmaShift = fy * a1 *(epMax/epsy-a2);
-		  if (sigmaShift <0) sigmaShift = 0;
-		
-		  TYieldStrain = (Cstress+Esh*epsy-(E0*Cstrain+fy+sigmaShift))/(Esh-E0);
-		  TYieldStress = Esh * (TYieldStrain-epsy)+fy+sigmaShift;
-		  TPlasticExcursion=CmaxStrain;  
+		TPlasticExcursion=TmaxStrain;
+        TshiftP = 1 + a3*pow((TmaxStrain-TminStrain)/(2.0*a4*epsy),0.8);
+		TReverStrain = Cstrain;
+		TReverStress = Cstress;
+		TYieldStrain = (c3-c)/E0/(1-b)+Tstrain/(1-b);
+		TYieldStress = 1/(1-b)*(b*c3-b*c+c1)+c3;
 	  }
       
-      if (Tloading != 0) {
-
-		  double Xi = fabs((TPlasticExcursion-TYieldStrain)/epsy);
-		  double R  = r0-(coeffR1*Xi)/(coeffR2+Xi);
-		  double epStar = (Tstrain-TReverStrain)/(TYieldStrain-TReverStrain);
-		  double sigmaStar = b * epStar+(1-b)*epStar/pow((1+pow(fabs(epStar),R)),1/R);
-		  Tstress = sigmaStar * (TYieldStress-TReverStress)+TReverStress;
-		
-		  double temp = b+(1-b)*(1-pow(fabs(epStar),R)/(1+pow(fabs(epStar),R)))/pow((1+pow(fabs(epStar),R)),1/R);
-		  Ttangent = temp*(TYieldStress-TReverStress)/(TYieldStrain-TReverStrain);
+      if (Cloading != 0) {
+        double c4 = TYieldStrain - TReverStrain;
+        double c5 = TYieldStress - TReverStress;
+        double c6 = Tstrain - TReverStrain;
+        double c4c5 = c5/c4;
+        double intval = 1+pow(fabs(c6/c4),TcurR);
+        
+        Tstress = TReverStress+b*c4c5*c6+(1-b)*c4c5*c6/pow(intval,1/TcurR);
+        Ttangent = c4c5*b+c4c5*(1-b)/pow(intval,1+1/TcurR);
       }
-
 }
 
 double 
@@ -349,13 +403,15 @@ MCFTSteel03::commitState(void)
    // History variables
    CminStrain = TminStrain;
    CmaxStrain = TmaxStrain;
-
+   CshiftP = TshiftP;
+   CshiftN = TshiftN;
    Cloading = Tloading;
    CYieldStrain = TYieldStrain;
    CYieldStress = TYieldStress;
    CReverStrain = TReverStrain;
    CReverStress = TReverStress;
    CPlasticExcursion = TPlasticExcursion;
+   CcurR = TcurR;
 
    // State variables
    Cstrain = Tstrain;
@@ -371,7 +427,8 @@ MCFTSteel03::revertToLastCommit(void)
    // Reset trial history variables to last committed state
    TminStrain = CminStrain;
    TmaxStrain = CmaxStrain;
-
+   TshiftP = CshiftP;
+   TshiftN = CshiftN;
    Tloading = Cloading;
    TYieldStrain = CYieldStrain;
    TYieldStress = CYieldStress;
@@ -383,6 +440,7 @@ MCFTSteel03::revertToLastCommit(void)
    Tstrain = Cstrain;
    Tstress = Cstress;
    Ttangent = Ctangent;
+   TcurR = CcurR;
 
    return 0;
 }
@@ -391,9 +449,10 @@ int
 MCFTSteel03::revertToStart(void)
 {
    // History variables
-   CminStrain = -fy/E0;
-   CmaxStrain = fy/E0;
-
+   CminStrain = 0;
+   CmaxStrain = 0;
+   CshiftP = 1.0;
+   CshiftN = 1.0;
    Cloading = 0;
    CYieldStrain = 0.0;
    CYieldStress = 0.0;
@@ -401,9 +460,10 @@ MCFTSteel03::revertToStart(void)
    CReverStress = 0.0;
    CPlasticExcursion = 0.0;
 
-   TminStrain = -fy/E0;
-   TmaxStrain = fy/E0;
-
+   TminStrain = 0;
+   TmaxStrain = 0;
+   TshiftP = 1.0;
+   TshiftN = 1.0;
    Tloading = 0;
    TYieldStrain = 0.0;
    TYieldStress = 0.0;
@@ -415,12 +475,12 @@ MCFTSteel03::revertToStart(void)
    Cstrain = 0.0;
    Cstress = 0.0;
    Ctangent = E0;
-
+   CcurR = getR(0);
 
    Tstrain = 0.0;
    Tstress = 0.0;
    Ttangent = E0;
-
+   TcurR = getR(0);
 
    //////////////////// sensitivity ///////////////////
     parameterID=0;
@@ -434,7 +494,7 @@ int
 MCFTSteel03::sendSelf(int commitTag, Channel &theChannel)
 {
    int res = 0;
-   static Vector data(20);
+   static Vector data(25);
    data(0) = this->getTag();
 
    // Material properties
@@ -446,22 +506,26 @@ MCFTSteel03::sendSelf(int commitTag, Channel &theChannel)
    data(6) = coeffR2;
    data(7) = a1;
    data(8) = a2;
+   data(9) = a3;
+   data(10) = a4;
 
    // History variables from last converged state
-   data(9) = CminStrain;
-   data(10) = CmaxStrain;
-   data(11) = Cloading;
-   data(12) = CYieldStrain;
-   data(13) = CYieldStress;
-   data(14) = CReverStrain;
-   data(15) = CReverStress;
-   data(16) = CPlasticExcursion;
+   data(11) = CminStrain;
+   data(12) = CmaxStrain;
+   data(13) = CshiftP;
+   data(14) = CshiftN;
+   data(15) = Cloading;
+   data(16) = CYieldStrain;
+   data(17) = CYieldStress;
+   data(18) = CReverStrain;
+   data(19) = CReverStress;
+   data(20) = CPlasticExcursion;
 
    // State variables from last converged state
-   data(17) = Cstrain;
-   data(18) = Cstress;
-   data(19) = Ctangent;
-   
+   data(21) = Cstrain;
+   data(22) = Cstress;
+   data(23) = Ctangent;
+   data(24) = CcurR;
 
    // Data is only sent after convergence, so no trial variables
    // need to be sent through data vector
@@ -478,7 +542,7 @@ MCFTSteel03::recvSelf(int commitTag, Channel &theChannel,
 	     FEM_ObjectBroker &theBroker)
 {
    int res = 0;
-   static Vector data(20);
+   static Vector data(25);
    res = theChannel.recvVector(this->getDbTag(), commitTag, data);
   
    if (res < 0) {
@@ -497,21 +561,27 @@ MCFTSteel03::recvSelf(int commitTag, Channel &theChannel,
 	  coeffR2=data(6);
       a1 = data(7);
       a2 = data(8);
-      
+      a3 = data(9);
+      a4 = data(10);
+
       // History variables from last converged state
-      CminStrain = data(9);
-      CmaxStrain = data(10);
-      Cloading = int(data(11));
-      CYieldStrain = data(12);
-      CYieldStress = data(13);
-      CReverStrain = data(14);
-      CReverStress = data(15);
-      CPlasticExcursion = data(16);
+      CminStrain = data(11);
+      CmaxStrain = data(12);
+      CshiftP = data(13);
+      CshiftN = data(14);
+      Cloading = int(data(15));
+      CYieldStrain = data(16);
+      CYieldStress = data(17);
+      CReverStrain = data(18);
+      CReverStress = data(19);
+      CPlasticExcursion = data(20);
 
       // Copy converged history values into trial values since data is only
       // sent (received) after convergence
       TminStrain = CminStrain;
       TmaxStrain = CmaxStrain;
+      TshiftP = CshiftP;
+      TshiftN = CshiftN;
       Tloading = Cloading;
       TYieldStrain = CYieldStrain;
       TYieldStress = CYieldStress;
@@ -520,15 +590,16 @@ MCFTSteel03::recvSelf(int commitTag, Channel &theChannel,
       TPlasticExcursion = CPlasticExcursion;
 
       // State variables from last converged state
-      Cstrain = data(17);
-      Cstress = data(18);
-      Ctangent = data(19);
-      
+      Cstrain = data(21);
+      Cstress = data(22);
+      Ctangent = data(23);
+      CcurR = data(24);
+
       // Copy converged state values into trial values
       Tstrain = Cstrain;
       Tstress = Cstress;
       Ttangent = Ctangent;
-   
+      TcurR = CcurR;
    }
     
    return res;
@@ -589,6 +660,8 @@ MCFTSteel03::Print(OPS_Stream &s, int flag)
    s << "\t\t  CR2: " << coeffR2 << " ";   
    s << "\t\t  a1: " << a1 << " ";
    s << "\t\t  a2: " << a2 << " ";
+   s << "\t\t  a3: " << a3 << " ";
+   s << "\t\t  a4: " << a4 << " ";
    s << endln;
 }
 

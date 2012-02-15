@@ -8,126 +8,95 @@
 
 #include <UniaxialMaterial.h>
 
-// Default values for reloading/unloading path parameters AC, RC
-#define STEEL_Z01_DEFAULT_AC        1.9
-#define STEEL_Z01_DEFAULT_RC       10.0
-#define LOOP_NUM_LIMIT               30
-#define SIZE                         30 //limit of array number
-
 class MCFTSteel02 : public UniaxialMaterial
 {
   public:
-    MCFTSteel02(int tag, double fy, double E0, double fpc, double rou,
-		     double ac = STEEL_Z01_DEFAULT_AC,
-			 double rc = STEEL_Z01_DEFAULT_RC);
-    MCFTSteel02();
+    MCFTSteel02(int tag,
+	    double fy, double E0, double b,
+	    double r, double cR1, double cR2, double a1, double a2);
+	    
+    MCFTSteel02(void);
     ~MCFTSteel02();
+
+    const char *getClassType(void) const {return "MCFTSteel02";};
+
+	double getInitialTangent(void) {return E0;};
+    UniaxialMaterial *getCopy(void);
 
     int setTrialStrain(double strain, double strainRate = 0.0); 
     int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
-    double getStrain(void);              
+    double getStrain(void);      
     double getStress(void);
     double getTangent(void);
-    double getInitialTangent(void) {return E0;};
-	double getSecant(void);
-
-	double getCommittedStrain(void);
+    double getSecant(void);
 
     int commitState(void);
     int revertToLastCommit(void);    
-    int revertToStart(void);   
-		
-	UniaxialMaterial *getCopy(void);
+    int revertToStart(void);        
     
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, 
-		 FEM_ObjectBroker &theBroker);    
+		 FEM_ObjectBroker &theBroker);
 
-    Response *setResponse (const char **argv, int argc, 
-			   OPS_Stream &theOutputStream);
-    int getResponse (int responseID, Information &matInformation);          
-    void Print(OPS_Stream &s, int flag =0);   
-  
+	Response *setResponse (const char **argv, int argc, 
+		OPS_Stream &theOutputStream);
+	int getResponse (int responseID, Information &matInformation);          
+
+    void Print(OPS_Stream &s, int flag =0);
+
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+	int    setParameter             (const char **argv, int argc, Parameter &param);
+	int    updateParameter          (int parameterID, Information &info);
+	int    activateParameter        (int parameterID);
+	double getStressSensitivity     (int gradNumber, bool conditional);
+	double getStrainSensitivity		(int gradNumber);
+	double getInitialTangentSensitivity(int gradNumber);
+	int    commitSensitivity        (double strainGradient, int gradNumber, int numGrads);
+// AddingSensitivity:END ///////////////////////////////////////////
 
   protected:
     
   private:
+    /*** Material Properties ***/
+    double fy;  // Yield stress
+    double E0;  // stiffness
+    double b;   // Hardening ratio (b = Esh/E0)
+    double r0;	// radius of rounded corners  20
+    
+	double coeffR1;  //18.5
+    double coeffR2;  //0.15
+    double a1;            //0
+    double a2;  // 0
 
-	/*** Material Properties ***/        
-    double fy;    // yield strength of bare steel
-    double E0;    // initial stiffness of steel
-    double fpc;   // compressive strength of concrete	
-    double rou;   // steel ration
-	double ac;    // parameter of reverse loop
-	double rc;    // parameter of reverse loop
-
-	/*** CONVERGED History Variables ***/
+    /*** CONVERGED History Variables ***/
     double CminStrain;  // Minimum strain in compression
     double CmaxStrain;  // Maximum strain in tension
-    int CloadingState; // Flag for loading state
-		               // 1 = initial envelope
-					   // 2 = tension envelope after yield
-					   // 3 = compression envelope after yield
-					   // 4 = reverse from tension envelope
-	                   // 5 = reverse from compression envelope
-	int CloopPathState; // Flag for loop state
-	                    // 1, 2 and 3 for the loop going down
-	                    // 1 : the first path when stress >0
-	                    // 2 : the second path when stress <0 to -0.65fy
-	                    // 3 : the third path when stress <-0.65fy to the end point of the loop
-	                    // 4, 5 and 6 for the loop going up
-	                    // 4 : the first path when stress <0
-	                    // 5 : the second path when stress >0 to 0.65fy
-	                    // 6 : the third path when stress >0.65fy to the end point of the loop
-	
-	double reverseFromTenEnvelopeStrain;  // Strain of reversed point from tensile envelope
-    double reverseFromTenEnvelopeStress;  // Stress of reversed point from tensile envelope
-	double approachToComEnvelopeStrain;   // Strain of point when unloading path approachs to compression envelope
-	double approachToComEnvelopeStress;   // Stress of point when unloading path approachs to compression envelope
-    
-    double reverseFromComEnvelopeStrain;  // Strain of reversed point from compressive envelope
-    double reverseFromComEnvelopeStress;  // Stress of reversed point from compressive envelope
-	double approachToTenEnvelopeStrain;   // Strain of point when reloading path approachs to tensile envelope
-	double approachToTenEnvelopeStress;   // Stress of point when reloading path approachs to tensile envelope
 
-	// History converged variables for hysteristic loop
-	double CreverseTopStrain[SIZE];    // array storing the strain and stress of top point of reverse loop
-	double CreverseTopStress[SIZE];
-	double CreverseBottomStrain[SIZE]; // array storing the strain and stress of last point of reverse loop
-	double CreverseBottomStress[SIZE];
-	int    CreverseTopNum;             // Num of reverse points reversed from up
-	int    CreverseBottomNum;          // Num of reverse points reversed from down
-
-	// Trial variables for hysteristic loop
-	double TreverseTopStrain[SIZE];    // array storing the strain and stress of top point of reverse loop
-	double TreverseTopStress[SIZE];
-	double TreverseBottomStrain[SIZE]; // array storing the strain and stress of last point of reverse loop
-	double TreverseBottomStress[SIZE];
-	int    TreverseTopNum;             // Num of reverse points reversed from up
-	int    TreverseBottomNum;          // Num of reverse points reversed from down
-	
-	double downPathPointOneStrain;    // key points at down path of loop
-	double downPathPointOneStress;    // set to be zero at default value
-	double downPathPointTwoStrain;
-	double downPathPointTwoStress;
-
-    double upPathPointOneStrain;      // key points at up path of loop
-	double upPathPointOneStress;      // set to be zero at default value
-	double upPathPointTwoStrain;
-	double upPathPointTwoStress;
-
+    int Cloading;       // Flag for loading/unloading
+                        // 1 = loading (positive strain increment)
+                        // -1 = unloading (negative strain increment)
+                        // 0 initially
+    double CYieldStrain;
+    double CYieldStress;
+    double CReverStrain;
+    double CReverStress;
+    double CPlasticExcursion;
 
     /*** CONVERGED State Variables ***/    
     double Cstrain;
     double Cstress;
-    double Ctangent;    
+    double Ctangent;
 
     /*** TRIAL History Variables ***/
-	double TminStrain;  // Minimum strain in compression
-    double TmaxStrain;  // Maximum strain in tension
-    int TloadingState;  // Flag for loading state, definition is same as CloadingState
-	int TloopPathState; // Flag for loop state, definition is same as CloopPathState
+    double TminStrain;   // abs of minimum strain
+    double TmaxStrain;   // abs of minimum strain
 
+    int Tloading;
+    double TYieldStrain;
+    double TYieldStress;
+    double TReverStrain;
+    double TReverStress;
+    double TPlasticExcursion;
     
     /*** TRIAL State Variables ***/
     double Tstrain;
@@ -135,29 +104,14 @@ class MCFTSteel02 : public UniaxialMaterial
     double Ttangent; // Not really a state variable, but declared here
                      // for convenience
 
-  
-    void determineTrialState (double dStrain);  
-	// Calculates the trial state variables based on the trial strain
+    // Calculates the trial state variables based on the trial strain
+    void determineTrialState (double dStrain);
+    double getR (double x_in);
 
-    void initialEnvelope( ); 
-	void tensionEnvelope( );
-	void compressionEnvelope( );
-	
-	void determineTrialLoop(double dStrain); // Calacuate the trail state variables in the loop
-	void determineDownPathPoint( ); //determine key points of down and up path of hysteristic loop
-	void determineUpPathPoint( );
-
-	void downPath( ); 
-	void upPath( );
-
-	void reverseFromTenEnvelope( );
-	void reverseFromComEnvelope( );
-
-	void reverseLoopSetZero( ); // Loop variables set to zero when merge into envelope
-	
-	double tt1; // for check
-	double tt2;
-	double ttStrain;
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+    int parameterID;
+	Matrix *SHVs;
+// AddingSensitivity:END ///////////////////////////////////////////
 
 };
 
