@@ -200,33 +200,33 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
     }
     
     // Get the copy for the Steel1
-    theMaterial[0] = s1->getCopy();
+    theMaterial[S_ONE] = s1->getCopy();
     // Check allocation    
-    if ( theMaterial[0] == 0 ) {
+    if ( theMaterial[S_ONE] == 0 ) {
       opserr << " MCFTRCPlaneStress::MCFTRCPlaneStress - failed to get a copy for steel1\n";
       exit(-1);
     }
     
     // Get the copy for the Steel2
-    theMaterial[1] = s2->getCopy();	
+    theMaterial[S_TWO] = s2->getCopy();	
     // Check allocation    
-    if ( theMaterial[1] == 0 ) {
+    if ( theMaterial[S_TWO] == 0 ) {
       opserr << " MCFTRCPlaneStress::MCFTRCPlaneStress - failed to get a copy for steel2\n";
       exit(-1);
     }
     
     // Get the copy for the Concrete1
-    theMaterial[2] = c1->getCopy();	
+    theMaterial[C_ONE] = c1->getCopy();	
     // Check allocation    
-    if ( theMaterial[2] == 0 ) {
+    if ( theMaterial[C_ONE] == 0 ) {
       opserr << " MCFTRCPlaneStress::MCFTRCPlaneStress - failed to get a copy for concrete1\n";
       exit(-1);
     }
     
     // Get the copy for the Concrete2
-    theMaterial[3] = c2->getCopy();	
+    theMaterial[C_TWO] = c2->getCopy();	
     // Check allocation    
-    if ( theMaterial[3] == 0 ) {
+    if ( theMaterial[C_TWO] == 0 ) {
       opserr << " MCFTRCPlaneStress::MCFTRCPlaneStress - failed to get a copy for concrete2\n";
       exit(-1);
     }
@@ -244,17 +244,17 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
     const char **argv = new const char *[1];
 
     argv[0] = "setVar";
-    theResponses[0] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);  //s1
-    theResponses[1] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);  //s2
+    theResponses[0] = theMaterial[S_ONE]->setResponse(argv, 1, *theDummyStream);  //s1
+    theResponses[1] = theMaterial[S_TWO]->setResponse(argv, 1, *theDummyStream);  //s2
 	argv[0] = "getVar";
-	theResponses[2] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);  //s1
-	theResponses[3] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);  //s2
+	theResponses[2] = theMaterial[S_ONE]->setResponse(argv, 1, *theDummyStream);  //s1
+	theResponses[3] = theMaterial[S_TWO]->setResponse(argv, 1, *theDummyStream);  //s2
     argv[0] = "setVar";
-    theResponses[4] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);  //c1
-    theResponses[5] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);  //c2
+    theResponses[4] = theMaterial[C_ONE]->setResponse(argv, 1, *theDummyStream);  //c1
+    theResponses[5] = theMaterial[C_TWO]->setResponse(argv, 1, *theDummyStream);  //c2
     argv[0] = "getVar";
-    theResponses[6] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);  //c1
-    theResponses[7] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);  //c2
+    theResponses[6] = theMaterial[C_ONE]->setResponse(argv, 1, *theDummyStream);  //c1
+    theResponses[7] = theMaterial[C_TWO]->setResponse(argv, 1, *theDummyStream);  //c2
 
     if ((theResponses[0] == 0) || (theResponses[1] == 0) ||
 	(theResponses[2] == 0) || (theResponses[3] == 0) ||
@@ -464,10 +464,10 @@ MCFTRCPlaneStress::getCopy(void)
   MCFTRCPlaneStress* theCopy =
     new MCFTRCPlaneStress( this->getTag(), 
 					 rho, 
-					 theMaterial[0], 
-					 theMaterial[1], 
-					 theMaterial[2], 
-					 theMaterial[3], 
+					 theMaterial[S_ONE], 
+					 theMaterial[S_TWO], 
+					 theMaterial[C_ONE], 
+					 theMaterial[C_TWO], 
 					 angle1, angle2, 
 					 rhox, rhoy, 
 					 db1, db2,
@@ -486,7 +486,7 @@ MCFTRCPlaneStress::getCopy(const char *type)
 {
 	MCFTRCPlaneStress* theModel =
 		new MCFTRCPlaneStress( this->getTag(), 
-           rho, theMaterial[0], theMaterial[1], theMaterial[2], theMaterial[3],
+           rho, theMaterial[S_ONE], theMaterial[S_TWO], theMaterial[C_ONE], theMaterial[C_TWO],
 		   angle1, angle2, rhox, rhoy, db1, db2, fpc, fyx, fyy, Es, epsc0, aggr, xd, yd );
 	theModel->strain_vec = strain_vec;
 	theModel->stress_vec = stress_vec;
@@ -563,13 +563,13 @@ MCFTRCPlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\t call the material print() function : "<< endln;
 	
 	s << "\t the steel 1 information is : " << endln;
-	theMaterial[0]->Print(s,flag);
+	theMaterial[S_ONE]->Print(s,flag);
 	s << "\t the steel 2 information is : " << endln;
-	theMaterial[1]->Print(s,flag);
+	theMaterial[S_TWO]->Print(s,flag);
 	s << "\t the concrete 1 information is : " << endln;
-	theMaterial[2]->Print(s,flag);
+	theMaterial[C_ONE]->Print(s,flag);
 	s << "\t the concrete 2 information is : " << endln;
-	theMaterial[3]->Print(s,flag);
+	theMaterial[C_TWO]->Print(s,flag);
 
 	s << "\tStrain and stress of the uniaxial materials:"<<endln;
 	for (int i=0; i<4; i++)
@@ -767,22 +767,23 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   double Ec    = 2.0 * fpc/epsc0;
   double epscr = fcr/Ec;
   double vcxy, vci, vcimax, s_cita=0.0, w=0.0, delta_S=0.0, gamma_S=0.0;
-  double Cs, Cd, betaD1, betaD2;
+  double betaD1, betaD2;
   double Ecx, Ecy;
 
   static Vector tempStrain(3); // maintain main strain vector 
 
   // Get citaE based on Tstrain, eq. i-9...
   if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON ) {
-	if (fabs(Tstrain(2)) < FLT_EPSILON) {
+	if (fabs(Tstrain(2)) < SMALL_STRAIN) {
 	  citaE = 0;
 	} else {
 	  citaE = 0.25*PI;
 	}
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_cita = 0.5 * atan(fabs(1.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 
-    if ( fabs(Tstrain(2)) < FLT_EPSILON ) {
-      citaE = 0;
+    if ( fabs(Tstrain(2)) < SMALL_STRAIN ) {
+      if (Tstrain(0) > Tstrain(1) ) citaE = 0;
+	  if (Tstrain(1) > Tstrain(0) ) citaE = 0.5*PI;
     } else if ( (Tstrain(0) > Tstrain(1)) && ( Tstrain(2) > 0) ) {
       citaE = temp_cita;
     } else if ( (Tstrain(0) > Tstrain(1)) && ( Tstrain(2) < 0) ) {
@@ -847,15 +848,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   Ts2(2,1) = 2.0*cos(angle2)*sin(angle2);
   Ts2(2,2) = pow(cos(angle2), 2.0)-pow(sin(angle2), 2.0);
 
-  Information &theInfoS01 = theResponses[0]->getInformation(); // S1 setVar
-  Information &theInfoS02 = theResponses[1]->getInformation(); // S2 setVar
-  Information &theInfoS03 = theResponses[2]->getInformation(); // S1 getVar
-  Information &theInfoS04 = theResponses[3]->getInformation(); // S2 getVar
-
-  Information &theInfoC01 = theResponses[4]->getInformation(); // C1 setVar
-  Information &theInfoC02 = theResponses[5]->getInformation(); // C2 setVar
-  Information &theInfoC03 = theResponses[6]->getInformation(); // C1 getVar
-  Information &theInfoC04 = theResponses[7]->getInformation(); // C2 getVar
+  Information &S1SetVar = theResponses[S1_SET_V]->getInformation(); // S1 setVar
+  Information &S2SetVar = theResponses[S2_SET_V]->getInformation(); // S2 setVar
+  Information &S1GetVar = theResponses[S1_GET_V]->getInformation(); // S1 getVar
+  Information &S2GetVar = theResponses[S2_GET_V]->getInformation(); // S2 getVar
+  Information &C1SetVar = theResponses[C1_SET_V]->getInformation(); // C1 setVar
+  Information &C2SetVar = theResponses[C2_SET_V]->getInformation(); // C2 setVar
+  Information &C1GetVar = theResponses[C1_GET_V]->getInformation(); // C1 getVar
+  Information &C2GetVar = theResponses[C2_GET_V]->getInformation(); // C2 getVar
 
   //for small strain return quickly
   if (Tstrain.pNorm(-1) <= DBL_EPSILON) {
@@ -896,22 +896,22 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
   // Calculate Steel stress incorporate steel offset strains
 
-  //theInfoS01.setVector(theData);
-  //theInfoS02.setVector(theData);
-  //theResponses[0]->getResponse();  // setVar
-  //theResponses[1]->getResponse();  // setVar
+  //S1SetVar.setVector(theData);
+  //S2SetVar.setVector(theData);
+  //theResponses[S1_SET_V]->getResponse();  // setVar
+  //theResponses[S2_SET_V]->getResponse();  // setVar
 
-  if (theMaterial[0]->setTrialStrain(epsSx) != 0) {
+  if (theMaterial[S_ONE]->setTrialStrain(epsSx) != 0) {
     opserr << "MCFTRCPlaneStress::determineTrialStress(), S1 setTrialStrain() Error" << endln;  // s1
 	return -1;
   }
-  if (theMaterial[1]->setTrialStrain(epsSy) != 0) {
+  if (theMaterial[S_TWO]->setTrialStrain(epsSy) != 0) {
     opserr << "MCFTRCPlaneStress::determineTrialStress(), S2 setTrialStrain() Error" << endln;  // s2
 	return -1;
   }
 
-  fSx = theMaterial[0]->getStress();
-  fSy = theMaterial[1]->getStress();
+  fSx = theMaterial[S_ONE]->getStress();
+  fSy = theMaterial[S_TWO]->getStress();
   
   // initial epsC vector assumptions equal to previous committed value
   epsC_vec  = Tstrain; //CepsC_vec; 
@@ -921,7 +921,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   static Vector errorVec(3); // epsC_vec converge test need a vector to maintain Error
   static Vector theData(8); // data for materials passed in 
   double errNorm;
-  double temp, tolNorm = 1.0e-6;
+  double temp, tolNorm = SMALL_STRAIN;
   bool vCiconverged = false;
   int iteration_counter = 0, ret;
   double deltaEpsC1p, deltaEpsC2p, deltaEpsCm1, deltaEpsCm2, deltaEpsTm1, deltaEpsTm2;
@@ -931,29 +931,31 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	// Get citaS based on epsC_vec, eq.i-11    
 	// citaS = cita, based on elastic strain part
 	// MCFT cita corresponding strain field, DSFM cita corresponding stress field
-    if ( fabs(epsC_vec(0)-epsC_vec(1)) < DBL_EPSILON) {
-      if (fabs(epsC_vec(2)) < FLT_EPSILON) {
+	epsCe_vec = Tstrain - epsCp_vec - epsSlip_vec;
+    if ( fabs(epsCe_vec(0)-epsCe_vec(1)) < DBL_EPSILON) {
+      if (fabs(epsCe_vec(2)) < SMALL_STRAIN) {
 	    citaS = 0;
 	  } else {
 	    citaS = 0.25*PI;
 	  }
-    } else {  // epsC_vec(0) != epsC_vec(1) 
-      temp_cita = 0.5 * atan(fabs(1.0e6*epsC_vec(2)/(1.0e6*epsC_vec(0)-1.0e6*epsC_vec(1)))); 
-      if ( fabs(epsC_vec(2)) < FLT_EPSILON ) {
-  	    citaS = 0;
-  	  } else if ( (epsC_vec(0) > epsC_vec(1)) && ( epsC_vec(2) > 0) ) {
+    } else {  // epsCe_vec(0) != epsCe_vec(1) 
+      temp_cita = 0.5 * atan(fabs(1.0e6*epsCe_vec(2)/(1.0e6*epsCe_vec(0)-1.0e6*epsCe_vec(1)))); 
+      if ( fabs(epsCe_vec(2)) < SMALL_STRAIN ) {
+  	    if (epsCe_vec(0) > epsCe_vec(1) ) citaS = 0;
+	    if (epsCe_vec(1) > epsCe_vec(0) ) citaS = 0.5*PI;
+  	  } else if ( (epsCe_vec(0) > epsCe_vec(1)) && ( epsCe_vec(2) > 0) ) {
   	    citaS = temp_cita;
-  	  } else if ( (epsC_vec(0) > epsC_vec(1)) && ( epsC_vec(2) < 0) ) {
+  	  } else if ( (epsCe_vec(0) > epsCe_vec(1)) && ( epsCe_vec(2) < 0) ) {
   	    citaS = PI - temp_cita;
-  	  } else if ( (epsC_vec(0) < epsC_vec(1)) && ( epsC_vec(2) > 0) ) {
+  	  } else if ( (epsCe_vec(0) < epsCe_vec(1)) && ( epsCe_vec(2) > 0) ) {
   	    citaS = 0.5*PI - temp_cita;
-  	  } else if ( (epsC_vec(0) < epsC_vec(1)) && ( epsC_vec(2) < 0) ) {
+  	  } else if ( (epsCe_vec(0) < epsCe_vec(1)) && ( epsCe_vec(2) < 0) ) {
   	    citaS = 0.5*PI + temp_cita;
   	  } else {
   	    opserr << "MCFTRCPlaneStress::determineTrialStress: Failure to calculate citaS\n";
-  	    opserr << " epsC_vec(0) = " << epsC_vec(0) << endln;
-  	    opserr << " epsC_vec(1) = " << epsC_vec(1) << endln;
-  	    opserr << " epsC_vec(2) = " << epsC_vec(2) << endln;
+  	    opserr << " epsCe_vec(0) = " << epsCe_vec(0) << endln;
+  	    opserr << " epsCe_vec(1) = " << epsCe_vec(1) << endln;
+  	    opserr << " epsCe_vec(2) = " << epsCe_vec(2) << endln;
   	  }
     }
 
@@ -980,7 +982,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	//epsC2 = 0.5*(epsC_vec(0)+epsC_vec(1)) 
 	//	  - 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
 
-	tempStrain.addMatrixVector(0.0, T_cita, epsC_vec, 1.0);
+	tempStrain.addMatrixVector(0.0, T_cita, Tstrain, 1.0);
 	epsC1 = tempStrain(0);
 	epsC2 = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);  // should be a minor value
@@ -1018,6 +1020,11 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	eT2m = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);
 
+	int status; // status to check if iteration satisfied eq.i-7
+	double tolerance = SMALL_STRESS; // tolerance for iteration
+	bool fC1converged, fC2converged;
+	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
+
 	if((epsC1 > 0 && epsC2 >0) || (epsC1 < 0 && epsC2 <0)) {
 
       if(epsC1 > 0 && epsC2 >0) {
@@ -1054,27 +1061,24 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		theData(7) = 1.0; // K
 
 	    ret = 0;
-	    ret += theInfoC01.setVector(theData);  // Information for C tension, material [2], response[4]
-	    ret += theResponses[4]->getResponse(); // C1 setVar 
-        ret += theMaterial[2]->setTrialStrain(epsC1);
+	    ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
+	    ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
+        ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
 	    if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	      return ret;
 	    }
-	    temp = theMaterial[2]->getStress();
+	    temp = theMaterial[C_ONE]->getStress();
 	    fC1 = min(fC1temp, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC1 > epscr) { //checkAtCrack(); 
 		  // Calculate local stress at cracks
-	      int status            = 0; // status to check if iteration satisfied eq.i-7
-	      double tolerance      = 1.0e-6; // tolerance for iteration
-	      bool fC1converged     = false;
-	      double error;
-	      double fScrx, fScry;
-	      double epsScrx        = epsSx;
-	      double epsScry        = epsSy;
-	      double epsIncr        = 0.0;
+	      status         = 0; // status to check if iteration satisfied eq.i-7
+	      fC1converged   = false;
+	      epsScrx        = epsSx;
+	      epsScry        = epsSy;
+	      epsIncr        = 0.0;
 	      
 	      while ( fC1converged == false && status == 0 ) {
 	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
@@ -1087,18 +1091,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[0]->setTrialStrain(epsScrx) != 0) {
+	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[0]->getStress();
+	      	//fScrx = theMaterial[S_ONE]->getStress();
 	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      
-	      	if( theMaterial[1]->setTrialStrain(epsScry) != 0) {
+	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[1]->getStress();
+	      	//fScry = theMaterial[S_TWO]->getStress();
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1112,8 +1116,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	  // temp is function of citan1 citan2 and fSx and fSy,
 	      	  // the iterative parameter should include citan1/citan2 angle chosen. 
 	      	  // like: if (citan1 > PI/2 && citan2 > PI/2)...
-	      	  temp = rhox * theMaterial[0]->getSecant() * pow(cos(citan1), 2.0)
-	      	       + rhoy * theMaterial[1]->getSecant() * pow(cos(citan2), 2.0);
+	      	  temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+	      	       + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
 	      	  epsIncr += error/temp;
 	      	}
 	      }
@@ -1166,27 +1170,24 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    theData(7) = 1.0; // K
 
 	    ret = 0;
-	    ret += theInfoC02.setVector(theData);  // Information for C2 in tension, material [3], response[5]
-	    ret += theResponses[5]->getResponse(); // C2 setVar 
-        ret += theMaterial[3]->setTrialStrain(epsC2);
+	    ret += C2SetVar.setVector(theData);  // Information for C2 in tension, material [3], response[5]
+	    ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar 
+        ret += theMaterial[C_TWO]->setTrialStrain(epsC2);
 	    if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
 	      return ret;
 	    }
-	    temp = theMaterial[3]->getStress();
+	    temp = theMaterial[C_TWO]->getStress();
 	    fC2 = min(fC2temp, temp);
 	    
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC2 > epscr) { //checkAtCrack(); 
 		  // Calculate local stress at cracks
-	      int status            = 0; // status to check if iteration satisfied eq.i-7
-	      double tolerance      = 1.0e-6; // tolerance for iteration
-	      bool fC2converged     = false;
-	      double error;
-	      double fScrx, fScry;
-	      double epsScrx        = epsSx;
-	      double epsScry        = epsSy;
-	      double epsIncr        = 0.0;
+	      status         = 0; // status to check if iteration satisfied eq.i-7
+	      fC2converged   = false;
+	      epsScrx        = epsSx;
+	      epsScry        = epsSy;
+	      epsIncr        = 0.0;
 	      
 	      while ( fC2converged == false && status == 0 ) {
 	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
@@ -1199,18 +1200,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[0]->setTrialStrain(epsScrx) != 0) {
+	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[0]->getStress();
+	      	//fScrx = theMaterial[S_ONE]->getStress();
 	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      
-	      	if( theMaterial[1]->setTrialStrain(epsScry) != 0) {
+	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[1]->getStress();
+	      	//fScry = theMaterial[S_TWO]->getStress();
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1224,8 +1225,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	  // temp is function of citan1 citan2 and fSx and fSy,
 	      	  // the iterative parameter should include citan1/citan2 angle chosen. 
 	      	  // like: if (citan1 > PI/2 && citan2 > PI/2)...
-	      	  temp = rhox * theMaterial[0]->getSecant() * pow(cos(citan1), 2.0)
-	      	       + rhoy * theMaterial[1]->getSecant() * pow(cos(citan2), 2.0);
+	      	  temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+	      	       + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
 	      	  epsIncr += error/temp;
 	      	}
 	      }
@@ -1257,11 +1258,11 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		//////////////////////////////////////////////////////////////////////////
 		// get C1, C2 's epsilon_p
 		//////////////////////////////////////////////////////////////////////////
-		theResponses[6]->getResponse();  // C1 getVar to theInfoC03
-		theResponses[7]->getResponse();  // C2 getVar to theInfoC04
+		theResponses[C1_GET_V]->getResponse();  // C1 getVar
+		theResponses[C2_GET_V]->getResponse();  // C2 getVar
 		
-		epsC12p_nowvec(0) = (*theInfoC03.theVector)(5); // ecp1 
-        epsC12p_nowvec(1) = (*theInfoC04.theVector)(5); // ecp2 
+		epsC12p_nowvec(0) = (*C1GetVar.theVector)(5); // ecp1 
+        epsC12p_nowvec(1) = (*C2GetVar.theVector)(5); // ecp2 
 	    if (epsC12p_nowvec(0) > 0) epsC12p_nowvec(0) = 0.0;
         if (epsC12p_nowvec(1) > 0) epsC12p_nowvec(1) = 0.0;
 
@@ -1274,7 +1275,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		opserr << "epsC1 and epsC2 negative, both!" << endln;
 		double sig1 = 0.0, sig2 = 0.0, sig_p1, sig_p2, eps_p1, eps_p2;
 		double norm = 1.0, K1, K2;
-		while (norm > FLT_EPSILON) {
+		while (norm > SMALL_STRESS) {
 		  K1 = 1 - 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
 		  K2 = 1 - 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
 		  sig_p1 = K1 * fpc;
@@ -1293,14 +1294,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      theData(7) = K1;
 
 	      ret = 0;
-	      ret += theInfoC01.setVector(theData);  // Information for C tension, material [2], response[4]
-	      ret += theResponses[4]->getResponse(); // C1 setVar 
-          ret += theMaterial[2]->setTrialStrain(epsC1);
+	      ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
+	      ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
+          ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
 	      if (ret != 0) {
 	        opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	        return ret;
 	      }
-	      fC1 = theMaterial[2]->getStress();
+	      fC1 = theMaterial[C_ONE]->getStress();
 
 		  //////////////////////////////////////////////////////////////////////////
 		  // C2
@@ -1313,14 +1314,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      theData(7) = K2;
 
 	      ret = 0;
-	      ret += theInfoC02.setVector(theData);  // Information for C compression, material [3], response[5]
-	      ret += theResponses[5]->getResponse(); // C2 setVar
-	      ret += theMaterial[3]->setTrialStrain(epsC2); //need further revision
+	      ret += C2SetVar.setVector(theData);  // Information for C compression, material [3], response[5]
+	      ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar
+	      ret += theMaterial[C_TWO]->setTrialStrain(epsC2); //need further revision
           if (ret != 0) {
 	        opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
 	        return ret;
 	      }
-	      fC2 = theMaterial[3]->getStress(); // w==5 ??
+	      fC2 = theMaterial[C_TWO]->getStress(); // w==5 ??
 	      
 		  //////////////////////////////////////////////////////////////////////////
 		  norm = sqrt(pow(fC1-sig1,2.0)+pow(fC2-sig2,2.0));
@@ -1328,10 +1329,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		  sig2 = fC2;
 		}
 
-		theResponses[6]->getResponse(); // C1 getVar to theInfoC03
-		epsC12p_nowvec(0) = (*theInfoC03.theVector)(5); // ecp1
-		theResponses[7]->getResponse(); // C2 getVar to theInfoC04
-		epsC12p_nowvec(1) = (*theInfoC04.theVector)(5); // ecp2 
+		theResponses[C1_GET_V]->getResponse(); // C1 getVar
+		epsC12p_nowvec(0) = (*C1GetVar.theVector)(5); // ecp1
+		theResponses[C2_GET_V]->getResponse(); // C2 getVar
+		epsC12p_nowvec(1) = (*C2GetVar.theVector)(5); // ecp2 
 
 	  } 
 	  
@@ -1368,27 +1369,24 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    theData(6) = 1.0; //betaD
 	    theData(7) = 1.0; // K
 	    ret = 0;
-	    ret += theInfoC01.setVector(theData);  // Information for C tension, material [2], response[4]
-	    ret += theResponses[4]->getResponse(); // C1 setVar 
-        ret += theMaterial[2]->setTrialStrain(epsC1);
+	    ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
+	    ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
+        ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
 	    if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	      return ret;
 	    }
-	    temp = theMaterial[2]->getStress();
+	    temp = theMaterial[C_ONE]->getStress();
 	    fC1 = min(fC1temp, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC1 > epscr) { //checkAtCrack(); 
 		  // Calculate local stress at cracks
-	      int status            = 0; // status to check if iteration satisfied eq.i-7
-	      double tolerance      = 1.0e-6; // tolerance for iteration
-	      bool fC1converged     = false;
-	      double error;
-	      double fScrx, fScry;
-	      double epsScrx        = epsSx;
-	      double epsScry        = epsSy;
-	      double epsIncr        = 0.0;
+	      status         = 0; // status to check if iteration satisfied eq.i-7
+	      fC1converged   = false;
+	      epsScrx        = epsSx;
+	      epsScry        = epsSy;
+	      epsIncr        = 0.0;
 	      
 	      while ( fC1converged == false && status == 0 ) {
 	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
@@ -1401,18 +1399,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[0]->setTrialStrain(epsScrx) != 0) {
+	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[0]->getStress();
+	      	//fScrx = theMaterial[S_ONE]->getStress();
 	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      
-	      	if( theMaterial[1]->setTrialStrain(epsScry) != 0) {
+	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[1]->getStress();
+	      	//fScry = theMaterial[S_TWO]->getStress();
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1426,8 +1424,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	  // temp is function of citan1 citan2 and fSx and fSy,
 	      	  // the iterative parameter should include citan1/citan2 angle chosen. 
 	      	  // like: if (citan1 > PI/2 && citan2 > PI/2)...
-	      	  temp = rhox * theMaterial[0]->getSecant() * pow(cos(citan1), 2.0)
-	      	       + rhoy * theMaterial[1]->getSecant() * pow(cos(citan2), 2.0);
+	      	  temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+	      	       + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
 	      	  epsIncr += error/temp;
 	      	}
 	      }
@@ -1470,17 +1468,17 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    theData(6) = betaD2;
 	    theData(7) = 1.0; //K 
 	    ret = 0;
-	    ret += theInfoC02.setVector(theData);  // Information for C compression, material [3], response[5]
-	    ret += theResponses[5]->getResponse(); // C2 setVar
-	    ret += theMaterial[3]->setTrialStrain(epsC2); //need further revision
+	    ret += C2SetVar.setVector(theData);  // Information for C compression, material [3], response[5]
+	    ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar
+	    ret += theMaterial[C_TWO]->setTrialStrain(epsC2); //need further revision
         if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
 	      return ret;
 	    }
-	    fC2 = theMaterial[3]->getStress(); // w==5 ??
+	    fC2 = theMaterial[C_TWO]->getStress(); // w==5 ??
   	    
-	    theResponses[7]->getResponse(); // C2 getVar to theInfoC04
-        epsC12p_nowvec(1) = (*theInfoC04.theVector)(5); // ecp2 
+	    theResponses[C2_GET_V]->getResponse(); // C2 getVar
+        epsC12p_nowvec(1) = (*C2GetVar.theVector)(5); // ecp2 
 
 	  } 
       
@@ -1498,17 +1496,17 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    theData(6) = betaD1;
 	    theData(7) = 1.0; // K
 	    ret = 0;
-	    ret += theInfoC01.setVector(theData);  // Information for C compression, material [2], response[4]
-	    ret += theResponses[4]->getResponse(); // C1 setVar
-	    ret += theMaterial[2]->setTrialStrain(epsC1); //need further revision
+	    ret += C1SetVar.setVector(theData);  // Information for C compression, material [2], response[4]
+	    ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar
+	    ret += theMaterial[C_ONE]->setTrialStrain(epsC1); //need further revision
         if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	      return ret;
 	    }
-	    fC1 = theMaterial[2]->getStress(); // w==5 ?? 
+	    fC1 = theMaterial[C_ONE]->getStress(); // w==5 ?? 
   	    
-	    theResponses[6]->getResponse(); // C2 getVar to theInfoC03
-        epsC12p_nowvec(0) = (*theInfoC04.theVector)(5); // ecp2 
+	    theResponses[C1_GET_V]->getResponse(); // C1 getVar
+        epsC12p_nowvec(0) = (*C2GetVar.theVector)(5); // ecp1
 	    
 	    //////////////////////////////////////////////////////////////////////////
 	    // fC2 -- tension
@@ -1534,27 +1532,24 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	    theData(7) = 1.0; //K
 
 	    ret = 0;
-	    ret += theInfoC03.setVector(theData);  // Information for C tension, material [3], response[5]
-	    ret += theResponses[5]->getResponse(); // C2 setVar 
-        ret += theMaterial[3]->setTrialStrain(epsC2);
+	    ret += C2SetVar.setVector(theData);  // Information for C tension, material [3], response[5]
+	    ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar 
+        ret += theMaterial[C_TWO]->setTrialStrain(epsC2);
 	    if (ret != 0) {
 	      opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
 	      return ret;
 	    }
-	    temp = theMaterial[3]->getStress();
+	    temp = theMaterial[C_TWO]->getStress();
 	    fC2 = min(fC2temp, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC2 > epscr) { //checkAtCrack(); 
 		  // Calculate local stress at cracks
-	      int status            = 0; // status to check if iteration satisfied eq.i-7
-	      double tolerance      = 1.0e-6; // tolerance for iteration
-	      bool fC2converged     = false;
-	      double error;
-	      double fScrx, fScry;
-	      double epsScrx        = epsSx;
-	      double epsScry        = epsSy;
-	      double epsIncr        = 0.0;
+		  status         = 0; // status to check if iteration satisfied eq.i-7
+		  fC2converged   = false;
+		  epsScrx        = epsSx;
+		  epsScry        = epsSy;
+		  epsIncr        = 0.0;
 	      
 	      while ( fC2converged == false && status == 0 ) {
 	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
@@ -1567,18 +1562,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[0]->setTrialStrain(epsScrx) != 0) {
+	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[0]->getStress();
+	      	//fScrx = theMaterial[S_ONE]->getStress();
 	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      
-	      	if( theMaterial[1]->setTrialStrain(epsScry) != 0) {
+	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[1]->getStress();
+	      	//fScry = theMaterial[S_TWO]->getStress();
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1592,8 +1587,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	      	  // temp is function of citan1 citan2 and fSx and fSy,
 	      	  // the iterative parameter should include citan1/citan2 angle chosen. 
 	      	  // like: if (citan1 > PI/2 && citan2 > PI/2)...
-	      	  temp = rhox * theMaterial[0]->getSecant() * pow(cos(citan1), 2.0)
-	      	       + rhoy * theMaterial[1]->getSecant() * pow(cos(citan2), 2.0);
+	      	  temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+	      	       + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
 	      	  epsIncr += error/temp;
 	      	}
 	      }
@@ -1685,14 +1680,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	eSlip2 = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2); // should be somve value need further check
 
-    //if (fabs(epsC1) < FLT_EPSILON) {
-	//  Ecx = theMaterial[2]->getTangent();
+    //if (fabs(epsC1) < SMALL_STRAIN) {
+	//  Ecx = theMaterial[C_ONE]->getTangent();
 	//} else {
 	  Ecx = fC1/(epsC1-eC1p-eSlip1);
 	  if (Ecx > Ec) Ecx = Ec;
 	//}
-    //if (fabs(epsC2) < FLT_EPSILON) {
-	//  Ecy = theMaterial[3]->getTangent();
+    //if (fabs(epsC2) < SMALL_STRAIN) {
+	//  Ecy = theMaterial[C_TWO]->getTangent();
 	//} else {
 	  Ecy = fC2/(epsC2-eC2p-eSlip2);
 	  if (Ecy > Ec) Ecy = Ec;
@@ -1703,10 +1698,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     Dcp(2,2) = Ecx * Ecy / ( Ecx + Ecy );
   
     // EbarS1, EbarS2, eq.i-5
-    if (fabs(epsSx) < FLT_EPSILON) Ds1p(0,0) = rhox * (theMaterial[0]->getSecant());
+    if (fabs(epsSx) < SMALL_STRAIN) Ds1p(0,0) = rhox * (theMaterial[S_ONE]->getSecant());
     else              Ds1p(0,0) = rhox * fSx / epsSx;
     
-    if (fabs(epsSy) < FLT_EPSILON) Ds2p(0,0) = rhoy * (theMaterial[1]->getSecant());
+    if (fabs(epsSy) < SMALL_STRAIN) Ds2p(0,0) = rhoy * (theMaterial[S_TWO]->getSecant());
     else              Ds2p(0,0) = rhoy * fSy / epsSy;
   
     Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
@@ -1740,7 +1735,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
-	  epsC_vec -= errorVec;
+	  epsC_vec += errorVec;
 	  //epsC12p_prevec = epsC12p_nowvec;
 	  iteration_counter += 1 ;
 	  if (iteration_counter > 20) {
@@ -1778,7 +1773,7 @@ MCFTRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
 {
   //double sig1 = 0.0, sig2 = 0.0, sig_p1, sig_p2, eps_p1, eps_p2;
   //double norm = 1.0, K1, K2;
-  //while (norm > FLT_EPSILON) {
+  //while (norm > SMALL_STRAIN) {
 	//K1 = 1 - 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
 	//K2 = 1 - 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
 	//sig_p1 = K1 * fpc;
@@ -1797,14 +1792,14 @@ MCFTRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
     //theData(7) = 1.0;
   //
 	//int ret = 0;
-	//ret += theInfoC01.setVector(theData);  // Information for C tension, material [2], response[4]
+	//ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
 	//ret += theResponses[4]->getResponse(); // C1 setVar 
-	//ret += theMaterial[2]->setTrialStrain(epsC1);
+	//ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
 	//if (ret != 0) {
 	//	opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
 	//	return ret;
 	//	}
-	//fC1 = theMaterial[2]->getStress();
+	//fC1 = theMaterial[C_ONE]->getStress();
   //
 	////////////////////////////////////////////////////////////////////////////
 	//// C2
@@ -1817,14 +1812,14 @@ MCFTRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
     //theData(7) = 1.0;
   //
 	//ret = 0;
-	//ret += theInfoC02.setVector(theData);  // Information for C compression, material [3], response[5]
+	//ret += C2SetVar.setVector(theData);  // Information for C compression, material [3], response[5]
 	//ret += theResponses[5]->getResponse(); // C2 setVar
-	//ret += theMaterial[3]->setTrialStrain(epsC2); //need further revision
+	//ret += theMaterial[C_TWO]->setTrialStrain(epsC2); //need further revision
 	//if (ret != 0) {
 	//	opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
 	//	return ret;
 	//	}
-	//fC2 = theMaterial[3]->getStress(); // w==5 ??
+	//fC2 = theMaterial[C_TWO]->getStress(); // w==5 ??
   //
 	////////////////////////////////////////////////////////////////////////////
 	//norm = sqrt(pow(fC1-sig1,2)+pow(fC2-sig2,2));

@@ -48,6 +48,23 @@
 #include <ID.h>
 #include <Tensor.h>
 
+#define SMALL_STRAIN  1.0e-12
+#define SMALL_STRESS  1.0e-10
+#define SMALL_TANGENT 1.0e-9
+
+#define S1_SET_V 0
+#define S2_SET_V 1
+#define S1_GET_V 2
+#define S2_GET_V 3
+#define C1_SET_V 4
+#define C2_SET_V 5
+#define C1_GET_V 6
+#define C2_GET_V 7
+#define C_ONE 2
+#define C_TWO 3
+#define S_ONE 0
+#define S_TWO 1
+
 class MCFTRCPlaneStress : public NDMaterial
 {
   public:
@@ -140,6 +157,7 @@ class MCFTRCPlaneStress : public NDMaterial
     // Trial values
 	Vector strain_vec;
 	Vector epsC_vec;
+	Vector epsCe_vec;
 	Vector epsCp_vec;
 	Vector epsSlip_vec;
 	Vector epsC12p_prevec; // pre time step eps
