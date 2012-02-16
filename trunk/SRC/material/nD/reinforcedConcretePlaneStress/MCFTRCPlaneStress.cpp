@@ -897,7 +897,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   fSy = theMaterial[S_TWO]->getStress();
   
   // initial epsC vector assumptions equal to previous committed value
-  epsC_vec  = Tstrain; //CepsC_vec; 
+  epsC_vec  = Tstrain; // epsC_vec = epsCe_vec + epsCp_vec; 
   epsCp_vec = CepsCp_vec;
 
   // vCi need to be satisfied several relationships in the concrete crack region
@@ -911,10 +911,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
   while (vCiconverged == false) {
     
-	// Get citaS based on epsC_vec, eq.i-11    
+	// Get citaS based on epsCe_vec, eq.i-11    
 	// citaS = cita, based on elastic strain part
 	// MCFT cita corresponding strain field, DSFM cita corresponding stress field
-	epsCe_vec = Tstrain - epsCp_vec - epsSlip_vec;
+	epsCe_vec = epsC_vec - epsCp_vec; // - epsSlip_vec
     if ( fabs(epsCe_vec(0)-epsCe_vec(1)) < DBL_EPSILON) {
       if (fabs(epsCe_vec(2)) < SMALL_STRAIN) {
 	    citaS = 0;
@@ -959,13 +959,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	T_cita(2,1) = 2.0*cos(cita)*sin(cita);
 	T_cita(2,2) = pow(cos(cita), 2.0)-pow(sin(cita), 2.0);
 
-	// Get epsC1,epsC2 and citaS based on Tstrain, eq.i-10
+	// Get epsC1,epsC2 and citaS based on epsC_vec, eq.i-10
 	//epsC1 = 0.5*(epsC_vec(0)+epsC_vec(1)) 
 	//	  + 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
 	//epsC2 = 0.5*(epsC_vec(0)+epsC_vec(1)) 
 	//	  - 0.5*sqrt(pow(epsC_vec(0)-epsC_vec(1), 2.0)+pow(epsC_vec(2), 2.0));
 
-	tempStrain.addMatrixVector(0.0, T_cita, Tstrain, 1.0);
+	tempStrain.addMatrixVector(0.0, T_cita, epsC_vec, 1.0);
 	epsC1 = tempStrain(0);
 	epsC2 = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);  // should be a minor value
@@ -1259,8 +1259,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		double sig1 = 0.0, sig2 = 0.0, sig_p1, sig_p2, eps_p1, eps_p2;
 		double norm = 1.0, K1, K2;
 		while (norm > SMALL_STRESS) {
-		  K1 = 1 - 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
-		  K2 = 1 - 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
+		  K1 = 1 + 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
+		  K2 = 1 + 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
 		  sig_p1 = K1 * fpc;
 		  eps_p1 = K1 * epsc0;
 		  sig_p2 = K2 * fpc;
@@ -1316,7 +1316,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 		epsC12p(0) = (*C1GetVar.theVector)(5); // ecp1
 		theResponses[C2_GET_V]->getResponse(); // C2 getVar
 		epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
-
+		opserr << "K1 = " << K1 << "\tK2 = " << K2 << endln;
 	  } 
 	  
 	  else {
@@ -1603,12 +1603,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	  }
 	}
 
-	// Get cita based on epsC_vec(elastic), and epsC_vec +epsCp_vec=Tstrain
-
-	//CepsC12p(0)
 	//eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
 	//	 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
-	//CepsC12p(1)
 	//eC2p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
 	//	 - 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
 	tempStrain.addMatrixVector(0.0, T_cita, CepsCp_vec, 1.0);
@@ -1666,13 +1662,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
     //if (fabs(epsC1) < SMALL_STRAIN) {
 	//  Ecx = theMaterial[C_ONE]->getTangent();
 	//} else {
-	  Ecx = fC1/(epsC1-eC1p-eSlip1);
+	  Ecx = fC1/(epsC1-eC1p); //-eSlip1
 	  if (Ecx > Ec) Ecx = Ec;
 	//}
     //if (fabs(epsC2) < SMALL_STRAIN) {
 	//  Ecy = theMaterial[C_TWO]->getTangent();
 	//} else {
-	  Ecy = fC2/(epsC2-eC2p-eSlip2);
+	  Ecy = fC2/(epsC2-eC2p); //-eSlip2
 	  if (Ecy > Ec) Ecy = Ec;
 	//}
   
@@ -1705,7 +1701,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 
 	//epsCp_vec -= tempVec;
 
-	errorVec = Tstrain - epsCp_vec - epsSlip_vec;
+	errorVec = Tstrain - epsCe_vec - epsCp_vec - epsSlip_vec;
 
     errNorm = errorVec.pNorm(-1);
 	// determine the norm of matrixnorm = tempMat.Norm();
@@ -1721,7 +1717,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	} else {
 	  //tempNorm = tempMat.Norm();
 	  //epsC_vec += 0.5 * errorVec; //Tstrain - epsCp_vec;
-	  //epsC_vec += errorVec;
+	  epsC_vec += errorVec;
 	  //CepsC12p = epsC12p;
 	  //epsCe_vec = Tstrain - epsCp_vec - epsSlip_vec;
 	  iteration_counter += 1 ;
