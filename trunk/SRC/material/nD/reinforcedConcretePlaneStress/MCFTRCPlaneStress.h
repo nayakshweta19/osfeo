@@ -160,8 +160,8 @@ class MCFTRCPlaneStress : public NDMaterial
 	Vector epsCe_vec;
 	Vector epsCp_vec;
 	Vector epsSlip_vec;
-	Vector epsC12p_prevec; // pre time step eps
-	Vector epsC12p_nowvec; // this time step eps
+	Vector CepsC12p; // pre time step eps
+	Vector epsC12p; // this time step eps
 	
 	Vector epsCcm_vec;
 	Vector epsCtm_vec;
