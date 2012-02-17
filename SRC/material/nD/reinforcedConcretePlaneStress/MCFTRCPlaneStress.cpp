@@ -173,11 +173,12 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
   lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), strain_vec(3),
   secant_matrix(3,3), tangent_matrix(3,3), CepsC12p(2), epsC12p(2), 
   epsC_vec(3), epsCe_vec(3), epsCp_vec(3), epsSlip_vec(3),
-  CepsC_vec(3), CepsCp_vec(3), CepsSlip_vec(3), 
+  CepsC_vec(3), CepsCe_vec(3), CepsCp_vec(3), CepsSlip_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
   CepsC12cm_vec(2), CepsCcm_vec(3), CepsC12tm_vec(2), CepsCtm_vec(3)
 {
     CepsC_vec.Zero();
+	CepsCe_vec.Zero();
 	CepsCp_vec.Zero();
 	CepsSlip_vec.Zero();
 	CepsCcm_vec.Zero();
@@ -271,6 +272,7 @@ MCFTRCPlaneStress::MCFTRCPlaneStress()
   epsC_vec(3), epsCe_vec(3), epsCp_vec(3), epsSlip_vec(3)
 {
   CepsC_vec.Zero();
+  CepsCe_vec.Zero();
   CepsCp_vec.Zero();
   CepsSlip_vec.Zero();
   CepsCcm_vec.Zero();
@@ -385,14 +387,16 @@ MCFTRCPlaneStress::commitState(void)
     theMaterial[i]->commitState();
   }
 
-  CepsC_vec  = epsC_vec; 
-  CepsCp_vec = epsCp_vec;   
+  CepsC_vec    = epsC_vec; 
+  CepsCe_vec   = epsCe_vec; 
+  CepsCp_vec   = epsCp_vec;   
+  CepsSlip_vec = epsSlip_vec;
   CepsCcm_vec  = epsCcm_vec;  
   CepsCtm_vec  = epsCtm_vec;  
   CepsC12cm_vec = epsC12cm_vec;
   CepsC12tm_vec = epsC12tm_vec;
-
   CepsC12p = epsC12p;
+
   lastStress = stress_vec;
   
   return 0;
@@ -405,8 +409,10 @@ MCFTRCPlaneStress::revertToLastCommit(void)
     theMaterial[i]->revertToLastCommit();
   }
 
-  epsC_vec  = CepsC_vec; 
-  epsCp_vec = CepsCp_vec;   
+  epsC_vec    = CepsC_vec; 
+  epsCe_vec   = CepsCe_vec;
+  epsCp_vec   = CepsCp_vec;
+  epsSlip_vec = CepsSlip_vec;
   epsCcm_vec = CepsCcm_vec;  
   epsCtm_vec = CepsCtm_vec;  
   epsC12cm_vec = CepsC12cm_vec;
@@ -434,19 +440,23 @@ MCFTRCPlaneStress::revertToStart(void)
   epsCp_vec.Zero();
   epsSlip_vec.Zero();
   CepsC_vec.Zero();
+  CepsCe_vec.Zero();
   CepsCp_vec.Zero();
   CepsSlip_vec.Zero();
-  CepsC12p.Zero();
 
   epsC12p.Zero();
+  CepsC12p.Zero();
+
   epsC12cm_vec.Zero();
   epsC12tm_vec.Zero();
+  CepsC12cm_vec.Zero();
+  CepsC12tm_vec.Zero();
+
   epsCcm_vec.Zero();
   epsCtm_vec.Zero();
   CepsCcm_vec.Zero();
   CepsCtm_vec.Zero();
-  CepsC12cm_vec.Zero();
-  CepsC12tm_vec.Zero();
+
   
   return 0;
 }
@@ -898,7 +908,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
   
   // initial epsC vector assumptions equal to previous committed value
   epsC_vec  = Tstrain; // epsC_vec = epsCe_vec + epsCp_vec; 
-  epsCp_vec = CepsCp_vec;
+  //epsCp_vec = CepsCp_vec;
 
   // vCi need to be satisfied several relationships in the concrete crack region
   static Vector errorVec(3); // epsC_vec converge test need a vector to maintain Error
@@ -975,30 +985,30 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	deltaEpsCm1 = (epsC1 < CepsC12cm_vec(0) ? epsC1-CepsC12cm_vec(0) : 0);
 	deltaEpsCm2 = (epsC2 < CepsC12cm_vec(1) ? epsC2-CepsC12cm_vec(1) : 0);
 
-	epsCcm_vec(0) += (0.5 * deltaEpsCm1 * (1+cos(2.0*cita)) + 0.5 * deltaEpsCm2 * (1-cos(2.0*cita)));
-	epsCcm_vec(1) += (0.5 * deltaEpsCm1 * (1-cos(2.0*cita)) + 0.5 * deltaEpsCm2 * (1+cos(2.0*cita)));
-	epsCcm_vec(2) += (deltaEpsCm1 - deltaEpsCm2) * sin(2.0*cita);
+	epsCcm_vec(0) = CepsCcm_vec(0) + (0.5 * deltaEpsCm1 * (1+cos(2.0*cita)) + 0.5 * deltaEpsCm2 * (1-cos(2.0*cita)));
+	epsCcm_vec(1) = CepsCcm_vec(1) + (0.5 * deltaEpsCm1 * (1-cos(2.0*cita)) + 0.5 * deltaEpsCm2 * (1+cos(2.0*cita)));
+	epsCcm_vec(2) = CepsCcm_vec(2) + (deltaEpsCm1 - deltaEpsCm2) * sin(2.0*cita);
 
 	//eC1m = 0.5*(epsCcm_vec(0)+epsCcm_vec(1))+0.5*((epsCcm_vec(0)-epsCcm_vec(1))*cos(2.0*cita)+epsCcm_vec(2)*sin(2.0*cita));
 	//eC2m = 0.5*(epsCcm_vec(0)+epsCcm_vec(1))-0.5*((epsCcm_vec(0)-epsCcm_vec(1))*cos(2.0*cita)+epsCcm_vec(2)*sin(2.0*cita));
 
-	tempStrain.addMatrixVector(0.0, T_cita, epsCcm_vec, 1.0);
+	tempStrain.addMatrixVector(0.0, T_cita, CepsCcm_vec, 1.0);
 	eC1m = tempStrain(0);
 	eC2m = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);
 
 	// T max
-	deltaEpsTm1 = (epsC1 > epsC12tm_vec(0) ? epsC1-epsC12tm_vec(0) : 0);
-	deltaEpsTm2 = (epsC2 > epsC12tm_vec(1) ? epsC2-epsC12tm_vec(1) : 0);
+	deltaEpsTm1 = (epsC1 > epsC12tm_vec(0) ? epsC1-CepsC12tm_vec(0) : 0);
+	deltaEpsTm2 = (epsC2 > epsC12tm_vec(1) ? epsC2-CepsC12tm_vec(1) : 0);
 
-	epsCtm_vec(0) += (0.5*deltaEpsTm1*(1+cos(2.0*cita)) + 0.5*deltaEpsTm2*(1-cos(2.0*cita)));
-	epsCtm_vec(1) += (0.5*deltaEpsTm1*(1-cos(2.0*cita)) + 0.5*deltaEpsTm2*(1+cos(2.0*cita)));
-	epsCtm_vec(2) += (deltaEpsTm1 - deltaEpsTm2) * sin(2.0*cita);
+	epsCtm_vec(0) = CepsCtm_vec(0) + (0.5*deltaEpsTm1*(1+cos(2.0*cita)) + 0.5*deltaEpsTm2*(1-cos(2.0*cita)));
+	epsCtm_vec(1) = CepsCtm_vec(1) + (0.5*deltaEpsTm1*(1-cos(2.0*cita)) + 0.5*deltaEpsTm2*(1+cos(2.0*cita)));
+	epsCtm_vec(2) = CepsCtm_vec(2) + (deltaEpsTm1 - deltaEpsTm2) * sin(2.0*cita);
 
 	//eT1m = 0.5*(epsCtm_vec(0)+epsCtm_vec(1))+0.5*((epsCtm_vec(0)-epsCtm_vec(1))*cos(2.0*cita)+epsCtm_vec(2)*sin(2.0*cita));
 	//eT2m = 0.5*(epsCtm_vec(0)+epsCtm_vec(1))-0.5*((epsCtm_vec(0)-epsCtm_vec(1))*cos(2.0*cita)+epsCtm_vec(2)*sin(2.0*cita));
 
-	tempStrain.addMatrixVector(0.0, T_cita, epsCtm_vec, 1.0);
+	tempStrain.addMatrixVector(0.0, T_cita, CepsCtm_vec, 1.0);
 	eT1m = tempStrain(0);
 	eT2m = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);
@@ -1709,10 +1719,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector Tstrain)
 	
   	if ( errNorm <= tolNorm) {
 	  vCiconverged = true;
-	  epsC12cm_vec(0) += deltaEpsCm1;
-	  epsC12cm_vec(1) += deltaEpsCm2;
-	  epsC12tm_vec(0) += deltaEpsTm1;
-	  epsC12tm_vec(1) += deltaEpsTm2;
+	  //epsC12cm_vec(0) += deltaEpsCm1;
+	  //epsC12cm_vec(1) += deltaEpsCm2;
+	  //epsC12tm_vec(0) += deltaEpsTm1;
+	  //epsC12tm_vec(1) += deltaEpsTm2;
 	//  this->Print(opserr,0);
 	} else {
 	  //tempNorm = tempMat.Norm();

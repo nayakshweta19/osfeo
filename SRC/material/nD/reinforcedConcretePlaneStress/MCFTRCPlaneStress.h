@@ -170,6 +170,7 @@ class MCFTRCPlaneStress : public NDMaterial
 	
     // Converged values
 	Vector CepsC_vec;
+	Vector CepsCe_vec;
 	Vector CepsCp_vec;
 	Vector CepsSlip_vec;
 	Vector CepsCcm_vec;
