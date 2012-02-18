@@ -64,8 +64,9 @@ class Parameter : public TaggedObject, public MovableObject
   // To make it compile -- MHS 9/28/2011
   virtual bool isImplicit(void) {return true;}
   virtual double getSensitivity(int index);
-  virtual double getPerturbation(void) {return 0.1;}
+  virtual double getPerturbation(void) {return 0.01;}
   virtual const char *getType(void) {return "FEModel";}
+  virtual int getPointerTag(void) {return -1;}
 
   virtual void setDomain(Domain *theDomain);
   virtual int sendSelf(int commitTag, Channel &theChannel);  
