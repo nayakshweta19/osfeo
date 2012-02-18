@@ -111,9 +111,10 @@ MCFTConcrete03::MCFTConcrete03(int tag, double _fc, double _epsc0, double _fcu,
 }
 
 MCFTConcrete03::MCFTConcrete03(void):
-  UniaxialMaterial(0, MAT_TAG_MCFTConcrete03)
+  UniaxialMaterial(0, MAT_TAG_MCFTConcrete03),
+  fc(0), epsc0(0), fcu(0), epscu(0), rat(0), ft(0), Ets(0)
 {
- 
+
 }
 
 MCFTConcrete03::~MCFTConcrete03(void)
@@ -363,10 +364,11 @@ MCFTConcrete03::revertToStart(void)
   ecmaxP = 0.0;
   sigminP = 0.0;
   sigmaxP = 0.0;
-  
-  deptP = 0.0;
-  eptP = 0.0;
-
+  ecmin = 0.0;
+  ecmax = 0.0;
+  sigmin = 0.0;
+  sigmax = 0.0;
+  dept = 0.0;
   ept = 0.0;
 
   betaD = 1.0;
@@ -572,7 +574,7 @@ MCFTConcrete03::getResponse(int responseID, Information &matInfo)
 	(*theVector)(2) = sigminP;
 	(*theVector)(3) = sigmaxP;
 	(*theVector)(4) = eptP;
-	this->determineCompEpscp(eps);
+	//this->determineCompEpscp(eps);
 	(*theVector)(5) = epscp;
 	(*theVector)(6) = betaD;
 	(*theVector)(7) = K;
