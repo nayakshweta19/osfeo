@@ -350,7 +350,7 @@ const Matrix&
 MCFTRCPlaneStress::getTangent(void)
 {
   //determineTrialStress(strain_vec);
-  //determineTangent();
+  //determineTangent(strain_vec);
   return tangent_matrix;
 }
 
@@ -762,6 +762,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   double Ecx, Ecy;
 
   static Vector tempStrain(3); // maintain main strain vector 
+  int Par=0;
 
   // Get citaE based on Tstrain, eq. i-9...
   if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON ) {
@@ -1011,14 +1012,15 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	eT2m = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);
 
-	int status; // status to check if iteration satisfied eq.i-7
+	int status=0; // status to check if iteration satisfied eq.i-7, Par for different path
 	double tolerance = SMALL_STRESS; // tolerance for iteration
 	bool fC1converged, fC2converged;
 	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
 
-	if((epsC1 > 0 && epsC2 >0) || (epsC1 < 0 && epsC2 <0)) {
+	if((epsC1 > DBL_EPSILON && epsC2 > DBL_EPSILON) || (epsC1 < -DBL_EPSILON && epsC2 < -DBL_EPSILON)) {
 
-      if(epsC1 > 0 && epsC2 >0) {
+      if(epsC1 > SMALL_STRAIN && epsC2 > SMALL_STRAIN) {
+		Par = 1;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 -- tensile for fc1, epsC1  
 		//////////////////////////////////////////////////////////////////////////
@@ -1072,7 +1074,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      epsIncr        = 0.0;
 	      
 	      while ( fC1converged == false && status == 0 ) {
-	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
+	      	if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
 	      	    opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
 	      	    opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
@@ -1181,7 +1183,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      epsIncr        = 0.0;
 	      
 	      while ( fC2converged == false && status == 0 ) {
-	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
+	      	if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
 	      	    opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
 	      	    opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
@@ -1259,7 +1261,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
 	  
-      else if (epsC1 < 0 && epsC2 <0) {
+      else if (epsC1 < SMALL_STRAIN && epsC2 < SMALL_STRAIN) {
+		Par = 2;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 Kupfer envelop for concrete
 		//////////////////////////////////////////////////////////////////////////
@@ -1327,16 +1330,66 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 		opserr << "K1 = " << K1 << "\tK2 = " << K2 << endln;
 	  } 
 	  
-	  else {
-		opserr << "Wrong path!" << endln;
-		return -1;
-	  }
 	} 
+	
+    else if (fabs(epsC1) <= DBL_EPSILON || fabs(epsC2) <= DBL_EPSILON){  //  uniaxal performance
+	  opserr << "Uniaxial behavior path!" << endln;
+	  if (fabs(epsC1) <= DBL_EPSILON) {
+		double v = 0.22;
+	    double temp = Ec/(1.0-v*v);
+	    
+	    Dcp(0,0) = temp;
+	    Dcp(0,1) = v*temp;
+	    Dcp(1,0) = v*temp;
+	    Dcp(1,1) = temp;
+	    Dcp(2,2) = temp*(1.0-v)/2.0;
+	    
+	    Ds1p(0,0)= Es * rhox;
+	    Ds2p(0,0)= Es * rhoy;
+	    
+	    Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
+	    Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
+	    Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
+	    
+	    secant_matrix = Dc + Ds1 + Ds2;
+	    tangent_matrix = secant_matrix;
+		Tstress.Zero();
+	    
+		return Tstress;
+
+	  } 
+	  else if (fabs(epsC2) <= DBL_EPSILON) {
+		double v = 0.22;
+	    double temp = Ec/(1.0-v*v);
+	    
+	    Dcp(0,0) = temp;
+	    Dcp(0,1) = v*temp;
+	    Dcp(1,0) = v*temp;
+	    Dcp(1,1) = temp;
+	    Dcp(2,2) = temp*(1.0-v)/2.0;
+	    
+	    Ds1p(0,0)= Es * rhox;
+	    Ds2p(0,0)= Es * rhoy;
+	    
+	    Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
+	    Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
+	    Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
+	    
+	    secant_matrix = Dc + Ds1 + Ds2;
+	    tangent_matrix = secant_matrix;
+	    Tstress.Zero();
+	    
+	    return Tstress;
+
+	  }
+
+	}
     
     else {
 	  // determine the MCFT state
 	  //Tstress = determineMCFTstress(epsC1,epsC2);
-      if (epsC1 > 0 && epsC2 < 0) {
+      if (epsC1 > SMALL_STRAIN && epsC2 < -SMALL_STRAIN) {
+		Par = 3;
 	    //////////////////////////////////////////////////////////////////////////
 	    // C1 -- tensile for fc1, epsC1  
 	    //////////////////////////////////////////////////////////////////////////
@@ -1380,7 +1433,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      epsIncr        = 0.0;
 	      
 	      while ( fC1converged == false && status == 0 ) {
-	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
+	      	if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
 	      	    opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
 	      	    opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
@@ -1473,7 +1526,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
       
-      else if (epsC1 < 0 && epsC2 >0 ) {
+      else if (epsC1 < -SMALL_STRAIN && epsC2 > SMALL_STRAIN ) {
+		Par = 4;
 		//////////////////////////////////////////////////////////////////////////
 	    // C1 -- compression 
 	    //////////////////////////////////////////////////////////////////////////
@@ -1543,7 +1597,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 		  epsIncr        = 0.0;
 	      
 	      while ( fC2converged == false && status == 0 ) {
-	      	if(epsScrx > 0.5 || epsScry > 0.5) { // for very large strain at cracks
+	      	if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
 	      	    opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
 	      	    opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
@@ -1667,28 +1721,28 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	eSlip2 = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2); // should be somve value need further check
 
-    //if (fabs(epsC1) < SMALL_STRAIN) {
-	//  Ecx = theMaterial[C_ONE]->getTangent();
-	//} else {
+    if (fabs(epsC1) < SMALL_STRAIN) {
+	  Ecx = theMaterial[C_ONE]->getTangent();
+	} else {
 	  Ecx = fC1/(epsC1-epsC12p(0)); //-eSlip1
-	  if (Ecx > Ec) Ecx = Ec;
-	//}
-    //if (fabs(epsC2) < SMALL_STRAIN) {
-	//  Ecy = theMaterial[C_TWO]->getTangent();
-	//} else {
+	  //if (Ecx > Ec) Ecx = Ec;
+	}
+    if (fabs(epsC2) < SMALL_STRAIN) {
+	  Ecy = theMaterial[C_TWO]->getTangent();
+	} else {
 	  Ecy = fC2/(epsC2-epsC12p(1)); //-eSlip2
-	  if (Ecy > Ec) Ecy = Ec;
-	//}
+	  //if (Ecy > Ec) Ecy = Ec;
+	}
   
     Dcp(0,0) = Ecx;
     Dcp(1,1) = Ecy;
     Dcp(2,2) = Ecx * Ecy / ( Ecx + Ecy );
   
     // EbarS1, EbarS2, eq.i-5
-    if (fabs(epsSx) < SMALL_STRAIN) Ds1p(0,0) = rhox * (theMaterial[S_ONE]->getSecant());
+    if (fabs(epsSx) < SMALL_STRAIN) Ds1p(0,0) = rhox * (theMaterial[S_ONE]->getTangent()); //getSecant());
     else              Ds1p(0,0) = rhox * fSx / epsSx;
     
-    if (fabs(epsSy) < SMALL_STRAIN) Ds2p(0,0) = rhoy * (theMaterial[S_TWO]->getSecant());
+    if (fabs(epsSy) < SMALL_STRAIN) Ds2p(0,0) = rhoy * (theMaterial[S_TWO]->getTangent()); //getSecant());
     else              Ds2p(0,0) = rhoy * fSy / epsSy;
   
     Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
@@ -1696,6 +1750,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
 
 	secant_matrix = Dc + Ds1 + Ds2;
+
+	secant_matrix(0,2) = 0.5 * secant_matrix(0,2);
+	secant_matrix(1,2) = 0.5 * secant_matrix(1,2);
+	secant_matrix(2,2) = 0.5 * secant_matrix(2,2);
 
     // Calculate pseudo-prestress vector
 
@@ -1740,20 +1798,78 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   tangent_matrix = secant_matrix;
 
   // Calculate total stress from steel and concrete
-  if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
-  else                                        vcxy = (fC1 - fC2) * tan(cita) /(1+pow(tan(cita),2));
+  //if ( Par == 3 ){
+
+    if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
+    else                                        vcxy = (fC1-fC2)*tan(cita)/(1.0+pow(tan(cita),2.0));
+    
+    if (fabs(cita) <= DBL_EPSILON) {
+	  Tstress(0) = fC1 + rhox * fSx;
+	  Tstress(1) = fC2 + rhoy * fSy;
+	  Tstress(2) = vcxy;
+    } else {
+      Tstress(0) = fC1 - vcxy / tan(cita) + rhox * fSx;
+      Tstress(1) = fC1 - vcxy * tan(cita) + rhoy * fSy;
+      Tstress(2) = vcxy;
+    }
+
+  /*} else if (Par == 4) {
+
+    if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
+    else                                        vcxy = (fC2-fC1)*tan(cita)/(1.0+pow(tan(cita),2.0));
+    
+    if (fabs(cita) <= DBL_EPSILON) {
+	  Tstress(0) = fC2 + rhox * fSx;
+	  Tstress(1) = fC1 + rhoy * fSy;
+	  Tstress(2) = vcxy;
+    } else {
+      Tstress(0) = fC2 - vcxy / tan(cita) + rhox * fSx;
+      Tstress(1) = fC2 - vcxy * tan(cita) + rhoy * fSy;
+      Tstress(2) = vcxy;
+    }
+
+  } else {
+
+	//Tstress(0) = pow(cos(cita),2)*fC1 + pow(sin(cita),2)*fC2
+	//		   + pow(cos(angle1),2)*rhox*fSx + pow(cos(angle2),2)*rhoy*fSy;
+	//
+	//Tstress(1) = pow(sin(cita),2)*fC1 + pow(cos(cita),2)*fC2
+	//		   + pow(sin(angle1),2)*rhox*fSx + pow(sin(angle2),2)*rhoy*fSy;
+	//
+	//Tstress(2) = cos(cita)*sin(cita)*fC1 - cos(cita)*sin(cita)*fC2
+	//		   + cos(angle1)*sin(angle1)*rhox*fSx + cos(angle2)*sin(angle2)*rhoy*fSy;
+    if (fC1 < fC2) {
+	  if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
+      else                                        vcxy = (fC2-fC1)*tan(cita)/(1.0+pow(tan(cita),2.0));
+    
+      if (fabs(cita) <= DBL_EPSILON) {
+	    Tstress(0) = fC2 + rhox * fSx;
+	    Tstress(1) = fC1 + rhoy * fSy;
+	    Tstress(2) = vcxy;
+      } else {
+        Tstress(0) = fC2 - vcxy / tan(cita) + rhox * fSx;
+        Tstress(1) = fC2 - vcxy * tan(cita) + rhoy * fSy;
+        Tstress(2) = vcxy;
+      } 
+    }
+	else {
+	  if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
+      else                                        vcxy = (fC1-fC2)*tan(cita)/(1.0+pow(tan(cita),2.0));
+      
+      if (fabs(cita) <= DBL_EPSILON) {
+	    Tstress(0) = fC1 + rhox * fSx;
+	    Tstress(1) = fC2 + rhoy * fSy;
+	    Tstress(2) = vcxy;
+      } else {
+        Tstress(0) = fC1 - vcxy / tan(cita) + rhox * fSx;
+        Tstress(1) = fC1 - vcxy * tan(cita) + rhoy * fSy;
+        Tstress(2) = vcxy;
+      }
+    }
+
+  } */
   
-  if (fabs(cita) <= DBL_EPSILON) {
-	Tstress(0) = fC1 + rhox * fSx;
-	Tstress(1) = fC2 + rhoy * fSy;
-	Tstress(2) = 0.0;
-  } 
-  else {
-    Tstress(0) = fC1 - vcxy / tan(cita) + rhox * fSx;
-    Tstress(1) = fC1 - vcxy * tan(cita) + rhoy * fSy;
-    Tstress(2) = vcxy;
-  }
-  Tstress.addMatrixVector(0.0, tangent_matrix, strain, 1.0);
+  //Tstress.addMatrixVector(0.0, tangent_matrix, strain, 1.0);
   return Tstress;
 }
 
@@ -1857,8 +1973,8 @@ MCFTRCPlaneStress::determinefS(double strain, double fy, double E, double Esh)
 
   if ( strain <= 0.0 ) {
 	if (strain <= -epssh ){
-	  if (strain <= -epsu) fS = -0.1 * fy; // not fracture
-	  else                 fS = -fy+(strain-epssh)*Esh;
+	  if (strain <= -epsu) fS = -0.00001 * fy; // not fracture
+	  else                 fS = -fy+(strain+epssh)*Esh;
 	}
 	else {
 	  if (strain <= -epsy) fS = -fy;
@@ -1866,7 +1982,7 @@ MCFTRCPlaneStress::determinefS(double strain, double fy, double E, double Esh)
 	}
   } else {
     if (strain >= epssh ){
-	  if (strain >= epsu) fS = 0.1 * fy; 
+	  if (strain >= epsu) fS = 0.00001 * fy; 
 	  else                fS = fy+(strain-epssh)*Esh;
 	}
 	else {
