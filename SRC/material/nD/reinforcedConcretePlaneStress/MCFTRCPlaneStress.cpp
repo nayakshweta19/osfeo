@@ -167,7 +167,7 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 								   double   EPSC0,
 								   double   AGGR,
 								   double   XD,     double   YD):
-  NDMaterial(tag, ND_TAG_MCFTRCPlaneStress), 
+  NDMaterial(tag, ND_TAG_MCFTRCPlaneStress),
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rhox(ROU1), rhoy(ROU2), db1(DB1), db2(DB2),
   fpc(FPC), fyx(FYX), fyy(FYY), Es(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
   lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3), strain_vec(3),
@@ -185,6 +185,9 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 	CepsCtm_vec.Zero();
     CepsC12cm_vec.Zero();
 	CepsC12tm_vec.Zero();
+
+	fC1 = 0.0; epsC1 = 0.0;
+	fC2 = 0.0; epsC2 = 0.0;
 
     lastStress.Zero();  // add at 7.28    
     
@@ -279,6 +282,9 @@ MCFTRCPlaneStress::MCFTRCPlaneStress()
   CepsCtm_vec.Zero();
   CepsC12cm_vec.Zero();
   CepsC12tm_vec.Zero();
+
+  fC1 = 0.0; epsC1 = 0.0;
+  fC2 = 0.0; epsC2 = 0.0;
 
   theMaterial = 0;
   theResponses = 0;
@@ -749,9 +755,9 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   Tstrain(2) = 0.5*strain(2);
 
   double cita, citaS, citaE, temp_cita, citan1, citan2, citaLag, dCitaE, dCitaS, citaIC; // principal strain direction
-  double epsC1, epsC2, epsSx, epsSy, epsts;
+  double epsSx, epsSy, epsts;
   double eC1p=0.0, eC2p=0.0, eC1m=0.0, eC2m=0.0, eT1m=0.0, eT2m=0.0, eSlip1=0.0, eSlip2=0.0;
-  double fC1, fC1a, fC1b, fC2, fC2a, fC2b, fSx, fSy; //, fC1c
+  double fC1a, fC1b, fC2a, fC2b, fSx, fSy; //, fC1c
   double halfGammaOneTwo;
 
   double fcr   = 0.65 * pow(-fpc, 0.33); //0.31*sqrt(-fpc);      ----ftp
@@ -1019,7 +1025,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	if((epsC1 > DBL_EPSILON && epsC2 > DBL_EPSILON) || (epsC1 < -DBL_EPSILON && epsC2 < -DBL_EPSILON)) {
 
-      if(epsC1 > SMALL_STRAIN && epsC2 > SMALL_STRAIN) {
+      if(epsC1 > DBL_EPSILON && epsC2 > DBL_EPSILON) {
 		Par = 1;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 -- tensile for fc1, epsC1  
@@ -1261,7 +1267,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
 	  
-      else if (epsC1 < SMALL_STRAIN && epsC2 < SMALL_STRAIN) {
+      else if (epsC1 < DBL_EPSILON && epsC2 < DBL_EPSILON) {
 		Par = 2;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 Kupfer envelop for concrete
@@ -1353,7 +1359,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	    
 	    secant_matrix = Dc + Ds1 + Ds2;
 	    tangent_matrix = secant_matrix;
-		Tstress.Zero();
+		Tstress.addMatrixVector(0.0, tangent_matrix, Tstrain, 1.0);
 	    
 		return Tstress;
 
@@ -1377,8 +1383,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	    
 	    secant_matrix = Dc + Ds1 + Ds2;
 	    tangent_matrix = secant_matrix;
-	    Tstress.Zero();
-	    
+		Tstress.addMatrixVector(0.0, tangent_matrix, Tstrain, 1.0);
+
 	    return Tstress;
 
 	  }
@@ -1388,7 +1394,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     else {
 	  // determine the MCFT state
 	  //Tstress = determineMCFTstress(epsC1,epsC2);
-      if (epsC1 > SMALL_STRAIN && epsC2 < -SMALL_STRAIN) {
+      if (epsC1 > DBL_EPSILON && epsC2 < -DBL_EPSILON) {
 		Par = 3;
 	    //////////////////////////////////////////////////////////////////////////
 	    // C1 -- tensile for fc1, epsC1  
@@ -1526,7 +1532,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
       
-      else if (epsC1 < -SMALL_STRAIN && epsC2 > SMALL_STRAIN ) {
+      else if (epsC1 < -DBL_EPSILON && epsC2 > DBL_EPSILON ) {
 		Par = 4;
 		//////////////////////////////////////////////////////////////////////////
 	    // C1 -- compression 
