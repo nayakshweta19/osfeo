@@ -160,7 +160,7 @@ class MCFTRCPlaneStress : public NDMaterial
 	Vector epsCe_vec;
 	Vector epsCp_vec;
 	Vector epsSlip_vec;
-	Vector CepsC12p; // pre time step eps
+	
 	Vector epsC12p; // this time step eps
 	
 	Vector epsCcm_vec;
@@ -173,13 +173,15 @@ class MCFTRCPlaneStress : public NDMaterial
 	Vector CepsCe_vec;
 	Vector CepsCp_vec;
 	Vector CepsSlip_vec;
+
+	Vector CepsC12p; // pre time step eps
+
 	Vector CepsCcm_vec;
 	Vector CepsCtm_vec;
     Vector CepsC12cm_vec;
 	Vector CepsC12tm_vec;
 
-    double DDOne; // damage factor for concrete One
-    double DDTwo; // damage factor for concrete Two
+    double fC1, fC2, epsC1, epsC2;
 
 	Vector stress0_vec;
 	Vector stress_vec;
