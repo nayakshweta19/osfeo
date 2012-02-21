@@ -771,7 +771,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   int Par=0;
 
   // Get citaE based on Tstrain, eq. i-9...
-  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON ) {
+  if ( fabs(Tstrain(0)-Tstrain(1)) < SMALL_STRAIN ) {
 	if (fabs(Tstrain(2)) < SMALL_STRAIN) {
 	  citaE = 0;
 	} else {
@@ -930,7 +930,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	// citaS = cita, based on elastic strain part
 	// MCFT cita corresponding strain field, DSFM cita corresponding stress field
 	epsCe_vec = epsC_vec - epsCp_vec; // - epsSlip_vec
-    if ( fabs(epsCe_vec(0)-epsCe_vec(1)) < DBL_EPSILON) {
+    if ( fabs(epsCe_vec(0)-epsCe_vec(1)) < SMALL_STRAIN) {
       if (fabs(epsCe_vec(2)) < SMALL_STRAIN) {
 	    citaS = 0;
 	  } else {
@@ -1090,19 +1090,18 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+	      	/*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[S_ONE]->getStress();
-	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
-	      
+	      	fScrx = theMaterial[S_ONE]->getStress();
 	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[S_TWO]->getStress();
-	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
+	      	fScry = theMaterial[S_TWO]->getStress(); */
+	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+			fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
 	      	temp = rhox * (fScrx - fSx) * pow(cos(citan1), 2.0) 
@@ -1199,18 +1198,19 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+	      	/*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[S_ONE]->getStress();
-	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+	      	fScrx = theMaterial[S_ONE]->getStress();
+	      	
 	      
 	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[S_TWO]->getStress();
+			fScry = theMaterial[S_TWO]->getStress(); */
+	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1267,7 +1267,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
 	  
-      else if (epsC1 < DBL_EPSILON && epsC2 < DBL_EPSILON) {
+      else if (epsC1 < -DBL_EPSILON && epsC2 < -DBL_EPSILON) {
 		Par = 2;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 Kupfer envelop for concrete
@@ -1341,6 +1341,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     else if (fabs(epsC1) <= DBL_EPSILON || fabs(epsC2) <= DBL_EPSILON){  //  uniaxal performance
 	  opserr << "Uniaxial behavior path!" << endln;
 	  if (fabs(epsC1) <= DBL_EPSILON) {
+		opserr << "epsC1 is too small!" << endln;
 		double v = 0.22;
 	    double temp = Ec/(1.0-v*v);
 	    
@@ -1365,6 +1366,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
 	  else if (fabs(epsC2) <= DBL_EPSILON) {
+		opserr << "epsC2 is too small!" << endln;
 		double v = 0.22;
 	    double temp = Ec/(1.0-v*v);
 	    
@@ -1449,18 +1451,19 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+	      	/*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[S_ONE]->getStress();
-	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+	      	fScrx = theMaterial[S_ONE]->getStress();
+	      	
 	      
 	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[S_TWO]->getStress();
+			fScry = theMaterial[S_TWO]->getStress(); */
+	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1613,18 +1616,19 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      	epsScrx = epsSx + epsIncr * pow(cos(citan1), 2.0);
 	      	epsScry = epsSy + epsIncr * pow(cos(citan2), 2.0);
 	      
-	      	if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+	      	/*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
 	      	    return -1;
 	      	}
-	      	//fScrx = theMaterial[S_ONE]->getStress();
-	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+	      	fScrx = theMaterial[S_ONE]->getStress();
+	      	
 	      
 	      	if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
 	      	    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
 	      	    return -1;
 	      	}
-	      	//fScry = theMaterial[S_TWO]->getStress();
+			fScry = theMaterial[S_TWO]->getStress(); */
+	      	fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
 	      	fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
 	      
 	      	// eq.i-7
@@ -1731,13 +1735,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	  Ecx = theMaterial[C_ONE]->getTangent();
 	} else {
 	  Ecx = fC1/(epsC1-epsC12p(0)); //-eSlip1
-	  //if (Ecx > Ec) Ecx = Ec;
+	  if (Ecx > Ec) Ecx = Ec;
 	}
     if (fabs(epsC2) < SMALL_STRAIN) {
 	  Ecy = theMaterial[C_TWO]->getTangent();
 	} else {
 	  Ecy = fC2/(epsC2-epsC12p(1)); //-eSlip2
-	  //if (Ecy > Ec) Ecy = Ec;
+	  if (Ecy > Ec) Ecy = Ec;
 	}
   
     Dcp(0,0) = Ecx;
@@ -1804,7 +1808,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   tangent_matrix = secant_matrix;
 
   // Calculate total stress from steel and concrete
-  //if ( Par == 3 ){
+  if ( Par == 3 ){
 
     if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
     else                                        vcxy = (fC1-fC2)*tan(cita)/(1.0+pow(tan(cita),2.0));
@@ -1819,7 +1823,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
       Tstress(2) = vcxy;
     }
 
-  /*} else if (Par == 4) {
+  }
+  else if (Par == 4) {
 
     if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
     else                                        vcxy = (fC2-fC1)*tan(cita)/(1.0+pow(tan(cita),2.0));
@@ -1834,7 +1839,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
       Tstress(2) = vcxy;
     }
 
-  } else {
+  }
+  /*else {
 
 	//Tstress(0) = pow(cos(cita),2)*fC1 + pow(sin(cita),2)*fC2
 	//		   + pow(cos(angle1),2)*rhox*fSx + pow(cos(angle2),2)*rhoy*fSy;
@@ -1876,7 +1882,8 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   } */
   
   //Tstress.addMatrixVector(0.0, tangent_matrix, strain, 1.0);
-  return Tstress;
+  stress_vec = Tstress;
+  return stress_vec;
 }
 
 int
