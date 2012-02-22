@@ -615,6 +615,8 @@ MCFTSteel03::setResponse(const char **argv, int argc,
     theResponse = new MaterialResponse(this, 100, Vector(6));
   } else if (strcmp(argv[0],"getVar") == 0) {
     theResponse = new MaterialResponse(this, 101, Vector(6));
+  } else if (strcmp(argv[0],"state") == 0) {
+    theResponse = new MaterialResponse(this, 21, Vector(3));
   } else
     return this->UniaxialMaterial::setResponse(argv, argc, theOutput);
 
@@ -642,6 +644,12 @@ MCFTSteel03::getResponse(int responseID, Information &matInfo)
     (*theVector)(3) = Tstress;
     (*theVector)(4) = Ttangent;
 	//(*theVector)(5) = epscp;
+  } else if (responseID == 21){ // output
+    Vector *theVector = matInfo.theVector;
+	(*theVector)(0) = Tstrain;
+	(*theVector)(1) = Tstress;
+	(*theVector)(2) = Ttangent;
+	//(*theVector)(3) = epscp;
   } else
     return this->UniaxialMaterial::getResponse(responseID, matInfo);
 

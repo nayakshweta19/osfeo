@@ -547,6 +547,8 @@ MCFTConcrete03::setResponse(const char **argv, int argc,
     theResponse = new MaterialResponse(this, 100, Vector(8));
   } else if (strcmp(argv[0],"getVar") == 0) {
     theResponse = new MaterialResponse(this, 101, Vector(8));
+  } else if (strcmp(argv[0],"state") == 0) {
+    theResponse = new MaterialResponse(this, 21, Vector(4));
   } else
     return this->UniaxialMaterial::setResponse(argv, argc, theOutput);
 
@@ -578,6 +580,12 @@ MCFTConcrete03::getResponse(int responseID, Information &matInfo)
 	(*theVector)(5) = epscp;
 	(*theVector)(6) = betaD;
 	(*theVector)(7) = K;
+  } else if (responseID == 21){ // output
+    Vector *theVector = matInfo.theVector;
+	(*theVector)(0) = eps;
+	(*theVector)(1) = sig;
+	(*theVector)(2) = e;
+	(*theVector)(3) = epscp;
   } else
     return this->UniaxialMaterial::getResponse(responseID, matInfo);
 

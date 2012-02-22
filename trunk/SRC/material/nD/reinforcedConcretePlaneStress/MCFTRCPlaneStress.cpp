@@ -498,10 +498,7 @@ MCFTRCPlaneStress::getCopy(const char *type)
 Response*
 MCFTRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 {
-#ifdef DEBUG
-	opserr << "MCFTRCPlaneStress::setResponse(...)" << endln;
-#endif
-	//Response *theResponse =0;
+    //Response *theResponse =0;
 	const char *matType = this->getType();
 
 	output.tag("NdMaterialOutput");
@@ -514,6 +511,14 @@ MCFTRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 		return new MaterialResponse(this, 2, this->getStrain());
 	//else if (strcmp(argv[0], "state") == 0)
 		//return new MaterialResponse(this, 3, this->getState());
+    else if (strcmp(argv[0], "steel1") == 0)
+        return theMaterial[S_ONE]->setResponse(argv+1, argc-1, output);
+	else if (strcmp(argv[0], "steel2") == 0)
+		return theMaterial[S_TWO]->setResponse(argv+1, argc-1, output);
+	else if (strcmp(argv[0], "concrete1") == 0)
+		return theMaterial[C_ONE]->setResponse(argv+1, argc-1, output);
+	else if (strcmp(argv[0], "concrete2") == 0)
+		return theMaterial[C_TWO]->setResponse(argv+1, argc-1, output);
 	else
 		return 0;
 }
@@ -521,9 +526,7 @@ MCFTRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 int
 MCFTRCPlaneStress::getResponse (int responseID, Information &matInfo)
 {
-#ifdef DEBUG
-	opserr << "MCFTRCPlaneStress::getResponse(...)" << endln;
-#endif
+
 	switch (responseID) {
 	case -1:
 		return -1;
@@ -539,6 +542,22 @@ MCFTRCPlaneStress::getResponse (int responseID, Information &matInfo)
 		//if (matInfo.theVector != 0)
 		//	*(matInfo.theVector) = getState();
 		return 0;
+	case 11:
+		if (matInfo.theVector != 0)
+			return theMaterial[S_ONE]->getResponse(21, matInfo);
+
+	case 12:
+		if (matInfo.theVector != 0)
+			return theMaterial[S_TWO]->getResponse(21, matInfo);
+
+	case 13:
+		if (matInfo.theVector != 0)
+			return theMaterial[C_ONE]->getResponse(21, matInfo);
+
+	case 14:
+		if (matInfo.theVector != 0)
+			return theMaterial[C_TWO]->getResponse(21, matInfo);
+
 	default:
 		return -1;
 	}
@@ -757,7 +776,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   double cita, citaS, citaE, temp_cita, citan1, citan2, citaLag, dCitaE, dCitaS, citaIC; // principal strain direction
   double epsSx, epsSy, epsts;
   double eC1p=0.0, eC2p=0.0, eC1m=0.0, eC2m=0.0, eT1m=0.0, eT2m=0.0, eSlip1=0.0, eSlip2=0.0;
-  double fC1a, fC1b, fC2a, fC2b, fSx, fSy; //, fC1c
+  double fC1a, fC1b, fC1c, fC2a, fC2b, fC2c, fSx, fSy; //
   double halfGammaOneTwo;
 
   double fcr   = 0.65 * pow(-fpc, 0.33); //0.31*sqrt(-fpc);      ----ftp
@@ -1023,9 +1042,9 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	bool fC1converged, fC2converged;
 	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
 
-	if((epsC1 > DBL_EPSILON && epsC2 > DBL_EPSILON) || (epsC1 < -DBL_EPSILON && epsC2 < -DBL_EPSILON)) {
+	if((epsC1 > 0 && epsC2 > 0) || (epsC1 < 0 && epsC2 < 0)) {
 
-      if(epsC1 > DBL_EPSILON && epsC2 > DBL_EPSILON) {
+      if(epsC1 > 0 && epsC2 > 0) {
 		Par = 1;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 -- tensile for fc1, epsC1  
@@ -1041,16 +1060,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
         //  case 2: eq. i-35, 36
         temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
         fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
-  	    
-        //temp = max(fC1a,fC1b); // eq.i-38 /fC1
+  	    temp = max(fC1a,fC1b); // eq.i-38 /fC1
   	    
         // eq.i-5   // for positive value
-        //fC1c = max(rhox* (fyx - fSx) * pow(cos(citan1), 2.0), 0.0)
-  	    //     + max(rhoy* (fyy - fSy) * pow(cos(citan2), 2.0), 0.0);
-        
-        //fC1 = min(temp, fC1c);
-        
-	    double fC1temp = max(fC1a, fC1b);
+        fC1c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
+  	         + rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+        double fC1max = min(temp, fC1c);
 	    
 	    theData(0) = eC1m;  // 
 	    theData(1) = eT1m;  // 
@@ -1068,7 +1083,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      return ret;
 	    }
 	    temp = theMaterial[C_ONE]->getStress();
-	    fC1 = min(fC1temp, temp);
+	    fC1 = min(fC1max, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC1 > epscr) { //checkAtCrack(); 
@@ -1157,8 +1172,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
         //  case 2: eq. i-35, 36
         temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
         fC2b = fcr/(1+sqrt(2.2/temp*epsC2));
-        
-	    double fC2temp = max(fC1a, fC1b);
+		temp = max(fC2a,fC2b); // eq.i-38 /fC1
+
+		// eq.i-5   // for positive value
+		fC2c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
+			 + rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+		double fC2max = min(temp, fC2c);
 	    
 	    theData(0) = eC2m;  // 
 	    theData(1) = eT2m;  // 
@@ -1176,7 +1195,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      return ret;
 	    }
 	    temp = theMaterial[C_TWO]->getStress();
-	    fC2 = min(fC2temp, temp);
+	    fC2 = min(fC2max, temp);
 	    
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC2 > epscr) { //checkAtCrack(); 
@@ -1246,7 +1265,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      // optional 1
 	      vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
 	      
-	      // if vci > vcimax , decrease fC1
+	      // if vci > vcimax , decrease fC2
 	      if (fabs(vci) > vcimax) {
 	      	fC2 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
 	      }
@@ -1267,7 +1286,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
 	  
-      else if (epsC1 < -DBL_EPSILON && epsC2 < -DBL_EPSILON) {
+      else if (epsC1 < 0 && epsC2 < 0) {
 		Par = 2;
 		//////////////////////////////////////////////////////////////////////////
 		// C1 Kupfer envelop for concrete
@@ -1338,7 +1357,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	  
 	} 
 	
-    else if (fabs(epsC1) <= DBL_EPSILON || fabs(epsC2) <= DBL_EPSILON){  //  uniaxal performance
+    /*else if (fabs(epsC1) <= 0 || fabs(epsC2) <= 0){  //  uniaxal performance
 	  opserr << "Uniaxial behavior path!" << endln;
 	  if (fabs(epsC1) <= DBL_EPSILON) {
 		opserr << "epsC1 is too small!" << endln;
@@ -1389,14 +1408,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	    return Tstress;
 
-	  }
+	  } 
 
-	}
+	}*/
     
     else {
 	  // determine the MCFT state
 	  //Tstress = determineMCFTstress(epsC1,epsC2);
-      if (epsC1 > DBL_EPSILON && epsC2 < -DBL_EPSILON) {
+      if (epsC1 > 0 && epsC2 < 0) {
 		Par = 3;
 	    //////////////////////////////////////////////////////////////////////////
 	    // C1 -- tensile for fc1, epsC1  
@@ -1412,8 +1431,13 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
         //  case 2: eq. i-35, 36
         temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
         fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
-	    double fC1temp = max(fC1a, fC1b);
+	    temp = max(fC1a, fC1b);
 	    
+		// eq.i-5   // for positive value
+		fC1c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
+			+ rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+		double fC1max = min(temp, fC1c);
+
 	    theData(0) = eC1m;  // 
 	    theData(1) = eT1m;  // 
 	    //theData(2) = epsC1;  // 
@@ -1429,7 +1453,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      return ret;
 	    }
 	    temp = theMaterial[C_ONE]->getStress();
-	    fC1 = min(fC1temp, temp);
+	    fC1 = min(fC1max, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC1 > epscr) { //checkAtCrack(); 
@@ -1535,7 +1559,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 	  } 
       
-      else if (epsC1 < -DBL_EPSILON && epsC2 > DBL_EPSILON ) {
+      else if (epsC1 < 0 && epsC2 > 0 ) {
 		Par = 4;
 		//////////////////////////////////////////////////////////////////////////
 	    // C1 -- compression 
@@ -1576,7 +1600,12 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
         //  case 2: eq. i-35, 36
         temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
         fC2b = fcr/(1+sqrt(2.2/temp*epsC2));
-	    double fC2temp = max(fC2a, fC2b);
+		temp = max(fC2a,fC2b); // eq.i-38 /fC1
+
+		// eq.i-5   // for positive value
+		fC2c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
+			+ rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+		double fC2max = min(temp, fC2c);
 	    
 	    theData(0) = eC2m;  // 
 	    theData(1) = eT2m;  // 
@@ -1594,7 +1623,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      return ret;
 	    }
 	    temp = theMaterial[C_TWO]->getStress();
-	    fC2 = min(fC2temp, temp);
+	    fC2 = min(fC2max, temp);
 
 		//////////////////////////////////////////////////////////////////////////
 		if(epsC2 > epscr) { //checkAtCrack(); 
@@ -1664,7 +1693,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	      // optional 1
 	      vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
 	      
-	      // if vci > vcimax , decrease fC1
+	      // if vci > vcimax , decrease fC2
 	      if (fabs(vci) > vcimax) {
 	      	fC2 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
 	      }
@@ -1840,7 +1869,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     }
 
   }
-  /*else {
+  else {
 
 	//Tstress(0) = pow(cos(cita),2)*fC1 + pow(sin(cita),2)*fC2
 	//		   + pow(cos(angle1),2)*rhox*fSx + pow(cos(angle2),2)*rhoy*fSy;
@@ -1879,10 +1908,14 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
       }
     }
 
-  } */
-  
+  } 
+
+  opserr << "cita = " << cita << ";\t citaS = " << citaS << ";\t citaE = " << citaE <<endln;
+
   //Tstress.addMatrixVector(0.0, tangent_matrix, strain, 1.0);
+
   stress_vec = Tstress;
+
   return stress_vec;
 }
 
