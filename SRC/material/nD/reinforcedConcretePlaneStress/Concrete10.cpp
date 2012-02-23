@@ -34,7 +34,7 @@
 // adapted to FEDEAS material library
 // by D. Sze and Filip C. Filippou in 1994
 //-----------------------------------------------------------------------
-
+// and this model is abstracted from the NonlinearBS/NS models.
 
 #include <stdlib.h>
 #include <Concrete10.h>

@@ -34,6 +34,7 @@
 ! adapted to FEDEAS material library
 ! by D. Sze and Filip C. Filippou in 1994
 -----------------------------------------------------------------------*/
+// and this model is abstracted from the NonlinearBS/NS models.
 
 #ifndef Concrete10_h
 #define Concrete10_h
