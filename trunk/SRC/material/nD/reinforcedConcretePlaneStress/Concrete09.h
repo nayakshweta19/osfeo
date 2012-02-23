@@ -34,6 +34,7 @@
 ! adapted to FEDEAS material library
 ! by D. Sze and Filip C. Filippou in 1994
 -----------------------------------------------------------------------*/
+// and this model is focus on the utility concrete02 for CSMM set routines.
 
 #ifndef Concrete09_h
 #define Concrete09_h
