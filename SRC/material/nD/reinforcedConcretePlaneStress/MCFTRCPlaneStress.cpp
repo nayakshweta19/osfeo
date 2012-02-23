@@ -542,22 +542,6 @@ MCFTRCPlaneStress::getResponse (int responseID, Information &matInfo)
 		//if (matInfo.theVector != 0)
 		//	*(matInfo.theVector) = getState();
 		return 0;
-	case 11:
-		if (matInfo.theVector != 0)
-			return theMaterial[S_ONE]->getResponse(21, matInfo);
-
-	case 12:
-		if (matInfo.theVector != 0)
-			return theMaterial[S_TWO]->getResponse(21, matInfo);
-
-	case 13:
-		if (matInfo.theVector != 0)
-			return theMaterial[C_ONE]->getResponse(21, matInfo);
-
-	case 14:
-		if (matInfo.theVector != 0)
-			return theMaterial[C_TWO]->getResponse(21, matInfo);
-
 	default:
 		return -1;
 	}
@@ -1037,7 +1021,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	eT2m = tempStrain(1);
 	halfGammaOneTwo = tempStrain(2);
 
-	int status=0; // status to check if iteration satisfied eq.i-7, Par for different path
+	int status=0; // status to check if iteration satisfied eq.i-7
 	double tolerance = SMALL_STRESS; // tolerance for iteration
 	bool fC1converged, fC2converged;
 	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
@@ -1435,7 +1419,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	    
 		// eq.i-5   // for positive value
 		fC1c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
-			+ rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+		     + rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
 		double fC1max = min(temp, fC1c);
 
 	    theData(0) = eC1m;  // 
@@ -1604,7 +1588,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
 		// eq.i-5   // for positive value
 		fC2c = fabs(rhox* (fyx - fSx) * pow(cos(citan1), 2.0)
-			+ rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
+		     + rhoy* (fyy - fSy) * pow(cos(citan2), 2.0) );
 		double fC2max = min(temp, fC2c);
 	    
 	    theData(0) = eC2m;  // 
@@ -1758,7 +1742,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	tempStrain.addMatrixVector(0.0, T_cita, epsSlip_vec, 1.0);
 	eSlip1 = tempStrain(0);
 	eSlip2 = tempStrain(1);
-	halfGammaOneTwo = tempStrain(2); // should be somve value need further check
+	halfGammaOneTwo = tempStrain(2); // should be some value need further check
 
     if (fabs(epsC1) < SMALL_STRAIN) {
 	  Ecx = theMaterial[C_ONE]->getTangent();
@@ -1837,11 +1821,9 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   tangent_matrix = secant_matrix;
 
   // Calculate total stress from steel and concrete
-  if ( Par == 3 ){
+  /*if ( Par == 3 ){
 
-    if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
-    else                                        vcxy = (fC1-fC2)*tan(cita)/(1.0+pow(tan(cita),2.0));
-    
+    vcxy = (fC1-fC2)*sin(2.0*cita)/2.0;
     if (fabs(cita) <= DBL_EPSILON) {
 	  Tstress(0) = fC1 + rhox * fSx;
 	  Tstress(1) = fC2 + rhoy * fSy;
@@ -1855,9 +1837,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   }
   else if (Par == 4) {
 
-    if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
-    else                                        vcxy = (fC2-fC1)*tan(cita)/(1.0+pow(tan(cita),2.0));
-    
+    vcxy = (fC2-fC1)*sin(2.0*cita)/2.0;
     if (fabs(cita) <= DBL_EPSILON) {
 	  Tstress(0) = fC2 + rhox * fSx;
 	  Tstress(1) = fC1 + rhoy * fSy;
@@ -1880,9 +1860,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 	//Tstress(2) = cos(cita)*sin(cita)*fC1 - cos(cita)*sin(cita)*fC2
 	//		   + cos(angle1)*sin(angle1)*rhox*fSx + cos(angle2)*sin(angle2)*rhoy*fSy;
     if (fC1 < fC2) {
-	  if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
-      else                                        vcxy = (fC2-fC1)*tan(cita)/(1.0+pow(tan(cita),2.0));
-    
+	  vcxy = (fC2-fC1)*sin(2.0*cita)/2.0;
       if (fabs(cita) <= DBL_EPSILON) {
 	    Tstress(0) = fC2 + rhox * fSx;
 	    Tstress(1) = fC1 + rhoy * fSy;
@@ -1894,9 +1872,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
       } 
     }
 	else {
-	  if (fabs(fabs(cita)-PI/2.0) <= DBL_EPSILON) vcxy = 0.0;
-      else                                        vcxy = (fC1-fC2)*tan(cita)/(1.0+pow(tan(cita),2.0));
-      
+	  vcxy = (fC1-fC2)*sin(2.0*cita)/2.0;
       if (fabs(cita) <= DBL_EPSILON) {
 	    Tstress(0) = fC1 + rhox * fSx;
 	    Tstress(1) = fC2 + rhoy * fSy;
@@ -1908,7 +1884,10 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
       }
     }
 
-  } 
+  }  */
+  Tstress(0) = fC1 * pow(cos(cita),2.0) + fC2 * pow(sin(cita),2.0) + rhox*fSx;
+  Tstress(1) = fC1 * pow(sin(cita),2.0) + fC2 * pow(cos(cita),2.0) + rhoy*fSy;
+  Tstress(2) = (fC1-fC2)*sin(2.0*cita)/2.0;
 
   opserr << "cita = " << cita << ";\t citaS = " << citaS << ";\t citaE = " << citaE <<endln;
 
