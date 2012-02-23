@@ -2322,7 +2322,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
     return TCL_ERROR;
   	}
 
-	else if (strcmp(argv[1],"ManderConcreteB01") == 0) {
+	else if (strcmp(argv[1],"ManderConcreteC01") == 0) {
   	  void *theMat = OPS_ManderConcreteC01();
       if (theMat != 0) 
     theMaterial = (UniaxialMaterial *)theMat;
