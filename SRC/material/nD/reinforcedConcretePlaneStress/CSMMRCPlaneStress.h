@@ -162,7 +162,7 @@ class CSMMRCPlaneStress : public NDMaterial
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
  
-	double CSMMRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p);
+	//double CSMMRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p);
 };
 
 #endif

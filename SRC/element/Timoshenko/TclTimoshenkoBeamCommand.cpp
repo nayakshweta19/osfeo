@@ -65,7 +65,7 @@ TclModelBuilder_addTimoshenko2d01(ClientData clientData, Tcl_Interp *interp,
 	if (argc < 8) {			//8
 	  opserr << "WARNING insufficient arguments\n";
 	  printCommand(argc, argv);
-	  opserr << "Want: element Timoshenko2d01 eleTag? iNode? jNode? secTag? transfTag?\n";
+	  opserr << "Want: element Timoshenko2d01 eleTag? iNode? jNode? secTag? transfTag? C1?\n";
 	  return TCL_ERROR;
 	}
 
