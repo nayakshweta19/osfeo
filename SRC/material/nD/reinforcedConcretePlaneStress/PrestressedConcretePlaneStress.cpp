@@ -164,8 +164,8 @@ PrestressedConcretePlaneStress::PrestressedConcretePlaneStress (int      tag,
   steelStatus = 0;
   dirStatus = 0;
   G12 = 0;
-  citaStrain = 10;
-  citaStress = 10;
+  citaStrain = 0.0;
+  citaStress = 0.0;
   
   TOneReverseStatus = 0;         
   TOneNowMaxComStrain = 0.0;
