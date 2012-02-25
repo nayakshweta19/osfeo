@@ -30,18 +30,19 @@ uniaxialMaterial    SteelZ01  12   $wfy    $wE  $wfc  $rou2
 
 # UniaxialMaterial: concreteZ01
 # ConcreteZ01                tag   f'c     ec0   
-#uniaxialMaterial ConcreteZ01  13 [expr -$wfc] -0.0025  
-#uniaxialMaterial ConcreteZ01  14 [expr -$wfc] -0.0025 
-#uniaxialMaterial ConcreteL02  13 [expr -$wfc] -0.0025  
-#uniaxialMaterial ConcreteL02  14 [expr -$wfc] -0.0025 
-uniaxialMaterial Concrete09 13 -20.1  -0.0021  -5.6  -0.03  0.14  +2.6  +1300 
-uniaxialMaterial Concrete09 14 -20.1  -0.0021  -5.6  -0.03  0.14  +2.6  +1300 
-
+#uniaxialMaterial ConcreteZ01  13 [expr -$wfc] -0.002  
+#uniaxialMaterial ConcreteZ01  14 [expr -$wfc] -0.002 
+#uniaxialMaterial ConcreteL02  13 [expr -$wfc] -0.002  
+#uniaxialMaterial ConcreteL02  14 [expr -$wfc] -0.002 
+#uniaxialMaterial Concrete09 13 -20.1  -0.0021  -5.6  -0.03  0.14  +2.6  +1300 
+#uniaxialMaterial Concrete09 14 -20.1  -0.0021  -5.6  -0.03  0.14  +2.6  +1300 
+uniaxialMaterial ManderConcreteC01 13 [expr -$wfc] -0.002 30000. 0.40 0.60 [expr 0.1*$wfc] 8.0e-5 0.5 2.9 -spall 2.1
+uniaxialMaterial ManderConcreteC01 14 [expr -$wfc] -0.002 30000. 0.40 0.60 [expr 0.1*$wfc] 8.0e-5 0.5 2.9 -spall 2.1
 set pi 3.141592654;
 # NDMaterial: ReinforceConcretePlaneStress
 #                                        tag    rho   s1 s2 c1 c2    angle1         angle2         rou1   rou2  fpc  fy  E0
 #nDMaterial FAReinforcedConcretePlaneStress 2  2.7e-6 11 12 13 14 [expr 0.0*$pi]  [expr 0.5*$pi]   $rou1 $rou2  $wfc $wfy $wE 0.002
-nDMaterial CSMMRCPlaneStress 2  2.7e-6 11 12 13 14 [expr 0.0*$pi]  [expr 0.5*$pi]   $rou1 $rou2  $wfc $wfy $wE 0.002
+nDMaterial CSMMRCPlaneStress 2  2.7e-6 11 12 13 14 [expr 0.0*$pi]  [expr 0.5*$pi]   $rou1 $rou2  $wfc $wfy $wE -0.002
 
 # Define geometry
 # ---------------
@@ -394,7 +395,7 @@ set iDmax6 [expr 1.1*$in/$mm];  # 27.94mm
 #                0.08   -0.08  0.12   -0.12   0.3   -0.3   0.4   -0.4   0.6   -0.6   1.1   -1.1
 set numSteps     {   508   1016  1270    1524  2667   3810  4445   5080  6350   7620 10795  13970 }
 set numIters     {   100    200   200     300   600    400   200    200   200    200   500    500 }
-set increments   { 0.004 -0.004 0.004  -0.004 0.004 -0.004 0.004 -0.004 0.004 -0.004 0.004 -0.004 }
+set increments   { 0.4 -0.4 0.4  -0.4 0.004 -0.004 0.004 -0.004 0.004 -0.004 0.004 -0.004 }
  
 for { set i 0 } { $i<12 } { incr i 1 } {
     set numStep [lindex $numSteps $i]

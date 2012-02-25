@@ -3,8 +3,8 @@ wipe;
 model basic -ndm 2 -ndf 2
 
 # define UNITS
-set in 1.; # define basic units â€” output units
-set kip 1.; # define basic units â€” output units
+set in 1.; # define basic units ¡ª output units
+set kip 1.; # define basic units ¡ª output units
 set sec 1.; # define basic units - output units
 set ft  [expr 12.*$in]; # define engineering units
 set ksi [expr $kip/pow($in,2)];
@@ -64,7 +64,7 @@ set damage1 0.0; # damage parameter for hysteretic model
 set damage2 0.0; # damage parameter for hysteretic model
 set betaMUsteel 0.0; # degraded unloading stiffness for hysteretic material based on MUA(-beta)
 
-# steel02 and steel03 parameters â€” baseline
+# steel02 and steel03 parameters ¡ª baseline
 set R0 18;  # control the transition from elastic to plastic branches,
 set cR1 0.925; # control the transition from elastic to plastic branches,
 set cR2 0.15; # control the transition from elastic to plastic branches
@@ -632,7 +632,7 @@ set timeIncr 0.00004;
 set displacement1 "Series -dt $timeIncr -filePath $DHfile1 -factor 100.01";
 pattern MultipleSupport 2 {
 	groundMotion 2 Plain -disp $displacement1
-	# Â« Middle eight nodes of the top slab - horizontal Â»
+	# ? Middle eight nodes of the top slab - horizontal ?
 	#$nodeTag Sdirn SgMotionTag
 	imposedMotion 80102 1 2
 	imposedMotion 80202 1 2

@@ -1,14 +1,14 @@
 # Create ModelBuilder with 2 dimensions and 2 DOF/node
-# ä¿®æ”¹è‡ª SW4 for nonlinearBS material
-# æ”¹ä¸ºä¸€ä¸ªå•å…ƒæ°´å¹³è·è½½
-# ä¸ºäº†å¯¹æ¯”å¼¹æ€§å¤šè½´æœ¬æ„å¯¹quadå•å…ƒçš„åˆšåº¦ï¼Œå¢åŠ äº†å¼¹æ€§å¤šè½´æœ¬æ„
+# ĞŞ¸Ä×Ô SW4 for nonlinearBS material
+# ¸ÄÎªÒ»¸öµ¥ÔªË®Æ½ºÉÔØ
+# ÎªÁË¶Ô±Èµ¯ĞÔ¶àÖá±¾¹¹¶Ôquadµ¥ÔªµÄ¸Õ¶È£¬Ôö¼ÓÁËµ¯ĞÔ¶àÖá±¾¹¹
 
 wipe;
 model basic -ndm 2 -ndf 2
 
 # define UNITS
-set in 25.4; # define basic units â€” output units  mm
-set kip 4453.74; # define basic units â€” output units  N
+set in 25.4; # define basic units ¡ª output units  mm
+set kip 4453.74; # define basic units ¡ª output units  N
 set sec 1.; # define basic units - output units
 set ft  [expr 12.*$in]; # define engineering units
 set ksi [expr $kip/pow($in,2)];
@@ -67,7 +67,7 @@ set damage1 0.1; # damage parameter for hysteretic model
 set damage2 0.2; # damage parameter for hysteretic model
 set betaMUsteel 0.4; # degraded unloading stiffness for hysteretic material based on MUA(-beta)
 
-# steel02 and steel03 parameters â€” baseline
+# steel02 and steel03 parameters ¡ª baseline
 set R0 18;  # control the transition from elastic to plastic branches,
 set cR1 0.925; # control the transition from elastic to plastic branches,
 set cR2 0.15; # control the transition from elastic to plastic branches

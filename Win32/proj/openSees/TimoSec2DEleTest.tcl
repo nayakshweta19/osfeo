@@ -97,14 +97,14 @@ set eleTag 2001
 #forceBeamColumn $eleTag $iNode $jNode $numIntgrPts $secTag $transfTag
 #element nonlinearBeamColumn 2001 1001 1002 $np $beamSecTag $transfTag;
 #element dispBeamColumn 2001 1001 1002 $np $beamSecTag $transfTag;
-#element Timoshenko2d01 2001 1001 1002 $np $beamSecTag $transfTag;
+element Timoshenko2d01 2001 1001 1002 $np $beamSecTag $transfTag;
 #element beamWithHinges $eleTag $iNode $jNode $secTagI $Lpi $secTagJ $Lpj $E $A $Iz $Iy $G $J $transfTag
 set Lpi 0.16;
 set Lpj 0.16;
 set E 2.100000E+011;
 set A 2.480000E-003;
 set Iz 4.510000E-005;
-element beamWithHinges $eleTag $iNode $jNode $beamSecTag $Lpi $beamSecTag $Lpj $E $A $Iz $transfTag
+#element beamWithHinges $eleTag $iNode $jNode $beamSecTag $Lpi $beamSecTag $Lpj $E $A $Iz $transfTag
 
 # Create recorder
 recorder Node -file data/Mphi.out -time -node 1002 -dof 1 2 3 disp;	# output moment (col 1) & curvature (col 2)
