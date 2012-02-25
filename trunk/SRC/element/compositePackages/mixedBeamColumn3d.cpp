@@ -1333,7 +1333,7 @@ Response* mixedBeamColumn3d::setResponse(const char **argv, int argc,
   Response *theResponse = 0;
 
   output.tag("ElementOutput");
-  output.attr("eleType","ForceBeamColumn3d");
+  output.attr("eleType","mixedBeamColumn3d");
   output.attr("eleTag",this->getTag());
   output.attr("node1",connectedExternalNodes[0]);
   output.attr("node2",connectedExternalNodes[1]);

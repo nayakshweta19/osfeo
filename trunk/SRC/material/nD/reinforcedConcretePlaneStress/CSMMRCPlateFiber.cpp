@@ -186,8 +186,8 @@ CSMMRCPlateFiber ::CSMMRCPlateFiber (int      tag,
     steelStatus = 0;
     dirStatus = 0;
     G12 = 0;
-    citaStrain = 10;
-    citaStress = 10;
+    citaStrain = 0.0;
+    citaStress = 0.0;
     
     TOneReverseStatus = 0;         
     TOneNowMaxComStrain = 0.0;
@@ -860,12 +860,13 @@ int CSMMRCPlateFiber::determineTrialStress(void)
   
   if ( status == 0 ) {  // does not get converged after iteration
       //getAngleError(citaFinal);
-      getAngleError(citaR+10./180.*PI);  // stress angle delay with 10 degree
+      getAngleError(citaR);  // stress angle delay with 10 degree
+	  citaFinal = citaR+10./180.*PI;
       // if ( minError > 0.05 )
       //    opserr << "CSMMRCPlateFiber::determineTrialStress: Warning, failure to get converged principal stress direction\n";
   } 
   
-  //citaStress = citaFinal;  // assign value for output in the screen
+  citaStress = citaFinal;  // assign value for output in the screen
   
   return 0;
 }

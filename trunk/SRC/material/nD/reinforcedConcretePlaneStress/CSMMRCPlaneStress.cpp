@@ -186,8 +186,8 @@ CSMMRCPlaneStress ::CSMMRCPlaneStress (int      tag,
     steelStatus = 0;
     dirStatus = 0;
     G12 = 0;
-    citaStrain = 10;
-    citaStress = 10;
+    citaStrain = 0.0;
+    citaStress = 0.0;
     
     TOneReverseStatus = 0;         
     TOneNowMaxComStrain = 0.0;
@@ -592,8 +592,8 @@ CSMMRCPlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\tE0: " << E0 << endln;
 	//*/
 
-	//s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159*180.0 << endln;
-	//s <<  "Principal Stress: citaStress = "<< citaStress/3.14159*180.0 << endln;
+	//s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159265453*180.0 << endln;
+	//s <<  "Principal Stress: citaStress = "<< citaStress/3.14159265453*180.0 << endln;
 	//s << " v12 = " << miu12 << " v21 = " << miu21 << endln;	
 	//s << " steelStatus " << steelStatus << endln;
 	//s << " dirStatus " << dirStatus << endln;
@@ -871,11 +871,12 @@ CSMMRCPlaneStress::determineTrialStress(void)
   if ( status == 0 ) {  // does not get converged after iteration
       //getAngleError(citaFinal);
       getAngleError(citaR);
+	  citaFinal = citaR + 10./180.*PI;
       // if ( minError > 0.05 )
       //    opserr << "CSMMRCPlaneStress::determineTrialStress: Warning, failure to get converged principal stress direction\n";
   } 
   
-  //citaStress = citaFinal;  // assign value for output in the screen
+  citaStress = citaFinal;  // assign value for output in the screen
   
   return 0;
 }
