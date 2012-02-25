@@ -230,8 +230,8 @@ mass 43 $m $m 0
 mass 44 $m $m 0
 mass 45 $m $m 0
 # define earthquake excitation
-set inputAccel "Path -filePath STN_run3_input_accel.TXT -dt 0.005 -factor [expr -30000.0]"
-pattern UniformExcitation 2 1 -accel $inputAccel
+timeSeries Path 1  -dt 0.005 -filePath STN_run3_input_accel.TXT -factor -30000.0
+pattern UniformExcitation 2 1 -accel 1
 # define damping
 set dampingratio 0.04;
 set a1 [expr $dampingratio*0.0073];
