@@ -383,6 +383,10 @@ TclModelBuilder_addTimoshenko2d02(ClientData clientData, Tcl_Interp *interp,  in
 	TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
+TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,  int argc, 
+	TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
 TclModelBuilder_Pipe3(ClientData clientData, Tcl_Interp *interp, int argc,
 					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
@@ -1197,13 +1201,16 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
-
   else if (strcmp(argv[1],"Timoshenko2d02") == 0) {
 	  int result = TclModelBuilder_addTimoshenko2d02(clientData, interp, argc, argv,
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
-
+  else if (strcmp(argv[1],"Timoshenko2d03") == 0) {
+	  int result = TclModelBuilder_addTimoshenko2d03(clientData, interp, argc, argv,
+		  theTclDomain, theTclBuilder);
+	  return result;
+  }
   else if (strcmp(argv[1], "TimoshenkoBeamColumn") == 0) {
 	  int result = TclModelBuilder_addTimoshenkoBeamColumn(clientData, interp, argc, argv,
 		  theTclDomain, theTclBuilder);

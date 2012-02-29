@@ -89,6 +89,7 @@ class mixedBeamColumn2dS : public Element
     // public methods for output
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
+	int displaySelf(Renderer &theViewer, int displayMode, float fact);
     void Print(OPS_Stream &s, int flag = 0);
     friend OPS_Stream &operator<<(OPS_Stream &s, mixedBeamColumn2dS &E);
 
