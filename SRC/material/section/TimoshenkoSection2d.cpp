@@ -89,7 +89,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
  	  Qy += zLoc*Area;
  	  a  += Area;
       
- 	  matData[i*3] = -yLoc;
+ 	  matData[i*3] =  yLoc;
  	  matData[i*3+1] = zLoc;
  	  matData[i*3+2] = Area;
       
@@ -97,7 +97,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
       if (theMaterials[i] == 0)
          opserr << "TimoshenkoSection2d::TimoshenkoSection2d -- failed to get copy of beam fiber" << endln;
     }
-    yBar = -Qz/a;
+    yBar = Qz/a;
     zBar = Qy/a;
   } 
   
