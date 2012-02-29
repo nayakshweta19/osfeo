@@ -115,6 +115,8 @@ extern void *OPS_NewShellNL(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
+extern void * OPS_mixedBeamColumn2dS(void);
+//extern void * OPS_mixedBeamColumn3dS(void);
 //////////////////////////////////////////////////////////////////////////
 
 extern int TclModelBuilder_addFeapTruss(ClientData clientData, Tcl_Interp *interp,  int argc,
@@ -780,6 +782,17 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
   else if ((strcmp(argv[1],"mixedBeamColumn2d") == 0) || (strcmp(argv[1],"mixedBC2d") == 0)) {
     
     void *theEle = OPS_mixedBeamColumn2d();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }    
+  }
+
+  else if ((strcmp(argv[1],"mixedBeamColumn2dS") == 0) || (strcmp(argv[1],"mixedBC2dS") == 0)) {
+    
+    void *theEle = OPS_mixedBeamColumn2dS();
     if (theEle != 0) 
       theElement = (Element *)theEle;
     else {
