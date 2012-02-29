@@ -126,7 +126,7 @@ Matrix *mixedBeamColumn2dS::nd2T = 0;
 //      Steel Tube Members and Frames," Report No. NSEL-023, Newmark Structural Laboratory Report Series
 //      (ISSN 1940-9826), Department of Civil and Environmental Engineering, University of Illinois at
 //      Urbana-Champaign, Urbana, Illinois, March.
-//
+
 
 OPS_Export void * OPS_mixedBeamColumn2dS() {
   // Variables to retrieve input
@@ -270,7 +270,6 @@ OPS_Export void * OPS_mixedBeamColumn2dS() {
 
   return theElement;
 }
-
 
 // constructor which takes the unique element tag, sections,
 // and the node ID's of it's nodal end points.
@@ -554,24 +553,29 @@ mixedBeamColumn2dS::~mixedBeamColumn2dS() {
 }
 
 
-int mixedBeamColumn2dS::getNumExternalNodes(void) const {
+int 
+mixedBeamColumn2dS::getNumExternalNodes(void) const {
    return 2;
 }
 
 
-const ID & mixedBeamColumn2dS::getExternalNodes(void) {
+const ID &
+mixedBeamColumn2dS::getExternalNodes(void) {
    return connectedExternalNodes;
 }
 
-Node ** mixedBeamColumn2dS::getNodePtrs(void) {
+Node **
+mixedBeamColumn2dS::getNodePtrs(void) {
    return theNodes;
 }
 
-int mixedBeamColumn2dS::getNumDOF(void) {
+int 
+mixedBeamColumn2dS::getNumDOF(void) {
    return NEGD;
 }
 
-void mixedBeamColumn2dS::setDomain(Domain *theDomain)
+void 
+mixedBeamColumn2dS::setDomain(Domain *theDomain)
 {
   // check Domain is not null - invoked when object removed from a domain
   if (theDomain == 0) {
@@ -626,7 +630,8 @@ void mixedBeamColumn2dS::setDomain(Domain *theDomain)
   }
 }
 
-int mixedBeamColumn2dS::commitState() {
+int 
+mixedBeamColumn2dS::commitState() {
   int err = 0; // error flag
   int i = 0; // integers for loops
 
@@ -668,7 +673,8 @@ int mixedBeamColumn2dS::commitState() {
   return err;
 }
 
-int mixedBeamColumn2dS::revertToLastCommit() {
+int 
+mixedBeamColumn2dS::revertToLastCommit() {
   int err;
   int i = 0;
 
@@ -704,7 +710,8 @@ int mixedBeamColumn2dS::revertToLastCommit() {
   return err;
 }
 
-int mixedBeamColumn2dS::revertToStart() {
+int 
+mixedBeamColumn2dS::revertToStart() {
   int err;
   int i,j,k; // for loops
   i = 0;
@@ -839,7 +846,8 @@ int mixedBeamColumn2dS::revertToStart() {
   return err;
 }
 
-const Matrix & mixedBeamColumn2dS::getInitialStiff(void) {
+const Matrix & 
+mixedBeamColumn2dS::getInitialStiff(void) {
   // If things haven't be initialized, then do so
   if (initialFlag == 0) {
     this->revertToStart();
@@ -847,7 +855,8 @@ const Matrix & mixedBeamColumn2dS::getInitialStiff(void) {
   return *Ki;
 }
 
-const Matrix & mixedBeamColumn2dS::getTangentStiff(void) {
+const Matrix & 
+mixedBeamColumn2dS::getTangentStiff(void) {
   // If things haven't be initialized, then do so
   if (initialFlag == 0) {
     this->revertToStart();
@@ -856,13 +865,15 @@ const Matrix & mixedBeamColumn2dS::getTangentStiff(void) {
   return crdTransf->getGlobalStiffMatrix(kv,internalForce);
 }
 
-const Vector & mixedBeamColumn2dS::getResistingForce(void) {
+const Vector & 
+mixedBeamColumn2dS::getResistingForce(void) {
   crdTransf->update();  // Will remove once we clean up the corotational 3d transformation -- MHS
   Vector p0Vec(p0, NDM_NATURAL);
   return crdTransf->getGlobalResistingForce(internalForce, p0Vec);
 }
 
-int mixedBeamColumn2dS::update() {
+int 
+mixedBeamColumn2dS::update() {
 
   // If things haven't be initialized, then do so
   if (initialFlag == 0) {
@@ -1031,7 +1042,8 @@ int mixedBeamColumn2dS::update() {
   return 0;
 }
 
-const Matrix & mixedBeamColumn2dS::getMass(void) {
+const Matrix &
+mixedBeamColumn2dS::getMass(void) {
   theMatrix.Zero();
 
   if (rho != 0.0) {
@@ -1042,7 +1054,8 @@ const Matrix & mixedBeamColumn2dS::getMass(void) {
   return theMatrix;
 }
 
-const Matrix & mixedBeamColumn2dS::getDamp(void) {
+const Matrix & 
+mixedBeamColumn2dS::getDamp(void) {
   theMatrix.Zero();
 
   // Add the damping forces
@@ -1053,7 +1066,8 @@ const Matrix & mixedBeamColumn2dS::getDamp(void) {
   return theMatrix;
 }
 
-void mixedBeamColumn2dS::zeroLoad(void) {
+void 
+mixedBeamColumn2dS::zeroLoad(void) {
   if (sp != 0)
     sp->Zero();
 
@@ -1062,7 +1076,8 @@ void mixedBeamColumn2dS::zeroLoad(void) {
   p0[2] = 0.0;
 }
 
-int mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
+int 
+mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
 
   int type;
   const Vector &data = theLoad->getData(type, loadFactor);
@@ -1144,7 +1159,8 @@ int mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
   return 0;
 }
 
-const Vector & mixedBeamColumn2dS::getResistingForceIncInertia() {
+const Vector & 
+mixedBeamColumn2dS::getResistingForceIncInertia() {
 
   // Compute the current resisting force
   theVector = this->getResistingForce();
@@ -1171,7 +1187,9 @@ const Vector & mixedBeamColumn2dS::getResistingForceIncInertia() {
   return theVector;
 }
 
-void mixedBeamColumn2dS::Print(OPS_Stream &s, int flag) {
+void 
+mixedBeamColumn2dS::Print(OPS_Stream &s, int flag)
+{
 
   if (flag == 1) {
     s << "\nElement: " << this->getTag() << " Type: mixedBeamColumn2dS ";
@@ -1192,19 +1210,89 @@ void mixedBeamColumn2dS::Print(OPS_Stream &s, int flag) {
       s << "\n"<<i<<" "<<xi[i]<<" "<<wt[i];
 
   } else {
-    s << "\nElement: " << this->getTag() << " Type: mixedBeamColumn2dS ";
-    s << "\tConnected Nodes: " << connectedExternalNodes ;
-    s << "\tNumber of Sections: " << numSections;
+    s << "\nElement: " << this->getTag() << " Type: mixedBeamColumn2dS " << endln;
+    s << "\tConnected Nodes: " << connectedExternalNodes << endln;
+    s << "\tNumber of Sections: " << numSections << endln;
     s << "\tMass density: " << rho << endln;
+
+	double L = crdTransf->getInitialLength();
+	// Axial
+	double N = internalForce(0);
+	theVector(3) =  N;
+	theVector(0) = -N+p0[0];
+
+	// Moments about z and shears along y
+	double M1 = internalForce(1);
+	double M2 = internalForce(2);
+	theVector(2)  = M1;
+	theVector(5) = M2;
+	double V = (M1+M2)/L;
+	theVector(1) =  V+p0[1];
+	theVector(4) = -V+p0[2];
+
+	s << "\tEnd 1 Forces (P V M): " << -theVector(0)
+		<< " " << theVector(1) << " " << theVector(2) << endln;
+	s << "\tEnd 2 Forces (P V M): " << theVector(3)
+		<< " " << -theVector(4) << " " << theVector(5) << endln;
+
+	beamIntegr->Print(s, flag);
+
+	for (int i = 0; i < numSections; i++){
+	  s << "\t Section \t" << i << endln; 
+	  sections[i]->Print(s,flag);
+	}
   }
 }
 
-OPS_Stream &operator<<(OPS_Stream &s, mixedBeamColumn2dS &E) {
+OPS_Stream &
+operator<<(OPS_Stream &s, mixedBeamColumn2dS &E)
+{
     E.Print(s);
     return s;
 }
 
-Response* mixedBeamColumn2dS::setResponse(const char **argv, int argc,
+int
+mixedBeamColumn2dS::displaySelf(Renderer &theViewer, int displayMode, float fact)
+{
+  // first determine the end points of the beam based on
+  // the display factor (a measure of the distorted image)
+  const Vector &end1Crd = theNodes[0]->getCrds();
+  const Vector &end2Crd = theNodes[1]->getCrds();	
+
+  static Vector v1(3);
+  static Vector v2(3);
+
+  if (displayMode >= 0) {
+    const Vector &end1Disp = theNodes[0]->getDisp();
+    const Vector &end2Disp = theNodes[1]->getDisp();
+    
+    for (int i = 0; i < 2; i++) {
+      v1(i) = end1Crd(i) + end1Disp(i)*fact;
+      v2(i) = end2Crd(i) + end2Disp(i)*fact;    
+    }
+  } else {
+    int mode = displayMode  *  -1;
+    const Matrix &eigen1 = theNodes[0]->getEigenvectors();
+    const Matrix &eigen2 = theNodes[1]->getEigenvectors();
+    if (eigen1.noCols() >= mode) {
+      for (int i = 0; i < 2; i++) {
+	v1(i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+	v2(i) = end2Crd(i) + eigen2(i,mode-1)*fact;    
+      }    
+    } else {
+      for (int i = 0; i < 2; i++) {
+	v1(i) = end1Crd(i);
+	v2(i) = end2Crd(i);
+      }    
+    }
+  }
+  
+  return theViewer.drawLine (v1, v2, 1.0, 1.0);
+}
+
+
+Response* 
+mixedBeamColumn2dS::setResponse(const char **argv, int argc,
                                          OPS_Stream &output) {
 
   Response *theResponse = 0;
