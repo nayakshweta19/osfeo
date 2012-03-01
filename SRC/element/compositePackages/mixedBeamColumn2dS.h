@@ -48,7 +48,6 @@ class Response;
 class BeamIntegration;
 class SectionForceDeformation;
 
-
 class mixedBeamColumn2dS : public Element
 {
   public:

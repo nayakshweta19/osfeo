@@ -19,6 +19,8 @@
 #include <Vector.h>
 #include <ID.h>
 #include <BeamIntegration.h>
+#include <SectionForceDeformation.h>
+#include <CrdTransf.h>
 
 class Node;
 class SectionForceDeformation;
@@ -92,22 +94,28 @@ class Timoshenko2d03 : public Element
     
   private:
     const Matrix &getInitialBasicStiff(void);
+	Matrix getNd(int sec, const Vector &v, double L);
+	Matrix getBd(int sec, const Vector &v, double L);
+
     int numSections;
 	double C1;
     SectionForceDeformation **theSections; // pointer to the ND material objects
-    TimoshenkoLinearCrdTransf2d *crdTransf;          // pointer to coordinate transformation object 
+    CrdTransf *crdTransf;          // pointer to coordinate transformation object 
     ID connectedExternalNodes; // Tags of quad nodes
     Node *theNodes[2];
     static Matrix K;		// Element stiffness, damping, and mass Matrix
     static Vector P;		// Element resisting force vector
     Vector Q;		// Applied nodal loads
     Vector q;		// Basic force
-    double q0[6];  // Fixed end forces in basic system
-    double p0[6];  // Reactions in basic system
+    double q0[3];  // Fixed end forces in basic system
+    double p0[3];  // Reactions in basic system
     double rho;			// Mass density per unit length
     static double workArea[];
 
     BeamIntegration *beamInt;
+
+	static Matrix *bd;
+	static Matrix *nd;
 
 	enum {maxNumSections = 10};
 
