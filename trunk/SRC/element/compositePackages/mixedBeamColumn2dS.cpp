@@ -1097,7 +1097,7 @@ mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
 
   if (type == LOAD_TAG_Beam2dUniformLoad) {
     double wy = data(0)*loadFactor;  // Transverse
-    double wx = data(1)*loadFactor;  // Axial
+    double wx = data(1)*loadFactor;  // Axial            // need revision
 
     Matrix &s_p = *sp;
 
@@ -1501,8 +1501,8 @@ Matrix mixedBeamColumn2dS::getNld_hat(int sec, const Vector &v, double L, bool g
     Nld_hat(0,0) = C;
     Nld_hat(1,1) = E;
     Nld_hat(1,2) = F;
-	Nld_hat(2,1) = F; // need revised
-	Nld_hat(2,2) = F; // need revised
+	Nld_hat(2,1) = C; // need revised
+	Nld_hat(2,2) = C; // need revised
 
   } else {
 
@@ -1538,7 +1538,7 @@ mixedBeamColumn2dS::getNd2(int sec, double P, double L){
 
    Nd2(1,1) = P * A;
    Nd2(1,2) = P * B;
-   Nd2(2,1) = P * B; // need revised
+   Nd2(2,1) = P * A; // need revised
    Nd2(2,2) = P * B; // need revised
 
    return Nd2;
