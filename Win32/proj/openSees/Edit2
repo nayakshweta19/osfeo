@@ -19,8 +19,8 @@ nDMaterial PlaneStress $PlaneStressMatTag $nDJ2MatTag;
 nDMaterial PlaneStressFiberMaterial $uDBeamTag $PlaneStressMatTag;
 section Timoshenko $beamSecTag { ; fiber2d -160 0 1600 $uDBeamTag; fiber2d  -80 0 1600 $uDBeamTag;	fiber2d    0 0 1600 $uDBeamTag; fiber2d   80 0 1600 $uDBeamTag;	fiber2d  160 0 1600 $uDBeamTag; };
 set iNode 1001; set jNode 1002; node 1001 0.0 0.0; node 1002 0.0 1000.0; fix 1001 1 1 1; fix 1002 0 0 0; set np 3; set C1 0.4;
-node 1003 0.0 200.0; node 1004 0.0 400.0; node 1005 0.0 600; node 1006 0.0 800;
-set transfTag 1; geomTransf Corotational $transfTag; # Corotational, PDelta ,Corotational
+#node 1003 0.0 200.0; node 1004 0.0 400.0; node 1005 0.0 600; node 1006 0.0 800;
+set transfTag 1; geomTransf Linear $transfTag; # Corotational, PDelta ,Corotational
 set Lpi 0.16; set Lpj 0.16; set E 2.100000E+011; set A 2.480000E-003; set Iz 4.510000E-005;
 #element nonlinearBeamColumn 2001 1001 1003 $np $beamSecTag $transfTag;
 #element nonlinearBeamColumn 2002 1003 1004 $np $beamSecTag $transfTag;
@@ -29,16 +29,16 @@ set Lpi 0.16; set Lpj 0.16; set E 2.100000E+011; set A 2.480000E-003; set Iz 4.5
 #element nonlinearBeamColumn 2005 1006 1002 $np $beamSecTag $transfTag;
 #element dispBeamColumn 2001 1001 1002 $np $beamSecTag $transfTag;
 #element mixedBeamColumn2d 2001 1001 1002 $np $beamSecTag $transfTag;
-#element mixedBeamColumn2dS 2001 1001 1003 $np $beamSecTag $transfTag; # -geomLinear;
+element mixedBeamColumn2dS 2001 1001 1002 $np $beamSecTag $transfTag; # -geomLinear;
 #element mixedBeamColumn2dS 2002 1003 1004 $np $beamSecTag $transfTag; # -geomLinear;
 #element mixedBeamColumn2dS 2003 1004 1005 $np $beamSecTag $transfTag; # -geomLinear;
 #element mixedBeamColumn2dS 2004 1005 1006 $np $beamSecTag $transfTag; # -geomLinear;
 #element mixedBeamColumn2dS 2005 1006 1002 $np $beamSecTag $transfTag; # -geomLinear;
-element Timoshenko2d03 2001 1001 1003 $beamSecTag $transfTag $C1;
-element Timoshenko2d03 2002 1003 1004 $beamSecTag $transfTag $C1;
-element Timoshenko2d03 2003 1004 1005 $beamSecTag $transfTag $C1;
-element Timoshenko2d03 2004 1005 1006 $beamSecTag $transfTag $C1;
-element Timoshenko2d03 2005 1006 1002 $beamSecTag $transfTag $C1;
+#element Timoshenko2d03 2001 1001 1002 $beamSecTag $transfTag $C1;
+#element Timoshenko2d03 2002 1003 1004 $beamSecTag $transfTag $C1;
+#element Timoshenko2d03 2003 1004 1005 $beamSecTag $transfTag $C1;
+#element Timoshenko2d03 2004 1005 1006 $beamSecTag $transfTag $C1;
+#element Timoshenko2d03 2005 1006 1002 $beamSecTag $transfTag $C1;
 #element Timoshenko2d02 2001 1001 1002 $np $beamSecTag $transfTag;
 #element beamWithHinges 2001 1001 1002 $beamSecTag $Lpi $beamSecTag $Lpj $E $A $Iz $transfTag;
 recorder display g3 10 10 800 600 -wipe;
