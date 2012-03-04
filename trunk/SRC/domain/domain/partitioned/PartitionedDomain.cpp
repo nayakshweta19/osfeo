@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.21 $
-// $Date: 2010/09/16 00:07:11 $
+// $Date: 2010-09-16 00:07:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/domain/partitioned/PartitionedDomain.cpp,v $
                                                                         
 // Written: fmk 
@@ -1874,6 +1874,7 @@ PartitionedDomain::calculateNodalReactions(bool inclInertia)
   int res = this->Domain::calculateNodalReactions(inclInertia); 
 
   // do the same for all the subdomains
+  /*
   if (theSubdomains != 0) {
     ArrayOfTaggedObjectsIter theSubsIter(*theSubdomains);	
     TaggedObject *theObject;
@@ -1882,6 +1883,7 @@ PartitionedDomain::calculateNodalReactions(bool inclInertia)
       res += theSub->calculateNodalReactions(inclInertia); 
     }
   }
+  */
   return res;
 }
 

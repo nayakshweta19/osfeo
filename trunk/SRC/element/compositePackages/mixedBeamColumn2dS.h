@@ -133,8 +133,8 @@ class mixedBeamColumn2dS : public Element
 
     // Element Load Variables
     Matrix *sp;
-    double p0[3]; // Reactions in the basic system due to element loads
-
+    double p0[3];  // Reactions in the basic system due to element loads
+	double q0[3];  // Fixed end forces in basic system
 
     // Attributes that change during the analysis
     Vector V;

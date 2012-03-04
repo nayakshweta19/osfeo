@@ -354,6 +354,10 @@ mixedBeamColumn2dS::mixedBeamColumn2dS (int tag, int nodeI, int nodeJ, int numSe
    p0[1] = 0.0;
    p0[2] = 0.0;
 
+   q0[0] = 0.0;
+   q0[1] = 0.0;
+   q0[2] = 0.0;
+
    // Element vectors and matrices
    sectionForceFibers = new Vector [numSections];
    commitedSectionForceFibers = new Vector [numSections];
@@ -444,6 +448,10 @@ mixedBeamColumn2dS::mixedBeamColumn2dS():
   p0[0] = 0.0;
   p0[1] = 0.0;
   p0[2] = 0.0;
+  
+  q0[0] = 0.0;
+  q0[1] = 0.0;
+  q0[2] = 0.0;
 
   // Element vectors and matrices
   sectionForceFibers = new Vector [numSections];
@@ -1110,14 +1118,20 @@ mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
       s_p(1,i) += wy*0.5*x*(x-L);
     }
 
+	double V = 0.5*wy*L;
+    double M = V*L/6.0; // wt*L*L/12
+    double P = wx*L;
     // Accumulate reactions in basic system
-    p0[0] -= wx*L;
-    double V;
-    V = 0.5*wy*L;
+    p0[0] -= P;
     p0[1] -= V;
     p0[2] -= V;
 
-  } else if (type == LOAD_TAG_Beam3dPointLoad) {
+	// Fixed end forces in basic system
+    q0[0] -= 0.5*P;
+    q0[1] -= M;
+    q0[2] += M;
+
+  } else if (type == LOAD_TAG_Beam2dPointLoad) {
     double Py = data(0)*loadFactor;
     double N  = data(1)*loadFactor;
     double aOverL = data(2);
@@ -1126,6 +1140,7 @@ mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
       return 0;
 
     double a = aOverL*L;
+	double b = L-a;
 
     double Vy2 = Py*aOverL;
     double Vy1 = Py-Vy2;
@@ -1148,6 +1163,17 @@ mixedBeamColumn2dS::addLoad(ElementalLoad *theLoad, double loadFactor) {
     p0[0] -= N;
     p0[1] -= Vy1;
     p0[2] -= Vy2;
+	
+	double L2 = 1.0/(L*L);
+    double a2 = a*a;
+    double b2 = b*b;
+
+    // Fixed end forces in basic system
+    q0[0] -= N*aOverL;
+    double M1 = -a * b2 * Py * L2;
+    double M2 = a2 * b * Py * L2;
+    q0[1] += M1;
+    q0[2] += M2;
 
   } else {
     opserr << "mixedBeamColumn2dS::addLoad() -- load type unknown for element with tag: " <<

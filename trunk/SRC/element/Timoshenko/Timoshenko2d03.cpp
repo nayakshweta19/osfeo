@@ -39,6 +39,8 @@ double Timoshenko2d03::workArea[100];
 
 Matrix *Timoshenko2d03::bd = 0;
 Matrix *Timoshenko2d03::nd = 0;
+Matrix *Timoshenko2d03::bdT = 0;
+Matrix *Timoshenko2d03::ndT = 0;
 
 Timoshenko2d03::Timoshenko2d03(int tag, 
 					 int nd1, int nd2,	
@@ -106,21 +108,21 @@ Timoshenko2d03::Timoshenko2d03(int tag,
   theNodes[0] = 0;
   theNodes[1] = 0;
   
-  q0[0] = 0.0;
-  q0[1] = 0.0;
-  q0[2] = 0.0;
-
   p0[0] = 0.0;
   p0[1] = 0.0;
   p0[2] = 0.0;
 
-  if (nd == 0)
-	  nd  = new Matrix [maxNumSections];
-  if (bd == 0)
-	  bd  = new Matrix [maxNumSections];
-  if (!nd || !bd ) {
+  if (nd == 0) 	nd = new Matrix [maxNumSections];
+  if (bd == 0)	bd = new Matrix [maxNumSections];
+  if (ndT == 0)	ndT = new Matrix [maxNumSections];
+  if (bdT == 0)	bdT = new Matrix [maxNumSections];
+  if (!nd || !bd || !ndT || !bdT) {
     opserr << "Timoshenko2d03::Timoshenko2d03() -- failed to allocate static section arrays";
     exit(-1);
+  }
+  for (int i=0; i<maxNumSections; i++ ){
+    ndT[i] = Matrix(3,3);
+    bdT[i] = Matrix(3,3);
   }
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
@@ -133,9 +135,9 @@ Timoshenko2d03::Timoshenko2d03()
 	connectedExternalNodes(2),
 	Q(3), q(3), C1(0.0), rho(0.0)
 {
-  q0[0] = 0.0;
-  q0[1] = 0.0;
-  q0[2] = 0.0;
+  //q0[0] = 0.0;
+  //q0[1] = 0.0;
+  //q0[2] = 0.0;
 
   p0[0] = 0.0;
   p0[1] = 0.0;
@@ -144,13 +146,17 @@ Timoshenko2d03::Timoshenko2d03()
   theNodes[0] = 0;
   theNodes[1] = 0;
 
-  if (nd == 0)
-	nd  = new Matrix [maxNumSections];
-  if (bd == 0)
-	bd  = new Matrix [maxNumSections];
-  if (!nd || !bd ) {
+  if (nd == 0) 	nd  = new Matrix [maxNumSections];
+  if (bd == 0)	bd  = new Matrix [maxNumSections];
+  if (ndT == 0)	ndT  = new Matrix [maxNumSections];
+  if (bdT == 0)	bdT  = new Matrix [maxNumSections];
+  if (!nd || !bd || !ndT || !bdT ) {
     opserr << "Timoshenko2d03::Timoshenko2d03() -- failed to allocate static section arrays";
     exit(-1);
+  }
+  for (int i=0; i<maxNumSections; i++ ){
+    ndT[i] = Matrix(3,3);
+    bdT[i] = Matrix(3,3);
   }
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
@@ -348,7 +354,7 @@ Timoshenko2d03::update(void)
 const Matrix&
 Timoshenko2d03::getTangentStiff(void)
 {
-  static Matrix kb(6,6);
+  static Matrix kb(3,3);
 
   // Zero for integral
   kb.Zero();
@@ -366,7 +372,7 @@ Timoshenko2d03::getTangentStiff(void)
   // Loop over the integration points
   int i = 0;
     
-    int order = theSections[i]->getOrder();
+    int order = theSections[i]->getOrder(); // P M V
     const ID &code = theSections[i]->getType();
 
 	// Get the section tangent stiffness and stress resultant
@@ -375,16 +381,21 @@ Timoshenko2d03::getTangentStiff(void)
     
 	bd[i] = this->getBd(i, v, L);
 	nd[i] = this->getNd(i, v, L);
-
+	for( int j = 0; j < 3; j++ ){
+      for( int k = 0; k < 3; k++ ){
+        bdT[i](k,j) = bd[i](j,k);
+        ndT[i](k,j) = nd[i](j,k);
+      }
+    }
     // Perform numerical integration
-	kb.addMatrixTripleProduct(1.0, bd[i], ks, 1.0);
+	kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
     
-	q.addMatrixVector(1.0, nd[i], s, 1.0);
+	q = q + L * wts[i] * bdT[i] * s;
 
   // Add effects of element loads, q = q(v) + q0		
-  q(0) += q0[0];
-  q(1) += q0[1];
-  q(2) += q0[2];
+  //q(0) += q0[0];
+  //q(1) += q0[1];
+  //q(2) += q0[2];
 
   // Transform to global stiffness
   K = crdTransf->getGlobalStiffMatrix(kb, q);
@@ -395,7 +406,7 @@ Timoshenko2d03::getTangentStiff(void)
 const Matrix&
 Timoshenko2d03::getInitialBasicStiff()
 {
-  static Matrix kb(6,6);
+  static Matrix kb(3,3);
 
   // Zero for integral
   kb.Zero();
@@ -419,9 +430,13 @@ Timoshenko2d03::getInitialBasicStiff()
     const Matrix &ks = theSections[i]->getInitialTangent();
     
 	bd[i] = this->getBd(i, v, L);
-    
+    for( int j = 0; j < 3; j++ ){
+      for( int k = 0; k < 3; k++ ){
+        bdT[i](k,j) = bd[i](j,k);
+      }
+    }
   // Perform numerical integration
-  kb.addMatrixTripleProduct(1.0, bd[i], ks, 1.0);
+  kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
 
   return kb;
 }
@@ -458,10 +473,6 @@ Timoshenko2d03::zeroLoad(void)
 {
   Q.Zero();
 
-  q0[0] = 0.0;
-  q0[1] = 0.0;
-  q0[2] = 0.0;
-  
   p0[0] = 0.0;
   p0[1] = 0.0;
   p0[2] = 0.0;
@@ -478,10 +489,10 @@ Timoshenko2d03::addLoad(ElementalLoad *theLoad, double loadFactor)
   
   if (type == LOAD_TAG_Beam2dUniformLoad) {
     double wy = data(0)*loadFactor;  // Transverse (+ve upward)
-    double wa = data(1)*loadFactor;  // Axial (+ve from node I to J)
+    double wx = data(1)*loadFactor;  // Axial (+ve from node I to J)
 
 	// Reactions in basic system
-	p0[0] -= wa*L;
+	p0[0] -= wx*L;
 	double V = 0.5*wy*L;
 	p0[1] -= V;
 	p0[2] -= V;
@@ -560,6 +571,7 @@ Timoshenko2d03::addInertiaLoadToUnbalance(const Vector &accel)
 const Vector&
 Timoshenko2d03::getResistingForce()
 {
+  crdTransf->update();  // Will remove once we clean up the corotational 3d transformation -- MHS
   double L = crdTransf->getInitialLength();
 
   double pts[maxNumSections];
@@ -583,22 +595,22 @@ Timoshenko2d03::getResistingForce()
     const Vector &s = theSections[i]->getStressResultant();
     
 	bd[i] = this->getBd(i, v, L);
+	for( int j = 0; j < 3; j++ ){
+      for( int k = 0; k < 3; k++ ){
+        bdT[i](k,j) = bd[i](j,k);
+      }
+    }
     // Perform numerical integration on internal force
-	q.addMatrixTransposeVector(1.0, bd[i], s, 1.0);
+	q = q + L * wts[i] * bdT[i] * s;
 
     // Add effects of element loads, q = q(v) + q0		
-  q(0) += q0[0];
-  q(1) += q0[1];
-  q(2) += q0[2];
+  //q(0) += q0[0];
+  //q(1) += q0[1];
+  //q(2) += q0[2];
   
   // Vector for reactions in basic system
   Vector p0Vec(p0, 3);
   P = crdTransf->getGlobalResistingForce(q, p0Vec);	
-  
-  // Subtract other external nodal loads ... P_res = P_int - P_ext
-  P(0) -= Q(0);
-  P(1) -= Q(1);
-  P(2) -= Q(2);
   
   return P;
 }
@@ -606,9 +618,7 @@ Timoshenko2d03::getResistingForce()
 const Vector&
 Timoshenko2d03::getResistingForceIncInertia()
 {
-
-  this->getResistingForce();
-  
+  // Add the inertial forces
   if (rho != 0.0) {
     const Vector &accel1 = theNodes[0]->getTrialAccel();
     const Vector &accel2 = theNodes[1]->getTrialAccel();
@@ -624,15 +634,11 @@ Timoshenko2d03::getResistingForceIncInertia()
     P(3) += m*accel2(0);
     P(4) += m*accel2(1);
     
-    // add the damping forces if Rayleigh damping
-    if (alphaM != 0.0 || betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0)
-      P += this->getRayleighDampingForces();
-
-  } else {
-    
-    // add the damping forces if Rayleigh damping
-    if (betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0)
-      P += this->getRayleighDampingForces();
+  }
+  
+  // Add the damping forces
+  if (alphaM != 0.0 || betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0) {
+    P += this->getRayleighDampingForces();
   }
 
   return P;
@@ -976,19 +982,21 @@ Timoshenko2d03::setResponse(const char **argv, int argc, OPS_Stream &s)
 int 
 Timoshenko2d03::getResponse(int responseID, Information &eleInfo)		//L modify
 {
-  //double V;
-  double L = crdTransf->getInitialLength();
 
-  if (responseID == 1)
+  if (responseID == 1) // global forces
     return eleInfo.setVector(this->getResistingForce());
 
-  else if (responseID == 2) {
-      P(3) =  q(3);
-      P(0) = -q(0);
-      P(2) = q(2);
-      P(5) = q(5);
-      P(1) =  q(1);
-      P(4) = -q(4);
+  else if (responseID == 2) { // local forces
+      // Axial
+	  P(3) =  q(0);
+      P(0) = -q(0)+p0[0];
+      // Moments about z and shears along y
+	  P(2) = q(1);
+      P(5) = q(2);
+	  double L = crdTransf->getInitialLength();
+      double V = (q(1)+q(2))/L;
+      P(1) =  V + p0[1];
+      P(4) = -V + p0[2];
       return eleInfo.setVector(P);
   }
 
@@ -1044,11 +1052,11 @@ Timoshenko2d03::getNd(int sec, const Vector &v, double L){
   Matrix Nd1(3,3);
   Nd1.Zero();
   
-  Nd1(0,0) = 1.0;
-  Nd1(1,1) = -x/L + 1.0;
+  Nd1(0,0) = 1.;
+  Nd1(1,1) = -x/L + 1.;
   Nd1(1,2) =  x/L;
-  Nd1(2,1) =  1/L; // need revised
-  Nd1(2,2) =  1/L; // need revised
+  Nd1(2,1) =  1./L; // need revised
+  Nd1(2,2) =  1./L; // need revised
   
   return Nd1;
 }
@@ -1063,11 +1071,11 @@ Timoshenko2d03::getBd(int sec, const Vector &v, double L){
   Matrix Bd(3,3);
   Bd.Zero();
   
-  Bd(0,0) = 1.0;
-  Bd(1,1) = -1/L;
-  Bd(1,2) =  1/L;
-  Bd(2,1) =  1/L; // need revised
-  Bd(2,2) =  1/L; // need revised
+  Bd(0,0) = 1./L;
+  Bd(1,1) = -1./L;
+  Bd(1,2) =  1./L;
+  Bd(2,1) = -1./2.; // shear components 
+  Bd(2,2) = -1./2.; // shear components 
   
   return Bd;
 }

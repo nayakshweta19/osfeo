@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2003/02/14 23:02:12 $
+// $Date: 2003-02-14 23:02:12 $
 // $Source: /usr/local/cvs/OpenSees/SRC/utility/Timer.cpp,v $
                                                                         
                                                                         
@@ -39,6 +39,10 @@
 
 #ifdef NOW
 extern "C" int getrusage(int who, struct rusage *rusage);
+#endif
+
+#ifdef _WIN32
+#include <Windows.h>
 #endif
 
 #ifndef CLK_TCK
@@ -64,7 +68,9 @@ void
 Timer::start(void)
 {
 #ifdef _WIN32
-    // fill in later
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	opserr << "Timer::start (hr:min:millisec): " << (int)st.wHour << ":" << (int)st.wMinute << ":" << (int)st.wMilliseconds << endln;
 #else        
     t1 = times(&tmsstart);
     getrusage(0,r1us);
@@ -76,6 +82,9 @@ Timer::pause(void)
 {
 #ifdef _WIN32
     // fill in later
+		SYSTEMTIME st;
+	GetSystemTime(&st);
+	opserr << "Timer::stop (hr:min:millisec): " << (int)st.wHour << ":" << (int)st.wMinute << ":" << (int)st.wMilliseconds << endln;
 #else        
     t2 = times(&tmsend);
     getrusage(0,r2us);    
