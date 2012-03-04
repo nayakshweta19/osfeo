@@ -107,15 +107,17 @@ class Timoshenko2d03 : public Element
     static Vector P;		// Element resisting force vector
     Vector Q;		// Applied nodal loads
     Vector q;		// Basic force
-    double q0[3];  // Fixed end forces in basic system
-    double p0[3];  // Reactions in basic system
-    double rho;			// Mass density per unit length
+    //double q0[3];   // Fixed end forces in basic system
+    double p0[3];   // Reactions in the basic system due to element loads
+    double rho;	    // Mass density per unit length
     static double workArea[];
 
     BeamIntegration *beamInt;
 
 	static Matrix *bd;
 	static Matrix *nd;
+	static Matrix *bdT;
+	static Matrix *ndT;
 
 	enum {maxNumSections = 10};
 

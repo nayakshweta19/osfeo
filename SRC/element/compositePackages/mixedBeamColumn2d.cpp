@@ -1104,7 +1104,7 @@ int mixedBeamColumn2d::addLoad(ElementalLoad *theLoad, double loadFactor) {
     p0[1] -= V;
     p0[2] -= V;
 
-  } else if (type == LOAD_TAG_Beam3dPointLoad) {
+  } else if (type == LOAD_TAG_Beam2dPointLoad) {
     double Py = data(0)*loadFactor;
     double N  = data(1)*loadFactor;
     double aOverL = data(2);
