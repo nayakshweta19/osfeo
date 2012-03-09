@@ -7,9 +7,6 @@
 // Description: This file contains the class implementation of Timoshenko2d03.Based on Timoshenko2d03.cpp.
 // Referred to R.L. Taylor FEM 6th Ed. Timoshenko Rod Element with Constant STrain
 
-
-
-
 #include <Timoshenko2d03.h>
 #include <Node.h>
 #include <FiberSection2d.h>
@@ -50,7 +47,7 @@ Timoshenko2d03::Timoshenko2d03(int tag,
 					 double c, double r = 0.0)
     :Element (tag, ELE_TAG_Timoshenko2d03), 
     numSections(1), theSections(0), crdTransf(0), beamInt(0),
-    connectedExternalNodes(2), Q(3), q(3), C1(c), rho(r)
+    connectedExternalNodes(2), Q(6), q(3), C1(c), rho(r)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
@@ -66,25 +63,25 @@ Timoshenko2d03::Timoshenko2d03(int tag,
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
     case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = (RASTMFiberSection2d *)theSection;
-    	break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = (FASTMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = (CSMMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = (MCFTFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_TimoshenkoSection2d:
-		theSections[i] = (TimoshenkoSection2d *)theSection;
-		break;
-
-	default:
-		opserr << "Timoshenko2d03::Timoshenko2d03() --default secTag at sec " << i+1 << endln;
-		theSections[i] = theSection;
-		break;
+      theSections[i] = (RASTMFiberSection2d *)theSection;
+      break;
+    case SEC_TAG_FASTMFiberSection2d:
+      theSections[i] = (FASTMFiberSection2d *)theSection;
+      break;
+    case SEC_TAG_CSMMFiberSection2d:
+      theSections[i] = (CSMMFiberSection2d *)theSection;
+      break;
+    case SEC_TAG_MCFTFiberSection2d:
+      theSections[i] = (MCFTFiberSection2d *)theSection;
+      break;
+    case SEC_TAG_TimoshenkoSection2d:
+      theSections[i] = (TimoshenkoSection2d *)theSection;
+      break;
+    
+    default:
+      opserr << "Timoshenko2d03::Timoshenko2d03() --default secTag at sec " << i+1 << endln;
+      theSections[i] = theSection;
+      break;
     }
       
 
@@ -97,8 +94,8 @@ Timoshenko2d03::Timoshenko2d03(int tag,
   beamInt = bi.getCopy();
 
   if (beamInt == 0) {
-	  opserr << "Timoshenko2d03::Timoshenko2d03() - failed to copy beam integration\n";
-	  exit(-1);
+	opserr << "Timoshenko2d03::Timoshenko2d03() - failed to copy beam integration\n";
+	exit(-1);
   }
 
   // Set connected external node IDs
@@ -107,7 +104,11 @@ Timoshenko2d03::Timoshenko2d03(int tag,
 
   theNodes[0] = 0;
   theNodes[1] = 0;
-  
+
+  q0[0] = 0.0;
+  q0[1] = 0.0;
+  q0[2] = 0.0;
+
   p0[0] = 0.0;
   p0[1] = 0.0;
   p0[2] = 0.0;
@@ -133,11 +134,11 @@ Timoshenko2d03::Timoshenko2d03()
 	:Element (0, ELE_TAG_Timoshenko2d03),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
 	connectedExternalNodes(2),
-	Q(3), q(3), C1(0.0), rho(0.0)
+	Q(6), q(3), C1(0.0), rho(0.0)
 {
-  //q0[0] = 0.0;
-  //q0[1] = 0.0;
-  //q0[2] = 0.0;
+  q0[0] = 0.0;
+  q0[1] = 0.0;
+  q0[2] = 0.0;
 
   p0[0] = 0.0;
   p0[1] = 0.0;
@@ -393,9 +394,9 @@ Timoshenko2d03::getTangentStiff(void)
 	q = q + L * wts[i] * bdT[i] * s;
 
   // Add effects of element loads, q = q(v) + q0		
-  //q(0) += q0[0];
-  //q(1) += q0[1];
-  //q(2) += q0[2];
+  q(0) += q0[0];
+  q(1) += q0[1];
+  q(2) += q0[2];
 
   // Transform to global stiffness
   K = crdTransf->getGlobalStiffMatrix(kb, q);
@@ -477,6 +478,10 @@ Timoshenko2d03::zeroLoad(void)
   p0[1] = 0.0;
   p0[2] = 0.0;
 
+  p0[0] = 0.0;
+  p0[1] = 0.0;
+  p0[2] = 0.0;
+
   return;
 }
 
@@ -488,19 +493,22 @@ Timoshenko2d03::addLoad(ElementalLoad *theLoad, double loadFactor)
   double L = crdTransf->getInitialLength();
   
   if (type == LOAD_TAG_Beam2dUniformLoad) {
-    double wy = data(0)*loadFactor;  // Transverse (+ve upward)
-    double wx = data(1)*loadFactor;  // Axial (+ve from node I to J)
+    double wt = data(0)*loadFactor;  // Transverse (+ve upward)
+    double wa = data(1)*loadFactor;  // Axial (+ve from node I to J)
+
+	double V = 0.5*wt*L;
+    double M = V*L/6.0; // wt*L*L/12
+    double P = wa*L;
 
 	// Reactions in basic system
-	p0[0] -= wx*L;
-	double V = 0.5*wy*L;
-	p0[1] -= V;
-	p0[2] -= V;
+    p0[0] -= P;
+    p0[1] -= V;
+    p0[2] -= V;
 
     // Fixed end forces in basic system
-    //q0[0] += wa*L*0.5;
-    //q0[1] += wt*L*L/12.0;
-    //q0[2] += -wt*L*L/12.0;
+    q0[0] -= 0.5*P;
+    q0[1] -= M;
+    q0[2] += M;
 
   } else if (type == LOAD_TAG_Beam2dPointLoad) {
     double P = data(0)*loadFactor;
@@ -510,26 +518,28 @@ Timoshenko2d03::addLoad(ElementalLoad *theLoad, double loadFactor)
 	if (aOverL < 0.0 || aOverL > 1.0)
 		return 0;
 
-	//double a = aOverL*L;
-	//double b = L-a;
+	double a = aOverL*L;
+	double b = L-a;
 
 	// Reactions in basic system
-	double V1 = P*(1.0-aOverL);
-	double V2 = P*aOverL;
+    p0[0] -= N;
+    double V1 = P*(1.0-aOverL);
+    double V2 = P*aOverL;
+    p0[1] -= V1;
+    p0[2] -= V2;
 
-	p0[0] -= N;
-	p0[1] -= V1;
-	p0[2] -= V2;
+    double L2 = 1.0/(L*L);
+    double a2 = a*a;
+    double b2 = b*b;
 
     // Fixed end forces in basic system
-   	
-	//double M1 = L*V*aOverL*(1.0-aOverL)*(1.0-aOverL+aOverL*2.0);
-    //q0[0] += N*(1.0-aOverL);
-    //q0[1] += V*(1.0-aOverL);
-    //q0[2] += M1;
+    q0[0] -= N*aOverL;
+    double M1 = -a * b2 * P * L2;
+    double M2 = a2 * b * P * L2;
+    q0[1] += M1;
+    q0[2] += M2;
 
-  }
-  else {
+  } else {
     opserr << "Timoshenko2d03::Timoshenko2d03 -- load type unknown for element with tag: "
 	   << this->getTag() << "Timoshenko2d03::addLoad()\n"; 
 			    
@@ -603,15 +613,24 @@ Timoshenko2d03::getResistingForce()
     // Perform numerical integration on internal force
 	q = q + L * wts[i] * bdT[i] * s;
 
-    // Add effects of element loads, q = q(v) + q0		
-  //q(0) += q0[0];
-  //q(1) += q0[1];
-  //q(2) += q0[2];
+  // Add effects of element loads, q = q(v) + q0		
+  q(0) += q0[0];
+  q(1) += q0[1];
+  q(2) += q0[2];
   
   // Vector for reactions in basic system
   Vector p0Vec(p0, 3);
   P = crdTransf->getGlobalResistingForce(q, p0Vec);	
   
+  // Subtract other external nodal loads ... P_res = P_int - P_ext
+  //P.addVector(1.0, Q, -1.0);
+  P(0) -= Q(0);
+  P(1) -= Q(1);
+  P(2) -= Q(2);
+  P(3) -= Q(3);
+  P(4) -= Q(4);
+  P(5) -= Q(5);
+
   return P;
 }
 
@@ -1019,29 +1038,6 @@ Timoshenko2d03::getResponse(int responseID, Information &eleInfo)		//L modify
     return -1;
 }
 
-// AddingSensitivity:BEGIN ///////////////////////////////////
-
-const Matrix &
-Timoshenko2d03::getKiSensitivity(int gradNumber)
-{
-	K.Zero();
-	return K;
-}
-
-const Matrix &
-Timoshenko2d03::getMassSensitivity(int gradNumber)
-{
-	K.Zero();
-	return K;
-}
-
-const Vector &
-Timoshenko2d03::getResistingForceSensitivity(int gradNumber)
-{
-	static Vector dummy(3);		// No distributed loads
-	return dummy;
-}
-
 Matrix
 Timoshenko2d03::getNd(int sec, const Vector &v, double L){
   double xi[maxNumSections];
@@ -1078,6 +1074,29 @@ Timoshenko2d03::getBd(int sec, const Vector &v, double L){
   Bd(2,2) = -1./2.; // shear components 
   
   return Bd;
+}
+
+// AddingSensitivity:BEGIN ///////////////////////////////////
+
+const Matrix &
+Timoshenko2d03::getKiSensitivity(int gradNumber)
+{
+	K.Zero();
+	return K;
+}
+
+const Matrix &
+Timoshenko2d03::getMassSensitivity(int gradNumber)
+{
+	K.Zero();
+	return K;
+}
+
+const Vector &
+Timoshenko2d03::getResistingForceSensitivity(int gradNumber)
+{
+	static Vector dummy(3);		// No distributed loads
+	return dummy;
 }
 
 // NEW METHOD

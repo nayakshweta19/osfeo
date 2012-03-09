@@ -98,29 +98,33 @@ class Timoshenko2d03 : public Element
 	Matrix getBd(int sec, const Vector &v, double L);
 
     int numSections;
-	double C1;
+
     SectionForceDeformation **theSections; // pointer to the ND material objects
     CrdTransf *crdTransf;          // pointer to coordinate transformation object 
-    ID connectedExternalNodes; // Tags of quad nodes
-    Node *theNodes[2];
-    static Matrix K;		// Element stiffness, damping, and mass Matrix
+    BeamIntegration *beamInt;
+	
+	ID connectedExternalNodes; // Tags of quad nodes
+    
+	Node *theNodes[2];
+    
+	static Matrix K;		// Element stiffness, damping, and mass Matrix
     static Vector P;		// Element resisting force vector
+
     Vector Q;		// Applied nodal loads
     Vector q;		// Basic force
-    //double q0[3];   // Fixed end forces in basic system
+    double q0[3];   // Fixed end forces in basic system
     double p0[3];   // Reactions in the basic system due to element loads
-    double rho;	    // Mass density per unit length
-    static double workArea[];
 
-    BeamIntegration *beamInt;
+    double rho;	    // Mass density per unit length
+	double C1;
 
 	static Matrix *bd;
 	static Matrix *nd;
 	static Matrix *bdT;
 	static Matrix *ndT;
 
-	enum {maxNumSections = 10};
-
+	enum {maxNumSections = 20};
+    static double workArea[];
     // AddingSensitivity:BEGIN //////////////////////////////////////////
     int parameterID;
     // AddingSensitivity:END ///////////////////////////////////////////
