@@ -37,6 +37,7 @@
 
 extern void printCommand(int argc, TCL_Char **argv);
 
+// element Timoshenko2d01 eleTag? iNode? jNode? secTag? transfTag? C1?
 int
 TclModelBuilder_addTimoshenko2d01(ClientData clientData, Tcl_Interp *interp,  
 				int argc, 
@@ -178,6 +179,7 @@ TclModelBuilder_addTimoshenko2d01(ClientData clientData, Tcl_Interp *interp,
 	return TCL_OK;
 }
 
+//element Timoshenko2d02 eleTag? iNode? jNode? nIP? secTag? transfTag?
 int
 TclModelBuilder_addTimoshenko2d02(ClientData clientData, Tcl_Interp *interp,  
 				int argc, 
