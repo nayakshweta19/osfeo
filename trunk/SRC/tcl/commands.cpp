@@ -112,6 +112,8 @@ OPS_Stream *opserrPtr = &sserr;
 #include <CTestRelativeEnergyIncr.h>
 #include <CTestRelativeTotalNormDispIncr.h>
 #include <CTestFixedNumIter.h>
+#include <NormDispAndUnbalance.h>
+#include <NormDispOrUnbalance.h>
 
 // soln algorithms
 #include <Linear.h>
@@ -3347,11 +3349,42 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
 
   // get the tolerence first
   double tol = 0.0;
+  double tol2 = 0.0;
   int numIter = 0;
   int printIt = 0;
   int normType = 2;
 
-  if (strcmp(argv[1],"FixedNumIter") != 0) {
+  if ((strcmp(argv[1],"NormDispAndUnbalance") == 0) || 
+      (strcmp(argv[1],"NormDispOrUnbalance") == 0)) {
+    if (argc == 5) {
+      if (Tcl_GetDouble(interp, argv[2], &tol) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetDouble(interp, argv[3], &tol2) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[4], &numIter) != TCL_OK)	
+	return TCL_ERROR;			  
+    } else if (argc == 6) {
+      if (Tcl_GetDouble(interp, argv[2], &tol) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetDouble(interp, argv[3], &tol2) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[4], &numIter) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[5], &printIt) != TCL_OK)	
+	return TCL_ERROR;			  
+    } else if (argc == 7) {
+      if (Tcl_GetDouble(interp, argv[2], &tol) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetDouble(interp, argv[3], &tol2) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[4], &numIter) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[5], &printIt) != TCL_OK)	
+	return TCL_ERROR;			  
+      if (Tcl_GetInt(interp, argv[6], &normType) != TCL_OK)	
+	return TCL_ERROR;			  
+    }
+  } else if (strcmp(argv[1],"FixedNumIter") != 0) {
     if (argc == 4) {
       if (Tcl_GetDouble(interp, argv[2], &tol) != TCL_OK)	
 	return TCL_ERROR;			  
@@ -3409,6 +3442,10 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     if (strcmp(argv[1],"NormUnbalance") == 0) 
       theNewTest = new CTestNormUnbalance(tol,numIter,printIt,normType);       
+    else if (strcmp(argv[1],"NormDispAndUnbalance") == 0) 
+      theNewTest = new NormDispAndUnbalance(tol,tol2, numIter,printIt,normType);       
+    else if (strcmp(argv[1],"NormDispOrUnbalance") == 0) 
+      theNewTest = new NormDispOrUnbalance(tol,tol2, numIter,printIt,normType);       
     else if (strcmp(argv[1],"NormDispIncr") == 0) 
       theNewTest = new CTestNormDispIncr(tol,numIter,printIt,normType);             
     else if (strcmp(argv[1],"EnergyIncr") == 0) 

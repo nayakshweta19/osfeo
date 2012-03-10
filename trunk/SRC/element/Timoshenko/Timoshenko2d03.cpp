@@ -323,8 +323,8 @@ Timoshenko2d03::update(void)
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
  
-	double x = L * pts[i];
-	double C2 = -2+3*C1+3*(1-2*C1)*x;
+	//double x = L * pts[i];
+	//double C2 = -2+3*C1+3*(1-2*C1)*x;
     Vector e(workArea, order);
 
     for (int j = 0; j < order; j++) {
@@ -332,9 +332,9 @@ Timoshenko2d03::update(void)
       case SECTION_RESPONSE_P:     // axial strain
 	e(j) = oneOverL*v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-	e(j) = oneOverL*((1.0-x/L)*v(1)+x/L*v(2)); break;
+	e(j) = oneOverL*(-1.0*v(1) + v(2)); break;
 	  case SECTION_RESPONSE_VY:    // shear strain
-	e(j) = oneOverL*(v(1)+v(2)); break;
+	e(j) = 0.5 * (v(1)+v(2)); break;
 	  default:
 	break;
       }
@@ -999,7 +999,7 @@ Timoshenko2d03::setResponse(const char **argv, int argc, OPS_Stream &s)
 }
 
 int 
-Timoshenko2d03::getResponse(int responseID, Information &eleInfo)		//L modify
+Timoshenko2d03::getResponse(int responseID, Information &eleInfo)		//LN modify
 {
 
   if (responseID == 1) // global forces
@@ -1039,26 +1039,28 @@ Timoshenko2d03::getResponse(int responseID, Information &eleInfo)		//L modify
 }
 
 Matrix
-Timoshenko2d03::getNd(int sec, const Vector &v, double L){
+Timoshenko2d03::getNd(int sec, const Vector &v, double L)
+{
   double xi[maxNumSections];
   beamInt->getSectionLocations(numSections, L, xi);
   
   double x = L * xi[sec];
   
-  Matrix Nd1(3,3);
-  Nd1.Zero();
+  Matrix Nd(3,3);
+  Nd.Zero();
   
-  Nd1(0,0) = 1.;
-  Nd1(1,1) = -x/L + 1.;
-  Nd1(1,2) =  x/L;
-  Nd1(2,1) =  1./L; // need revised
-  Nd1(2,2) =  1./L; // need revised
+  Nd(0,0) = 1.;
+  Nd(1,1) = -x/L + 1.;
+  Nd(1,2) =  x/L;
+  Nd(2,1) =  1./L; // need revised
+  Nd(2,2) =  1./L; // need revised
   
-  return Nd1;
+  return Nd;
 }
 
 Matrix
-Timoshenko2d03::getBd(int sec, const Vector &v, double L){
+Timoshenko2d03::getBd(int sec, const Vector &v, double L)
+{
   double xi[maxNumSections];
   beamInt->getSectionLocations(numSections, L, xi);
   

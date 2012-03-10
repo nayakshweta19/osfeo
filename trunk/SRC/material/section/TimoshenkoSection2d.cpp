@@ -54,8 +54,8 @@ ID TimoshenkoSection2d::code(3);
 // constructors:
 TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
   SectionForceDeformation(tag, SEC_TAG_TimoshenkoSection2d),
-	  numFibers(num), theMaterials(0), matData(0),
-	  yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
+  numFibers(num), theMaterials(0), matData(0),
+  yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
 {
   if (numFibers != 0) {
   
@@ -118,8 +118,8 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
 // constructor for blank object that recvSelf needs to be invoked upon
 TimoshenkoSection2d::TimoshenkoSection2d():
   SectionForceDeformation(0, SEC_TAG_TimoshenkoSection2d),
-	  numFibers(0), theMaterials(0), matData(0),
-	  yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
+  numFibers(0), theMaterials(0), matData(0),
+  yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
 {
   s = new Vector(sData, 3);
   ks = new Matrix(kData, 3, 3);
@@ -393,14 +393,165 @@ TimoshenkoSection2d::revertToStart(void)
 int
 TimoshenkoSection2d::sendSelf(int commitTag, Channel &theChannel)
 {
-  return -1;
+  int res = 0;
+
+  // create an id to send objects tag and numFibers, 
+  //     size 3 so no conflict with matData below if just 1 fiber
+  static ID data(3);
+  data(0) = this->getTag();
+  data(1) = numFibers;
+  int dbTag = this->getDbTag();
+  res += theChannel.sendID(dbTag, commitTag, data);
+  if (res < 0) {
+    opserr <<  "TimoshenkoSection2d::sendSelf - failed to send ID data\n";
+    return res;
+  }    
+
+  if (numFibers != 0) {
+    
+    // create an id containingg classTag and dbTag for each material & send it
+    ID materialData(2*numFibers);
+    for (int i=0; i<numFibers; i++) {
+      NDMaterial *theMat = theMaterials[i];
+      materialData(2*i) = theMat->getClassTag();
+      int matDbTag = theMat->getDbTag();
+      if (matDbTag == 0) {
+	matDbTag = theChannel.getDbTag();
+	if (matDbTag != 0)
+	  theMat->setDbTag(matDbTag);
+      }
+      materialData(2*i+1) = matDbTag;
+    }    
+    
+    res += theChannel.sendID(dbTag, commitTag, materialData);
+    if (res < 0) {
+      opserr <<  "TimoshenkoSection2d::sendSelf - failed to send material data\n";
+      return res;
+    }    
+
+    // send the fiber data, i.e. area and loc
+    Vector fiberData(matData, 2*numFibers);
+    res += theChannel.sendVector(dbTag, commitTag, fiberData);
+    if (res < 0) {
+      opserr <<  "TimoshenkoSection2d::sendSelf - failed to send material data\n";
+      return res;
+    }    
+
+    // now invoke send(0 on all the materials
+    for (int j=0; j<numFibers; j++)
+      theMaterials[j]->sendSelf(commitTag, theChannel);
+
+  }
+
+  return res;
 }
 
 int
 TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
 		     FEM_ObjectBroker &theBroker)
 {
-  return -1;
+  int res = 0;
+
+  static ID data(3);
+  
+  int dbTag = this->getDbTag();
+  res += theChannel.recvID(dbTag, commitTag, data);
+  if (res < 0) {
+    opserr <<  "TimoshenkoSection2d::recvSelf - failed to recv ID data\n";
+    return res;
+  }    
+  this->setTag(data(0));
+
+  // recv data about materials objects, classTag and dbTag
+  if (data(1) != 0) {
+    ID materialData(2*data(1));
+    res += theChannel.recvID(dbTag, commitTag, materialData);
+    if (res < 0) {
+      opserr <<  "TimoshenkoSection2d::recvSelf - failed to recv material data\n";
+      return res;
+    }    
+
+    // if current arrays not of correct size, release old and resize
+    if (theMaterials == 0 || numFibers != data(1)) {
+      // delete old stuff if outa date
+      if (theMaterials != 0) {
+	for (int i=0; i<numFibers; i++)
+	  delete theMaterials[i];
+	delete [] theMaterials;
+	if (matData != 0)
+	  delete [] matData;
+	matData = 0;
+	theMaterials = 0;
+      }
+
+      // create memory to hold material pointers and fiber data
+      numFibers = data(1);
+      if (numFibers != 0) {
+	theMaterials = new NDMaterial *[numFibers];
+	
+	if (theMaterials == 0) {
+	  opserr <<"TimoshenkoSection2d::recvSelf -- failed to allocate Material pointers\n";
+	  exit(-1);
+	}
+	
+	for (int j=0; j<numFibers; j++)
+	  theMaterials[j] = 0;
+
+	matData = new double [numFibers*2];
+
+	if (matData == 0) {
+	  opserr <<"TimoshenkoSection2d::recvSelf  -- failed to allocate double array for material data\n";
+	  exit(-1);
+	}
+      }
+    }
+
+    Vector fiberData(matData, 2*numFibers);
+    res += theChannel.recvVector(dbTag, commitTag, fiberData);
+    if (res < 0) {
+      opserr <<  "TimoshenkoSection2d::recvSelf - failed to recv material data\n";
+      return res;
+    }    
+
+    int i;
+    for (i=0; i<numFibers; i++) {
+      int classTag = materialData(2*i);
+      int dbTag = materialData(2*i+1);
+
+      // if material pointed to is blank or not of corrcet type, 
+      // release old and create a new one
+      if (theMaterials[i] == 0)
+	theMaterials[i] = theBroker.getNewNDMaterial(classTag);
+      else if (theMaterials[i]->getClassTag() != classTag) {
+	delete theMaterials[i];
+	theMaterials[i] = theBroker.getNewNDMaterial(classTag);      
+      }
+
+      if (theMaterials[i] == 0) {
+	opserr <<"TimoshenkoSection2d::recvSelf -- failed to allocate double array for material data\n";
+	exit(-1);
+      }
+
+      theMaterials[i]->setDbTag(dbTag);
+      res += theMaterials[i]->recvSelf(commitTag, theChannel, theBroker);
+    }
+
+    double Qz = 0.0;
+    double A  = 0.0;
+    double yLoc, Area;
+
+    // Recompute centroid
+    for (i = 0; i < numFibers; i++) {
+      yLoc = matData[2*i];
+      Area = matData[2*i+1];
+      A  += Area;
+      Qz += yLoc*Area;
+    }
+    
+    yBar = Qz/A;
+  }    
+
+  return res;
 }
 
 void
