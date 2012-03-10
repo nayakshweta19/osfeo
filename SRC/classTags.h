@@ -73,7 +73,8 @@
 #define CONVERGENCE_TEST_CTestRelativeEnergyIncr            6
 #define CONVERGENCE_TEST_CTestRelativeTotalNormDispIncr     7
 #define CONVERGENCE_TEST_CTestFixedNumIter                  8
-
+#define CONVERGENCE_TEST_NormDispAndUnbalance               9
+#define CONVERGENCE_TEST_NormDispOrUnbalance               10
 
 #define GRND_TAG_ElCentroGroundMotion                 1
 #define GROUND_MOTION_TAG_GroundMotionRecord          2
