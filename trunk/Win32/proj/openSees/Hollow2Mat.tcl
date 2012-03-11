@@ -8,11 +8,11 @@ model  BasicBuilder  -ndm  2  -ndf  3
 # --------------- 
 
 # Node    tag    xCrd    yCrd 
-node       1  +0.000000E+000  +0.000000E+000 
-#node       2  +0.000000E+000  +3.100000E+002 
-#node       3  +0.000000E+000  +1.700000E+003 
-#node       4  +0.000000E+000  +9.300000E+002 
-node       5  +0.000000E+000  +3.40000E+003 
+node       1  +0.000000E+000 0.e3; #0.0;    #+0.000000E+000 
+node       2  +0.000000E+000 0.31e3; #0.67e3; #+0.850000E+003 
+node       3  +0.000000E+000 0.62e3; #1.34e3; #+1.700000E+003 
+node       4  +0.000000E+000 0.93e3; #2.01e3; #+2.550000E+003 
+node       5  +0.000000E+000 1.24e3; #2.68e3; #+3.400000E+003 
 
 # Define Single Point Constraints 
 # ------------------------------- 
@@ -26,7 +26,7 @@ uniaxialMaterial  Elastic       1  +2.900000E+004  +0.000000E+000
 
 # Material "CoreConcrete":    matTag    fc'    epsc0    fcu'    epsu    lambda    ft    Ets 
 # C30
-set Fc 14.3
+set Fc 14.1; ##14.3
 set rFc 1.1;
 set rFu 0.2;
 set E [expr 4733.*sqrt($rFc*abs($Fc))]; #for psi: [expr 57000.*sqrt($rFc*abs($Fc))];
@@ -46,7 +46,7 @@ uniaxialMaterial Concrete02 2  [expr -abs(1.*$fpc)] [expr -abs(1.*$epsc0)] [expr
 
 
 # Material "CoverConcrete":    matTag    fc'    epsc0    fcu'    epsu    lambda    ft    Ets 
-set Fc 13.1;
+set Fc 15.1; ## 13.1
 set rFc 1.0;
 set rFu 0.2;
 set E [expr 4733.*sqrt($rFc*abs($Fc))]; #for psi: [expr 57000.*sqrt($rFc*abs($Fc))];
@@ -62,11 +62,11 @@ set Ets  $fT/0.002;
 uniaxialMaterial  Concrete01 3  [expr -abs(1.*$fpc)] [expr -abs(1.*$epsc0)] [expr -abs(1.*$fpcU)] [expr -abs(1.*$epsU)]
 
 # Material "reinforcedBar":    matTag    Fy    E    b    R0    cR1    cR2    <a1    a2    a3    a4>    <sig0> 
-#uniaxialMaterial  Steel02       4  +2.100000E+002  +2.000000E+005  +1.000000E-001  +1.850000E+001  +9.250000E-001  +1.500000E-001  +0.000000E+000  +1.000000E+000  +0.000000E+000  +1.000000E+000  +0.000000E+000 
+uniaxialMaterial  Steel02 4 200 190000 0.1 18.5 0.925 0.15 0 1 0 1 0 
 
 # Material "reinforcedSteel360":    matTag    Fy    Fu    E    Eh    epsh    epsu    <-GABuck  lsr  beta  r  gamma>    <-DMBuck  lsr  <alpha>>    <-CMFatigue  Cf  alpha  Cd>    <-IsoHard  <a1  <limit>>>    <-MPCurveParams  R1  R2  R3> 
 #uniaxialMaterial  ReinforcingSteel       4  +3.600000E+002  +3.350000E+002  +2.000000E+005  +5.000000E+002  +5.000000E-002  +1.200000E-001  -GABuck  +6.000000E+000  +1.000000E+000  +4.000000E-001  +5.000000E-001  -DMBuck  +6.000000E+000  +1.000000E+000  -CMFatigue  +2.600000E-001  +5.060000E-001  +3.890000E-001  -IsoHard  +4.300000E+000  +1.000000E-002  -MPCurveParams  +3.330000E-001  +1.800000E+001  +4.000000E+000 
-set MaterialTag 4;
+set MaterialTag 14;
 set fY 200.;
 set fU [expr 1.3*$fY];
 set Es 1.95e5;
@@ -146,16 +146,16 @@ geomTransf  PDelta       1
 # Define element(s) 
 # ----------------- 
 # Element "Beam":            eleTag    NodeI    NodeJ    NIP    secTag    geoTranTag    <-mass massDens>    <-iter maxIters tol> 
-element  dispBeamColumn       1       1       5     4     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
+element  dispBeamColumn       1       1       2     4     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
 
 # Element "Beam":    eleTag    NodeI    NodeJ    NIP    secTag    geoTranTag    <-mass massDens>    <-iter maxIters tol> 
-#element  dispBeamColumn       2       3       5     5     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
+element  dispBeamColumn       2       2       3     4     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
 
 # Element "Beam":    eleTag    NodeI    NodeJ    NIP    secTag    geoTranTag    <-mass massDens>    <-iter maxIters tol> 
-#element  dispBeamColumn       3       3       5     5     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
+element  dispBeamColumn       3       3       4     4     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
 
 # Element "Beam":    eleTag    NodeI    NodeJ    NIP    secTag    geoTranTag    <-mass massDens>    <-iter maxIters tol> 
-#element  dispBeamColumn       4       4       5     5     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
+element  dispBeamColumn       4       4       5     4     2     1  -mass +4.665600E+005  -iter   20  +1.000000E-004 
 
 
 # Define time series 
@@ -193,7 +193,7 @@ pattern  Plain       2  "Linear" {
     load       5  1.000000E+005  +0.000000E+000   +0.000000E+000 
 } 
 
-recorder Node -file hollow2_nodeReaction.dat -time -node 1 -dof 1 2 3 reaction
+recorder Node -file hollow2_nodeReaction.dat -time -node 1 -dof 1 2 3 reaction;
 recorder Node -file hollow2_node_disp_Output.dat -time -node 5 -dof 1 2 disp;
 
 set Dincr [expr 1.0];	# displacement increment. you want this to be small, but not too small to slow analysis
@@ -231,8 +231,8 @@ initialize
 
 # Perform the Cycle pushover analysis
 # characteristics of cyclic analysis	
-#set iDmax { 5 10 15 20 25 30 35 40 45 50 55 60 65 70 } ; ##20 25 30 35 40 45 50 60 70 80 100 120 140 160 240 };  # vector of displacement-cycle peaks, in terms of storey drift ratio
-set iDmax { 5 10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160} ; ##20 25 30 35 40 45 50 60 70 80 100 120 140 160 240 };  # vector of displacement-cycle peaks, in terms of storey drift ratio
+set iDmax { 5 10 15 20 25 30 35 40 45 50 55 60 65 70 } ; ##20 25 30 35 40 45 50 60 70 80 100 120 140 160 240 };  # vector of displacement-cycle peaks, in terms of storey drift ratio
+#set iDmax { 5 10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160} ; ##20 25 30 35 40 45 50 60 70 80 100 120 140 160 240 };  # vector of displacement-cycle peaks, in terms of storey drift ratio
 set CycleType Full;    # you can do Full / Push / Half cycles with the proc
 set Ncycles 2;				# specify the number of cycles at each peak
 #  ---------------------------------    perform Static Cyclic Displacements Analysis
