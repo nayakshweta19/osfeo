@@ -80,6 +80,19 @@ FunctionEvaluator::getNumberOfEvaluations()
 	return numberOfEvaluations;
 }
 
+int
+FunctionEvaluator::setResponseVariable(const char *label, int lsfTag,
+				       int rvTag, double value)
+{
+  return 0;
+}
+
+int
+FunctionEvaluator::setResponseVariable(const char *label, int lsfTag,
+				       double value)
+{
+  return 0;
+}
 
 /*
 int 
