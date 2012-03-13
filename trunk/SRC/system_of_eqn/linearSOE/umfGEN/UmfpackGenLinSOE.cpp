@@ -108,7 +108,7 @@ UmfpackGenLinSOE::setSize(Graph &theGraph)
     nnz = newNNZ;
 
     lValue = factLVALUE*nnz; // 
-    opserr << "UmfpackGenLinSOE::setSize() : nnz: " << nnz << " lvalue: " << lValue << endln;
+    //opserr << "UmfpackGenLinSOE::setSize() : nnz: " << nnz << " lvalue: " << lValue << endln;
 
     if (lValue > Asize) { // we have to get more space for A and colA
 
