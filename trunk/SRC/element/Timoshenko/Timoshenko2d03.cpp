@@ -332,16 +332,15 @@ Timoshenko2d03::update(void)
       case SECTION_RESPONSE_P:     // axial strain
 	e(j) = oneOverL*v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-	e(j) = oneOverL*(-1.0*v(1) + v(2)); break;
+	e(j) = oneOverL*(- v(1) + v(2)); break;
 	  case SECTION_RESPONSE_VY:    // shear strain
-	e(j) = 0.5 * (v(1)+v(2)); break;
+	e(j) = -0.5 * (v(1)+v(2)); break;
 	  default:
 	break;
       }
 	}
 
     // Set the section deformations
-    //err += theSections[i]->setTrialSectionDeformation(e,L);
 	err += theSections[i]->setTrialSectionDeformation(e);
 
   if (err != 0) {
@@ -1052,8 +1051,8 @@ Timoshenko2d03::getNd(int sec, const Vector &v, double L)
   Nd(0,0) = 1.;
   Nd(1,1) = -x/L + 1.;
   Nd(1,2) =  x/L;
-  Nd(2,1) =  1./L; // need revised
-  Nd(2,2) =  1./L; // need revised
+  Nd(2,1) =  1./L; // shear components 
+  Nd(2,2) =  1./L; // shear components 
   
   return Nd;
 }
