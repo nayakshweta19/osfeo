@@ -25,7 +25,7 @@
 // Written: fmk
 // Created: 04/04
 //
-// Description: This file contains the class implementation of TimoshenkoSection2d.
+// Description: This file contains the class implementation of TimoshenkoSection3d.
 
 #include <stdlib.h>
 #include <math.h>

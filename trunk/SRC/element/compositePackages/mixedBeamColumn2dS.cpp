@@ -63,7 +63,6 @@
 
 using namespace std;
 
-
 Matrix mixedBeamColumn2dS::theMatrix(NEGD,NEGD);
 Vector mixedBeamColumn2dS::theVector(NEGD);
 double mixedBeamColumn2dS::workArea[400];
@@ -75,8 +74,6 @@ Matrix *mixedBeamColumn2dS::nd2 = 0;
 Matrix *mixedBeamColumn2dS::nd1T = 0;
 Matrix *mixedBeamColumn2dS::nd2T = 0;
 
-
-
 #ifdef _USRDLL
 #define OPS_Export extern "C" _declspec(dllexport)
 #elif _MACOSX
@@ -86,12 +83,7 @@ Matrix *mixedBeamColumn2dS::nd2T = 0;
 #define OPS_Export
 #endif
 
-
-//OPS_Export void localInit() {
-//  OPS_Error("mixedBeamColumn2dS element \nWritten by Mark D Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
-//}
-
-// Documentation: Two Dimensional Mixed Beam Column Element
+// Documentation: Two Dimensional Mixed Beam Column Element including Shear Deformation
 // element mixedBeamColumn2dS $tag $iNode $jNode $numIntgrPts $secTag $transfTag <-mass $massDens>
 //   <-integration $intType> <-doRayleigh $rFlag> <-geomLinear>
 //
@@ -560,12 +552,10 @@ mixedBeamColumn2dS::~mixedBeamColumn2dS() {
    delete [] commitedSectionFlexibility;
 }
 
-
 int 
 mixedBeamColumn2dS::getNumExternalNodes(void) const {
    return 2;
 }
-
 
 const ID &
 mixedBeamColumn2dS::getExternalNodes(void) {
@@ -1316,7 +1306,6 @@ mixedBeamColumn2dS::displaySelf(Renderer &theViewer, int displayMode, float fact
   return theViewer.drawLine (v1, v2, 1.0, 1.0);
 }
 
-
 Response* 
 mixedBeamColumn2dS::setResponse(const char **argv, int argc,
                                          OPS_Stream &output) {
@@ -1396,8 +1385,8 @@ mixedBeamColumn2dS::setResponse(const char **argv, int argc,
   return theResponse;
 }
 
-
-int mixedBeamColumn2dS::getResponse(int responseID, Information &eleInfo) {
+int 
+mixedBeamColumn2dS::getResponse(int responseID, Information &eleInfo) {
   if (responseID == 1) { // global forces
     return eleInfo.setVector(this->getResistingForce());
 
@@ -1489,7 +1478,8 @@ mixedBeamColumn2dS::getKg(int sec, double P, double L) {
   return kg;
 }
 
-Matrix mixedBeamColumn2dS::getMd(int sec, Vector dShapeFcn, Vector dFibers, double L) {
+Matrix 
+mixedBeamColumn2dS::getMd(int sec, Vector dShapeFcn, Vector dFibers, double L) {
   double xi[MAX_NUM_SECTIONS];
   beamIntegr->getSectionLocations(numSections, L, xi);
 
@@ -1508,7 +1498,8 @@ Matrix mixedBeamColumn2dS::getMd(int sec, Vector dShapeFcn, Vector dFibers, doub
   return md;
 }
 
-Matrix mixedBeamColumn2dS::getNld_hat(int sec, const Vector &v, double L, bool geomLinear) {
+Matrix 
+mixedBeamColumn2dS::getNld_hat(int sec, const Vector &v, double L, bool geomLinear) {
   double xi[MAX_NUM_SECTIONS];
   beamIntegr->getSectionLocations(numSections, L, xi);
 
@@ -1585,8 +1576,8 @@ mixedBeamColumn2dS::getNd1(int sec, const Vector &v, double L, bool geomLinear){
      Nd1(0,0) = 1.0;
      Nd1(1,1) = -x/L + 1.0;
      Nd1(1,2) =  x/L;
-	 Nd1(2,1) =  1/L; // need revised
-	 Nd1(2,2) =  1/L; // need revised
+	 Nd1(2,1) = 1.0/L; // need revised
+	 Nd1(2,2) = 1.0/L; // need revised
 
    } else {
 
@@ -1598,15 +1589,16 @@ mixedBeamColumn2dS::getNd1(int sec, const Vector &v, double L, bool geomLinear){
      Nd1(1,0) = A;
      Nd1(1,1) = -x/L + 1.0;
      Nd1(1,2) =  x/L;
-	 Nd1(2,1) =  1/L; // need revised
-	 Nd1(2,2) =  1/L; // need revised
+	 Nd1(2,1) = 1.0/L; // need revised
+	 Nd1(2,2) = 1.0/L; // need revised
 
    }
 
    return Nd1;
 }
 
-void mixedBeamColumn2dS::getSectionTangent(int sec,int type,Matrix &kSection) {
+void 
+mixedBeamColumn2dS::getSectionTangent(int sec,int type,Matrix &kSection) {
   int order = sections[sec]->getOrder();
   const ID &code = sections[sec]->getType();
 
@@ -1680,7 +1672,8 @@ void mixedBeamColumn2dS::getSectionTangent(int sec,int type,Matrix &kSection) {
   }
 }
 
-void mixedBeamColumn2dS::getSectionStress(int sec,Vector &fSection) {
+void 
+mixedBeamColumn2dS::getSectionStress(int sec,Vector &fSection) {
   int order = sections[sec]->getOrder();
   const ID &code = sections[sec]->getType();
 
@@ -1740,14 +1733,15 @@ mixedBeamColumn2dS::setSectionDeformation(int sec,Vector &defSection) {
   int res = sections[sec]->setTrialSectionDeformation(sectionDeformation);
 }
 
-
-int mixedBeamColumn2dS::sendSelf(int commitTag, Channel &theChannel){
+int 
+mixedBeamColumn2dS::sendSelf(int commitTag, Channel &theChannel){
   // @todo write mixedBeamColumn2dS::sendSelf
   opserr << "Error: mixedBeamColumn2dS::sendSelf -- not yet implemented for mixedBeamColumn2dS element";
   return -1;
 }
 
-int mixedBeamColumn2dS::recvSelf(int commitTag, Channel &theChannel,
+int 
+mixedBeamColumn2dS::recvSelf(int commitTag, Channel &theChannel,
                                 FEM_ObjectBroker &theBroker){
   // @todo write mixedBeamColumn2dS::recvSelf
   opserr << "Error: mixedBeamColumn2dS::sendSelf -- not yet implemented for mixedBeamColumn2dS element";

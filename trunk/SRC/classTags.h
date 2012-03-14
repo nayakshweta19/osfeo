@@ -354,6 +354,7 @@
 //added by LN
 #define FIBER_TAG_Biaxial2d       3
 #define FIBER_TAG_Biaxial3d       4
+#define FIBER_TAG_Triaxial        5
 #define ND_TAG_CSMMRCPlaneStress  112
 #define ND_TAG_CSMMRCPlateFiber   113
 #define ND_TAG_RAReinforcedConcretePlateFiber  114
@@ -893,7 +894,10 @@
 #define ELE_TAG_Timoshenko2d02 102008
 #define ELE_TAG_Timoshenko2d03 102009
 #define ELE_TAG_Timoshenko2d04 102010
-
+#define ELE_TAG_Timoshenko3d01 102011
+#define ELE_TAG_Timoshenko3d02 102012
+#define ELE_TAG_Timoshenko3d03 102013
+#define ELE_TAG_Timoshenko3d04 102014
 
 #define ELE_TAG_TimoshenkoBeam2d 102001
 
