@@ -23,6 +23,7 @@
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
 #include <ElementResponse.h>
+#include <CompositeResponse.h>
 #include <ElementalLoad.h>
 #include <BeamIntegration.h>
 #include <Parameter.h>
@@ -108,8 +109,8 @@ Timoshenko3d01::Timoshenko3d01(int tag,
     exit(-1);
   }
   for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(5,5);
-    bdT[i] = Matrix(5,5);
+    ndT[i] = Matrix(6,6);
+    bdT[i] = Matrix(6,6);
   }
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
@@ -145,8 +146,8 @@ Timoshenko3d01::Timoshenko3d01()
     exit(-1);
   }
   for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(5,5);
-    bdT[i] = Matrix(5,5);
+    ndT[i] = Matrix(6,6);
+    bdT[i] = Matrix(6,6);
   }
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
@@ -313,7 +314,6 @@ Timoshenko3d01::update(void)
     const ID &code = theSections[i]->getType();
  
 	//double x = L * pts[i];
-	//double C2 = -2+3*C1+3*(1-2*C1)*x;
     Vector e(workArea, order);
 
     for (int j = 0; j < order; j++) {
@@ -323,11 +323,11 @@ Timoshenko3d01::update(void)
       case SECTION_RESPONSE_MZ:    // curvature
 	e(j) = oneOverL*(- v(1) + v(2)); break;
 	  case SECTION_RESPONSE_MY:     // curvature
-	e(j) = oneOverL*((4.0)*v(3) + (2.0)*v(4)); break;
+	e(j) = oneOverL*(- v(3) + v(4)); break;
 	  case SECTION_RESPONSE_VY:    // shear strain
 	e(j) = -0.5 * (v(1)+v(2)); break;
       case SECTION_RESPONSE_VZ:    // shear strain
-	e(j) = -0.5 * (v(1)+v(2)); break;
+	e(j) = -0.5 * (v(3)+v(4)); break;
 	  case SECTION_RESPONSE_T:
 	e(j) = oneOverL*v(5); break;
 	  default:
@@ -367,7 +367,7 @@ Timoshenko3d01::getTangentStiff(void)
   // Loop over the integration points
   int i = 0;
     
-    int order = theSections[i]->getOrder(); // P M V
+    int order = theSections[i]->getOrder(); // P, Mz, My, Vy, Vz, T
     const ID &code = theSections[i]->getType();
 
 	// Get the section tangent stiffness and stress resultant
@@ -786,7 +786,7 @@ Timoshenko3d01::recvSelf(int commitTag, Channel &theChannel,
       crdTransf = theBroker.getNewCrdTransf(crdTransfClassTag);
 
       if (crdTransf == 0) {
-	opserr << "DispBeamColumn2d::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
+	opserr << "Timoshenko3d01::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
 	  crdTransfClassTag << endln;
 	  return -2;	  
       }
@@ -968,59 +968,203 @@ Timoshenko3d01::displaySelf(Renderer &theViewer, int displayMode, float fact)
 Response*
 Timoshenko3d01::setResponse(const char **argv, int argc, OPS_Stream &s)
 {
+    Response *theResponse = 0;
+
+    s.tag("ElementOutput");
+    s.attr("eleType","DispBeamColumn3d");
+    s.attr("eleTag",this->getTag());
+    s.attr("node1",connectedExternalNodes[0]);
+    s.attr("node2",connectedExternalNodes[1]);
+
+    //
+    // we compare argv[0] for known response types 
+    //
+
     // global force - 
     if (strcmp(argv[0],"forces") == 0 || strcmp(argv[0],"force") == 0
-		|| strcmp(argv[0],"globalForce") == 0 || strcmp(argv[0],"globalForces") == 0)
-		return new ElementResponse(this, 1, P);
+	|| strcmp(argv[0],"globalForce") == 0 || strcmp(argv[0],"globalForces") == 0) {
+
+      s.tag("ResponseType","Px_1");
+      s.tag("ResponseType","Py_1");
+      s.tag("ResponseType","Pz_1");
+      s.tag("ResponseType","Mx_1");
+      s.tag("ResponseType","My_1");
+      s.tag("ResponseType","Mz_1");
+      s.tag("ResponseType","Px_2");
+      s.tag("ResponseType","Py_2");
+      s.tag("ResponseType","Pz_2");
+      s.tag("ResponseType","Mx_2");
+      s.tag("ResponseType","My_2");
+      s.tag("ResponseType","Mz_2");
+
+
+      theResponse = new ElementResponse(this, 1, P);
 
     // local force -
-    else if (strcmp(argv[0],"localForce") == 0 || strcmp(argv[0],"localForces") == 0)
-		return new ElementResponse(this, 2, P);
+    }  else if (strcmp(argv[0],"localForce") == 0 || strcmp(argv[0],"localForces") == 0) {
+
+      s.tag("ResponseType","N_ 1");
+      s.tag("ResponseType","Vy_1");
+      s.tag("ResponseType","Vz_1");
+      s.tag("ResponseType","T_1");
+      s.tag("ResponseType","My_1");
+      s.tag("ResponseType","Tz_1");
+      s.tag("ResponseType","N_2");
+      s.tag("ResponseType","Py_2");
+      s.tag("ResponseType","Pz_2");
+      s.tag("ResponseType","T_2");
+      s.tag("ResponseType","My_2");
+      s.tag("ResponseType","Mz_2");
+
+      theResponse = new ElementResponse(this, 2, P);
 
     // chord rotation -
-    else if (strcmp(argv[0],"chordRotation") == 0 || strcmp(argv[0],"chordDeformation") == 0
-	     || strcmp(argv[0],"basicDeformation") == 0)
-      return new ElementResponse(this, 3, Vector(3));
-    
+    }  else if (strcmp(argv[0],"chordRotation") == 0 || strcmp(argv[0],"chordDeformation") == 0 
+	      || strcmp(argv[0],"basicDeformation") == 0) {
+
+      s.tag("ResponseType","eps");
+      s.tag("ResponseType","thetaZ_1");
+      s.tag("ResponseType","thetaZ_2");
+      s.tag("ResponseType","thetaY_1");
+      s.tag("ResponseType","thetaY_2");
+      s.tag("ResponseType","thetaX");
+
+      theResponse = new ElementResponse(this, 3, Vector(6));
+
     // plastic rotation -
-    else if (strcmp(argv[0],"plasticRotation") == 0 || strcmp(argv[0],"plasticDeformation") == 0)
-      return new ElementResponse(this, 4, Vector(3));
-    
-    // section response -
-    else if (strcmp(argv[0],"section") == 0 || strcmp(argv[0],"-section") == 0) {
-      if (argc <= 2)
-	return 0;
-      
-      int sectionNum = atoi(argv[1]);
-      if (sectionNum > 0 && sectionNum <= numSections)
-	return theSections[sectionNum-1]->setResponse(&argv[2], argc-2, s);
-      else
-	return 0;
+    } else if (strcmp(argv[0],"plasticRotation") == 0 || strcmp(argv[0],"plasticDeformation") == 0) {
+
+    s.tag("ResponseType","epsP");
+    s.tag("ResponseType","thetaZP_1");
+    s.tag("ResponseType","thetaZP_2");
+    s.tag("ResponseType","thetaYP_1");
+    s.tag("ResponseType","thetaYP_2");
+    s.tag("ResponseType","thetaXP");
+
+    theResponse = new ElementResponse(this, 4, Vector(6));
+  
+  // section response -
+  } 
+    else if (strstr(argv[0],"sectionX") != 0) {
+      if (argc > 2) {
+	float sectionLoc = atof(argv[1]);
+	
+	double xi[maxNumSections];
+	double L = crdTransf->getInitialLength();
+	beamInt->getSectionLocations(numSections, L, xi);
+	
+	sectionLoc /= L;
+	
+	float minDistance = fabs(xi[0]-sectionLoc);
+	int sectionNum = 0;
+	for (int i = 1; i < numSections; i++) {
+	  if (fabs(xi[i]-sectionLoc) < minDistance) {
+	    minDistance = fabs(xi[i]-sectionLoc);
+	    sectionNum = i;
+	  }
+	}
+	
+	s.tag("GaussPointOutput");
+	s.attr("number",sectionNum+1);
+	s.attr("eta",xi[sectionNum]*L);
+	
+	theResponse = theSections[sectionNum]->setResponse(&argv[2], argc-2, s);
+      }
     }
     
-    else
-      return 0;
+    else if (strcmp(argv[0],"section") ==0) { 
+      if (argc > 1) {
+	
+	int sectionNum = atoi(argv[1]);
+
+	if (sectionNum > 0 && sectionNum <= numSections && argc > 2) {
+	  
+	  double xi[maxNumSections];
+	  double L = crdTransf->getInitialLength();
+	  beamInt->getSectionLocations(numSections, L, xi);
+	  
+	  s.tag("GaussPointOutput");
+	  s.attr("number",sectionNum);
+	  s.attr("eta",xi[sectionNum-1]*L);
+	  
+	  theResponse =  theSections[sectionNum-1]->setResponse(&argv[2], argc-2, s);
+	  
+	  s.endTag();
+	} else if (sectionNum == 0) { // argv[1] was not an int, we want all sections, 
+	
+	  CompositeResponse *theCResponse = new CompositeResponse();
+	  int numResponse = 0;
+	  double xi[maxNumSections];
+	  double L = crdTransf->getInitialLength();
+	  beamInt->getSectionLocations(numSections, L, xi);
+	  
+	  for (int i=0; i<numSections; i++) {
+	    
+	    s.tag("GaussPointOutput");
+	    s.attr("number",i+1);
+	    s.attr("eta",xi[i]*L);
+	    
+	    Response *theSectionResponse = theSections[i]->setResponse(&argv[1], argc-1, s);
+	    
+	    s.endTag();	  
+	    
+	    if (theSectionResponse != 0) {
+	      numResponse = theCResponse->addResponse(theSectionResponse);
+	    }
+	  }
+	  
+	  if (numResponse == 0) // no valid responses found
+	    delete theCResponse;
+	  else
+	    theResponse = theCResponse;
+	}
+      }
+    }
+ 
+  s.endTag();
+  return theResponse;
 }
 
 int 
 Timoshenko3d01::getResponse(int responseID, Information &eleInfo)		//LN modify
 {
+  double N, V, M1, M2, T;
+  double L = crdTransf->getInitialLength();
+  double oneOverL = 1.0/L;
 
-  if (responseID == 1) // global forces
+  if (responseID == 1)
     return eleInfo.setVector(this->getResistingForce());
+    
+  else if (responseID == 2) {
+    // Axial
+    N = q(0);
+    P(6) =  N;
+    P(0) = -N+p0[0];
+    
+    // Torsion
+    T = q(5);
+    P(9) =  T;
+    P(3) = -T;
+    
+    // Moments about z and shears along y
+    M1 = q(1);
+    M2 = q(2);
+    P(5)  = M1;
+    P(11) = M2;
+    V = (M1+M2)*oneOverL;
+    P(1) =  V+p0[1];
+    P(7) = -V+p0[2];
+    
+    // Moments about y and shears along z
+    M1 = q(3);
+    M2 = q(4);
+    P(4)  = M1;
+    P(10) = M2;
+    V = -(M1+M2)*oneOverL;
+    P(2) = -V+p0[3];
+    P(8) =  V+p0[4];
 
-  else if (responseID == 2) { // local forces
-      // Axial
-	  P(3) =  q(0);
-      P(0) = -q(0)+p0[0];
-      // Moments about z and shears along y
-	  P(2) = q(1);
-      P(5) = q(2);
-	  double L = crdTransf->getInitialLength();
-      double V = (q(1)+q(2))/L;
-      P(1) =  V + p0[1];
-      P(4) = -V + p0[2];
-      return eleInfo.setVector(P);
+    return eleInfo.setVector(P);
   }
 
   // Chord rotation
@@ -1029,8 +1173,8 @@ Timoshenko3d01::getResponse(int responseID, Information &eleInfo)		//LN modify
 
   // Plastic rotation
   else if (responseID == 4) {
-    static Vector vp(3);
-    static Vector ve(3);
+    static Vector vp(6);
+    static Vector ve(6);
     const Matrix &kb = this->getInitialBasicStiff();
     kb.Solve(q, ve);
     vp = crdTransf->getBasicTrialDisp();
@@ -1050,15 +1194,20 @@ Timoshenko3d01::getNd(int sec, const Vector &v, double L)
   
   double x = L * xi[sec];
   
-  Matrix Nd(3,3);
+  Matrix Nd(6,6);
   Nd.Zero();
-  
+  //P, Mz, My, Vy, Vz, T
   Nd(0,0) = 1.;
   Nd(1,1) = -x/L + 1.;
   Nd(1,2) =  x/L;
-  Nd(2,1) =  1./L; // shear components 
-  Nd(2,2) =  1./L; // shear components 
-  
+  Nd(2,1) = -x/L + 1.;
+  Nd(2,2) =  x/L;
+  Nd(3,3) =  1./L; // shear components
+  Nd(3,4) =  1./L; // shear components
+  Nd(4,3) =  1./L; // shear components 
+  Nd(4,4) =  1./L; // shear components 
+  Nd(5,5) =  1.; // torsion components 
+
   return Nd;
 }
 
@@ -1070,15 +1219,20 @@ Timoshenko3d01::getBd(int sec, const Vector &v, double L)
   
   double x = L * xi[sec];
   
-  Matrix Bd(3,3);
+  Matrix Bd(6,6);
   Bd.Zero();
   
   Bd(0,0) = 1./L;
   Bd(1,1) = -1./L;
   Bd(1,2) =  1./L;
-  Bd(2,1) = -0.5; // shear components 
-  Bd(2,2) = -0.5; // shear components 
-  
+  Bd(2,1) = -1./L; 
+  Bd(2,2) =  1./L; 
+  Bd(3,3) = -0.5; // shear components
+  Bd(3,4) = -0.5; // shear components
+  Bd(4,3) = -0.5; // shear components 
+  Bd(4,4) = -0.5; // shear components 
+  Bd(5,5) = 1./L; // torsion components 
+
   return Bd;
 }
 
