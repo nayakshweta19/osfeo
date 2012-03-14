@@ -387,6 +387,10 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,  in
 	TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
+TclModelBuilder_addTimoshenko3d01(ClientData clientData, Tcl_Interp *interp,  int argc, 
+	TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
 TclModelBuilder_Pipe3(ClientData clientData, Tcl_Interp *interp, int argc,
 					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
@@ -1211,6 +1215,11 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
+  else if (strcmp(argv[1],"Timoshenko3d01") == 0) {
+	  int result = TclModelBuilder_addTimoshenko3d01(clientData, interp, argc, argv,
+		  theTclDomain, theTclBuilder);
+	  return result;
+  }
   else if (strcmp(argv[1], "TimoshenkoBeamColumn") == 0) {
 	  int result = TclModelBuilder_addTimoshenkoBeamColumn(clientData, interp, argc, argv,
 		  theTclDomain, theTclBuilder);
@@ -1337,7 +1346,7 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 	eleCommands = eleCommands->next;
     }
 
-   //
+    //
     // maybe element in a routine, check existing ones or try loading new ones
     //
 

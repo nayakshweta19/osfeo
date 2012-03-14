@@ -3239,7 +3239,7 @@ TclCommand_add3dFiber(ClientData clientData, Tcl_Interp *interp, int argc,
 {
     // check if a section is being processed
     if (currentSectionTag == 0) {
-	opserr <<  "WARNING subcommand 'fiber' is only valid inside a 'section' command\n";
+	opserr <<  "WARNING subcommand 'fiber3d' is only valid inside a 'section timoshenko' command\n";
 	return TCL_ERROR;
     }	   
     
@@ -3289,40 +3289,31 @@ TclCommand_add3dFiber(ClientData clientData, Tcl_Interp *interp, int argc,
          return TCL_ERROR;
      }                
     
-    UniaxialMaterial *material = OPS_getUniaxialMaterial(matTag);
+    NDMaterial *material = theTclModelBuilder->getNDMaterial(matTag);
 
     int NDM = theTclModelBuilder->getNDM();  
         
-    // creates 2d section      
+    // creates 3d fiber      
     if (NDM == 2) {
-
-	if (material == 0) {
-	    opserr <<  "WARNING invalid material ID for patch\n";
-	    return TCL_ERROR;
-	}   
-
-	theFiber = new UniaxialFiber2d(numFibers, *material, area, yLoc);
-	if (theFiber == 0) {
-	    opserr <<  "WARNING unable to allocate fiber \n";
-	    return TCL_ERROR;
-	}    
-    }
+	  opserr <<  "Triaxial fiber is only for 3d issues\n";
+	  return TCL_ERROR;
+	}  
 
     else if (NDM == 3) {
 
       static Vector fiberPosition(2);
-	fiberPosition(0) = yLoc;
-	fiberPosition(1) = zLoc;
+	  fiberPosition(0) = yLoc;
+	  fiberPosition(1) = zLoc;
 	    
-	theFiber = new UniaxialFiber3d(numFibers, *material, area, fiberPosition);
-	if (theFiber == 0) {
-	    opserr <<  "WARNING unable to allocate fiber \n";
-	    return TCL_ERROR;
-	}    
+	  theFiber = new TriaxialFiber(numFibers, *material, area, fiberPosition);
+	  if (theFiber == 0) {
+	      opserr <<  "WARNING unable to allocate fiber \n";
+	      return TCL_ERROR;
+	  }    
     }
 
     else {
-	opserr <<  "WARNING fiber command for FiberSection only fo 2 or 3d \n";
+	opserr <<  "WARNING fiber3d command for FiberSection only for 3d \n";
 	return TCL_ERROR;
     }    
 	
