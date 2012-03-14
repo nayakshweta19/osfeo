@@ -6644,7 +6644,7 @@ nodeReaction(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
     if (argc < 2) {
 	opserr << "WARNING want - nodeReaction nodeTag? <dof?>\n";
 	return TCL_ERROR;
-   }    
+    }    
 
     int tag;
     int dof = -1;

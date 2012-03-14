@@ -20,29 +20,29 @@
                                                                         
 // $Revision: 1.9 $
 // $Date: 2007/02/02 01:18:42 $
-// $Source: /usr/local/cvs/OpenSees/SRC/material/section/fiber/BiaxialFiber3d.cpp,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/material/section/fiber/TriaxialFiber.cpp,v $
                                                                         
                                                                         
-// File: ~/fiber/BiaxialFiber3d.h
+// File: ~/fiber/TriaxialFiber.h
 //
 // Written: Neallee
 // Created: 2011
 // Revision: 
 //
 // Description: This file contains the implementation for the
-// BiaxialFiber3d class. BiaxialFiber3d provides the abstraction of a
+// TriaxialFiber class. TriaxialFiber provides the abstraction of a
 // uniaxial fiber that forms a fiber section for 3d frame elements.
-// The BiaxialFiber3d is subjected to a stress state with
+// The TriaxialFiber is subjected to a stress state with
 // only one nonzero axial stress and corresponding axial strain.
 //
-// What: "@(#) BiaxialFiber3d.C, revA"
+// What: "@(#) TriaxialFiber.C, revA"
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <UniaxialMaterial.h>
 #include <NDMaterial.h>
-#include <BiaxialFiber3d.h>
+#include <TriaxialFiber.h>
 #include <Vector.h>
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
@@ -51,13 +51,13 @@
 #include <Information.h>
 #include <FiberResponse.h>
 
-Matrix BiaxialFiber3d::ks(3,3); 
-Vector BiaxialFiber3d::fs(3); 
-ID BiaxialFiber3d::code(6); 
+Matrix TriaxialFiber::ks(3,3); 
+Vector TriaxialFiber::fs(3); 
+ID TriaxialFiber::code(6); 
 
 // constructor:
-BiaxialFiber3d::BiaxialFiber3d()
-:Fiber(0, FIBER_TAG_Biaxial3d),
+TriaxialFiber::TriaxialFiber()
+:Fiber(0, FIBER_TAG_Triaxial),
  theMaterial(0), area(0.0)
 {
 	if (code(0) != SECTION_RESPONSE_P) {
@@ -73,16 +73,16 @@ BiaxialFiber3d::BiaxialFiber3d()
    as[1] = 0.0;
 }
 
-BiaxialFiber3d::BiaxialFiber3d(int tag, 
+TriaxialFiber::TriaxialFiber(int tag, 
                                  NDMaterial &theMat,
                                  double Area, const Vector &position)
-:Fiber(tag, FIBER_TAG_Biaxial3d),
+:Fiber(tag, FIBER_TAG_Triaxial),
  theMaterial(0), area(Area)
 {
 	theMaterial = theMat.getCopy("BeamFiber");  // get a copy of the MaterialModel
 
 	if (theMaterial == 0) {
-	  opserr << "BiaxialFiber3d::BiaxialFiber3d -- failed to get copy of NDMaterial\n";
+	  opserr << "TriaxialFiber::TriaxialFiber -- failed to get copy of NDMaterial\n";
 	  exit(-1);
 	}
 	
@@ -100,7 +100,7 @@ BiaxialFiber3d::BiaxialFiber3d(int tag,
 }
 
 // destructor:
-BiaxialFiber3d::~BiaxialFiber3d ()
+TriaxialFiber::~TriaxialFiber ()
 {
    if (theMaterial != 0)
       delete theMaterial;
@@ -108,7 +108,7 @@ BiaxialFiber3d::~BiaxialFiber3d ()
 
 
 int   
-BiaxialFiber3d::setTrialFiberStrain(const Vector &vs)
+TriaxialFiber::setTrialFiberStrain(const Vector &vs)
 {
   Vector strain;
   strain(0)= vs(0) + as[0]*vs(1) + as[1]*vs(2);
@@ -116,7 +116,7 @@ BiaxialFiber3d::setTrialFiberStrain(const Vector &vs)
   if (theMaterial != 0)
       return theMaterial->setTrialStrain(strain);
   else {
-    opserr << "BiaxialFiber3d::setTrialFiberStrain() - no material!\n";
+    opserr << "TriaxialFiber::setTrialFiberStrain() - no material!\n";
     return -1; // in case fatal does not exit
   }
 }
@@ -125,7 +125,7 @@ BiaxialFiber3d::setTrialFiberStrain(const Vector &vs)
 
 // get fiber stress resultants 
 Vector &
-BiaxialFiber3d::getFiberStressResultants (void)
+TriaxialFiber::getFiberStressResultants (void)
 {
     Vector df = theMaterial->getStress();
 	df = df * area;
@@ -142,7 +142,7 @@ BiaxialFiber3d::getFiberStressResultants (void)
 
 // get contribution of fiber to section tangent stiffness
 Matrix &
-BiaxialFiber3d::getFiberTangentStiffContr(void) 
+TriaxialFiber::getFiberTangentStiffContr(void) 
 {
     // ks = (as^as) * area * Et;
     Matrix value = theMaterial->getTangent();
@@ -170,7 +170,7 @@ BiaxialFiber3d::getFiberTangentStiffContr(void)
 }
 
 Fiber*
-BiaxialFiber3d::getCopy (void)
+TriaxialFiber::getCopy (void)
 {
    // make a copy of the fiber 
    static Vector position(2);
@@ -178,46 +178,46 @@ BiaxialFiber3d::getCopy (void)
    position(0) = -as[0];
    position(1) =  as[1];
 
-   BiaxialFiber3d *theCopy = new BiaxialFiber3d (this->getTag(), 
+   TriaxialFiber *theCopy = new TriaxialFiber (this->getTag(), 
                                                    *theMaterial, area, 
                                                    position);
    return theCopy;
 }  
 
 int
-BiaxialFiber3d::getOrder(void)
+TriaxialFiber::getOrder(void)
 {
 	return 3;
 }
 
 const ID&
-BiaxialFiber3d::getType(void)
+TriaxialFiber::getType(void)
 {
 	return code;
 }
 
 int   
-BiaxialFiber3d::commitState(void)
+TriaxialFiber::commitState(void)
 {
    return theMaterial->commitState();
 }
 
 
 int   
-BiaxialFiber3d::revertToLastCommit(void)
+TriaxialFiber::revertToLastCommit(void)
 {
    return theMaterial->revertToLastCommit();
 }
 
 int   
-BiaxialFiber3d::revertToStart(void)
+TriaxialFiber::revertToStart(void)
 {
    return theMaterial->revertToStart();
 }
 
 
 int   
-BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
+TriaxialFiber::sendSelf(int commitTag, Channel &theChannel)
 {
     // 
     // store tag and material info in an ID and send it
@@ -236,7 +236,7 @@ BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
     idData(2) = matDbTag;
     
     if (theChannel.sendID(dbTag, commitTag, idData) < 0)  {
-	opserr << "BiaxialFiber3d::sendSelf() -  failed to send ID data\n";
+	opserr << "TriaxialFiber::sendSelf() -  failed to send ID data\n";
 	return -1;
     }    
     
@@ -249,13 +249,13 @@ BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
     dData(1) = as[0];
     dData(2) = as[1];
     if (theChannel.sendVector(dbTag, commitTag, dData) < 0)  {
-      opserr << "BiaxialFiber3d::sendSelf() -  failed to send Vector data\n";
+      opserr << "TriaxialFiber::sendSelf() -  failed to send Vector data\n";
       return -2;
     }    
 
     // now invoke sendSelf on the material
     if (theMaterial->sendSelf(commitTag, theChannel) < 0) {
-      opserr << "BiaxialFiber3d::sendSelf() -  the material failed in sendSelf()\n";
+      opserr << "TriaxialFiber::sendSelf() -  the material failed in sendSelf()\n";
       return -3;
     }    	
     
@@ -264,7 +264,7 @@ BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
 
 
 int   
-BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel, 
+TriaxialFiber::recvSelf(int commitTag, Channel &theChannel, 
 			  FEM_ObjectBroker &theBroker)
 {
     // 
@@ -275,7 +275,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     int dbTag = this->getDbTag();
     
     if (theChannel.recvID(dbTag, commitTag, idData) < 0)  {
-	opserr << "BiaxialFiber3d::recvSelf() -  failed to recv ID data\n";
+	opserr << "TriaxialFiber::recvSelf() -  failed to recv ID data\n";
 	return -1;
     }    
 
@@ -287,7 +287,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     
     static Vector dData(3);
     if (theChannel.recvVector(dbTag, commitTag, dData) < 0)  {
-      opserr << "BiaxialFiber3d::recvSelf() -  failed to recv Vector data\n";
+      opserr << "TriaxialFiber::recvSelf() -  failed to recv Vector data\n";
 	return -2;
     }        
     area = dData(0);
@@ -313,7 +313,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     if (theMaterial == 0) {
 	theMaterial = theBroker.getNewNDMaterial(matClassTag);
 	if (theMaterial == 0) {
-	  opserr << "BiaxialFiber3d::recvSelf() - " << 
+	  opserr << "TriaxialFiber::recvSelf() - " << 
 	    "failed to get a UniaxialMaterial of type "<< matClassTag << endln;
 	    return -3;
 	}
@@ -324,7 +324,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
 
     // now invoke recvSelf on the material
     if (theMaterial->recvSelf(commitTag, theChannel, theBroker) < 0) {
-      opserr << "BiaxialFiber3d::recvSelf() -  the material failed in recvSelf()\n";
+      opserr << "TriaxialFiber::recvSelf() -  the material failed in recvSelf()\n";
 	return -4;
     }    	
 
@@ -332,16 +332,16 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
 }
 
 
-void BiaxialFiber3d::Print(OPS_Stream &s, int flag)
+void TriaxialFiber::Print(OPS_Stream &s, int flag)
 {
-    s << "\nbiaxialFiber3d, tag: " << this->getTag() << endln;
+    s << "\nTriaxialFiber, tag: " << this->getTag() << endln;
     s << "\tArea: " << area << endln; 
     s << "\tMatrix as: " << 1.0 << " " << as[0] << " " << as[1] << endln; 
     s << "\tMaterial, tag: " << theMaterial->getTag() << endln;
 }
 
 Response*
-BiaxialFiber3d::setResponse(const char **argv, int argc, OPS_Stream &s)
+TriaxialFiber::setResponse(const char **argv, int argc, OPS_Stream &s)
 {
 	if (argc == 0)
 		return 0;
@@ -354,7 +354,7 @@ BiaxialFiber3d::setResponse(const char **argv, int argc, OPS_Stream &s)
 }
 
 int
-BiaxialFiber3d::getResponse(int responseID, Information &fibInfo)
+TriaxialFiber::getResponse(int responseID, Information &fibInfo)
 {
 	switch(responseID) {
 		case 1:
@@ -366,7 +366,7 @@ BiaxialFiber3d::getResponse(int responseID, Information &fibInfo)
 }
 
 void 
-BiaxialFiber3d::getFiberLocation(double &yLoc, double &zLoc)
+TriaxialFiber::getFiberLocation(double &yLoc, double &zLoc)
 {
 	yLoc = -as[0];
 	zLoc = as[1];

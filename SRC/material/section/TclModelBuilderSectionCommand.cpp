@@ -99,6 +99,7 @@
 #include <UniaxialFiber3d.h>
 #include <BiaxialFiber2d.h>
 #include <BiaxialFiber3d.h>
+#include <TriaxialFiber.h>
 
 #include <Bidirectional.h>
 #include <Isolator2spring.h>
@@ -5853,7 +5854,11 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 				
 				if (fibersArea(k) < 0) opserr << "ERROR: " << fiberPosition(0) << " " << fiberPosition(1) << endln;
 				
-				fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition);
+				if (material->getOrder() == 3) {
+				    fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition);
+				} else if (material->getOrder() == 6) {
+					fiber[i] = new TriaxialFiber(k, *material, fibersArea(k), fiberPosition);
+				}
 
 				if (!fiber[k])
 				{
