@@ -47,7 +47,7 @@ Timoshenko3d01::Timoshenko3d01(int tag,
     :Element (tag, ELE_TAG_Timoshenko3d01), 
     numSections(1), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2), 
-	Q(6), q(3), C1(c), rho(r), parameterID(0)
+	Q(12), q(6), C1(c), rho(r), parameterID(0)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
@@ -134,6 +134,7 @@ Timoshenko3d01::Timoshenko3d01()
   p0[2] = 0.0;
   p0[3] = 0.0;
   p0[4] = 0.0;
+
   theNodes[0] = 0;
   theNodes[1] = 0;
 
