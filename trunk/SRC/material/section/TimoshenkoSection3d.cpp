@@ -48,9 +48,9 @@
 ID TimoshenkoSection3d::code(6);
 
 // constructors:
-TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers): 
+TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, double gj): 
   SectionForceDeformation(tag, SEC_TAG_TimoshenkoSection3d),
-  numFibers(num), theMaterials(0), matData(0),
+  numFibers(num), theMaterials(0), matData(0), GJ(gj),
   yBar(0.0), zBar(0.0), e(6), eCommit(6), s(0), ks(0)
 {
   if (numFibers != 0) {
@@ -121,7 +121,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers):
 // constructor for blank object that recvSelf needs to be invoked upon
 TimoshenkoSection3d::TimoshenkoSection3d():
   SectionForceDeformation(0, SEC_TAG_TimoshenkoSection3d),
-  numFibers(0), theMaterials(0), matData(0),
+  numFibers(0), theMaterials(0), matData(0), GJ(0),
   yBar(0.0), zBar(0.0), e(6), eCommit(6), s(0), ks(0)
 {
   s = new Vector(sData, 6);
@@ -309,8 +309,9 @@ TimoshenkoSection3d::getSectionTangent(void)
     kData[28] += five6*d22; //(4,4)
     
     // Torsion term
-    kData[35] += z2*d11 - yz*(d12+d21) + y2*d22; //(5,5)
-    
+	if (GJ == 0.0) kData[35] += z2*d11 - yz*(d12+d21) + y2*d22; //(5,5)
+	else           kData[35] = GJ;
+
     // Bending-torsion coupling terms
     tmp = -z*d01 + y*d02;
     kData[5] += tmp;    //(0,5)

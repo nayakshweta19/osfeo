@@ -1436,7 +1436,8 @@ TclCommand_addFiberIntSection (ClientData clientData, Tcl_Interp *interp, int ar
 }
 
 //////////////////////////////////////////////////////////////////////////
-int TclCommand_addRASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
+int 
+TclCommand_addRASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
 				TCL_Char **argv, TclModelBuilder *theTclModelBuilder) 
 {     
 	int secTag;
@@ -1527,7 +1528,8 @@ int TclCommand_addRASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp,
 	return TCL_OK;
 }
 
-int TclCommand_addFASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
+int 
+TclCommand_addFASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
 	TCL_Char **argv, TclModelBuilder *theTclModelBuilder) 
 	{     
 	int secTag;
@@ -1618,7 +1620,8 @@ int TclCommand_addFASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp,
 	return TCL_OK;
 }
 
-int TclCommand_addCSMMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
+int 
+TclCommand_addCSMMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
                                      TCL_Char **argv, TclModelBuilder *theTclModelBuilder) 
 {     
 	int secTag;
@@ -1709,7 +1712,8 @@ int TclCommand_addCSMMFiberSection2d(ClientData clientData, Tcl_Interp *interp, 
 	return TCL_OK;
 }
 
-int TclCommand_addMCFTFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
+int 
+TclCommand_addMCFTFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
 	TCL_Char **argv, TclModelBuilder *theTclModelBuilder)
 {
 	int secTag;
@@ -1796,7 +1800,8 @@ int TclCommand_addMCFTFiberSection2d(ClientData clientData, Tcl_Interp *interp, 
 	return TCL_OK;
 }
 
-int TclCommand_addTimoshenkoSection3d(ClientData clientData, Tcl_Interp *interp, int argc,
+int 
+TclCommand_addTimoshenkoSection3d(ClientData clientData, Tcl_Interp *interp, int argc,
 	TCL_Char **argv, TclModelBuilder *theTclModelBuilder)
 {
 	int secTag;
@@ -5861,9 +5866,9 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 			
 			SectionForceDeformation *section = 0;
 			if (isTorsion)
-				section = new TimoshenkoSection3d(secTag, numFibers, fiber);
+				section = new TimoshenkoSection3d(secTag, numFibers, fiber, GJ);
 			else
-				section = new TimoshenkoSection3d(secTag, numFibers, fiber);
+				section = new TimoshenkoSection3d(secTag, numFibers, fiber, GJ);
 			
 			// Delete fibers
 			for (i = 0; i < numFibers; i++)

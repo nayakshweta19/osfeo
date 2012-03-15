@@ -45,7 +45,7 @@ class TimoshenkoSection3d : public SectionForceDeformation
 {
   public:
     TimoshenkoSection3d(); 
-    TimoshenkoSection3d(int tag, int numFibers, Fiber **fibers); 
+    TimoshenkoSection3d(int tag, int numFibers, Fiber **fibers, double gj); 
     ~TimoshenkoSection3d();
 
     int   setTrialSectionDeformation(const Vector &deforms); 
@@ -86,7 +86,9 @@ class TimoshenkoSection3d : public SectionForceDeformation
     
     double yBar;       // Section centroid
     double zBar;
-  
+
+    double GJ;
+
     static ID code;
 
     Vector e;          // trial section deformations 
