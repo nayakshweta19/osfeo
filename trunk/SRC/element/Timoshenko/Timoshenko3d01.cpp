@@ -322,9 +322,9 @@ Timoshenko3d01::update(void)
       case SECTION_RESPONSE_P:     // axial strain
 	e(j) = oneOverL*v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-	e(j) = oneOverL*(- v(1) + v(2)); break;
+	e(j) = oneOverL*(-v(1) + v(2)); break;
 	  case SECTION_RESPONSE_MY:     // curvature
-	e(j) = oneOverL*(- v(3) + v(4)); break;
+	e(j) = oneOverL*(-v(3) + v(4)); break;
 	  case SECTION_RESPONSE_VY:    // shear strain
 	e(j) = -0.5 * (v(1)+v(2)); break;
       case SECTION_RESPONSE_VZ:    // shear strain
@@ -377,16 +377,17 @@ Timoshenko3d01::getTangentStiff(void)
     
 	bd[i] = this->getBd(i, v, L);
 	//nd[i] = this->getNd(i, v, L);
-	for( int j = 0; j < 6; j++ ){
-      for( int k = 0; k < 6; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-        //ndT[i](k,j) = nd[i](j,k);
-      }
-    }
+	//for( int j = 0; j < 6; j++ ){
+    //  for( int k = 0; k < 6; k++ ){
+    //    bdT[i](k,j) = bd[i](j,k);
+    //    //ndT[i](k,j) = nd[i](j,k);
+    //  }
+    //}
     // Perform numerical integration
-	kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
-    
-	q = q + L * wts[i] * bdT[i] * s;
+	//kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
+    kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
+	//q = q + L * wts[i] * bdT[i] * s;
+	q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
 
   // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
@@ -428,13 +429,14 @@ Timoshenko3d01::getInitialBasicStiff()
     const Matrix &ks = theSections[i]->getInitialTangent();
     
 	bd[i] = this->getBd(i, v, L);
-    for( int j = 0; j < 6; j++ ){
-      for( int k = 0; k < 6; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
+    //for( int j = 0; j < 6; j++ ){
+    //  for( int k = 0; k < 6; k++ ){
+    //    bdT[i](k,j) = bd[i](j,k);
+    //  }
+    //}
   // Perform numerical integration
-  kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
+  //kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
+  kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
 
   return kb;
 }
@@ -626,13 +628,14 @@ Timoshenko3d01::getResistingForce()
     const Vector &s = theSections[i]->getStressResultant();
     
 	bd[i] = this->getBd(i, v, L);
-	for( int j = 0; j < 6; j++ ){
-      for( int k = 0; k < 6; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
+	//for( int j = 0; j < 6; j++ ){
+    //  for( int k = 0; k < 6; k++ ){
+    //    bdT[i](k,j) = bd[i](j,k);
+    //  }
+    //}
     // Perform numerical integration on internal force
-	q = q + L * wts[i] * bdT[i] * s;
+	//q = q + L * wts[i] * bdT[i] * s;
+	q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
 
   // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
@@ -1200,12 +1203,12 @@ Timoshenko3d01::getNd(int sec, const Vector &v, double L)
   //P, Mz, My, Vy, Vz, T
   Nd(0,0) = 1.;
   Nd(1,1) = -x/L + 1.;
-  Nd(1,2) =  x/L;
-  Nd(2,1) = -x/L + 1.;
-  Nd(2,2) =  x/L;
+  Nd(1,3) =  x/L;
+  Nd(2,2) = -x/L + 1.;
+  Nd(2,4) =  x/L;
+  Nd(3,1) =  1./L; // shear components
   Nd(3,3) =  1./L; // shear components
-  Nd(3,4) =  1./L; // shear components
-  Nd(4,3) =  1./L; // shear components 
+  Nd(4,2) =  1./L; // shear components 
   Nd(4,4) =  1./L; // shear components 
   Nd(5,5) =  1.; // torsion components 
 
@@ -1225,12 +1228,12 @@ Timoshenko3d01::getBd(int sec, const Vector &v, double L)
   
   Bd(0,0) = 1./L;
   Bd(1,1) = -1./L;
-  Bd(1,2) =  1./L;
-  Bd(2,1) = -1./L; 
-  Bd(2,2) =  1./L; 
+  Bd(1,3) =  1./L;
+  Bd(2,2) = -1./L; 
+  Bd(2,4) =  1./L; 
+  Bd(3,1) = -0.5; // shear components
   Bd(3,3) = -0.5; // shear components
-  Bd(3,4) = -0.5; // shear components
-  Bd(4,3) = -0.5; // shear components 
+  Bd(4,2) = -0.5; // shear components 
   Bd(4,4) = -0.5; // shear components 
   Bd(5,5) = 1./L; // torsion components 
 
