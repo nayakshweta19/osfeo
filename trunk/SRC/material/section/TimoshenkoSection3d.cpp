@@ -87,7 +87,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
       Qy += zLoc*Area;
       a  += Area;
 
-      matData[i*3]   = -yLoc;
+      matData[i*3]   = yLoc;
       matData[i*3+1] = zLoc;
       matData[i*3+2] = Area;
 
@@ -98,7 +98,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
 
     }
 
-    yBar = -Qz/a;
+    yBar = Qz/a;
     zBar = Qy/a;
   }
 
@@ -113,8 +113,8 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
   code(0) = SECTION_RESPONSE_P;
   code(1) = SECTION_RESPONSE_MZ;
   code(2) = SECTION_RESPONSE_MY;
-  code(3) = SECTION_RESPONSE_VY;
-  code(4) = SECTION_RESPONSE_VZ;
+  code(3) = SECTION_RESPONSE_VZ;
+  code(4) = SECTION_RESPONSE_VY;
   code(5) = SECTION_RESPONSE_T;
 }
 
@@ -136,8 +136,8 @@ TimoshenkoSection3d::TimoshenkoSection3d():
   code(0) = SECTION_RESPONSE_P;
   code(1) = SECTION_RESPONSE_MZ;
   code(2) = SECTION_RESPONSE_MY;
-  code(3) = SECTION_RESPONSE_VY;
-  code(4) = SECTION_RESPONSE_VZ;
+  code(3) = SECTION_RESPONSE_VZ;
+  code(4) = SECTION_RESPONSE_VY;
   code(5) = SECTION_RESPONSE_T;
 }
 
@@ -202,46 +202,6 @@ TimoshenkoSection3d::setTrialSectionDeformation (const Vector &deforms)
   return res;
 }
 
-/*
-const Matrix&
-TimoshenkoSection3d::getInitialTangent(void)
-{
-  kData[0] = 0.0; kData[1] = 0.0; kData[2] = 0.0; kData[3] = 0.0;
-  kData[4] = 0.0; kData[5] = 0.0; kData[6] = 0.0; kData[7] = 0.0;
-  kData[8] = 0.0; 
-
-  int loc = 0;
-
-  for (int i = 0; i < numFibers; i++) {
-    NDMaterial *theMat = theMaterials[i];
-    double y = matData[loc++] - yBar;
-    double z = matData[loc++] - zBar;
-    double A = matData[loc++];
-
-    const Matrix &tangent = theMat->getTangent();
-
-    double value = tangent(0,0) * A;
-    double vas1 = y*value;
-    double vas2 = z*value;
-    double vas1as2 = vas1*z;
-
-    kData[0] += value;
-    kData[1] += vas1;
-    kData[2] += vas2;
-    
-    kData[4] += vas1 * y;
-    kData[5] += vas1as2;
-    
-    kData[8] += vas2 * z; 
-  }
-
-  kData[3] = kData[1];
-  kData[6] = kData[2];
-  kData[7] = kData[5];
-
-  return *ks;
-}*/
-
 const Vector&
 TimoshenkoSection3d::getSectionDeformation(void)
 {
@@ -303,10 +263,10 @@ TimoshenkoSection3d::getSectionTangent(void)
     kData[13] += tmp;     //(2,1)
     
     // Shear terms
-    kData[21] += five6*d11; //(3,3)
-    kData[22] += five6*d12; //(3,4)
-    kData[27] += five6*d21; //(4,3)
-    kData[28] += five6*d22; //(4,4)
+    kData[21] += d11; //(3,3)five6*
+    kData[22] += d12; //(3,4)five6*
+    kData[27] += d21; //(4,3)five6*
+    kData[28] += d22; //(4,4)five6*
     
     // Torsion term
 	if (GJ == 0.0) kData[35] += z2*d11 - yz*(d12+d21) + y2*d22; //(5,5)
@@ -323,9 +283,9 @@ TimoshenkoSection3d::getSectionTangent(void)
     kData[32] += z*tmp; //(5,2)
     
     // Hit tangent terms with root56
-    d01 *= root56; d02 *= root56;
-    d10 *= root56; d11 *= root56; d12 *= root56;
-    d20 *= root56; d21 *= root56; d22 *= root56;
+    //d01 *= root56; d02 *= root56;
+    //d10 *= root56; d11 *= root56; d12 *= root56;
+    //d20 *= root56; d21 *= root56; d22 *= root56;
     
     // Bending-shear coupling terms
     kData[3] += d01;    //(0,3)
@@ -653,9 +613,9 @@ TimoshenkoSection3d::recvSelf(int commitTag, Channel &theChannel,
 
     // Recompute centroid
     for (i = 0; i < numFibers; i++) {
-      yLoc = -matData[2*i];
-      zLoc = matData[2*i+1];
-      Area = matData[2*i+2];
+      yLoc = -matData[3*i];
+      zLoc = matData[3*i+1];
+      Area = matData[3*i+2];
       A  += Area;
       Qz += yLoc*Area;
       Qy += zLoc*Area;

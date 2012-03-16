@@ -379,11 +379,11 @@ Timoshenko2d03::getTangentStiff(void)
     const Vector &s = theSections[i]->getStressResultant();			
     
 	bd[i] = this->getBd(i, v, L);
-	nd[i] = this->getNd(i, v, L);
+	//nd[i] = this->getNd(i, v, L);
 	for( int j = 0; j < 3; j++ ){
       for( int k = 0; k < 3; k++ ){
         bdT[i](k,j) = bd[i](j,k);
-        ndT[i](k,j) = nd[i](j,k);
+        //ndT[i](k,j) = nd[i](j,k);
       }
     }
     // Perform numerical integration
