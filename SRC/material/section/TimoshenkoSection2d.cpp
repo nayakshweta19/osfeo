@@ -542,8 +542,8 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
 
     // Recompute centroid
     for (i = 0; i < numFibers; i++) {
-      yLoc = matData[2*i];
-      Area = matData[2*i+1];
+      yLoc = matData[3*i];
+      Area = matData[3*i+1];
       A  += Area;
       Qz += yLoc*Area;
     }
