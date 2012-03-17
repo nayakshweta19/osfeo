@@ -53,7 +53,7 @@ class BiaxialFiber3d: public Fiber
   public:
     BiaxialFiber3d ();    
     BiaxialFiber3d (int tag, NDMaterial &theMat, double Area, 
-                     const Vector &position);
+                     const Vector &position, const Vector &vecxzPlane);
  
     ~BiaxialFiber3d();
 
@@ -91,6 +91,7 @@ class BiaxialFiber3d: public Fiber
     static Matrix ks;       // static class wide matrix object for returns
     static Vector fs;	    // static class wide vector object for returns					
     static ID code;
+	double R[3];            // Transform for fiber normal to the reference coordinate
 };
 
 

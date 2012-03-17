@@ -51,52 +51,54 @@
 #include <Information.h>
 #include <FiberResponse.h>
 
-Matrix BiaxialFiber3d::ks(3,3); 
-Vector BiaxialFiber3d::fs(3); 
-ID BiaxialFiber3d::code(6); 
+Matrix BiaxialFiber3d::ks(2,2); 
+Vector BiaxialFiber3d::fs(2); 
+ID BiaxialFiber3d::code(3); 
 
 // constructor:
 BiaxialFiber3d::BiaxialFiber3d()
-:Fiber(0, FIBER_TAG_Biaxial3d),
- theMaterial(0), area(0.0)
+               :Fiber(0, FIBER_TAG_Biaxial3d),
+                theMaterial(0), area(0.0)
 {
-	if (code(0) != SECTION_RESPONSE_P) {
-       code(0) = SECTION_RESPONSE_P;
-       code(1) = SECTION_RESPONSE_MZ;
-       code(2) = SECTION_RESPONSE_VY;
-       code(3) = SECTION_RESPONSE_MY;
-       code(4) = SECTION_RESPONSE_VZ;
-       code(5) = SECTION_RESPONSE_T;
-	}
+  if (code(0) != SECTION_RESPONSE_P) {
+    code(0) = SECTION_RESPONSE_P;
+    code(1) = SECTION_RESPONSE_MZ;
+	code(2) = SECTION_RESPONSE_VY;
+  }
 
    as[0] = 0.0;
    as[1] = 0.0;
+
+   R[0] = 0.0;
+   R[1] = 0.0;
+   R[2] = 0.0;
 }
 
 BiaxialFiber3d::BiaxialFiber3d(int tag, 
-                                 NDMaterial &theMat,
-                                 double Area, const Vector &position)
-:Fiber(tag, FIBER_TAG_Biaxial3d),
- theMaterial(0), area(Area)
+                NDMaterial &theMat,
+                double Area, const Vector &position, const Vector &vecxzPlane)
+               :Fiber(tag, FIBER_TAG_Biaxial3d),
+                theMaterial(0), area(Area)
 {
-	theMaterial = theMat.getCopy("BeamFiber");  // get a copy of the MaterialModel
+	theMaterial = theMat.getCopy("BeamFiber2d");  // get a copy of the MaterialModel
 
 	if (theMaterial == 0) {
 	  opserr << "BiaxialFiber3d::BiaxialFiber3d -- failed to get copy of NDMaterial\n";
 	  exit(-1);
 	}
 	
-	if (code(0) != SECTION_RESPONSE_P) {
-		code(0) = SECTION_RESPONSE_P;
-		code(1) = SECTION_RESPONSE_MZ;
-		code(2) = SECTION_RESPONSE_VY;
-		code(3) = SECTION_RESPONSE_MY;
-		code(4) = SECTION_RESPONSE_VZ;
-		code(5) = SECTION_RESPONSE_T;
-	}
+  if (code(0) != SECTION_RESPONSE_P) {
+    code(0) = SECTION_RESPONSE_P;
+    code(1) = SECTION_RESPONSE_MZ;
+	code(2) = SECTION_RESPONSE_VY;
+  }
 
 	as[0] = -position(0);
 	as[1] =  position(1);
+
+	R[0] = vecxzPlane(0);
+    R[1] = vecxzPlane(1);
+    R[2] = vecxzPlane(2);
 }
 
 // destructor:
@@ -106,12 +108,15 @@ BiaxialFiber3d::~BiaxialFiber3d ()
       delete theMaterial;
 }
 
-
 int   
 BiaxialFiber3d::setTrialFiberStrain(const Vector &vs)
 {
+  // Use the section kinematic matrix to get the fiber strain
+  // eps = as * vs;
   Vector strain;
   strain(0)= vs(0) + as[0]*vs(1) + as[1]*vs(2);
+  strain(1) = vs(1);
+  strain(2) = vs(2);                              //need revise
 
   if (theMaterial != 0)
       return theMaterial->setTrialStrain(strain);
@@ -121,14 +126,14 @@ BiaxialFiber3d::setTrialFiberStrain(const Vector &vs)
   }
 }
 
-
-
 // get fiber stress resultants 
 Vector &
 BiaxialFiber3d::getFiberStressResultants (void)
 {
-    Vector df = theMaterial->getStress();
-	df = df * area;
+    // Use the section kinematic matrix to get the fiber 
+    // stress resultant vector
+    // fs = as^ * area * sigma;Vector df = theMaterial->getStress();
+	Vector df = theMaterial->getStress() * area;
 
     // fs = as^ df;
     fs(0) = df(0);
@@ -138,12 +143,12 @@ BiaxialFiber3d::getFiberStressResultants (void)
     return fs;
 }
 
-
-
 // get contribution of fiber to section tangent stiffness
 Matrix &
 BiaxialFiber3d::getFiberTangentStiffContr(void) 
 {
+    // Use the section kinematic matrix to get the fiber 
+    // tangent stiffness matrix
     // ks = (as^as) * area * Et;
     Matrix value = theMaterial->getTangent();
 	value = value * area;
@@ -174,13 +179,17 @@ BiaxialFiber3d::getCopy (void)
 {
    // make a copy of the fiber 
    static Vector position(2);
+   static Vector vecxzPlane(3);
 
    position(0) = -as[0];
    position(1) =  as[1];
+   vecxzPlane(0) = R[0];
+   vecxzPlane(1) = R[1];
+   vecxzPlane(2) = R[2];
 
    BiaxialFiber3d *theCopy = new BiaxialFiber3d (this->getTag(), 
                                                    *theMaterial, area, 
-                                                   position);
+                                                   position, vecxzPlane);
    return theCopy;
 }  
 
@@ -202,7 +211,6 @@ BiaxialFiber3d::commitState(void)
    return theMaterial->commitState();
 }
 
-
 int   
 BiaxialFiber3d::revertToLastCommit(void)
 {
@@ -214,7 +222,6 @@ BiaxialFiber3d::revertToStart(void)
 {
    return theMaterial->revertToStart();
 }
-
 
 int   
 BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
@@ -261,7 +268,6 @@ BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
     
     return 0;
 }
-
 
 int   
 BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel, 
@@ -330,7 +336,6 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
 
     return 0;
 }
-
 
 void BiaxialFiber3d::Print(OPS_Stream &s, int flag)
 {

@@ -85,14 +85,12 @@ BiaxialFiber2d::BiaxialFiber2d(): Fiber(0, FIBER_TAG_Biaxial2d),
   }
 }
 
-
 // Destructor: 
 BiaxialFiber2d::~BiaxialFiber2d ()
 {
   if (theMaterial != 0)
     delete theMaterial;
 }
-
 
 int   
 BiaxialFiber2d::setTrialFiberStrain(const Vector &vs)
@@ -106,8 +104,6 @@ BiaxialFiber2d::setTrialFiberStrain(const Vector &vs)
   
   return theMaterial->setTrialStrain(strain);
 }
-
-
 
 // get fiber stress resultants 
 Vector &
@@ -124,8 +120,6 @@ BiaxialFiber2d::getFiberStressResultants (void)
 
   return fs;
 }
-
-
 
 // get contribution of fiber to section tangent stiffness
 Matrix &
@@ -172,20 +166,17 @@ BiaxialFiber2d::commitState(void)
    return theMaterial->commitState();
 }
 
-
 int   
 BiaxialFiber2d::revertToLastCommit(void)
 {
    return theMaterial->revertToLastCommit();
 }
 
-
 int   
 BiaxialFiber2d::revertToStart(void)
 {
    return theMaterial->revertToStart();
 }
-
 
 int   
 BiaxialFiber2d::sendSelf(int commitTag, Channel &theChannel)
@@ -241,8 +232,7 @@ BiaxialFiber2d::sendSelf(int commitTag, Channel &theChannel)
   return res;
 }
 
-
-int   
+int
 BiaxialFiber2d::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
   // 
@@ -315,7 +305,6 @@ BiaxialFiber2d::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &t
   
   return res;
 }
-
 
 void BiaxialFiber2d::Print(OPS_Stream &s, int flag)
 {
