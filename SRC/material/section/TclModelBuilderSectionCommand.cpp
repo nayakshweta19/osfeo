@@ -4898,7 +4898,7 @@ buildRASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder
 			delete [] reinfBar;
 		}
 		UniaxialMaterial *material;
-		UniaxialMaterial *Hmaterial;
+
 		int NDM = theTclModelBuilder->getNDM();
 		Fiber **fiber = new Fiber *[numFibers];
 		if (fiber == 0) {
@@ -5130,7 +5130,7 @@ buildFASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder
 			delete [] reinfBar;
 			}
 		UniaxialMaterial *material;
-		UniaxialMaterial *Hmaterial;
+
 		int NDM = theTclModelBuilder->getNDM();
 		Fiber **fiber = new Fiber *[numFibers];
 		if (fiber == 0) {
@@ -5282,7 +5282,6 @@ buildCSMMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
 		int i, j, k;
 		int numFibers;
-		int numHFibers;
 		int numPatches;
 		Patch **patch;
 		int  numReinfLayers;
@@ -5562,7 +5561,7 @@ buildMCFTFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		}
 		
 		UniaxialMaterial *material;
-		UniaxialMaterial *Hmaterial;
+
 		int NDM = theTclModelBuilder->getNDM();
 		Fiber **fiber = new Fiber *[numFibers];
 		if (fiber == 0) {
@@ -5712,7 +5711,7 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 	{
 		// build the section
 		FiberSectionRepr *fiberSectionRepr = (FiberSectionRepr *) sectionRepres;
-		int i, j, k;
+		int i; //, j, k
 		int numFibers;
 
 		// there is no patches and layers for timoshenko section
@@ -5738,7 +5737,7 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		//	numFibers += reinfLayer[i]->getNumReinfBars();
 
 		static Vector fiberPosition(2);
-		int    matTag;
+		//int    matTag;
 		ID     fibersMaterial(numFibers-numSectionRepresFibers);
 		Matrix fibersPosition(2,numFibers-numSectionRepresFibers);
 		Vector fibersArea(numFibers-numSectionRepresFibers);
