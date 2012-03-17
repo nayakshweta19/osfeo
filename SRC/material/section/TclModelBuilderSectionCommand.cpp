@@ -3215,7 +3215,23 @@ TclCommand_add2dFiber(ClientData clientData, Tcl_Interp *interp, int argc,
 	  fiberPosition(0) = yLoc;
 	  fiberPosition(1) = zLoc;
 	      
-	  theFiber = new BiaxialFiber3d(numFibers, *material, area, fiberPosition);
+	  Vector vecxzPlane(3);                  // vector that defines local xz plane
+	  if (Tcl_GetDouble(interp, argv[5], &vecxzPlane(0)) != TCL_OK) {
+         opserr <<  "WARNING invalid vecxzPlaneX: fiber yLoc zLoc area matTag vecxzPlaneX? vecxzPlaneY? vecxzPlaneZ?\n";
+         return TCL_ERROR;
+      } 
+
+	  if (Tcl_GetDouble(interp, argv[6], &vecxzPlane(1)) != TCL_OK) {
+         opserr <<  "WARNING invalid vecxzPlaneX: fiber yLoc zLoc area matTag vecxzPlaneX? vecxzPlaneY? vecxzPlaneZ?\n";
+         return TCL_ERROR;
+      } 
+
+	  if (Tcl_GetDouble(interp, argv[7], &vecxzPlane(3)) != TCL_OK) {
+         opserr <<  "WARNING invalid vecxzPlaneX: fiber yLoc zLoc area matTag vecxzPlaneX? vecxzPlaneY? vecxzPlaneZ?\n";
+         return TCL_ERROR;
+      } 
+
+	  theFiber = new BiaxialFiber3d(numFibers, *material, area, fiberPosition, vecxzPlane);
 	  if (theFiber == 0) {
 	      opserr <<  "WARNING unable to allocate fiber \n";
 	      return TCL_ERROR;
@@ -5397,7 +5413,7 @@ buildCSMMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
 				fiberPosition(0) = fibersPosition(0,k);
 				fiberPosition(1) = fibersPosition(1,k);
-				fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition);
+				//fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition);
 
 				if (fibersArea(k) < 0) opserr << "ERROR: " << fiberPosition(0) << " " << fiberPosition(1) << endln;
 
@@ -5699,26 +5715,27 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		int i, j, k;
 		int numFibers;
 
-		int numPatches;
-		Patch **patch;
-
-		int  numReinfLayers;
-		ReinfLayer **reinfLayer;
-
-		numPatches     = fiberSectionRepr->getNumPatches();
-		patch          = fiberSectionRepr->getPatches();
-		numReinfLayers = fiberSectionRepr->getNumReinfLayers();
-		reinfLayer     = fiberSectionRepr->getReinfLayers();
+		// there is no patches and layers for timoshenko section
+		//int numPatches;
+		//Patch **patch;
+		//
+		//int  numReinfLayers;
+		//ReinfLayer **reinfLayer;
+		//
+		//numPatches     = fiberSectionRepr->getNumPatches();
+		//patch          = fiberSectionRepr->getPatches();
+		//numReinfLayers = fiberSectionRepr->getNumReinfLayers();
+		//reinfLayer     = fiberSectionRepr->getReinfLayers();
 		int numSectionRepresFibers = fiberSectionRepr->getNumFibers();
 		Fiber **sectionRepresFibers = fiberSectionRepr->getFibers();
 
 		numFibers = numSectionRepresFibers;
 		
-		for (i = 0; i < numPatches; i++)
-			numFibers += patch[i]->getNumCells();
-		
-		for (i = 0; i < numReinfLayers; i++)
-			numFibers += reinfLayer[i]->getNumReinfBars();
+		//for (i = 0; i < numPatches; i++)
+		//	numFibers += patch[i]->getNumCells();
+		//
+		//for (i = 0; i < numReinfLayers; i++)
+		//	numFibers += reinfLayer[i]->getNumReinfBars();
 
 		static Vector fiberPosition(2);
 		int    matTag;
@@ -5726,60 +5743,60 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		Matrix fibersPosition(2,numFibers-numSectionRepresFibers);
 		Vector fibersArea(numFibers-numSectionRepresFibers);
 		
-		int  numCells;
-		Cell **cell;
+		//int  numCells;
+		//Cell **cell;
 
-		k = 0;
-		for (i = 0; i < numPatches; i++)
-		{
-
-			numCells   = patch[i]->getNumCells();
-			matTag = patch[i]->getMaterialID();
-			cell = patch[i]->getCells();
-
-			if (cell == 0)
-			{
-				opserr <<  "WARNING out of run to create fibers\n";
-				return TCL_ERROR;
-			}
-
-			for (j = 0; j < numCells; j++)
-			{
-				fibersMaterial(k) = matTag;
-				fibersArea(k)     = cell[j]->getArea();
-				fiberPosition     = cell[j]->getCentroidPosition();
-				fibersPosition(0,k) = fiberPosition(0);
-				fibersPosition(1,k) = fiberPosition(1);
-				k++;
-			}
-			
-			for (j = 0; j < numCells; j++)
-				delete cell[j];
-			delete [] cell;
-		}
+		//k = 0;
+		//for (i = 0; i < numPatches; i++)
+		//{
+		//
+		//	numCells   = patch[i]->getNumCells();
+		//	matTag = patch[i]->getMaterialID();
+		//	cell = patch[i]->getCells();
+		//
+		//	if (cell == 0)
+		//	{
+		//		opserr <<  "WARNING out of run to create fibers\n";
+		//		return TCL_ERROR;
+		//	}
+		//
+		//	for (j = 0; j < numCells; j++)
+		//	{
+		//		fibersMaterial(k) = matTag;
+		//		fibersArea(k)     = cell[j]->getArea();
+		//		fiberPosition     = cell[j]->getCentroidPosition();
+		//		fibersPosition(0,k) = fiberPosition(0);
+		//		fibersPosition(1,k) = fiberPosition(1);
+		//		k++;
+		//	}
+		//	
+		//	for (j = 0; j < numCells; j++)
+		//		delete cell[j];
+		//	delete [] cell;
+		//}
 		
-		ReinfBar *reinfBar;
-		int numReinfBars;
-
-		for (i = 0; i < numReinfLayers; i++)
-		{
-			numReinfBars = reinfLayer[i]->getNumReinfBars();
-			reinfBar     = reinfLayer[i]->getReinfBars();
-			matTag  = reinfLayer[i]->getMaterialID();
-
-			for (j = 0; j < numReinfBars; j++)
-			{
-				fibersMaterial(k) = matTag;
-				fibersArea(k)     = reinfBar[j].getArea();
-				fiberPosition     = reinfBar[j].getPosition();
-				fibersPosition(0,k) = fiberPosition(0);
-				fibersPosition(1,k) = fiberPosition(1);
-				k++;
-			}
-			delete [] reinfBar;
-		}
+		//ReinfBar *reinfBar;
+		//int numReinfBars;
+		//
+		//for (i = 0; i < numReinfLayers; i++)
+		//{
+		//	numReinfBars = reinfLayer[i]->getNumReinfBars();
+		//	reinfBar     = reinfLayer[i]->getReinfBars();
+		//	matTag  = reinfLayer[i]->getMaterialID();
+		//
+		//	for (j = 0; j < numReinfBars; j++)
+		//	{
+		//		fibersMaterial(k) = matTag;
+		//		fibersArea(k)     = reinfBar[j].getArea();
+		//		fiberPosition     = reinfBar[j].getPosition();
+		//		fibersPosition(0,k) = fiberPosition(0);
+		//		fibersPosition(1,k) = fiberPosition(1);
+		//		k++;
+		//	}
+		//	delete [] reinfBar;
+		//}
 		
-		NDMaterial *material;
+		//NDMaterial *material;
 		// dimension of the structure (1d, 2d, or 3d)
 		int NDM = theTclModelBuilder->getNDM();
 		Fiber **fiber = new Fiber *[numFibers];
@@ -5796,21 +5813,21 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		if (NDM == 2)
 		{
 
-			k = 0;
-			for (i = numSectionRepresFibers; i < numFibers; i++) {
-				material = OPS_GetNDMaterial(fibersMaterial(k));
-				if (material == 0) {
-					opserr <<  "WARNING invalid material ID for patch\n";
-					return TCL_ERROR;
-				}
-
-				fiber[i] = new BiaxialFiber2d(k, *material, fibersArea(k), fibersPosition(0,k));
-				if (!fiber[i]) {
-					opserr <<  "WARNING unable to allocate fiber \n";
-					return TCL_ERROR;
-				}
-				k++;
-			}
+			//k = 0;
+			//for (i = numSectionRepresFibers; i < numFibers; i++) {
+			//	material = OPS_GetNDMaterial(fibersMaterial(k));
+			//	if (material == 0) {
+			//		opserr <<  "WARNING invalid material ID for patch\n";
+			//		return TCL_ERROR;
+			//	}
+			//
+			//	fiber[i] = new BiaxialFiber2d(k, *material, fibersArea(k), fibersPosition(0,k));
+			//	if (!fiber[i]) {
+			//		opserr <<  "WARNING unable to allocate fiber \n";
+			//		return TCL_ERROR;
+			//	}
+			//	k++;
+			//}
 			
 			SectionForceDeformation *section = new TimoshenkoSection2d(secTag, numFibers, fiber);
 			
@@ -5818,14 +5835,12 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 			for (i = 0; i < numFibers; i++)
 				delete fiber[i];
 
-			if (section == 0)
-			{
+			if (section == 0) {
 				opserr <<  "WARNING - cannot construct section\n";
 				return TCL_ERROR;
 			}
 			
-			if (theTclModelBuilder->addSection (*section) < 0)
-			{
+			if (theTclModelBuilder->addSection (*section) < 0) {
 				opserr <<  "WARNING - cannot add section\n";
 				return TCL_ERROR;
 			}
@@ -5833,36 +5848,36 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
 		else if (NDM == 3)
 		{
-			static Vector fiberPosition(2);
-
-			k = 0;
-
-			for (i = numSectionRepresFibers; i < numFibers; i++)
-			{
-				material = OPS_GetNDMaterial(fibersMaterial(k));
-				if (material == 0) {
-					opserr <<  "WARNING invalid material ID for patch\n";
-					return TCL_ERROR;
-				}
-
-				fiberPosition(0) = fibersPosition(0,k);
-				fiberPosition(1) = fibersPosition(1,k);
-				
-				if (fibersArea(k) < 0) opserr << "ERROR: " << fiberPosition(0) << " " << fiberPosition(1) << endln;
-				
-				if (material->getOrder() == 3) {
-				    fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition);
-				} else if (material->getOrder() == 6) {
-					fiber[i] = new TriaxialFiber(k, *material, fibersArea(k), fiberPosition);
-				}
-
-				if (!fiber[k])
-				{
-					opserr <<  "WARNING unable to allocate fiber \n";
-					return TCL_ERROR;
-				}
-				k++;
-			}
+			//static Vector fiberPosition(2);
+			//
+			//k = 0;
+			//
+			//for (i = numSectionRepresFibers; i < numFibers; i++)
+			//{
+			//	material = OPS_GetNDMaterial(fibersMaterial(k));
+			//	if (material == 0) {
+			//		opserr <<  "WARNING invalid material ID for patch\n";
+			//		return TCL_ERROR;
+			//	}
+			//
+			//	fiberPosition(0) = fibersPosition(0,k);
+			//	fiberPosition(1) = fibersPosition(1,k);
+			//	
+			//	if (fibersArea(k) < 0) opserr << "ERROR: " << fiberPosition(0) << " " << fiberPosition(1) << endln;
+			//	
+			//	if (material->getOrder() == 3) {
+			//	    fiber[i] = new BiaxialFiber3d(k, *material, fibersArea(k), fiberPosition, vecxzPlane);
+			//	} else if (material->getOrder() == 6) {
+			//		fiber[i] = new TriaxialFiber(k, *material, fibersArea(k), fiberPosition);
+			//	}
+			//
+			//	if (!fiber[k])
+			//	{
+			//		opserr <<  "WARNING unable to allocate fiber \n";
+			//		return TCL_ERROR;
+			//	}
+			//	k++;
+			//}
 			
 			SectionForceDeformation *section = 0;
 			if (isTorsion)
@@ -5874,14 +5889,12 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 			for (i = 0; i < numFibers; i++)
 				delete fiber[i];
 
-			if (section == 0)
-			{
+			if (section == 0) {
 				opserr <<  "WARNING - cannot construct section\n";
 				return TCL_ERROR;
 			}
 			
-			if (theTclModelBuilder->addSection (*section) < 0)
-			{
+			if (theTclModelBuilder->addSection (*section) < 0) {
 				opserr <<  "WARNING - cannot add section\n";
 				return TCL_ERROR;
 			}
