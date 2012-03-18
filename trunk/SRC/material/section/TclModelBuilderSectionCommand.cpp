@@ -5879,10 +5879,10 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 			//}
 			
 			SectionForceDeformation *section = 0;
-			if (isTorsion)
+			//if (isTorsion)
 				section = new TimoshenkoSection3d(secTag, numFibers, fiber, GJ);
-			else
-				section = new TimoshenkoSection3d(secTag, numFibers, fiber, GJ);
+			//else
+			//	section = new TimoshenkoSection3d(secTag, numFibers, fiber, GJ);
 			
 			// Delete fibers
 			for (i = 0; i < numFibers; i++)
