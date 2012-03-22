@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2006/08/03 23:42:19 $
+// $Date: 2006-08-03 23:42:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/ElasticPPMaterial.h,v $
                                                                         
 #ifndef ElasticPPMaterial_h
@@ -73,11 +73,13 @@ class ElasticPPMaterial : public UniaxialMaterial
     double fyp, fyn;	// positive and negative yield stress
     double ezero;	// initial strain
     double E;		// elastic modulus
-    double trialStrain;	// trial strain
     double ep;		// plastic strain at last commit
-
+    double trialStrain;	     // current trial strain
     double trialStress;      // current trial stress
     double trialTangent;     // current trial tangent
+    double commitStrain;     // last commited strain
+    double commitStress;     // last commited stress
+    double commitTangent;    // last committed  tangent
 };
 
 

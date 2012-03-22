@@ -88,6 +88,7 @@ class mixedBeamColumn3d : public Element
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
     void Print(OPS_Stream &s, int flag = 0);
+	int displaySelf(Renderer &theViewer, int displayMode, float fact);
     friend OPS_Stream &operator<<(OPS_Stream &s, mixedBeamColumn3d &E);
 
     Response* setResponse(const char **argv, int argc, OPS_Stream &output);
