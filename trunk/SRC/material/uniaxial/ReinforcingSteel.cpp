@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.6 $
-// $Date: 2006/08/28 17:40:32 $
+// $Date: 2006-08-28 17:40:32 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/ReinforcingSteel.cpp,v $
 
 /* ****************************************************************** **
@@ -35,14 +35,15 @@
 //
 // Description: This file contains the class definition for 
 // ReinforcingSteel
-#include <tcl.h>
-#include <elementAPI.h>
 
 #include "ReinforcingSteel.h"
 #include <Vector.h>
 #include <Channel.h>
 #include <math.h>
 #include <float.h>
+
+#include <tcl.h>
+#include <elementAPI.h>
 
 #ifdef HelpDebugMat
   int ReinforcingSteel::classCount = 0;
@@ -276,8 +277,6 @@ OPS_NewReinforcingSteel()
   //  return -1;
   return theMaterial;
 }
-
-
 
 
 ReinforcingSteel::ReinforcingSteel(int tag, double fy, double fsu, double Es, double Esh_, double esh_, double esu, 
@@ -747,14 +746,14 @@ ReinforcingSteel::sendSelf(int cTag, Channel &theChannel)
 {
   int res = 0;
   int index =0;
-  static Vector data(71+12*LastRule_RS/2);
+  static Vector data(75+12*LastRule_RS/2);
   
   data(index++) = this->getTag();
   data(index++) = reduction;
   data(index++) = fsu_fraction;
   data(index++) = beta;
   data(index++) = theBarFailed;
-	data(index++) = p;
+  data(index++) = p;
   data(index++) = Esp;
   data(index++) = eshp;
   data(index++) = fshp;
@@ -779,9 +778,9 @@ ReinforcingSteel::sendSelf(int cTag, Channel &theChannel)
   data(index++) = TFatDamage;
   data(index++) = CFatDamage;
   data(index++) = LDratio;
-	data(index++) = Fat1;
+  data(index++) = Fat1;
   data(index++) = Fat2;
-	data(index++) = Deg1;
+  data(index++) = Deg1;
   data(index++) = BuckleModel;
   data(index++) = TBranchMem;
   data(index++) = TBranchNum;
@@ -825,27 +824,27 @@ ReinforcingSteel::sendSelf(int cTag, Channel &theChannel)
   data(index++) = RC3;
 
   for(int i=0; i<=LastRule_RS/2; i++) {
-	  data(index++) = C_ePlastic[i];
+    data(index++) = C_ePlastic[i];
     data(index++) = T_ePlastic[i];
-	  data(index++) = CR[i];
-	  data(index++) = Cfch[i];
-	  data(index++) = CQ[i];
-	  data(index++) = CEsec[i];
-	  data(index++) = Cea[i];
-	  data(index++) = Cfa[i];
-	  data(index++) = CEa[i];
-	  data(index++) = Ceb[i];
-	  data(index++) = Cfb[i];
-	  data(index++) = CEb[i];
+    data(index++) = CR[i];
+    data(index++) = Cfch[i];
+    data(index++) = CQ[i];
+    data(index++) = CEsec[i];
+    data(index++) = Cea[i];
+    data(index++) = Cfa[i];
+    data(index++) = CEa[i];
+    data(index++) = Ceb[i];
+    data(index++) = Cfb[i];
+    data(index++) = CEb[i];
   }
-  #ifdef _NDEBUG
-    if (--index != data.Size())
-      opserr << "ReinforcingSteel::sendSelf() wrong vector size\n";
-  #endif
+#ifdef _NDEBUG
+  if (--index != data.Size())
+    opserr << "ReinforcingSteel::sendSelf() wrong vector size\n";
+#endif
   res = theChannel.sendVector(this->getDbTag(), cTag, data);
   if (res < 0) 
     opserr << "ReinforcingSteel::sendSelf() - failed to send data\n";
-
+  
   return res;
 }
 
@@ -855,7 +854,7 @@ ReinforcingSteel::recvSelf(int cTag, Channel &theChannel,
 {
   int res = 0;
   int index =0;
-  static Vector data(71+12*LastRule_RS/2);
+  static Vector data(75+12*LastRule_RS/2);
   res = theChannel.recvVector(this->getDbTag(), cTag, data);
   
   if (res < 0) {

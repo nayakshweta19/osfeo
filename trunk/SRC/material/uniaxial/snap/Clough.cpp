@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2006/08/03 23:44:38 $
+// $Date: 2006-08-03 23:44:38 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/snap/Clough.cpp,v $
 //
 //
@@ -534,7 +534,7 @@ int Clough::setTrialStrain( double d, double strainRate)
 	if( flagDeg == 1 || flagDeg == 2 ) {
 		if( ( Enrgtot >= Enrgts && Enrgts != 0.0) || ( Enrgtot >= Enrgtk && Enrgtk != 0.0) || 
 			( Enrgtot >= Enrgta && Enrgta != 0.0) || ( Enrgtot >= Enrgtd && Enrgtd != 0.0))
-			opserr << "Total Energy greater than capacity\n";
+		  //			opserr << "Total Energy greater than capacity\n";
 		
 		//	Update beta values for strength, acc. stiff. and capping
 
