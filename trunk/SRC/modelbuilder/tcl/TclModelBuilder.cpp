@@ -311,6 +311,12 @@ TclCommand_addTriaxialLayer(ClientData clientData,
 	             Tcl_Interp *interp,
 	             int argc,
 	             TCL_Char **argv);
+
+int
+TclCommand_addBiaxialPatch(ClientData clientData,
+	             Tcl_Interp *interp,
+				 int argc,
+				 TCL_Char **argv);
 //////////////////////////////////////////////////////////////////////////
 
 int
@@ -413,6 +419,10 @@ extern int
 TclCommand_add3dLayer (ClientData clientData, Tcl_Interp *interp,
 		     int argc, TCL_Char **argv,
 		     TclModelBuilder *theTclBuilder);
+extern int
+TclCommand_add2dPatch(ClientData clientData, Tcl_Interp *interp,
+             int argc, TCL_Char **argv, 
+			 TclModelBuilder *theTclModelBuilder);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -602,6 +612,8 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   Tcl_CreateCommand(interp, "layer2d", TclCommand_addBiaxialLayer,
 	        (ClientData)NULL, NULL);
   Tcl_CreateCommand(interp, "layer3d", TclCommand_addTriaxialLayer,
+	        (ClientData)NULL, NULL);
+  Tcl_CreateCommand(interp, "patch2d", TclCommand_addBiaxialPatch,
 	        (ClientData)NULL, NULL);
 
   //LEO
@@ -3422,6 +3434,13 @@ TclCommand_addTriaxialLayer(ClientData clientData, Tcl_Interp *interp, int argc,
 				  theTclBuilder);
 }
 
+int
+TclCommand_addBiaxialPatch(ClientData clientData, Tcl_Interp *interp, int argc,   
+			   TCL_Char **argv)
+{
+  return TclCommand_add2dPatch(clientData, interp, argc,argv,
+				  theTclBuilder);
+}
 
 int
 TclCommand_addRemoGeomTransf(ClientData clientData, Tcl_Interp *interp, int argc,   
