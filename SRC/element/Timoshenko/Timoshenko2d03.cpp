@@ -718,7 +718,7 @@ Timoshenko2d03::sendSelf(int commitTag, Channel &theChannel)
   }
 
   if (theChannel.sendID(dbTag, commitTag, idSections) < 0)  {
-    opserr << "Timoshenko2d03::sendSelf() - failed to send ID data\n";
+    opserr << "DispBeamColumn2d::sendSelf() - failed to send ID data\n";
     return -1;
   }    
 
@@ -766,7 +766,7 @@ Timoshenko2d03::recvSelf(int commitTag, Channel &theChannel,
       crdTransf = theBroker.getNewCrdTransf(crdTransfClassTag);
 
       if (crdTransf == 0) {
-	opserr << "Timoshenko2d03::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
+	opserr << "DispBeamColumn2d::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
 	  crdTransfClassTag << endln;
 	  return -2;	  
       }
