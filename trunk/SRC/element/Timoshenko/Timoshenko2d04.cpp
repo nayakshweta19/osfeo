@@ -10,10 +10,6 @@
 #include <Timoshenko2d04.h>
 #include <Node.h>
 #include <FiberSection2d.h>
-#include <RASTMFiberSection2d.h>
-#include <FASTMFiberSection2d.h>
-#include <CSMMFiberSection2d.h>
-#include <MCFTFiberSection2d.h>
 #include <TimoshenkoSection2d.h>
 #include <CrdTransf.h>
 #include <Matrix.h>
@@ -49,13 +45,13 @@ Timoshenko2d04::Timoshenko2d04(int tag,
     :Element (tag, ELE_TAG_Timoshenko2d04), 
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2),
-    Q(6), q(6), rho(r)
+    Q(6), q(3), rho(r)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
     
   if (theSections == 0) {
-    opserr << "Timoshenko2d02::Timoshenko2d04 - failed to allocate section model pointer\n";
+    opserr << "Timoshenko2d04::Timoshenko2d04 - failed to allocate section model pointer\n";
     exit(-1);
   }
 
@@ -63,18 +59,6 @@ Timoshenko2d04::Timoshenko2d04(int tag,
     // Get copies of the material model for each integration point
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
-    case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = (RASTMFiberSection2d *)theSection;
-    	break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = (FASTMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = (CSMMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = (MCFTFiberSection2d *)theSection;
-		break;
 	case SEC_TAG_TimoshenkoSection2d:
 		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
@@ -88,14 +72,14 @@ Timoshenko2d04::Timoshenko2d04(int tag,
   crdTransf = coordTransf.getCopy2d();
   
   if (crdTransf == 0) {
-    opserr << "Timoshenko2d02::Timoshenko2d02 - failed to copy coordinate transformation\n";
+    opserr << "Timoshenko2d04::Timoshenko2d04 - failed to copy coordinate transformation\n";
     exit(-1);
   }
   
   beamInt = bi.getCopy();
 
   if (beamInt == 0) {
-	  opserr << "Timoshenko2d02::Timoshenko2d02() - failed to copy beam integration\n";
+	  opserr << "Timoshenko2d04::Timoshenko2d04() - failed to copy beam integration\n";
 	  exit(-1);
   }
 
@@ -118,7 +102,7 @@ Timoshenko2d04::Timoshenko2d04(int tag,
   if (ndT == 0)	ndT = new Matrix [maxNumSections];
   if (bdT == 0)	bdT = new Matrix [maxNumSections];
   if (!nd || !bd || !ndT || !bdT) {
-    opserr << "Timoshenko2d03::Timoshenko2d03() -- failed to allocate static section arrays";
+    opserr << "Timoshenko2d04::Timoshenko2d04() -- failed to allocate static section arrays";
     exit(-1);
   }
   for (int i=0; i<maxNumSections; i++ ){
@@ -317,21 +301,22 @@ Timoshenko2d04::update(void)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
 
+  double Omega, mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p;
   // Loop over the integration points
   for (int i = 0; i<numSections; i++) {
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
     const Matrix &ks = theSections[i]->getSectionTangent();
 
-	double Omega = 0.0; //ks(1,1)/ks(2,2)/5.*6./L;
-	double mu = 1./(1.+12.*Omega);
-	double xi = L * pts[i];
-	double phi1 = mu*xi*L*(6.*Omega*(1-xi)+(1-xi)*(1-xi));
-	double phi1p = mu*L*(1.+(6-12*xi)*Omega-4.*xi+3.*xi*xi);
-	double phi2 = mu*xi*L*(6.*Omega*(xi-1)-xi+xi*xi);
-	double phi2p = mu*L*((12*xi-6)*Omega+xi*(3.*xi-2));
-	double phi3 = mu*(1+12*Omega-12*Omega*xi-4*xi+3*xi*xi);
-	double phi4 = mu*(12*Omega*xi-2*xi+3*xi*xi);
+	Omega = 0.3; //ks(1,1)/ks(2,2)/5.*6./L;
+	mu    = 1./(1.+12.*Omega);
+	x     = L * pts[i];
+	phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
+	phi1p =       mu*(3.*x*x+L*L*(1+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+	phi2  =      -mu*x*(L-x)*(x + 6.*L*Omega)                     /L/L;
+	phi2p =       mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
+	phi3  = (L-x)*mu*(L-3.*x+12*L*Omega)                          /L/L;
+	phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
 	//double C2 = -2+3*C1+3*(1-2*C1)*x;
 
     Vector e(workArea, order);
@@ -388,18 +373,10 @@ Timoshenko2d04::getTangentStiff(void)
     const Matrix &ks = theSections[i]->getSectionTangent();			
     const Vector &s = theSections[i]->getStressResultant();			
     
-	bd[i] = this->getBd(i, v, L);
-	//nd[i] = this->getNd(i, v, L);
-	for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-        //ndT[i](k,j) = nd[i](j,k);
-      }
-    }
     // Perform numerical integration
-	kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
-    
-	q = q + L * wts[i] * bdT[i] * s;
+	bd[i] = this->getBd(i, v, L);
+	kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
+    q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
   }
 
   // Add effects of element loads, q = q(v) + q0		
@@ -438,14 +415,9 @@ Timoshenko2d04::getInitialBasicStiff()
     // Get the section tangent stiffness and stress resultant
     const Matrix &ks = theSections[i]->getInitialTangent();
     
+	// Perform numerical integration
 	bd[i] = this->getBd(i, v, L);
-    for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
-    // Perform numerical integration
-    kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
+    kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
   }
   return kb;
 }
@@ -612,14 +584,9 @@ Timoshenko2d04::getResistingForce()
     // Get section stress resultant
     const Vector &s = theSections[i]->getStressResultant();
     
-	bd[i] = this->getBd(i, v, L);
-	for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
     // Perform numerical integration on internal force
-	q = q + L * wts[i] * bdT[i] * s;
+	bd[i] = this->getBd(i, v, L);
+	q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
   }
 
   // Add effects of element loads, q = q(v) + q0		
@@ -836,21 +803,6 @@ Timoshenko2d04::recvSelf(int commitTag, Channel &theChannel,
       int sectDbTag = idSections(loc+1);
       loc += 2;
 	  switch (sectClassTag) {
-	  case SEC_TAG_RASTMFiberSection2d:
-		  theSections[i] = new RASTMFiberSection2d();
-		  break;
-	  case SEC_TAG_FASTMFiberSection2d:
-		  theSections[i] = new FASTMFiberSection2d();
-		  break;
-	  case SEC_TAG_CSMMFiberSection2d:
-		  theSections[i] = new CSMMFiberSection2d();
-		  break;
-	  case SEC_TAG_MCFTFiberSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
-		  break;
-	  case SEC_TAG_TimoshenkoSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
-		  break;
 	  default:
 		  opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
 		  theSections[i] = new FiberSection2d();
@@ -884,21 +836,6 @@ Timoshenko2d04::recvSelf(int commitTag, Channel &theChannel,
 	// delete the old section[i] and create a new one
 	delete theSections[i];
 	switch (sectClassTag) {
-	case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = new RASTMFiberSection2d();
-		break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = new FASTMFiberSection2d();
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = new CSMMFiberSection2d();
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = new MCFTFiberSection2d();
-		break;
-	case SEC_TAG_TimoshenkoSection2d:
-		theSections[i] = new MCFTFiberSection2d();
-		break;
 	default:
 		opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
 		theSections[i] = new FiberSection2d();
@@ -1050,22 +987,20 @@ Timoshenko2d04::getResponse(int responseID, Information &eleInfo)		//LN modify
 Matrix
 Timoshenko2d04::getNd(int sec, const Vector &v, double L)
 {
-  double x[maxNumSections];
-  beamInt->getSectionLocations(numSections, L, x);
+  double pts[maxNumSections];
+  beamInt->getSectionLocations(numSections, L, pts);
 
   const Matrix &ks = theSections[sec]->getSectionTangent();
 
-  double Omega = 0.0; //ks(1,1)/ks(2,2)/5.*6./L;
-  double mu = 1./(1.+12.*Omega);
-  double xi = L * x[sec];
-  double phi1 = mu*xi*L*(6.*Omega*(1-xi)+(1-xi)*(1-xi));
-  //double phi1p = mu*L*(1.+(6-12*xi)*Omega-4.*xi+3.*xi*xi);
-  double phi2 = mu*xi*L*(6.*Omega*(xi-1)-xi+xi*xi);
-  //double phi2p = mu*L*((12*xi-6)*Omega+xi*(3.*xi-2));
-  double phi3 = mu*(1+12*Omega-12*Omega*xi-4*xi+3*xi*xi);
-  double phi4 = mu*(12*Omega*xi-2*xi+3*xi*xi);
-
-  //double x = L * xi[sec];
+  double Omega = 0.3; //ks(1,1)/ks(2,2)/5.*6./L;
+  double mu    = 1./(1.+12.*Omega);
+  double x     = L * pts[sec];
+  double phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
+  double phi1p =       mu*(3.*x*x+L*L*(1+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+  double phi2  =      -mu*x*(L-x)*(x + 6.*L*Omega)                     /L/L;
+  double phi2p =       mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
+  double phi3  = (L-x)*mu*(L-3.*x+12*L*Omega)                          /L/L;
+  double phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
   
   Matrix Nd(3,3);
   Nd.Zero();
@@ -1082,22 +1017,20 @@ Timoshenko2d04::getNd(int sec, const Vector &v, double L)
 Matrix
 Timoshenko2d04::getBd(int sec, const Vector &v, double L)
 {
-  double x[maxNumSections];
-  beamInt->getSectionLocations(numSections, L, x);
+  double pts[maxNumSections];
+  beamInt->getSectionLocations(numSections, L, pts);
   
   const Matrix &ks = theSections[sec]->getSectionTangent();
 
-  double Omega = 0.0; //ks(1,1)/ks(2,2)/5.*6./L;
-  double mu = 1./(1.+12.*Omega);
-  double xi = L * x[sec];
-  //double phi1 = mu*xi*L*(6.*Omega*(1-xi)+(1-xi)*(1-xi));
-  double phi1p = mu*L*(1.+(6-12*xi)*Omega-4.*xi+3.*xi*xi);
-  //double phi2 = mu*xi*L*(6.*Omega*(xi-1)-xi+xi*xi);
-  double phi2p = mu*L*((12*xi-6)*Omega+xi*(3.*xi-2));
-  double phi3 = mu*(1+12*Omega-12*Omega*xi-4*xi+3*xi*xi);
-  double phi4 = mu*(12*Omega*xi-2*xi+3*xi*xi);
-
-  //double x = L * xi[sec];
+  double Omega = 0.3; //;ks(1,1)/ks(2,2)/5.*6./L
+  double mu    = 1./(1.+12.*Omega);
+  double x     = L * pts[sec];
+  double phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
+  double phi1p =       mu*(3.*x*x+L*L*(1+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+  double phi2  =      -mu*x*(L-x)*(x + 6.*L*Omega)                     /L/L;
+  double phi2p =       mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
+  double phi3  = (L-x)*mu*(L-3.*x+12*L*Omega)                          /L/L;
+  double phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
   
   Matrix Bd(3,3);
   Bd.Zero();
