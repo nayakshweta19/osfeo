@@ -328,7 +328,7 @@ Timoshenko3d04::update(void)
 	phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
 
     Vector e(workArea, order);
-
+	//P, Mz, My, Vy, Vz, T
     for (int j = 0; j < order; j++) {
       switch(code(j)) {
       case SECTION_RESPONSE_P:     // axial strain
@@ -1242,7 +1242,7 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
 
   Matrix Bd(6,6);
   Bd.Zero();
-  
+  //P, Mz, My, Vy, Vz, T
   Bd(0,0) = 1./L;
   Bd(1,1) = phi3;
   Bd(1,3) = phi4;
