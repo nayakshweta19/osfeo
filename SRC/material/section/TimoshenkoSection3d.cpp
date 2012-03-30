@@ -50,7 +50,7 @@ ID TimoshenkoSection3d::code(6);
 // constructors:
 TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, double gj): 
   SectionForceDeformation(tag, SEC_TAG_TimoshenkoSection3d),
-  numFibers(num), theMaterials(0), matData(0), GJ(gj),
+  numFibers(num), theMaterials(0), matData(0), GJ(gj), yh(0.0), zh(0.0),
   yBar(0.0), zBar(0.0), e(6), eCommit(6), s(0), ks(0)
 {
   if (numFibers != 0) {
@@ -71,7 +71,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
     double Qz = 0.0;
     double Qy = 0.0;
     double a  = 0.0;
-    
+    double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
 	NDMaterial *theMat;
     for (int i = 0; i < numFibers; i++) {
 
@@ -96,8 +96,14 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
       if (theMaterials[i] == 0) 
 	    opserr << "TimoshenkoSection3d::TimoshenkoSection3d -- failed to get copy of a Material\n";
 
-    }
+	  if (yLoc < yHmin ) yHmin=yLoc;
+	  if (zLoc < zHmin ) zHmin=zLoc;
+	  if (yLoc > yHmax ) yHmax=yLoc;
+	  if (zLoc > zHmax ) zHmax=zLoc;
 
+    }
+	zh   = yHmax - yHmin;
+	yh   = zHmax - zHmin;
     yBar = Qz/a;
     zBar = Qy/a;
   }
@@ -121,7 +127,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
 // constructor for blank object that recvSelf needs to be invoked upon
 TimoshenkoSection3d::TimoshenkoSection3d():
   SectionForceDeformation(0, SEC_TAG_TimoshenkoSection3d),
-  numFibers(0), theMaterials(0), matData(0), GJ(0),
+  numFibers(0), theMaterials(0), matData(0), GJ(0), yh(0.0), zh(0.0),
   yBar(0.0), zBar(0.0), e(6), eCommit(6), s(0), ks(0)
 {
   s = new Vector(sData, 6);
@@ -206,6 +212,48 @@ const Vector&
 TimoshenkoSection3d::getSectionDeformation(void)
 {
   return e;
+}
+
+double
+TimoshenkoSection3d::getZh(void)
+{
+  double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
+  double yLoc, zLoc;
+  for (int i = 0; i < numFibers; i++) {
+	yLoc=matData[i*3];
+ 	zLoc=matData[i*3+1];
+
+	if (yLoc < yHmin ) yHmin=yLoc;
+	if (zLoc < zHmin ) zHmin=zLoc;
+	if (yLoc > yHmax ) yHmax=yLoc;
+	if (zLoc > zHmax ) zHmax=zLoc;
+  }
+
+  zh = yHmax - yHmin;
+  yh = zHmax - zHmin;
+
+  return zh;
+}
+
+double
+TimoshenkoSection3d::getYh(void)
+{
+  double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
+  double yLoc, zLoc;
+  for (int i = 0; i < numFibers; i++) {
+	yLoc=matData[i*3];
+ 	zLoc=matData[i*3+1];
+
+	if (yLoc < yHmin ) yHmin=yLoc;
+	if (zLoc < zHmin ) zHmin=zLoc;
+	if (yLoc > yHmax ) yHmax=yLoc;
+	if (zLoc > zHmax ) zHmax=zLoc;
+  }
+
+  zh = yHmax - yHmin;
+  yh = zHmax - zHmin;
+
+  return yh;
 }
 
 // Compute section tangent stiffness, ks, from material tangent, Dt,
