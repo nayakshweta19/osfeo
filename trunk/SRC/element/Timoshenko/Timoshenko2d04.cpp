@@ -118,7 +118,7 @@ Timoshenko2d04::Timoshenko2d04()
 	:Element (0, ELE_TAG_Timoshenko2d04),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
 	connectedExternalNodes(2),
-	Q(6), q(3), C1(0.0), rho(0.0)
+	Q(6), q(3), rho(0.0)
 {
   q0[0] = 0.0;
   q0[1] = 0.0;
@@ -306,7 +306,7 @@ Timoshenko2d04::update(void)
   for (int i = 0; i<numSections; i++) {
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
-    const Matrix &ks = theSections[i]->getSectionTangent();
+    //const Matrix &ks = theSections[i]->getSectionTangent();
 
 	Omega = 0.3; //ks(1,1)/ks(2,2)/5.*6./L;
 	mu    = 1./(1.+12.*Omega);
@@ -317,7 +317,6 @@ Timoshenko2d04::update(void)
 	phi2p =       mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
 	phi3  = (L-x)*mu*(L-3.*x+12*L*Omega)                          /L/L;
 	phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
-	//double C2 = -2+3*C1+3*(1-2*C1)*x;
 
     Vector e(workArea, order);
 
@@ -1020,7 +1019,7 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
   
-  const Matrix &ks = theSections[sec]->getSectionTangent();
+  //const Matrix &ks = theSections[sec]->getSectionTangent();
 
   double Omega = 0.3; //;ks(1,1)/ks(2,2)/5.*6./L
   double mu    = 1./(1.+12.*Omega);

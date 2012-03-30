@@ -24,10 +24,6 @@
 
 class Node;
 class SectionForceDeformation;
-class RASTMFiberSection2d;
-class FASTMFiberSection2d;
-class CSMMFiberSection2d;
-class MCFTFiberSection2d;
 class CrdTransf;
 class TimoshenkoLinearCrdTransf2d;
 class Response;
@@ -116,7 +112,6 @@ class Timoshenko2d04 : public Element
     double p0[3];   // Reactions in the basic system due to element loads
 
     double rho;	    // Mass density per unit length
-	double C1;
 
 	static Matrix *bd;
 	static Matrix *nd;
