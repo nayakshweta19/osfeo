@@ -64,6 +64,9 @@ class TimoshenkoSection3d : public SectionForceDeformation
     const ID &getType (void);
     int getOrder (void) const;
     
+	double getZh(void);
+	double getYh(void);
+
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, 
 		 FEM_ObjectBroker &theBroker);
@@ -86,6 +89,9 @@ class TimoshenkoSection3d : public SectionForceDeformation
     
     double yBar;       // Section centroid
     double zBar;
+	
+	double yh;         // Section Nominal Hight
+	double zh;
 
     double GJ;
 

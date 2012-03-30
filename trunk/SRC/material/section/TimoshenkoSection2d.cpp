@@ -54,7 +54,7 @@ ID TimoshenkoSection2d::code(3);
 // constructors:
 TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
   SectionForceDeformation(tag, SEC_TAG_TimoshenkoSection2d),
-  numFibers(num), theMaterials(0), matData(0),
+  numFibers(num), theMaterials(0), matData(0), yh(0.0), zh(0.0),
   yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
 {
   if (numFibers != 0) {
@@ -74,7 +74,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
     double Qz = 0.0;
     double Qy = 0.0;
     double a  = 0.0;
-    
+    double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
 	NDMaterial *theMat;
     for (int i = 0; i < numFibers; i++) {
 	  double yLoc, zLoc, Area;
@@ -96,9 +96,16 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
       theMaterials[i] = theMat->getCopy("BeamFiber2d") ; // theMat.getCopy("TimoshenkoFiber");
       if (theMaterials[i] == 0)
          opserr << "TimoshenkoSection2d::TimoshenkoSection2d -- failed to get copy of beam fiber" << endln;
+
+	  if (yLoc < yHmin ) yHmin=yLoc;
+	  if (zLoc < zHmin ) zHmin=zLoc;
+	  if (yLoc > yHmax ) yHmax=yLoc;
+	  if (zLoc > zHmax ) zHmax=zLoc;
     }
     yBar = Qz/a;
     zBar = Qy/a;
+	zh   = yHmax - yHmin;
+	yh   = zHmax - zHmin;
   } 
   
   s = new Vector(sData, 3);
@@ -118,7 +125,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
 // constructor for blank object that recvSelf needs to be invoked upon
 TimoshenkoSection2d::TimoshenkoSection2d():
   SectionForceDeformation(0, SEC_TAG_TimoshenkoSection2d),
-  numFibers(0), theMaterials(0), matData(0),
+  numFibers(0), theMaterials(0), matData(0), yh(0.0), zh(0.0),
   yBar(0.0), zBar(0.0), e(3), eCommit(3), s(0), ks(0)
 {
   s = new Vector(sData, 3);
@@ -191,6 +198,27 @@ const Vector&
 TimoshenkoSection2d::getSectionDeformation(void)
 {
   return e;
+}
+
+double
+TimoshenkoSection2d::getZh(void)
+{
+  double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
+  double yLoc, zLoc;
+  for (int i = 0; i < numFibers; i++) {
+	yLoc=matData[i*3];
+ 	zLoc=matData[i*3+1];
+
+	if (yLoc < yHmin ) yHmin=yLoc;
+	if (zLoc < zHmin ) zHmin=zLoc;
+	if (yLoc > yHmax ) yHmax=yLoc;
+	if (zLoc > zHmax ) zHmax=zLoc;
+  }
+
+  zh = yHmax - yHmin;
+  yh = zHmax - zHmin;
+
+  return zh;
 }
 
 // Compute section tangent stiffness, ks, from material tangent, Dt,

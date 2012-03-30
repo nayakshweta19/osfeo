@@ -307,8 +307,8 @@ Timoshenko2d04::update(void)
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
     //const Matrix &ks = theSections[i]->getSectionTangent();
-
-	Omega = 0.3; //ks(1,1)/ks(2,2)/5.*6./L;
+	double zh = theSections[i]->getZh();
+	Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
 	mu    = 1./(1.+12.*Omega);
 	x     = L * pts[i];
 	phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
@@ -1020,8 +1020,9 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   beamInt->getSectionLocations(numSections, L, pts);
   
   //const Matrix &ks = theSections[sec]->getSectionTangent();
+  double zh = theSections[sec]->getZh();
+  double Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
 
-  double Omega = 0.3; //;ks(1,1)/ks(2,2)/5.*6./L
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   double phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;

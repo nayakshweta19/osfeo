@@ -66,7 +66,8 @@ class TimoshenkoSection2d : public SectionForceDeformation
   SectionForceDeformation *getCopy(void);
   const ID &getType(void);
   int getOrder(void) const;
-  
+  double getZh(void);
+
   int sendSelf(int cTag, Channel &theChannel);
   int recvSelf(int cTag, Channel &theChannel, 
 	       FEM_ObjectBroker &theBroker);
@@ -85,6 +86,9 @@ class TimoshenkoSection2d : public SectionForceDeformation
   double yBar;       // Section centroid
   double zBar;
 
+  double yh;         // Section Nominal Hight
+  double zh;
+  
   static ID code;
 
   Vector e;          // trial section deformations 
