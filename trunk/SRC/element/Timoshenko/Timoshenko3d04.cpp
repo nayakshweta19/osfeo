@@ -63,7 +63,7 @@ Timoshenko3d04::Timoshenko3d04(int tag,
     theSections[i] = s[i]->getCopy();
 
     // Check allocation
-    if (theSections[i] == 0 || s[i]->getClassTag() != SEC_TAG_TimoshenkoSection3d) {
+    if (theSections[i] == 0 ) { //|| s[i]->getClassTag() != SEC_TAG_TimoshenkoSection3d
       opserr << "Timoshenko3d04::Timoshenko3d04() --failed to get a copy of section model " << endln;
       exit(-1);
     }
@@ -1245,22 +1245,22 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
   double zh = theSections[sec]->getZh();
   double OmegaZ = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
   double muZ    = 1./(1.+12.*OmegaZ);
-  double phi1Z  =       muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
-  double phi1pZ =       muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
-  double phi2Z  =      -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
-  double phi2pZ =       muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
-  double phi3Z  = (L-x)*muZ*(L-3.*x+12*L*OmegaZ)                           /L/L;
-  double phi4Z  =     x*muZ*(  3.*x+2*L*(6*OmegaZ-1))                      /L/L;
+  double phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
+  double phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
+  double phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
+  double phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
+  double phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
+  double phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
 
   double yh = theSections[sec]->getYh();
   double OmegaY = 3.*yh*yh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
   double muY    = 1./(1.+12.*OmegaY);
-  double phi1Y  =       muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
-  double phi1pY =       muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
-  double phi2Y  =      -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
-  double phi2pY =       muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
-  double phi3Y  = (L-x)*muY*(L-3.*x+12*L*OmegaY)                           /L/L;
-  double phi4Y  =     x*muY*(  3.*x+2*L*(6*OmegaY-1))                      /L/L;
+  double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
+  double phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
+  double phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
+  double phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
+  double phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
+  double phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
 
   Matrix Bd(6,6);
   Bd.Zero();
