@@ -1203,12 +1203,12 @@ Timoshenko3d01::getNd(int sec, const Vector &v, double L)
   //P, Mz, My, Vy, Vz, T
   Nd(0,0) = 1.;
   Nd(1,1) = -x/L + 1.;
-  Nd(1,3) =  x/L;
-  Nd(2,2) = -x/L + 1.;
+  Nd(1,2) =  x/L;
+  Nd(2,3) = -x/L + 1.;
   Nd(2,4) =  x/L;
   Nd(3,1) =  1./L; // shear components
-  Nd(3,3) =  1./L; // shear components
-  Nd(4,2) =  1./L; // shear components 
+  Nd(3,2) =  1./L; // shear components
+  Nd(4,3) =  1./L; // shear components 
   Nd(4,4) =  1./L; // shear components 
   Nd(5,5) =  1.; // torsion components 
 
@@ -1228,12 +1228,12 @@ Timoshenko3d01::getBd(int sec, const Vector &v, double L)
   
   Bd(0,0) = 1./L;
   Bd(1,1) = -1./L;
-  Bd(1,3) =  1./L;
-  Bd(2,2) = -1./L; 
+  Bd(1,2) =  1./L;
+  Bd(2,3) = -1./L; 
   Bd(2,4) =  1./L; 
   Bd(3,1) = -0.5; // shear components
-  Bd(3,3) = -0.5; // shear components
-  Bd(4,2) = -0.5; // shear components 
+  Bd(3,2) = -0.5; // shear components
+  Bd(4,3) = -0.5; // shear components 
   Bd(4,4) = -0.5; // shear components 
   Bd(5,5) = 1./L; // torsion components 
 
