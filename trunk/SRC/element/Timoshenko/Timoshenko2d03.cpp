@@ -61,22 +61,9 @@ Timoshenko2d03::Timoshenko2d03(int tag,
     // Get copies of the material model for each integration point
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
-    case SEC_TAG_RASTMFiberSection2d:
-      theSections[i] = (RASTMFiberSection2d *)theSection;
-      break;
-    case SEC_TAG_FASTMFiberSection2d:
-      theSections[i] = (FASTMFiberSection2d *)theSection;
-      break;
-    case SEC_TAG_CSMMFiberSection2d:
-      theSections[i] = (CSMMFiberSection2d *)theSection;
-      break;
-    case SEC_TAG_MCFTFiberSection2d:
-      theSections[i] = (MCFTFiberSection2d *)theSection;
-      break;
     case SEC_TAG_TimoshenkoSection2d:
       theSections[i] = (TimoshenkoSection2d *)theSection;
       break;
-    
     default:
       opserr << "Timoshenko2d03::Timoshenko2d03() --default secTag at sec " << i+1 << endln;
       theSections[i] = theSection;

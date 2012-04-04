@@ -310,33 +310,37 @@ Timoshenko3d04::update(void)
   beamInt->getSectionLocations(numSections, L, pts);
 
   double x;
-  double OmegaZ, muZ, zh, phi1Z, phi2Z, phi3Z, phi4Z, phi1pZ, phi2pZ;
-  double OmegaY, muY, yh, phi1Y, phi2Y, phi3Y, phi4Y, phi1pY, phi2pY;
+  double OmegaZ, muZ, zh, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //,
+  double OmegaY, muY, yh, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //, 
   // Loop over the integration points
   for (int i = 0; i< numSections; i++) {
     x      = L * pts[i];
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
 	//const Matrix &ks = theSections[i]->getSectionTangent();
-	double zh = theSections[i]->getZh();
+	zh = theSections[i]->getZh();
 	OmegaZ = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
 	muZ    = 1./(1.+12.*OmegaZ);
-	phi1Z  =       muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
-	phi1pZ =       muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
-	phi2Z  =      -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
-	phi2pZ =       muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
-	phi3Z  = (L-x)*muZ*(L-3.*x+12*L*OmegaZ)                           /L/L;
-	phi4Z  =     x*muZ*(  3.*x+2*L*(6*OmegaZ-1))                      /L/L;
+	//phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
+	phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
+	//phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
+	phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
+	phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
+	phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
+	phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
+	phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
-	double yh = theSections[i]->getYh();
+	yh = theSections[i]->getYh();
 	OmegaY = 3.*yh*yh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
 	muY    = 1./(1.+12.*OmegaY);
-	phi1Y  =       muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
-	phi1pY =       muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
-	phi2Y  =      -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
-	phi2pY =       muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
-	phi3Y  = (L-x)*muY*(L-3.*x+12*L*OmegaY)                           /L/L;
-	phi4Y  =     x*muY*(  3.*x+2*L*(6*OmegaY-1))                      /L/L;
+	//phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
+	phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
+	//phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
+	phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
+	phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
+	phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
+	phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
+	phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
 
     Vector e(workArea, order);
 	//P, Mz, My, Vy, Vz, T
@@ -345,9 +349,9 @@ Timoshenko3d04::update(void)
       case SECTION_RESPONSE_P:     // axial strain
 	e(j) = oneOverL*v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-	e(j) = phi3Z* v(1) + phi4Z* v(2); break;
+	e(j) = phi3pZ* v(1) + phi4pZ* v(2); break;
 	  case SECTION_RESPONSE_MY:    // curvature
-	e(j) = phi3Y* v(3) + phi4Y* v(4); break;
+	e(j) = phi3pY* v(3) + phi4pY* v(4); break;
 	  case SECTION_RESPONSE_VY:    // shear strain
 	e(j) = (phi1pY - phi3Y) * v(1) + (phi2pY-phi4Y) * v(2); break;
       case SECTION_RESPONSE_VZ:    // shear strain
@@ -402,10 +406,10 @@ Timoshenko3d04::getTangentStiff(void)
 	
     // Perform numerical integration
 	bd[i] = this->getBd(i, v, L);
-	//kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
-    kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
-	//q = q + L * wts[i] * bdT[i] * s;
-	q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
+	//kb = kb + wts[i] * bdT[i] * ks * bd[i];
+    kb.addMatrixTripleProduct(1.0, bd[i], ks, L*wts[i]);
+	//q = q + wts[i] * bdT[i] * s;
+	q.addMatrixTransposeVector(1.0, bd[i], s, L*wts[i]);
   }
 
   // Add effects of element loads, q = q(v) + q0		
@@ -449,8 +453,8 @@ Timoshenko3d04::getInitialBasicStiff()
 
     // Perform numerical integration
     bd[i] = this->getBd(i, v, L);
-    //kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
-    kb.addMatrixTripleProduct(1.0, bd[i], ks, L * wts[i]);
+    //kb = kb + wts[i] * bdT[i] * ks * bd[i];
+    kb.addMatrixTripleProduct(1.0, bd[i], ks, L*wts[i]);
 
   }
   return kb;
@@ -644,8 +648,8 @@ Timoshenko3d04::getResistingForce()
 
     // Perform numerical integration on internal force
 	bd[i] = this->getBd(i, v, L);
-	//q = q + L * wts[i] * bdT[i] * s;
-	q.addMatrixTransposeVector(1.0, bd[i], s, L * wts[i]);
+	//q = q + wts[i] * bdT[i] * s;
+	q.addMatrixTransposeVector(1.0, bd[i], s, L*wts[i]);
   }
 
   // Add effects of element loads, q = q(v) + q0		
@@ -1201,34 +1205,35 @@ Timoshenko3d04::getResponse(int responseID, Information &eleInfo)		//LN modify
 Matrix
 Timoshenko3d04::getNd(int sec, const Vector &v, double L)
 {
-  //double pts[maxNumSections];
-  //beamInt->getSectionLocations(numSections, L, pts);
-  //
+  double pts[maxNumSections];
+  beamInt->getSectionLocations(numSections, L, pts);
+  
   //const Matrix &ks = theSections[sec]->getSectionTangent();
-  //
-  //double Omega = 0.3; //ks(1,1)/ks(2,2)/5.*6./L;
-  //double mu    = 1./(1.+12.*Omega);
-  //double x     = L * pts[sec];
-  //double phi1  =       mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
-  //double phi1p =       mu*(3.*x*x+L*L*(1+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
-  //double phi2  =      -mu*x*(L-x)*(x + 6.*L*Omega)                     /L/L;
-  //double phi2p =       mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
-  //double phi3  = (L-x)*mu*(L-3.*x+12*L*Omega)                          /L/L;
-  //double phi4  =     x*mu*(  3.*x+2*L*(6*Omega-1))                     /L/L;
+  double zh = theSections[sec]->getZh();
+
+  double Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
+  double mu    = 1./(1.+12.*Omega);
+  double x     = L * pts[sec];
+  double phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
+  //double phi1p =  mu*(3.*x*x+L*L*(1+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+  double phi2  = -mu*x*(L-x)*(x + 6.*L*Omega)                     /L/L;
+  //double phi2p =  mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1))/L/L;
+  double phi3  =  mu*(L-x)*(L-3.*x+12*L*Omega)                    /L/L;
+  double phi4  =  mu*x*(  3.*x+2*L*(6*Omega-1))                   /L/L;
 
   Matrix Nd(6,6);
   Nd.Zero();
   //P, Mz, My, Vy, Vz, T
-  //Nd(0,0) = 1.;
-  //Nd(1,1) = phi3;
-  //Nd(1,3) = phi4;
-  //Nd(2,2) = phi3;
-  //Nd(2,4) = phi4;
-  //Nd(3,1) = phi1; // shear components
-  //Nd(3,3) = phi2; // shear components
-  //Nd(4,2) = phi1; // shear components 
-  //Nd(4,4) = phi2; // shear components 
-  //Nd(5,5) = 1.; // torsion components 
+  Nd(0,0) = 1.;
+  Nd(1,1) = phi3;
+  Nd(1,2) = phi4;
+  Nd(2,3) = phi3;
+  Nd(2,4) = phi4;
+  Nd(3,1) = phi1; // shear components
+  Nd(3,2) = phi2; // shear components
+  Nd(4,3) = phi1; // shear components 
+  Nd(4,4) = phi2; // shear components 
+  Nd(5,5) = 1.; // torsion components 
 
   return Nd;
 }
@@ -1250,7 +1255,9 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
   double phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
   double phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
   double phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
+  double phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
   double phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
+  double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
   double yh = theSections[sec]->getYh();
   double OmegaY = 3.*yh*yh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
@@ -1260,19 +1267,21 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
   double phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
   double phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
   double phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
+  double phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
   double phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
+  double phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
 
   Matrix Bd(6,6);
   Bd.Zero();
   //P, Mz, My, Vy, Vz, T
   Bd(0,0) = 1./L;
-  Bd(1,1) = phi3Z;
-  Bd(1,3) = phi4Z;
-  Bd(2,2) = phi3Y; 
-  Bd(2,4) = phi4Y; 
+  Bd(1,1) = phi3pZ;
+  Bd(1,2) = phi4pZ;
+  Bd(2,3) = phi3pY; 
+  Bd(2,4) = phi4pY; 
   Bd(3,1) = phi1pY-phi3Y; // shear components
-  Bd(3,3) = phi2pY-phi4Y; // shear components
-  Bd(4,2) = phi1pZ-phi3Z; // shear components 
+  Bd(3,2) = phi2pY-phi4Y; // shear components
+  Bd(4,3) = phi1pZ-phi3Z; // shear components 
   Bd(4,4) = phi2pZ-phi4Z; // shear components 
   Bd(5,5) = 1./L; // torsion components 
 
