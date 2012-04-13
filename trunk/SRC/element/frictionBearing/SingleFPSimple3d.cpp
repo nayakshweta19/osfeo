@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 4860 $
-// $Date: 2012-04-01 05:39:55 +0800 (星期日, 01 四月 2012) $
+// $Date: 2012-04-01 05:39:55 +0800 (周日, 01 4月 2012) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/SingleFPSimple3d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
