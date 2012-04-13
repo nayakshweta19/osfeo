@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.1 $
-// $Date: 2009/04/17 23:02:41 $
+// $Date: 2009-04-17 23:02:41 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/frictionBearing/frictionModel/VPDependentFriction.h,v $
 
 #ifndef VPDependentFriction_h
