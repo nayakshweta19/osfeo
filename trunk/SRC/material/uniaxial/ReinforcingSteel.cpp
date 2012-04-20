@@ -41,7 +41,6 @@
 #include <Channel.h>
 #include <math.h>
 #include <float.h>
-
 #include <tcl.h>
 #include <elementAPI.h>
 
@@ -49,233 +48,234 @@
   int ReinforcingSteel::classCount = 0;
 #endif
 
+
 static int numReinforcingSteelMaterials = 0;
 
 void *
 OPS_NewReinforcingSteel()
 {
-  if (numReinforcingSteelMaterials == 0) {
-    numReinforcingSteelMaterials++;
-  }
-
-  // Pointer to a uniaxial material that will be returned
-  UniaxialMaterial *theMaterial = 0;
-
-  int argc = OPS_GetNumRemainingInputArgs();
-
-  if (argc < 9) {
-    opserr << "WARNING insufficient arguments\n";
-    opserr << "Want: uniaxialMaterial ReinforcingSteel tag? fy? fu? Es? Esh? esh? eult? <-GABuck?> <-DMBuck?> <-CMFatigue?> <-MPCurveParams?> <-IsoHard?>" << endln;
-    return 0;
-  }
-  
-  int tag;
-  double fy, fu, Es, Esh, esh, eult;
-  double slen = 0.0;
-  double Cf = 0.0;
-  double alpha = -4.46;
-  double Cd = 0.0;
-  double beta = 1.0;
-  double r = 1.0;
-  double gama = 0.5;
-  int buckModel = 0;
-  double RC1 = 1.0/3.0;
-  double RC2 = 18.0;
-  double RC3 = 4.0;
-  double a1 = 0.0;
-  double hardLim = 0.01;
-  
-  int numData = 1;
-  if (OPS_GetIntInput(&numData, &tag) != TCL_OK) {
-    opserr << "WARNING invalid uniaxialMaterial ReinforcingSteel tag" << endln;
-    return 0;		
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &fy) != TCL_OK) {
-    opserr << "WARNING invalid fy\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;	
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &fu) != TCL_OK) {
-    opserr << "WARNING invalid fu\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &Es) != TCL_OK) {
-    opserr << "WARNING invalid Es\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;	
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &Esh) != TCL_OK) {
-    opserr << "WARNING invalid Esh\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;	
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &esh) != TCL_OK) {
-    opserr << "WARNING invalid esh\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;	
-  }
-  
-  if (OPS_GetDoubleInput(&numData, &eult) != TCL_OK) {
-    opserr << "WARNING invalid eult\n";
-    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-    return 0;	
-  }
-
-  argc = OPS_GetNumRemainingInputArgs();
-  char argvLoc[16];
-  while (argc > 1) {
-
-	if (OPS_GetString(argvLoc, 16) != 0) {
-		opserr << "WARNING invalid string option uniaxialMaterial ReinforcingSteel tag: " << tag << endln;
-		return 0;
-	}
-
-	numData = 1;
-
-    if (strcmp(argvLoc,"-GABuck") == 0) {
-      if (argc < 4)  {
-        opserr << "WARNING insufficient optional arguments for -GABuck\n";
-        opserr << "Want: <-GABuck lsr? beta? r? gama?>" << endln;
-        return 0;
-      }
-	  
-      buckModel = 1;
-      if (OPS_GetDoubleInput(&numData, &slen) != TCL_OK) {
-        opserr << "WARNING invalid lsr\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-      if (OPS_GetDoubleInput(&numData, &beta) != TCL_OK) {
-        opserr << "WARNING invalid beta\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-	  
-      if (OPS_GetDoubleInput(&numData, &r) != TCL_OK) {
-        opserr << "WARNING invalid r\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-	  
-      if (OPS_GetDoubleInput(&numData, &gama) != TCL_OK) {
-        opserr << "WARNING invalid gama\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
+    if (numReinforcingSteelMaterials == 0) {
+      numReinforcingSteelMaterials++;
     }
 
-    else if (strcmp(argvLoc,"-DMBuck") == 0) {
-      if (argc < 1)  {
-        opserr << "WARNING insufficient optional arguments for -DMBuck\n";
-        opserr << "Want: <-DMBuck lsr? <alpha?>>" << endln;
-        return 0;
-      }
-      
-      buckModel = 2;
-      if (OPS_GetDoubleInput(&numData, &slen) != TCL_OK) {
-        opserr << "WARNING invalid lsr\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-      if (argc < 1)  {
-        beta = 1.0;
-      } else  {
+    // Pointer to a uniaxial material that will be returned
+    UniaxialMaterial *theMaterial = 0;
+
+    int argc = OPS_GetNumRemainingInputArgs();
+
+    if (argc < 9) {
+      opserr << "WARNING insufficient arguments\n";
+      opserr << "Want: uniaxialMaterial ReinforcingSteel tag? fy? fu? Es? Esh? esh? eult? <-GABuck?> <-DMBuck?> <-CMFatigue?> <-MPCurveParams?> <-IsoHard?>" << endln;
+      return 0;
+    }
+
+    int tag;
+    double fy, fu, Es, Esh, esh, eult;
+    double slen = 0.0;
+    double Cf = 0.0;
+    double alpha = -4.46;
+    double Cd = 0.0;
+    double beta = 1.0;
+    double r = 1.0;
+    double gama = 0.5;
+    int buckModel = 0;
+    double RC1 = 1.0/3.0;
+    double RC2 = 18.0;
+    double RC3 = 4.0;
+    double a1 = 0.0;
+    double hardLim = 0.01;
+
+    int numData = 1;
+    if (OPS_GetIntInput(&numData, &tag) != TCL_OK) {
+      opserr << "WARNING invalid uniaxialMaterial ReinforcingSteel tag" << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &fy) != TCL_OK) {
+      opserr << "WARNING invalid fy\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &fu) != TCL_OK) {
+      opserr << "WARNING invalid fu\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &Es) != TCL_OK) {
+      opserr << "WARNING invalid Es\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &Esh) != TCL_OK) {
+      opserr << "WARNING invalid Esh\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &esh) != TCL_OK) {
+      opserr << "WARNING invalid esh\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    if (OPS_GetDoubleInput(&numData, &eult) != TCL_OK) {
+      opserr << "WARNING invalid eult\n";
+      opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+      return 0;
+    }
+
+    argc = OPS_GetNumRemainingInputArgs();
+    char argvLoc[16];
+    while (argc > 1) {
+
+  	if (OPS_GetString(argvLoc, 16) != 0) {
+  		opserr << "WARNING invalid string option uniaxialMaterial ReinforcingSteel tag: " << tag << endln;
+  		return 0;
+  	}
+
+  	numData = 1;
+
+      if (strcmp(argvLoc,"-GABuck") == 0) {
+        if (argc < 4)  {
+          opserr << "WARNING insufficient optional arguments for -GABuck\n";
+          opserr << "Want: <-GABuck lsr? beta? r? gama?>" << endln;
+          return 0;
+        }
+
+        buckModel = 1;
+        if (OPS_GetDoubleInput(&numData, &slen) != TCL_OK) {
+          opserr << "WARNING invalid lsr\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
+        }
         if (OPS_GetDoubleInput(&numData, &beta) != TCL_OK) {
-          opserr << "WARNING invalid alpha\n";
+          opserr << "WARNING invalid beta\n";
           opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-          return 0;	
+          return 0;
+        }
+
+        if (OPS_GetDoubleInput(&numData, &r) != TCL_OK) {
+          opserr << "WARNING invalid r\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
+        }
+
+        if (OPS_GetDoubleInput(&numData, &gama) != TCL_OK) {
+          opserr << "WARNING invalid gama\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
         }
       }
-      if (beta<0.75 || beta>1.0)
-        opserr << "WARNING alpha usually is between 0.75 and 1.0\n";
-    }
-    
-	else if (strcmp(argvLoc,"-CMFatigue") == 0) {
-	  if (argc < 3)  {
-	    opserr << "WARNING insufficient optional arguments for -CMFatigue\n";
-	    opserr << "Want: <-CMFatigue Cf? alpha? Cd?>" << endln;
-	    return 0;
-	  }
-	  if (OPS_GetDoubleInput(&numData, &Cf) != TCL_OK) {
-	    opserr << "WARNING invalid Cf\n";
-	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-	    return 0;	
-	  }
-	  if (OPS_GetDoubleInput(&numData, &alpha) != TCL_OK) {
-	    opserr << "WARNING invalid alpha\n";
-	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-	    return 0;	
-	  }
-	  if (OPS_GetDoubleInput(&numData, &Cd) != TCL_OK) {
-	    opserr << "WARNING invalid Cd\n";
-	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-	    return 0;	
-	  }
-	}
-	else if (strcmp(argvLoc,"-MPCurveParams") == 0) {
-      if (argc < 3)  {
-        opserr << "WARNING insufficient optional arguments for -MPCurveParams\n";
-        opserr << "Want: <-CMFatigue R1? R2? R3?>" << endln;
-        return 0;
-      }
-      if (OPS_GetDoubleInput(&numData, &RC1) != TCL_OK) {
-        opserr << "WARNING invalid RC1\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-      if (OPS_GetDoubleInput(&numData, &RC2) != TCL_OK) {
-        opserr << "WARNING invalid RC2\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-      if (OPS_GetDoubleInput(&numData, &RC3) != TCL_OK) {
-        opserr << "WARNING invalid RC3\n";
-        opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-        return 0;	
-      }
-    }
-	else if (strcmp(argvLoc,"-IsoHard") == 0) {
-      if (argc < 1) {
-        a1 = 4.3;
-        opserr << "uniaxialMaterial ReinforcingSteel -IsoHard: default values used\n";
-      } else {
-        if (OPS_GetDoubleInput(&numData, &a1) != TCL_OK) {
-          opserr << "WARNING invalid a1\n";
-          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-          return 0;	
+
+      else if (strcmp(argvLoc,"-DMBuck") == 0) {
+        if (argc < 1)  {
+          opserr << "WARNING insufficient optional arguments for -DMBuck\n";
+          opserr << "Want: <-DMBuck lsr? <alpha?>>" << endln;
+          return 0;
         }
-        if (OPS_GetDoubleInput(&numData, &hardLim) != TCL_OK) {
-          opserr << "WARNING invalid hardening limit\n";
+
+        buckModel = 2;
+        if (OPS_GetDoubleInput(&numData, &slen) != TCL_OK) {
+          opserr << "WARNING invalid lsr\n";
           opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
-          return 0;	
+          return 0;
+        }
+        if (argc < 1)  {
+          beta = 1.0;
+        } else  {
+          if (OPS_GetDoubleInput(&numData, &beta) != TCL_OK) {
+            opserr << "WARNING invalid alpha\n";
+            opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+            return 0;
+          }
+        }
+        if (beta<0.75 || beta>1.0)
+          opserr << "WARNING alpha usually is between 0.75 and 1.0\n";
+      }
+
+  	else if (strcmp(argvLoc,"-CMFatigue") == 0) {
+  	  if (argc < 3)  {
+  	    opserr << "WARNING insufficient optional arguments for -CMFatigue\n";
+  	    opserr << "Want: <-CMFatigue Cf? alpha? Cd?>" << endln;
+  	    return 0;
+  	  }
+  	  if (OPS_GetDoubleInput(&numData, &Cf) != TCL_OK) {
+  	    opserr << "WARNING invalid Cf\n";
+  	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+  	    return 0;
+  	  }
+  	  if (OPS_GetDoubleInput(&numData, &alpha) != TCL_OK) {
+  	    opserr << "WARNING invalid alpha\n";
+  	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+  	    return 0;
+  	  }
+  	  if (OPS_GetDoubleInput(&numData, &Cd) != TCL_OK) {
+  	    opserr << "WARNING invalid Cd\n";
+  	    opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+  	    return 0;
+  	  }
+  	}
+  	else if (strcmp(argvLoc,"-MPCurveParams") == 0) {
+        if (argc < 3)  {
+          opserr << "WARNING insufficient optional arguments for -MPCurveParams\n";
+          opserr << "Want: <-CMFatigue R1? R2? R3?>" << endln;
+          return 0;
+        }
+        if (OPS_GetDoubleInput(&numData, &RC1) != TCL_OK) {
+          opserr << "WARNING invalid RC1\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
+        }
+        if (OPS_GetDoubleInput(&numData, &RC2) != TCL_OK) {
+          opserr << "WARNING invalid RC2\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
+        }
+        if (OPS_GetDoubleInput(&numData, &RC3) != TCL_OK) {
+          opserr << "WARNING invalid RC3\n";
+          opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+          return 0;
         }
       }
+  	else if (strcmp(argvLoc,"-IsoHard") == 0) {
+        if (argc < 1) {
+          a1 = 4.3;
+          opserr << "uniaxialMaterial ReinforcingSteel -IsoHard: default values used\n";
+        } else {
+          if (OPS_GetDoubleInput(&numData, &a1) != TCL_OK) {
+            opserr << "WARNING invalid a1\n";
+            opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+            return 0;
+          }
+          if (OPS_GetDoubleInput(&numData, &hardLim) != TCL_OK) {
+            opserr << "WARNING invalid hardening limit\n";
+            opserr << "uniaxialMaterial ReinforcingSteel: " << tag << endln;
+            return 0;
+          }
+        }
+      }
+
+  	else {
+  	  opserr << "WARNING did not recognize optional flag\n";
+  	  opserr << "Possible Optional Flags: <-GABuck?> <-DMBuck?> <-CMFatigue?> <-MPCurveParams?> <-IsoHard?>" << endln;
+  	  return 0;
+  	}
+
+  	argc = OPS_GetNumRemainingInputArgs();
+
     }
 
-	else {
-	  opserr << "WARNING did not recognize optional flag\n";
-	  opserr << "Possible Optional Flags: <-GABuck?> <-DMBuck?> <-CMFatigue?> <-MPCurveParams?> <-IsoHard?>" << endln;
-	  return 0;
-	}
+    // Parsing was successful, allocate the material
+    theMaterial = new ReinforcingSteel(tag, fy, fu, Es, Esh, esh, eult, buckModel, slen, beta, r, gama, Cf, alpha, Cd, RC1, RC2, RC3, a1, hardLim);
 
-	argc = OPS_GetNumRemainingInputArgs();
-
-  }
-
-  // Parsing was successful, allocate the material
-  theMaterial = new ReinforcingSteel(tag, fy, fu, Es, Esh, esh, eult, buckModel, slen, beta, r, gama, Cf, alpha, Cd, RC1, RC2, RC3, a1, hardLim);
-  
-  //if (theMaterial != 0) 
-  //  return OPS_addUniaxialMaterial(theMaterial);
-  //else
-  //  return -1;
-  return theMaterial;
+    //if (theMaterial != 0)
+    //  return OPS_addUniaxialMaterial(theMaterial);
+    //else
+    //  return -1;
+    return theMaterial;
 }
 
 

@@ -9,7 +9,7 @@
 #include <tcl.h>
 #include <string.h>
 
-#include <fstream>
+#include <fstream.h>
 #include <engine.h>
 #include <mex.h>
 

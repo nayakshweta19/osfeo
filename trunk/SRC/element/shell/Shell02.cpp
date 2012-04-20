@@ -79,7 +79,7 @@ OPS_NewShell02(void)
   SectionForceDeformation *theSection = OPS_GetSectionForceDeformation(iData[5]);
 
   if (theSection == 0) {
-    opserr << "ERROR:  element Shell02 " << iData[0] << "section not found\n";
+	opserr << "ERROR:  element Shell02 " << iData[0] << "section " << iData[5] << " not found\n";
     return 0;
   }
   
