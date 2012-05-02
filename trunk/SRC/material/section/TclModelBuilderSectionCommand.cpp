@@ -4089,7 +4089,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
    // make sure at least one other argument to contain layer type
    if (argc < 2) 
    {
-      opserr <<  "WARNING need to specify a layer type \n";
+      opserr <<  "WARNING need to specify a layer2d type \n";
       return TCL_ERROR;
    }    
 
@@ -4098,7 +4098,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
    {
       if (argc < 9)
       {
-         opserr <<  "WARNING invalid number of parameters: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid number of parameters: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
 
@@ -4112,49 +4112,49 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
       
       if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK)
       {
-         opserr <<  "WARNING invalid matTag: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid matTag: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tmatTag: " << matTag;
 
       if (Tcl_GetInt(interp, argv[argi++], &numTwoDFibers) != TCL_OK)
       {
-         opserr <<  "WARNING invalid numfibers: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid numfibers: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tnumReinfBars: " << numReinfBars;
 
       if (Tcl_GetDouble(interp, argv[argi++], &fiberArea) != TCL_OK)
       {
-         opserr <<  "WARNING invalid fiberArea: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid fiberArea: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\treinfBarArea: " << reinfBarArea;
 
       if (Tcl_GetDouble(interp, argv[argi++], &yStartPt) != TCL_OK)
       {
-         opserr <<  "WARNING invalid yStartPt: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid yStartPt: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tyStartPt: " << yStartPt;
     
       if (Tcl_GetDouble(interp, argv[argi++], &zStartPt) != TCL_OK)
       {
-         opserr <<  "WARNING invalid zStartPt: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid zStartPt: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tzStartPt: " << zStartPt;
        
       if (Tcl_GetDouble(interp, argv[argi++], &yEndPt) != TCL_OK)
       {
-         opserr <<  "WARNING invalid yEndPt: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid yEndPt: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tyEndPt: " << yEndPt;
     
       if (Tcl_GetDouble(interp, argv[argi++], &zEndPt) != TCL_OK)
       {
-         opserr <<  "WARNING invalid zEndPt: layer straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
+         opserr <<  "WARNING invalid zEndPt: layer2d straight matTag numfibers fiberArea yStartPt zStartPt yEndPt zEndPt\n";
          return TCL_ERROR;
       }
       
@@ -4193,7 +4193,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
                                                    startPt, endPt);
       if (!twoDLayer)
       {
-         opserr <<  "WARNING cannot alocate reinfLayer\n";
+         opserr <<  "WARNING cannot allocate Layer2d objects\n";
          return TCL_ERROR;
       }
       //opserr << "\nStraigthReinfLayer: " << *reinfLayer;
@@ -4204,7 +4204,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
       
       if (error)
       {
-         opserr <<  "WARNING cannot add reinforcing layer to section\n";
+         opserr <<  "WARNING cannot add layer2d object to section\n";
          return TCL_ERROR;
       }
       
@@ -4213,7 +4213,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
    {
       if (argc < 8)
       {
-         opserr <<  "WARNING invalid number of parameters: layer circ matTag numReinfBars reinfBarArea yCenter zCenter arcRadius <startAng endAng>\n";
+         opserr <<  "WARNING invalid number of parameters: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter arcRadius <startAng endAng>\n";
          return TCL_ERROR;
       }
 
@@ -4227,42 +4227,42 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
       
       if (Tcl_GetInt(interp, argv[argi++], &matTag) != TCL_OK)
       {
-         opserr <<  "WARNING invalid matTag: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid matTag: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tmatTag: " << matTag;
 
       if (Tcl_GetInt(interp, argv[argi++], &numReinfBars) != TCL_OK)
       {
-         opserr <<  "WARNING invalid numReinfBars: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid numReinfBars: layer circ2d matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tnumReinfBars: " << numReinfBars;
 
       if (Tcl_GetDouble(interp, argv[argi++], &reinfBarArea) != TCL_OK)
       {
-         opserr <<  "WARNING invalid reinfBarArea: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid reinfBarArea: layer circ2d matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\treinfBarArea: " << reinfBarArea;
 
       if (Tcl_GetDouble(interp, argv[argi++], &yCenter) != TCL_OK)
       {
-         opserr <<  "WARNING invalid yCenter: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid yCenter: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tyCenter: " << yCenter;
     
       if (Tcl_GetDouble(interp, argv[argi++], &zCenter) != TCL_OK)
       {
-         opserr <<  "WARNING invalid zCenter: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid zCenter: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tzCenter: " << zCenter;
        
       if (Tcl_GetDouble(interp, argv[argi++], &radius) != TCL_OK)
       {
-         opserr <<  "WARNING invalid radius: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+         opserr <<  "WARNING invalid radius: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
          return TCL_ERROR;
       }
       //opserr << "\n\tradius: " << radius;
@@ -4272,14 +4272,14 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
       if (argc > 9) {
 		  if (Tcl_GetDouble(interp, argv[argi++], &startAng) != TCL_OK)
 		  {
-			 opserr <<  "WARNING invalid startAng: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+			 opserr <<  "WARNING invalid startAng: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
 			 return TCL_ERROR;
 		  }
 		  //opserr << "\n\tstartAng: " << startAng;
 
 		  if (Tcl_GetDouble(interp, argv[argi++], &endAng) != TCL_OK)
 		  {
-			 opserr <<  "WARNING invalid endAng: layer circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
+			 opserr <<  "WARNING invalid endAng: layer2d circ matTag numReinfBars reinfBarArea yCenter zCenter radius startAng endAng\n";
 			 return TCL_ERROR;
 		  }
 		  //opserr << "\n\tendAng: " << endAng;
@@ -4299,7 +4299,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
      
       if (sectionRepres->getType() != SEC_TAG_FiberSection)
       {
-         opserr <<  "WARNING section invalid: patch can only be added to fiber sections\n";
+         opserr <<  "WARNING section invalid: layer2d can only be added to fiber sections\n";
          return TCL_ERROR;
       }
 
@@ -4324,7 +4324,7 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
 
       if (!reinfLayer)
       {
-         opserr <<  "WARNING cannot alocate reinfLayer\n";
+         opserr <<  "WARNING cannot allocate Layer2d object\n";
          return TCL_ERROR;
       }
       //opserr << "\nCircReinfLayer: " << *reinfLayer;
@@ -4335,14 +4335,14 @@ TclCommand_add2dLayer(ClientData clientData, Tcl_Interp *interp, int argc,
       
       if (error)
       {
-         opserr <<  "WARNING cannot add reinforcing layer to section\n";
+         opserr <<  "WARNING cannot add layer2d object to section\n";
          return TCL_ERROR;
       }
       
    }
    else
    {
-      opserr <<  "WARNING reinforcing layer type is not available\n";
+      opserr <<  "WARNING layer2d type is not available\n";
       return TCL_ERROR;
    }
   
