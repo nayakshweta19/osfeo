@@ -30,8 +30,6 @@ double Timoshenko2d04::workArea[100];
 
 Matrix *Timoshenko2d04::bd = 0;
 Matrix *Timoshenko2d04::nd = 0;
-Matrix *Timoshenko2d04::bdT = 0;
-Matrix *Timoshenko2d04::ndT = 0;
 
 Timoshenko2d04::Timoshenko2d04(int tag, 
 					 int nd1, 
@@ -99,17 +97,12 @@ Timoshenko2d04::Timoshenko2d04(int tag,
 
   if (nd == 0) 	nd = new Matrix [maxNumSections];
   if (bd == 0)	bd = new Matrix [maxNumSections];
-  if (ndT == 0)	ndT = new Matrix [maxNumSections];
-  if (bdT == 0)	bdT = new Matrix [maxNumSections];
 
-  if (!nd || !bd || !ndT || !bdT) {
+  if (!nd || !bd ) {
     opserr << "Timoshenko2d04::Timoshenko2d04() -- failed to allocate static section arrays";
     exit(-1);
   }
-  for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(3,3);
-    bdT[i] = Matrix(3,3);
-  }
+
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
 // AddingSensitivity:END //////////////////////////////////////
@@ -134,18 +127,12 @@ Timoshenko2d04::Timoshenko2d04()
 
   if (nd == 0) 	nd  = new Matrix [maxNumSections];
   if (bd == 0)	bd  = new Matrix [maxNumSections];
-  if (ndT == 0)	ndT  = new Matrix [maxNumSections];
-  if (bdT == 0)	bdT  = new Matrix [maxNumSections];
 
-  if (!nd || !bd || !ndT || !bdT ) {
+  if (!nd || !bd ) {
     opserr << "Timoshenko2d04::Timoshenko2d04() -- failed to allocate static section arrays";
     exit(-1);
   }
 
-  for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(3,3);
-    bdT[i] = Matrix(3,3);
-  }
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
 // AddingSensitivity:END //////////////////////////////////////
@@ -309,9 +296,10 @@ Timoshenko2d04::update(void)
   for (int i = 0; i<numSections; i++) {
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
-    const Matrix &ks = theSections[i]->getSectionTangent();
+    //const Matrix &ks = theSections[i]->getSectionTangent();
 	double zh = theSections[i]->getZh();
-	Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
+	// A.Bazoune & Y.A. Khulief, 2006
+	Omega = 1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0));	//3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; 
 	mu    = 1./(1.+12.*Omega);
 	x     = L * pts[i];
 	//phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
@@ -994,10 +982,10 @@ Timoshenko2d04::getNd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
 
-  const Matrix &ks = theSections[sec]->getSectionTangent();
+  //const Matrix &ks = theSections[sec]->getSectionTangent();
   double zh = theSections[sec]->getZh();
-
-  double Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
+  // A.Bazoune & Y.A. Khulief, 2006
+  double Omega = 1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0));	//3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; 
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   double phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
@@ -1025,9 +1013,10 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
   
-  const Matrix &ks = theSections[sec]->getSectionTangent();
+  //const Matrix &ks = theSections[sec]->getSectionTangent();
   double zh = theSections[sec]->getZh();
-  double Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
+  // A.Bazoune & Y.A. Khulief, 2006
+  double Omega = 1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0));	//3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; 
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   //double   phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;

@@ -35,8 +35,6 @@ double Timoshenko2d03::workArea[100];
 
 Matrix *Timoshenko2d03::bd = 0;
 Matrix *Timoshenko2d03::nd = 0;
-Matrix *Timoshenko2d03::bdT = 0;
-Matrix *Timoshenko2d03::ndT = 0;
 
 Timoshenko2d03::Timoshenko2d03(int tag, 
 					 int nd1, int nd2,	
@@ -101,16 +99,12 @@ Timoshenko2d03::Timoshenko2d03(int tag,
 
   if (nd == 0) 	nd = new Matrix [maxNumSections];
   if (bd == 0)	bd = new Matrix [maxNumSections];
-  if (ndT == 0)	ndT = new Matrix [maxNumSections];
-  if (bdT == 0)	bdT = new Matrix [maxNumSections];
-  if (!nd || !bd || !ndT || !bdT) {
+
+  if (!nd || !bd ) {
     opserr << "Timoshenko2d03::Timoshenko2d03() -- failed to allocate static section arrays";
     exit(-1);
   }
-  for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(3,3);
-    bdT[i] = Matrix(3,3);
-  }
+
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
 // AddingSensitivity:END //////////////////////////////////////
@@ -135,16 +129,12 @@ Timoshenko2d03::Timoshenko2d03()
 
   if (nd == 0) 	nd  = new Matrix [maxNumSections];
   if (bd == 0)	bd  = new Matrix [maxNumSections];
-  if (ndT == 0)	ndT  = new Matrix [maxNumSections];
-  if (bdT == 0)	bdT  = new Matrix [maxNumSections];
-  if (!nd || !bd || !ndT || !bdT ) {
+
+  if (!nd || !bd ) {
     opserr << "Timoshenko2d03::Timoshenko2d03() -- failed to allocate static section arrays";
     exit(-1);
   }
-  for (int i=0; i<maxNumSections; i++ ){
-    ndT[i] = Matrix(3,3);
-    bdT[i] = Matrix(3,3);
-  }
+
 // AddingSensitivity:BEGIN /////////////////////////////////////
 	parameterID = 0;
 // AddingSensitivity:END //////////////////////////////////////
@@ -366,17 +356,9 @@ Timoshenko2d03::getTangentStiff(void)
     const Vector &s = theSections[i]->getStressResultant();			
     
 	bd[i] = this->getBd(i, v, L);
-	//nd[i] = this->getNd(i, v, L);
-	for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-        //ndT[i](k,j) = nd[i](j,k);
-      }
-    }
     // Perform numerical integration
-	kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
-    
-	q = q + L * wts[i] * bdT[i] * s;
+	kb.addMatrixTripleProduct(1.0, bd[i], ks, L*wts[i]);
+    q.addMatrixTransposeVector(1.0, bd[i], s, L*wts[i]);
 
   // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
@@ -416,13 +398,8 @@ Timoshenko2d03::getInitialBasicStiff()
     const Matrix &ks = theSections[i]->getInitialTangent();
     
 	bd[i] = this->getBd(i, v, L);
-    for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
   // Perform numerical integration
-  kb = kb + L * wts[i] * bdT[i] * ks * bd[i];
+  kb.addMatrixTripleProduct(1.0, bd[i], ks, L*wts[i]);
 
   return kb;
 }
@@ -590,13 +567,8 @@ Timoshenko2d03::getResistingForce()
     const Vector &s = theSections[i]->getStressResultant();
     
 	bd[i] = this->getBd(i, v, L);
-	for( int j = 0; j < 3; j++ ){
-      for( int k = 0; k < 3; k++ ){
-        bdT[i](k,j) = bd[i](j,k);
-      }
-    }
     // Perform numerical integration on internal force
-	q = q + L * wts[i] * bdT[i] * s;
+	q.addMatrixTransposeVector(1.0, bd[i], s, L*wts[i]);
 
   // Add effects of element loads, q = q(v) + q0		
   q(0) += q0[0];
