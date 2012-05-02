@@ -1,9 +1,17 @@
 include ../../../Makefile.def
 
-OBJS       = SSPquad.o \
-	         SSPquadUP.o \
-			 SSPbrick.o \
-			 SSPbrickUP.o
+OBJS       = SimpleContact2D.o \
+             SimpleContact3D.o \
+             BeamContact2D.o \
+             BeamContact2Dp.o \
+             BeamContact3D.o \
+             BeamContact3Dp.o \
+             BeamEndContact3D.o \
+             BeamEndContact3Dp.o \
+             SSPquad.o \
+             SSPquadUP.o \
+             SSPbrick.o \
+             SSPbrickUP.o
 
 all:         $(OBJS)
 

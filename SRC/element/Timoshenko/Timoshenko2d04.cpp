@@ -5,7 +5,6 @@
 // Created: 09/09
 // Modified by: Li Ning 
 // Description: This file contains the class implementation of Timoshenko2d04.Based on Timoshenko2d04.cpp.
-// Referred to R.L. Taylor FEM 6th Ed. Timoshenko Rod Element with Constant STrain
 
 #include <Timoshenko2d04.h>
 #include <Node.h>
@@ -42,7 +41,7 @@ Timoshenko2d04::Timoshenko2d04(int tag,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
 					 double r)
-    :Element (tag, ELE_TAG_Timoshenko2d04), 
+    :Element (tag, ELE_TAG_Timoshenko2d04),
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2),
     Q(6), q(3), rho(r)
@@ -97,10 +96,12 @@ Timoshenko2d04::Timoshenko2d04(int tag,
   p0[0] = 0.0;
   p0[1] = 0.0;
   p0[2] = 0.0;
+
   if (nd == 0) 	nd = new Matrix [maxNumSections];
   if (bd == 0)	bd = new Matrix [maxNumSections];
   if (ndT == 0)	ndT = new Matrix [maxNumSections];
   if (bdT == 0)	bdT = new Matrix [maxNumSections];
+
   if (!nd || !bd || !ndT || !bdT) {
     opserr << "Timoshenko2d04::Timoshenko2d04() -- failed to allocate static section arrays";
     exit(-1);
@@ -135,10 +136,12 @@ Timoshenko2d04::Timoshenko2d04()
   if (bd == 0)	bd  = new Matrix [maxNumSections];
   if (ndT == 0)	ndT  = new Matrix [maxNumSections];
   if (bdT == 0)	bdT  = new Matrix [maxNumSections];
+
   if (!nd || !bd || !ndT || !bdT ) {
     opserr << "Timoshenko2d04::Timoshenko2d04() -- failed to allocate static section arrays";
     exit(-1);
   }
+
   for (int i=0; i<maxNumSections; i++ ){
     ndT[i] = Matrix(3,3);
     bdT[i] = Matrix(3,3);
@@ -306,9 +309,9 @@ Timoshenko2d04::update(void)
   for (int i = 0; i<numSections; i++) {
     int order = theSections[i]->getOrder();
     const ID &code = theSections[i]->getType();
-    //const Matrix &ks = theSections[i]->getSectionTangent();
+    const Matrix &ks = theSections[i]->getSectionTangent();
 	double zh = theSections[i]->getZh();
-	Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
+	Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
 	mu    = 1./(1.+12.*Omega);
 	x     = L * pts[i];
 	//phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
@@ -991,10 +994,10 @@ Timoshenko2d04::getNd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
 
-  //const Matrix &ks = theSections[sec]->getSectionTangent();
+  const Matrix &ks = theSections[sec]->getSectionTangent();
   double zh = theSections[sec]->getZh();
 
-  double Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
+  double Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   double phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
@@ -1022,9 +1025,9 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
   
-  //const Matrix &ks = theSections[sec]->getSectionTangent();
+  const Matrix &ks = theSections[sec]->getSectionTangent();
   double zh = theSections[sec]->getZh();
-  double Omega = 3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L;
+  double Omega = ks(1,1)/ks(2,2)/5.*6./L; //3.*zh*zh/10/L;
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   //double   phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                     /L/L;
