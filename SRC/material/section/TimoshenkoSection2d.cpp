@@ -166,8 +166,8 @@ TimoshenkoSection2d::~TimoshenkoSection2d()
 // linear kinematic relationship, eps = a*e, where
 // eps = [eps_11, eps_12 ]'
 // e   = [eps_a, kappa_z, gamma_y ]'
-// a   = [1 -y  0   
-//        0  0  1 ]
+// a   = [1 -y*beta  0   
+//        0     0    1 ]
 int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
 {
   int res = 0;
@@ -179,13 +179,13 @@ int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
   
   double y, z;
   
-  double root56 = sqrt(5.0/6.0);
+  double beta = 1.0; //5.0/6.0;
 
   for (int i = 0; i < numFibers; i++) {
     y = matData[i*3] - yBar;
     z = matData[i*3+1] - zBar;
       
-    eps(0) = e(0) - y*e(1);
+    eps(0) = e(0) - y*beta*e(1);
     eps(1) = e(2);
     
     res += theMaterials[i]->setTrialStrain(eps);
@@ -207,18 +207,54 @@ TimoshenkoSection2d::getZh(void)
   double yLoc, zLoc;
   for (int i = 0; i < numFibers; i++) {
 	yLoc=matData[i*3];
- 	zLoc=matData[i*3+1];
+ 	//zLoc=matData[i*3+1];
 
 	if (yLoc < yHmin ) yHmin=yLoc;
-	if (zLoc < zHmin ) zHmin=zLoc;
+	//if (zLoc < zHmin ) zHmin=zLoc;
 	if (yLoc > yHmax ) yHmax=yLoc;
-	if (zLoc > zHmax ) zHmax=zLoc;
+	//if (zLoc > zHmax ) zHmax=zLoc;
   }
 
   zh = yHmax - yHmin;
-  yh = zHmax - zHmin;
+  //yh = zHmax - zHmin;
 
   return zh;
+}
+
+double
+TimoshenkoSection2d::getEIy(void)
+{
+  double EIy=0;
+  double yLoc, zLoc, aLoc;
+  for (int i = 0; i < numFibers; i++) {
+	yLoc=matData[i*3];
+ 	zLoc=matData[i*3+1];
+	aLoc=matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	EIy += Dt(0,0) * aLoc * pow(yLoc,2.0);
+  }
+
+  return EIy;
+}
+
+double
+TimoshenkoSection2d::getGA(void)
+{
+  double GA=0;
+  double yLoc, zLoc, aLoc;
+  for (int i = 0; i < numFibers; i++) {
+	yLoc=matData[i*3];
+ 	zLoc=matData[i*3+1];
+	aLoc=matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	GA += Dt(1,1) * aLoc;
+  }
+
+  return GA;
 }
 
 // Compute section tangent stiffness, ks, from material tangent, Dt,
