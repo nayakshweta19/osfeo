@@ -572,7 +572,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
 	Element *theElement = 0;
 
 	BeamIntegration *beamIntegr = 0;
-	beamIntegr = new LegendreBeamIntegration();
+	beamIntegr = new LobattoBeamIntegration();
 
 	if (ndm == 2) {
 	  theTransf2d = OPS_GetCrdTransf(transfTag);
@@ -865,7 +865,7 @@ TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp,
 	Element *theElement = 0;
 
 	BeamIntegration *beamIntegr = 0;
-	beamIntegr = new LegendreBeamIntegration();
+	beamIntegr = new LobattoBeamIntegration();
 
 	if (ndm == 3) {
 	  theTransf3d = OPS_GetCrdTransf(transfTag);
