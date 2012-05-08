@@ -75,6 +75,15 @@ class TimoshenkoSection2d : public SectionForceDeformation
 	       FEM_ObjectBroker &theBroker);
   void Print(OPS_Stream &s, int flag = 0);
   
+  Response *setResponse(const char **argv, int argc, 
+			  OPS_Stream &s);
+  int getResponse(int responseID, Information &info);
+
+  int addFiber(Fiber &theFiber);
+  
+  // AddingSensitivity:BEGIN //////////////////////////////////////////
+  int setParameter(const char **argv, int argc, Parameter &param);
+
  protected:
   
  private:
