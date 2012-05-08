@@ -89,7 +89,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
  	  Qy += zLoc*Area;
  	  a  += Area;
       
- 	  matData[i*3] =  yLoc;
+ 	  matData[i*3] = -yLoc;
  	  matData[i*3+1] = zLoc;
  	  matData[i*3+2] = Area;
       
@@ -102,7 +102,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
 	  if (yLoc > yHmax ) yHmax=yLoc;
 	  if (zLoc > zHmax ) zHmax=zLoc;
     }
-    yBar = Qz/a;
+    yBar = -Qz/a;
     zBar = Qy/a;
 	zh   = yHmax - yHmin;
 	yh   = zHmax - zHmin;
@@ -162,6 +162,73 @@ TimoshenkoSection2d::~TimoshenkoSection2d()
 	delete ks;
 }
 
+int
+TimoshenkoSection2d::addFiber(Fiber &newFiber)
+{
+  // need to create larger arrays
+  int newSize = numFibers+1;
+  NDMaterial **newArray = new NDMaterial *[newSize]; 
+  double *newMatData = new double [3 * newSize];
+  if (newArray == 0 || newMatData == 0) {
+    opserr <<"TimoshenkoSection2d::addFiber -- failed to allocate Fiber pointers\n";
+    return -1;
+  }
+
+  // copy the old pointers and data
+  int i;
+  for (i = 0; i < numFibers; i++) {
+    newArray[i] = theMaterials[i];
+    newMatData[3*i] = matData[3*i];
+    newMatData[3*i+1] = matData[3*i+1];
+	newMatData[3*i+2] = matData[3*i+2];
+  }
+
+  // set the new pointers and data
+  double yLoc, zLoc, Area;
+  newFiber.getFiberLocation(yLoc, zLoc);
+  Area = newFiber.getArea();
+  newMatData[numFibers*3] = -yLoc;
+  newMatData[numFibers*3+1] = zLoc;
+  newMatData[numFibers*3+2] = Area;
+  NDMaterial *theMat = newFiber.getNDMaterial();
+  newArray[numFibers] = theMat->getCopy("BeamFiber2d");
+
+  if (newArray[numFibers] == 0) {
+    opserr <<"TimoshenkoSection2d::addFiber -- failed to get copy of a Material\n";
+    delete [] newMatData;
+    return -1;
+  }
+
+  numFibers++;
+
+  if (theMaterials != 0) {
+    delete [] theMaterials;
+    delete [] matData;
+  }
+
+  theMaterials = newArray;
+  matData = newMatData;
+
+  double Qz = 0.0;
+  double Qy = 0.0;
+  double A  = 0.0;
+
+  // Recompute centroid
+  for (i = 0; i < numFibers; i++) {
+    yLoc = -matData[3*i];
+	zLoc = matData[3*i+1];
+	Area = matData[3*i+1];
+    A  += Area;
+    Qz += yLoc*Area;
+	Qy += zLoc*Area;
+  }
+
+  yBar = -Qz/A;
+  zBar = Qy/A;
+
+  return 0;
+}
+
 // Compute fiber strain, eps, from section deformation, e, using the
 // linear kinematic relationship, eps = a*e, where
 // eps = [eps_11, eps_12 ]'
@@ -171,7 +238,6 @@ TimoshenkoSection2d::~TimoshenkoSection2d()
 int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
 {
   int res = 0;
-  
   e = deforms;
   
   // Material strain vector
@@ -185,7 +251,7 @@ int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
     y = matData[i*3] - yBar;
     z = matData[i*3+1] - zBar;
       
-    eps(0) = e(0) - y*beta*e(1);
+    eps(0) = e(0) + y * e(1);
     eps(1) = e(2);
     
     res += theMaterials[i]->setTrialStrain(eps);
@@ -224,16 +290,16 @@ TimoshenkoSection2d::getZh(void)
 double
 TimoshenkoSection2d::getEIy(void)
 {
-  double EIy=0;
-  double yLoc, zLoc, aLoc;
+  double EIy = 0.;
+  double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-	yLoc=matData[i*3];
- 	zLoc=matData[i*3+1];
-	aLoc=matData[i*3+2];
+    y = matData[i*3] - yBar;
+    z = matData[i*3+1] - zBar;
+	A = matData[i*3+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
-	EIy += Dt(0,0) * aLoc * pow(yLoc,2.0);
+	EIy += Dt(0,0) * A * pow(y,2.);
   }
 
   return EIy;
@@ -242,16 +308,16 @@ TimoshenkoSection2d::getEIy(void)
 double
 TimoshenkoSection2d::getGA(void)
 {
-  double GA=0;
-  double yLoc, zLoc, aLoc;
+  double GA = 0.;
+  double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-	yLoc=matData[i*3];
- 	zLoc=matData[i*3+1];
-	aLoc=matData[i*3+2];
+	//y =matData[i*3] - yBar;
+ 	//z =matData[i*3+1] - zBar;
+	A =matData[i*3+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
-	GA += Dt(1,1) * aLoc;
+	GA += Dt(1,1) * A;
   }
 
   return GA;
@@ -300,7 +366,7 @@ TimoshenkoSection2d::getSectionTangent(void)
     kData[4] += y2*d00; //1,1           M
     kData[8] += d11;    //2,2 five6*    V
 
-    tmp = -y*d00;
+    tmp = y*d00;
     kData[1] += tmp; // 0,1
     kData[3] += tmp; // 1,0
     
@@ -310,8 +376,8 @@ TimoshenkoSection2d::getSectionTangent(void)
     kData[2] += d01; //0,2
     kData[6] += d10; //2,0
 
-    kData[5] -= y*d01; //1,2
-    kData[7] -= y*d10; //2,1
+    kData[5] += y*d01; //1,2
+    kData[7] += y*d10; //2,1
     
   }
 
@@ -337,8 +403,8 @@ TimoshenkoSection2d::getStressResultant(void)
 
   for (int i = 0; i < numFibers; i++) {
     
-    y = matData[i*3];
-    z = matData[i*3+1];
+    y = matData[i*3] - yBar;
+    z = matData[i*3+1] - zBar;
     w = matData[i*3+2];
     
     const Vector &sig = theMaterials[i]->getStress();
@@ -347,7 +413,7 @@ TimoshenkoSection2d::getStressResultant(void)
     sig1 = sig(1)*w;
     
     sData[0] += sig0;
-    sData[1] -= y*sig0;
+    sData[1] += y*sig0;
     sData[2] += sig1;
 
   }
@@ -494,7 +560,7 @@ TimoshenkoSection2d::sendSelf(int commitTag, Channel &theChannel)
     }    
 
     // send the fiber data, i.e. area and loc
-    Vector fiberData(matData, 2*numFibers);
+    Vector fiberData(matData, 3*numFibers);
     res += theChannel.sendVector(dbTag, commitTag, fiberData);
     if (res < 0) {
       opserr <<  "TimoshenkoSection2d::sendSelf - failed to send material data\n";
@@ -561,7 +627,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
 	for (int j=0; j<numFibers; j++)
 	  theMaterials[j] = 0;
 
-	matData = new double [numFibers*2];
+	matData = new double [numFibers*3];
 
 	if (matData == 0) {
 	  opserr <<"TimoshenkoSection2d::recvSelf  -- failed to allocate double array for material data\n";
@@ -570,7 +636,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
       }
     }
 
-    Vector fiberData(matData, 2*numFibers);
+    Vector fiberData(matData, 3*numFibers);
     res += theChannel.recvVector(dbTag, commitTag, fiberData);
     if (res < 0) {
       opserr <<  "TimoshenkoSection2d::recvSelf - failed to recv material data\n";
@@ -601,18 +667,22 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
     }
 
     double Qz = 0.0;
+	double Qy = 0.0;
     double A  = 0.0;
-    double yLoc, Area;
+    double yLoc, zLoc, Area;
 
     // Recompute centroid
     for (i = 0; i < numFibers; i++) {
-      yLoc = matData[3*i];
+      yLoc = -matData[3*i];
+      zLoc = matData[3*i+1];
       Area = matData[3*i+1];
       A  += Area;
       Qz += yLoc*Area;
+	  Qy += zLoc*Area;
     }
     
-    yBar = Qz/A;
+    yBar = -Qz/A;
+    zBar = Qy/A;
   }    
 
   return res;
@@ -624,4 +694,310 @@ TimoshenkoSection2d::Print(OPS_Stream &s, int flag)
   s << "\nTimoshenkoSection2d, tag: " << this->getTag() << endln;
   s << "\tFiber Material, tag: " << theMaterials[0]->getTag() << endln;
   theMaterials[0]->Print(s, flag);
+}
+
+Response*
+TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output)
+{
+
+  const ID &type = this->getType();
+  int typeSize = this->getOrder();
+
+  Response *theResponse =0;
+
+  output.tag("SectionOutput");
+  output.attr("secType", this->getClassType());
+  output.attr("secTag", this->getTag());
+
+  // deformations
+  if (strcmp(argv[0],"deformations") == 0 || strcmp(argv[0],"deformation") == 0) {
+    for (int i=0; i<typeSize; i++) {
+      int code = type(i);
+      switch (code){
+      case SECTION_RESPONSE_MZ:
+	output.tag("ResponseType","kappaZ");
+	break;
+      case SECTION_RESPONSE_P:
+	output.tag("ResponseType","eps");
+	break;
+      case SECTION_RESPONSE_VY:
+	output.tag("ResponseType","gammaY");
+	break;
+      case SECTION_RESPONSE_MY:
+	output.tag("ResponseType","kappaY");
+	break;
+      case SECTION_RESPONSE_VZ:
+	output.tag("ResponseType","gammaZ");
+	break;
+      case SECTION_RESPONSE_T:
+	output.tag("ResponseType","theta");
+	break;
+      default:
+	output.tag("ResponseType","Unknown");
+      }
+    }
+    theResponse =  new MaterialResponse(this, 1, this->getSectionDeformation());
+  
+  // forces
+  } else if (strcmp(argv[0],"forces") == 0 || strcmp(argv[0],"force") == 0) {
+    for (int i=0; i<typeSize; i++) {
+      int code = type(i);
+      switch (code){
+      case SECTION_RESPONSE_MZ:
+	output.tag("ResponseType","Mz");
+	break;
+      case SECTION_RESPONSE_P:
+	output.tag("ResponseType","P");
+	break;
+      case SECTION_RESPONSE_VY:
+	output.tag("ResponseType","Vy");
+	break;
+      case SECTION_RESPONSE_MY:
+	output.tag("ResponseType","My");
+	break;
+      case SECTION_RESPONSE_VZ:
+	output.tag("ResponseType","Vz");
+	break;
+      case SECTION_RESPONSE_T:
+	output.tag("ResponseType","T");
+	break;
+      default:
+	output.tag("ResponseType","Unknown");
+      }
+    }
+    theResponse =  new MaterialResponse(this, 2, this->getStressResultant());
+  
+  // force and deformation
+  } else if (strcmp(argv[0],"forceAndDeformation") == 0) { 
+    for (int i=0; i<typeSize; i++) {
+      int code = type(i);
+      switch (code){
+      case SECTION_RESPONSE_MZ:
+	output.tag("ResponseType","kappaZ");
+	break;
+      case SECTION_RESPONSE_P:
+	output.tag("ResponseType","eps");
+	break;
+      case SECTION_RESPONSE_VY:
+	output.tag("ResponseType","gammaY");
+	break;
+      case SECTION_RESPONSE_MY:
+	output.tag("ResponseType","kappaY");
+	break;
+      case SECTION_RESPONSE_VZ:
+	output.tag("ResponseType","gammaZ");
+	break;
+      case SECTION_RESPONSE_T:
+	output.tag("ResponseType","theta");
+	break;
+      default:
+	output.tag("ResponseType","Unknown");
+      }
+    }
+    for (int j=0; j<typeSize; j++) {
+      int code = type(j);
+      switch (code){
+      case SECTION_RESPONSE_MZ:
+	output.tag("ResponseType","Mz");
+	break;
+      case SECTION_RESPONSE_P:
+	output.tag("ResponseType","P");
+	break;
+      case SECTION_RESPONSE_VY:
+	output.tag("ResponseType","Vy");
+	break;
+      case SECTION_RESPONSE_MY:
+	output.tag("ResponseType","My");
+	break;
+      case SECTION_RESPONSE_VZ:
+	output.tag("ResponseType","Vz");
+	break;
+      case SECTION_RESPONSE_T:
+	output.tag("ResponseType","T");
+	break;
+      default:
+	output.tag("ResponseType","Unknown");
+      }
+    }
+
+    theResponse =  new MaterialResponse(this, 4, Vector(2*this->getOrder()));
+  
+  } else if (strcmp(argv[0],"fiberData") == 0) {
+    int numData = numFibers*5;
+    for (int j = 0; j < numFibers; j++) {
+      output.tag("FiberOutput");
+      output.attr("yLoc", -matData[3*j]);
+      output.attr("zLoc", matData[3*j+1]);
+      output.attr("area", matData[3*j+2]);    
+      output.tag("ResponseType","yCoord");
+      output.tag("ResponseType","zCoord");
+      output.tag("ResponseType","area");
+      output.tag("ResponseType","stress");
+      output.tag("ResponseType","strain");
+      output.endTag();
+    }
+    Vector theResponseData(numData);
+    theResponse = new MaterialResponse(this, 5, theResponseData);
+  }
+
+
+  else {
+    if (argc > 2 || strcmp(argv[0],"fiber") == 0) {
+      
+      int key = numFibers;
+      int passarg = 2;
+      
+      
+      if (argc <= 3)	{  // fiber number was input directly
+	
+	key = atoi(argv[1]);
+	
+      } else if (argc > 4) {         // find fiber closest to coord. with mat tag
+	int matTag = atoi(argv[3]);
+	double yCoord = atof(argv[1]);
+	double zCoord = atof(argv[2]);
+	double closestDist = 0.0;
+	double ySearch, zSearch, dy, dz;
+	double distance;
+	int j;
+	
+	// Find first fiber with specified material tag
+	for (j = 0; j < numFibers; j++) {
+	  if (matTag == theMaterials[j]->getTag()) {
+	    ySearch = -matData[3*j];
+	    zSearch =  matData[3*j+1];
+	    dy = ySearch-yCoord;
+	    dz = zSearch-zCoord;
+	    closestDist = sqrt(dy*dy + dz*dz);
+	    key = j;
+	    break;
+	  }
+	}
+	
+	// Search the remaining fibers
+	for ( ; j < numFibers; j++) {
+	  if (matTag == theMaterials[j]->getTag()) {
+	    ySearch = -matData[3*j];
+	    zSearch =  matData[3*j+1];
+	    dy = ySearch-yCoord;
+	    dz = zSearch-zCoord;
+	    distance = sqrt(dy*dy + dz*dz);
+	    if (distance < closestDist) {
+	      closestDist = distance;
+	      key = j;
+	    }
+	  }
+	}
+	passarg = 4;
+      }
+      
+      else {                  // fiber near-to coordinate specified
+	double yCoord = atof(argv[1]);
+	double zCoord = atof(argv[2]);
+	double closestDist;
+	double ySearch, zSearch, dy, dz;
+	double distance;
+	ySearch = -matData[0];
+	zSearch =  matData[1];
+	dy = ySearch-yCoord;
+	dz = zSearch-zCoord;
+	closestDist = sqrt(dy*dy + dz*dz);
+	key = 0;
+	for (int j = 1; j < numFibers; j++) {
+	  ySearch = -matData[3*j];
+	  zSearch =  matData[3*j+1];
+	  dy = ySearch-yCoord;
+	  dz = zSearch-zCoord;
+	  distance = sqrt(dy*dy + dz*dz);
+	  if (distance < closestDist) {
+	    closestDist = distance;
+	    key = j;
+	  }
+	}
+	passarg = 3;
+      }
+      
+      if (key < numFibers && key >= 0) {
+	output.tag("FiberOutput");
+	output.attr("yLoc",-matData[3*key]);
+	output.attr("zLoc",matData[3*key+1]);
+	output.attr("area",matData[3*key+2]);
+	
+	theResponse =  theMaterials[key]->setResponse(&argv[passarg], argc-passarg, output);
+	
+	output.endTag();
+      }
+    }
+  }
+
+  output.endTag();
+  return theResponse;
+}
+
+
+int 
+TimoshenkoSection2d::getResponse(int responseID, Information &sectInfo)
+{
+  // Just call the base class method ... don't need to define
+  // this function, but keeping it here just for clarity
+  if (responseID == 5) {
+    int numData = 5*numFibers;
+    Vector data(numData);
+    int count = 0;
+    for (int j = 0; j < numFibers; j++) {
+      double yLoc, zLoc, A;
+	  Vector stress, strain;
+      yLoc = -matData[3*j];
+      zLoc =  matData[3*j+1];
+      A = matData[3*j+2];
+      stress = theMaterials[j]->getStress();
+      strain = theMaterials[j]->getStrain();
+      data(count) = yLoc; data(count+1) = zLoc; data(count+2) = A;
+      data(count+3) = stress(0); data(count+4) = stress(1); data(count+5) = stress(2);
+	  data(count+6) = strain(0); data(count+7) = strain(1); data(count+8) = strain(2);
+      count += 8;
+    }
+    return sectInfo.setVector(data);	
+  } else {
+    return SectionForceDeformation::getResponse(responseID, sectInfo);
+  }
+}
+
+int
+TimoshenkoSection2d::setParameter(const char **argv, int argc, Parameter &param)
+{
+  if (argc < 3)
+    return -1;
+
+
+  int result = 0;
+
+  // A material parameter
+  if (strstr(argv[0],"material") != 0) {
+
+    // Get the tag of the material
+    int paramMatTag = atoi(argv[1]);
+
+    // Loop over fibers to find the right material(s)
+    int ok = 0;
+    for (int i = 0; i < numFibers; i++)
+      if (paramMatTag == theMaterials[i]->getTag()) {
+	ok = theMaterials[i]->setParameter(&argv[2], argc-2, param);
+	if (ok != -1)
+	  result = ok;
+      }
+    
+    return result;
+  }    
+
+  int ok = 0;
+  
+  // loop over every material
+  for (int i = 0; i < numFibers; i++) {
+    ok = theMaterials[i]->setParameter(argv, argc, param);
+    if (ok != -1)
+      result = ok;
+  }
+
+  return result;
 }
