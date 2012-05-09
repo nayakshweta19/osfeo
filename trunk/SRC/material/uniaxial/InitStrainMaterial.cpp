@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2010/09/11 00:45:22 $
+// $Date: 2010-09-11 00:45:22 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/InitStrainMaterial.cpp,v $
 
 // Written: fmk
@@ -253,4 +253,29 @@ InitStrainMaterial::Print(OPS_Stream &s, int flag)
   s << "InitStrainMaterial tag: " << this->getTag() << endln;
   s << "\tMaterial: " << theMaterial->getTag() << endln;
   s << "\tinitital strain: " << epsInit << endln;
+}
+
+int 
+InitStrainMaterial::setParameter(const char **argv, int argc, Parameter &param)
+{
+  return theMaterial->setParameter(argv, argc, param);
+}
+
+double
+InitStrainMaterial::getStressSensitivity(int gradIndex, bool conditional)
+{
+  return theMaterial->getStressSensitivity(gradIndex, conditional);
+}
+
+double
+InitStrainMaterial::getInitialTangentSensitivity(int gradIndex)
+{
+  return theMaterial->getInitialTangentSensitivity(gradIndex);
+}
+
+int
+InitStrainMaterial::commitSensitivity(double strainGradient, 
+				      int gradIndex, int numGrads)
+{
+  return theMaterial->commitSensitivity(strainGradient, gradIndex, numGrads);
 }

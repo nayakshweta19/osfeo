@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.33 $
-// $Date: 2010/09/13 21:26:10 $
+// $Date: 2010-09-13 21:26:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/forceBeamColumn/ForceBeamColumn3d.cpp,v $
 
 /*
@@ -1915,6 +1915,7 @@ ForceBeamColumn3d::getInitialDeformations(Vector &v0)
        static Vector yAxis(3);
        static Vector zAxis(3);
 
+
        crdTransf->getLocalAxes(xAxis, yAxis, zAxis);
 
        s << "#ForceBeamColumn3D\n";
@@ -2172,6 +2173,8 @@ ForceBeamColumn3d::getInitialDeformations(Vector &v0)
     } else if (strcmp(argv[0],"getRemCriteria2") == 0) {
       theResponse = new ElementResponse(this, 8, Vector(2), ID(6));
 
+    } else if (strcmp(argv[0],"RayleighForces") == 0 || strcmp(argv[0],"rayleighForces") == 0) {theResponse = new ElementResponse(this, 12, theVector);
+
       // section response -
     } else if (strcmp(argv[0],"section") ==0) { 
 
@@ -2284,6 +2287,9 @@ ForceBeamColumn3d::getResponse(int responseID, Information &eleInfo)
     vp.addVector(1.0, v0, -1.0);
     return eleInfo.setVector(vp);
   }
+
+  else if (responseID == 12)
+    return eleInfo.setVector(this->getRayleighDampingForces());
 
   // Point of inflection
   else if (responseID == 5) {
