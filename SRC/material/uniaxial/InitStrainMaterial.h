@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2010/09/11 00:45:21 $
+// $Date: 2010-09-11 00:45:21 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/InitStrainMaterial.h,v $
                                                       
 // Written: fmk
@@ -64,6 +64,14 @@ class InitStrainMaterial : public UniaxialMaterial
     
     void Print(OPS_Stream &s, int flag =0);
     
+    int setParameter(const char **argv, int argc, Parameter &param);
+
+    // AddingSensitivity:BEGIN //////////////////////////////////////////
+    double getStressSensitivity(int gradIndex, bool conditional);
+    double getInitialTangentSensitivity(int gradIndex);
+    int commitSensitivity(double strainGradient, int gradIndex, int numGrads);
+    // AddingSensitivity:END ///////////////////////////////////////////
+
   protected:
     
   private:
