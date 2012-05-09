@@ -66,6 +66,10 @@ class TimoshenkoSection3d : public SectionForceDeformation
     
 	double getZh(void);
 	double getYh(void);
+	double getEIy(void);
+	double getEIz(void);
+	double getGAy(void);
+	double getGAz(void);
 
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, 

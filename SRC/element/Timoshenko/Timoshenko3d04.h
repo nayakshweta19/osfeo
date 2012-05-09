@@ -116,8 +116,6 @@ class Timoshenko3d04 : public Element
 
 	static Matrix *bd;
 	static Matrix *nd;
-	static Matrix *bdT;
-	static Matrix *ndT;
 
 	enum {maxNumSections = 20};
     static double workArea[];
