@@ -288,9 +288,9 @@ TimoshenkoSection2d::getZh(void)
 }
 
 double
-TimoshenkoSection2d::getEIy(void)
+TimoshenkoSection2d::getEIz(void)
 {
-  double EIy = 0.;
+  double G, E, K, EIz = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
     y = matData[i*3] - yBar;
@@ -299,16 +299,18 @@ TimoshenkoSection2d::getEIy(void)
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
-	EIy += Dt(0,0) * A * pow(y,2.);
+	G = Dt(1,1); K= Dt(0,0) - 4./3.*G;
+	E = 9.*K*G/(3.*K+G);
+	EIz += E * A * pow(y,2.);
   }
 
-  return EIy;
+  return EIz;
 }
 
 double
-TimoshenkoSection2d::getGA(void)
+TimoshenkoSection2d::getGAy(void)
 {
-  double GA = 0.;
+  double G, GAy = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
 	//y =matData[i*3] - yBar;
@@ -316,11 +318,11 @@ TimoshenkoSection2d::getGA(void)
 	A =matData[i*3+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
-
-	GA += Dt(1,1) * A;
+	G = Dt(1,1);
+	GAy += G * A;
   }
 
-  return GA;
+  return GAy;
 }
 
 // Compute section tangent stiffness, ks, from material tangent, Dt,

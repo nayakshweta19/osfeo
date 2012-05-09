@@ -88,9 +88,10 @@ class SectionForceDeformation : public Material
   virtual double getRho(void);
   virtual double getZh(void) {return 0;};
   virtual double getYh(void) {return 0;};
-  virtual double getEIz(void) {return 0;};
   virtual double getEIy(void) {return 0;};
-  virtual double getGA(void) {return 0;};
+  virtual double getEIz(void) {return 0;};
+  virtual double getGAy(void) {return 0;};
+  virtual double getGAz(void) {return 0;};
 
   virtual int commitState (void) = 0;
   virtual int revertToLastCommit (void) = 0;

@@ -67,8 +67,8 @@ class TimoshenkoSection2d : public SectionForceDeformation
   const ID &getType(void);
   int getOrder(void) const;
   double getZh(void);
-  double getEIy(void);
-  double getGA(void);
+  double getEIz(void);
+  double getGAy(void);
 
   int sendSelf(int cTag, Channel &theChannel);
   int recvSelf(int cTag, Channel &theChannel, 

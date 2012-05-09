@@ -256,6 +256,78 @@ TimoshenkoSection3d::getYh(void)
   return yh;
 }
 
+double
+TimoshenkoSection3d::getEIz(void)
+{
+  double EIz = 0.;
+  double y, z, A;
+  for (int i = 0; i < numFibers; i++) {
+    y = matData[i*3] - yBar;
+    z = matData[i*3+1] - zBar;
+	A = matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	EIz += Dt(0,0) * A * pow(y,2.);
+  }
+
+  return EIz;
+}
+
+double
+TimoshenkoSection3d::getEIy(void)
+{
+  double EIy = 0.;
+  double y, z, A;
+  for (int i = 0; i < numFibers; i++) {
+    y = matData[i*3] - yBar;
+    z = matData[i*3+1] - zBar;
+	A = matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	EIy += Dt(0,0) * A * pow(z,2.);
+  }
+
+  return EIy;
+}
+
+double
+TimoshenkoSection3d::getGAy(void)
+{
+  double GAy = 0.;
+  double y, z, A;
+  for (int i = 0; i < numFibers; i++) {
+	//y =matData[i*3] - yBar;
+ 	//z =matData[i*3+1] - zBar;
+	A =matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	GAy += Dt(1,1) * A;
+  }
+
+  return GAy;
+}
+
+double
+TimoshenkoSection3d::getGAz(void)
+{
+  double GAz = 0.;
+  double y, z, A;
+  for (int i = 0; i < numFibers; i++) {
+	//y =matData[i*3] - yBar;
+ 	//z =matData[i*3+1] - zBar;
+	A =matData[i*3+2];
+
+	const Matrix &Dt = theMaterials[i]->getTangent();
+
+	GAz += Dt(2,2) * A;
+  }
+
+  return GAz;
+}
+
 // Compute section tangent stiffness, ks, from material tangent, Dt,
 // by integrating over section area
 // ks = int_A a'*Dt*a dA
