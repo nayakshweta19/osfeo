@@ -290,31 +290,35 @@ Timoshenko2d04::update(void)
 
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
+  double wts[maxNumSections];
+  beamInt->getSectionWeights(numSections, L, wts);
 
-  double Omega, mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp = 0.0;
-    while (error > 1.e-4) {
-  // Loop over the integration points
-  for (int i = 0; i<numSections; i++) {
-    int order = theSections[i]->getOrder();
-    const ID &code = theSections[i]->getType();
-
-      //const Matrix &ks = theSections[i]->getSectionTangent();
-      //double zh = theSections[i]->getZh();
-      // A.Bazoune & Y.A. Khulief, 2006
-      Omega = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
-      mu    = 1./(1.+12.*Omega);
+  double Omega[maxNumSections], OmegaM, mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
+  while (error > 1.e-3) {
+	OmegaM = 0.;
+    for (int i = 0; i<numSections; i++) {
+	  //const Matrix &ks = theSections[i]->getSectionTangent(); //double zh = theSections[i]->getZh();
+	  // A.Bazoune & Y.A. Khulief, 2006
+	  Omega[i] = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
+      OmegaM += Omega[i]*wts[i];
+	}
+    // Loop over the integration points
+    for (int i = 0; i<numSections; i++) {
+      int order = theSections[i]->getOrder();
+      const ID &code = theSections[i]->getType();
+      mu    = 1./(1.+12.*OmegaM);
       x     = L * pts[i];
-      //phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                      /L/L;
-      phi1p =  mu*(3.*x*x+L*L*(1.+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
-      //phi2  = -mu*x*(L-x)*(x + 6.*L*Omega)                      /L/L;
-      phi2p =  mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1.))/L/L;
-      phi3  =  mu*(L-x)*(L-3.*x+12.*L*Omega)                    /L/L;
-      phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
-      phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
-      phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
-  	  
+      //phi1  =  mu*x*(L-x)*(L-x+6.*L*OmegaM)                      /L/L;
+      phi1p =  mu*(3.*x*x+L*L*(1.+6.*OmegaM)-4.*L*(x+3.*x*OmegaM))/L/L;
+      //phi2  = -mu*x*(L-x)*(x + 6.*L*OmegaM)                      /L/L;
+      phi2p =  mu*(3.*x*x-L*L* 6. *OmegaM +2.*L*x*(6.*OmegaM-1.))/L/L;
+      phi3  =  mu*(L-x)*(L-3.*x+12.*L*OmegaM)                    /L/L;
+      phi3p =  mu*(6.*x - 4.*L*(1.+3.*OmegaM))                   /L/L;
+      phi4  =  mu*x*(  3.*x+2.*L*(6.*OmegaM-1.))                 /L/L;
+      phi4p =  mu*2.*(3.*x+L*(6.*OmegaM-1.))                     /L/L;
+        
       Vector e(workArea, order);
-  	  
+        
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
@@ -327,14 +331,15 @@ Timoshenko2d04::update(void)
       break;
         }
       }
-  	  
+        
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-
-  }
-  error = fabs(Omega-temp);
-  temp = Omega;
+    
     }
+  
+    error = fabs(OmegaM-temp);
+    temp = OmegaM;
+  }
 
   if (err != 0) {
     opserr << "Timoshenko2d04::update() - failed setTrialSectionDeformations(e)\n";
