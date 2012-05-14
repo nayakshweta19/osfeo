@@ -112,6 +112,8 @@ class Timoshenko2d04 : public Element
     double p0[3];   // Reactions in the basic system due to element loads
 
     double rho;	    // Mass density per unit length
+	
+	double Omega;   // shear contribution factor
 
 	static Matrix *bd;
 	static Matrix *nd;

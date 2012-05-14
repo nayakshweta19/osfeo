@@ -299,8 +299,8 @@ TimoshenkoSection2d::getEIz(void)
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
-	G = Dt(1,1); K= Dt(0,0) - 4./3.*G;
-	E = 9.*K*G/(3.*K+G);
+	//G = Dt(1,1); K= Dt(0,0) - 4./3.*G;
+	E = Dt(0,0); //9.*K*G/(3.*K+G);
 	EIz += E * A * pow(y,2.);
   }
 

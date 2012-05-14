@@ -45,7 +45,7 @@ Matrix PlaneStressRCFiberMaterial::tangent(2,2);
 
 PlaneStressRCFiberMaterial::PlaneStressRCFiberMaterial(void)
 : NDMaterial(0, ND_TAG_PlaneStressRCFiberMaterial),
-Tstrain22(0.0), Cstrain22(0.0), twoDtgLastCommit(3,3), theMaterial(0)
+Tstrain22(0.0), Cstrain22(0.0), twoDtgLastCommit(3,3), strain(2), theMaterial(0)
 {
 	// Nothing to do
 }
@@ -164,11 +164,11 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   //static Vector twoDstressCopy(3); 
   //static Matrix twoDtangentCopy(3,3);
 
-  int maxSubdivisions = 5;
-  int numSubdivide    = 1;
-  bool converged      = false;
-  maxIters            = 20;
-  tol                 = 1.0e-5;
+  //int maxSubdivisions = 5;
+  //int numSubdivide    = 1;
+  //bool converged      = false;
+  //maxIters            = 20;
+  //tol                 = 1.0e-5;
 
   //set two dimensional strain
   
@@ -176,92 +176,23 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   twoDstrain(1) = this->Tstrain22;     //Tstrain22;   eps_yy
   twoDstrain(2) = this->strain(1);     //Tstrain12;   gamma_xy -> eps_xy*2.0
 
-  while (converged == false && numSubdivide <= maxSubdivisions) {
-	
-	// try regular newton (if l==0), or
-	// initial tangent on first iteration then regular newton (if l==1), or 
-	// initial tangent iterations (if l==2)
-
-	for (int l=0; l<3; l++) {
-
-  int numIters = maxIters;
-
-  if (l == 1) 
-	numIters = 10*maxIters; // allow 10 times more iterations for initial tangent
-
-  for (int cnt=0; cnt <numIters; cnt++) {
     if (theMaterial->setTrialStrain(twoDstrain) < 0) {
       opserr << "PlaneStressRCFiberMaterial::setTrialStrain - setStrain failed in material with strain " << twoDstrain;
       return -1;
     }
 	
     twoDstress = theMaterial->getStress();
-    
-    //out of plane stress and tangents
-    condensedStress = twoDstress(1);
-
-    //set norm
-    norm = fabs(condensedStress); //abs(twoDstress(1));
-    //this->Tgamma31  -= strainIncrement(0);
-    //this->Tstrain22 -= strainIncrement(0);
-    //this->Tstrain33 -= strainIncrement(2);
-    //this->Tgamma23  -= strainIncrement(3);
 
 	twoDtangent = theMaterial->getTangent();
 	dd22 = twoDtangent(1,1);
-	dd23 = twoDtangent(1,2);
-	dd21 = twoDtangent(0,1);
 
-    if (norm <= tol) {
-	  converged = true;
-
-	  // break out of cnt & l loops
-	  cnt = numIters+1;
-	  l   = 4;
-
-    } else {
-	  // for next iteration
-	  //condensation
-	  if (l<2) {
-        //update out of new strains
-	    this->Tstrain22 -= condensedStress / dd22;
-			//= -(dd21*twoDstrain(0)+dd23*twoDstrain(2))/dd22; // -(k23*gamma+k21*eps_x)/k22
-
-		if ((cnt == (numIters-1)) && (l == 1)) {
-		  cnt = 0; //reset iteration num
-		  l = 2;
-		}
-		numSubdivide ++;
-	  } 
-	  else { // l=2
-	  // if we have failed to converge for all of our schemes
-	    //dd22.Solve(condensedStress, strainIncrement);
-	    //this->Tstrain22 -= strainIncrement(0);
-	  }
-	  twoDstrain(1) = this->Tstrain22;
-    } // test norm <? tol
-
-  }  // for (cnt=0; cnt<numIters; cnt++)
-
-    } // for (int l=0; l<2; l++)
-
-  } // (converged == false && numSubdivide <= maxSubdivisions)
+  this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
+  this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
+  this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
+  this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
   
-  // if fail to converge we return an error flag & print an error message
-  if (converged == false) {
-    opserr << "WARNING - PlaneStressRCFiberMaterial::setTrialStrain - failed to get compatible " << endln;
-    opserr << "inter-fiber forces & deformations PlaneStressRCFiberMaterial: " << endln;
-    opserr << "matTag = " << this->getTag() << "( norm: " << norm << ")" << endln;
-    //return -1;
-  }
-
-  this->tangent(0,0) = twoDtangent(0,0) - (twoDtangent(0,1)-twoDtangent(1,0))/dd22; 
-  this->tangent(0,1) = twoDtangent(0,2) - (twoDtangent(0,1)-twoDtangent(1,2))/dd22;
-  this->tangent(1,0) = twoDtangent(2,0) - (twoDtangent(2,1)-twoDtangent(1,0))/dd22;
-  this->tangent(1,1) = twoDtangent(2,2) - (twoDtangent(2,1)-twoDtangent(1,2))/dd22;
-  
-  stress(0) = twoDstress(0) - twoDtangent(0,1)/dd22 * twoDstress(1);
-  stress(1) = twoDstress(2) - twoDtangent(2,1)/dd22 * twoDstress(1);
+  this->stress(0) = tangent(0,0)*strain(0)+tangent(0,1)*strain(1);
+  this->stress(1) = tangent(1,0)*strain(0)+tangent(1,1)*strain(1);
 
   return 0;
 }
@@ -287,41 +218,21 @@ PlaneStressRCFiberMaterial::getTangent()
 const Matrix&  
 PlaneStressRCFiberMaterial::getInitialTangent()
 {
-  static Matrix dd11(2,2);
-  static Matrix dd12(2,1);
-  static Matrix dd21(1,2);
-  static Matrix dd22(1,1);
-  static Matrix dd22invdd21(1,2);
+  //static Matrix dd11(2,2);
+  //static Matrix dd12(2,1);
+  //static Matrix dd21(1,2);
+  //static Matrix dd22(1,1);
+  //static Matrix dd22invdd21(1,2);
   static Matrix twoDtangentCopy(3,3);
 
   const Matrix &twoDtangent = theMaterial->getInitialTangent();
 
-  //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
-  for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
-    for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
-      twoDtangentCopy(ii,jj) = twoDtangent(i,j);
-    }//end for j
-  }//end for i
+  double dd22 = twoDtangent(1,1);
 
-  for (i=0; i<2; i++) 
-    for (j=0; j<2; j++) 
-      dd11(i,j) = twoDtangentCopy(i,j);
-
-  for (int i = 0; i < 2; i++)
-    dd12(i,0) = twoDtangentCopy(i,2);
-
-  for (int j = 0; j < 2; j++)
-    dd21(0,j) = twoDtangentCopy(2,j);
-
-  dd22(0,0)   = twoDtangentCopy(2,2);
-
-  //condensation 
-  dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
+  this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
+  this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
+  this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
+  this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
 
   return this->tangent;
 }
