@@ -92,7 +92,7 @@ Matrix *mixedBeamColumn3d::nd2T = 0;
 
 
 //OPS_Export void localInit() {
-//  OPS_Error("mixedBeamColumn3d element \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
+//  OPS_Error("mixedBeamColumn3d element \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign\n", 1);
 //}
 
 // Documentation: Three Dimensional Mixed Beam Column Element
@@ -972,8 +972,7 @@ int mixedBeamColumn3d::update() {
   // Define Variables
   double GJ;
   double torsionalForce;
-  //Vector sectionForceShapeFcn[numSections];
-  Vector *sectionForceShapeFcn = new Vector [numSections];
+  Vector sectionForceShapeFcn[maxNumSections];
   for ( i = 0; i < numSections; i++ ) {
     sectionForceShapeFcn[i] = Vector(NDM_SECTION);
   }
@@ -1320,14 +1319,13 @@ void mixedBeamColumn3d::Print(OPS_Stream &s, int flag) {
 
 }
 
-
 int
 mixedBeamColumn3d::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
   // first determine the end points of the quad based on
   // the display factor (a measure of the distorted image)
   const Vector &end1Crd = theNodes[0]->getCrds();
-  const Vector &end2Crd = theNodes[1]->getCrds();	
+  const Vector &end2Crd = theNodes[1]->getCrds();       
   
   static Vector v1(3);
   static Vector v2(3);
@@ -1346,14 +1344,14 @@ mixedBeamColumn3d::displaySelf(Renderer &theViewer, int displayMode, float fact)
     const Matrix &eigen2 = theNodes[1]->getEigenvectors();
     if (eigen1.noCols() >= mode) {
       for (int i = 0; i < 3; i++) {
-	v1(i) = end1Crd(i) + eigen1(i,mode-1)*fact;
-	v2(i) = end2Crd(i) + eigen2(i,mode-1)*fact;    
+        v1(i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+        v2(i) = end2Crd(i) + eigen2(i,mode-1)*fact;    
       }    
 
     } else {
       for (int i = 0; i < 3; i++) {
-	v1(i) = end1Crd(i);
-	v2(i) = end2Crd(i);
+        v1(i) = end1Crd(i);
+        v2(i) = end2Crd(i);
       }    
     }
   }

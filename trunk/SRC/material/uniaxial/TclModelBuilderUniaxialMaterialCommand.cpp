@@ -100,11 +100,13 @@
 extern void *OPS_NewBilinMaterial(void);
 extern void *OPS_NewSAWSMaterial(void);
 extern void *OPS_NewSecantConcreteMaterial(void); //
-extern void *OPS_changManderConcrete01(void);  //   for CompositePackage
-extern void *OPS_sakinoSunConcrete04(void);    //   for CompositePackage
-extern void *OPS_shenSteel01(void);            //   for CompositePackage
-extern void *OPS_shenSteelCCFT(void);          //   for CompositePackage
-extern void *OPS_shenSteelRCFT(void);          //   for CompositePackage
+extern void *OPS_changManderConcrete01(void);          //   for CompositePackage
+extern void *OPS_sakinoSunConcrete04(void);            //   for CompositePackage
+extern void *OPS_shenSteel01(void);                    //   for CompositePackage
+extern void *OPS_shenSteelCCFT(void);                  //   for CompositePackage
+extern void *OPS_shenSteelRCFT(void);                  //   for CompositePackage
+extern void *OPS_ratchet(void);                        //   for CompositePackage
+extern void *OPS_multiSurfaceKinematicHardening(void); //   for CompositePackage
 extern void *OPS_NewMCFTSteel01Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel02Material(void); //   for mcft/dsfm
 extern void *OPS_NewMCFTSteel03Material(void); //   for mcft/dsfm
@@ -2339,6 +2341,23 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
 	else if (strcmp(argv[1],"ManderConcreteM01") == 0) {
   	  void *theMat = OPS_ManderConcreteM01();
+      if (theMat != 0) 
+    theMaterial = (UniaxialMaterial *)theMat;
+      else 
+    return TCL_ERROR;
+  	}
+
+	else if (strcmp(argv[1],"multiSurfaceKinematicHardening") == 0 || 
+		     strcmp(argv[1],"multiSurface") == 0) {
+  	  void *theMat = OPS_multiSurfaceKinematicHardening();
+      if (theMat != 0) 
+    theMaterial = (UniaxialMaterial *)theMat;
+      else 
+    return TCL_ERROR;
+  	}
+
+	else if (strcmp(argv[1],"ratchet") == 0) {
+  	  void *theMat = OPS_ratchet();
       if (theMat != 0) 
     theMaterial = (UniaxialMaterial *)theMat;
       else 
