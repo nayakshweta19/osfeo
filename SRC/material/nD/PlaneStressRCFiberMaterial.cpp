@@ -143,8 +143,7 @@ PlaneStressRCFiberMaterial::getRho(void)
 //receive the strain
 //2D Plane Stress Material strain order = 11, 22, 12
 //PlaneStressRCFiberMaterial strain order = 11, 12, 22
-//11, 22, 33, 12, 23, 31
-//11, 12, 31, 22, 33, 23
+
 int 
 PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 {
@@ -155,13 +154,14 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 
   //newton loop to solve for out-of-plane strains
   double norm;
-  static double condensedStress;
-  static double strainIncrement;
+  static Vector condensedStress(1);
+  static Vector strainIncrement(1);
   static Vector twoDstress(3);
   static Vector twoDstrain(3);
   static Matrix twoDtangent(3,3);
   static Vector twoDstressCopy(3); 
   static Matrix twoDtangentCopy(3,3);
+  static Matrix dd22(1,1);
 
   int i, j;
   int ii, jj;
@@ -184,17 +184,26 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	//two dimensional tangent 
 	twoDtangent = theMaterial->getTangent();
 
-    //Plane stress material strain order = 11, 22, 33, 12, 23, 31
-    //BeamFiber 2d material strain order = 11, 12, 31, 22, 33, 23
+    //Plane stress material strain order = 11, 22, 12
+    //BeamFiber 2d material strain order = 11, 12, 22
     //swap matrix indices to sort out-of-plane components
-    for (i=0; i<6; i++) {
+    for (i=0; i<3; i++) {
       ii = this->indexMap(i);
       twoDstressCopy(ii) = twoDstress(i);
-      for (j=0; j<6; j++) {
+      for (j=0; j<3; j++) {
 	jj = this->indexMap(j);
 	twoDtangentCopy(ii,jj) = twoDtangent(i,j);
       }//end for j
     }//end for i
+
+	//set norm
+    norm = condensedStress.Norm();
+
+	//condensation 
+    dd22.Solve(condensedStress, strainIncrement);
+
+    //update out of plane strains
+	this->Tstrain22 -= strainIncrement(0);
 
   } while (norm > tolerance);
 
@@ -218,33 +227,173 @@ PlaneStressRCFiberMaterial::getStrain(void)
 const Vector&  
 PlaneStressRCFiberMaterial::getStress()
 {
+  //newton loop to solve for out-of-plane strains
+  static const double tolerance = 1.0e-05;
+  double norm;
+  static Vector condensedStress(1);
+  static Vector strainIncrement(1);
+  static Vector twoDstress(3);
+  static Vector twoDstrain(3);
+  static Matrix twoDtangent(3,3);
+  static Vector twoDstressCopy(3); 
+  static Matrix twoDtangentCopy(3,3);
+  static Matrix dd22(1,1);
+
+  int i, j;
+  int ii, jj;
+
+  do {
+	  //set three dimensional strain
+    twoDstrain(0) = this->strain(0);
+    twoDstrain(1) = this->Tstrain22;
+    twoDstrain(2) = this->strain(1); 
+
+    if (theMaterial->setTrialStrain(twoDstrain) < 0) {
+      opserr << "BeamFiberMaterial2d::setTrialStrain - setStrain failed in material with strain " << twoDstrain;
+      return -1;   
+    }
+
+    //three dimensional stress
+    twoDstress = theMaterial->getStress();
+
+    //three dimensional tangent 
+    twoDtangent = theMaterial->getTangent();
+
+    //NDmaterial strain order        = 11, 22, 12
+    //BeamFiberMaterial2d strain order = 11, 12, 22
+
+    //swap matrix indices to sort out-of-plane components 
+    for (i=0; i<3; i++) {
+      ii = this->indexMap(i);
+      twoDstressCopy(ii) = twoDstress(i);
+      for (j=0; j<3; j++) {
+	jj = this->indexMap(j);
+	twoDtangentCopy(ii,jj) = twoDtangent(i,j);
+      }//end for j
+    }//end for i
+
+    //out of plane stress and tangents
+    for (i=0; i<1; i++) {
+      condensedStress(i) = twoDstressCopy(i+2);
+      for (j=0; j<1; j++) 
+	dd22(i,j) = twoDtangentCopy(i+2,j+2);
+    }//end for i
+
+    //set norm
+    norm = condensedStress.Norm();
+
+    //condensation 
+    dd22.Solve(condensedStress, strainIncrement);
+
+    //update out of plane strains
+	this->Tstrain22 -= strainIncrement(0);
+
+  } while (norm > tolerance);
+  
+  //const Vector &threeDstress = theMaterial->getStress();
+  
+  //swap matrix indices to sort out-of-plane components 
+  for (i=0; i<3; i++) {
+    ii = this->indexMap(i);
+    twoDstressCopy(ii) = twoDstress(i);
+  }
+  
+  for (i=0; i<2; i++) 
+    this->stress(i)    = twoDstressCopy(i);
+
   return this->stress;
 }
 
 const Matrix&  
 PlaneStressRCFiberMaterial::getTangent()
 {
+  static Matrix dd11(2,2);
+  static Vector dd12(2);
+  static Vector dd21(2);
+  static Vector dd22(1);
+  static Vector dd22invdd21(2);
+  static Matrix twoDtangentCopy(3,3);
+
+  const Matrix &twoDtangent = theMaterial->getTangent();
+
+  //swap matrix indices to sort out-of-plane components 
+  int i, j , ii, jj;
+  for (i=0; i<3; i++) {
+    ii = this->indexMap(i);
+    for (j=0; j<3; j++) {
+      jj = this->indexMap(j);
+      twoDtangentCopy(ii,jj) = twoDtangent(i,j);
+    }//end for j
+  }//end for i
+
+  for (i=0; i<2; i++) 
+    for (j=0; j<2; j++) 
+      dd11(i,j) = twoDtangentCopy(i,  j );
+
+  for (int i = 0; i < 2; i++)
+      dd12(i) = twoDtangentCopy(i,  2);
+
+  for (int j = 0; j < 2; j++)
+      dd21(j) = twoDtangentCopy(2,j );
+
+  dd22(0) = twoDtangentCopy(2,2);
+
+  //int Solve(const Vector &V, Vector &res) const;
+  //int Solve(const Matrix &M, Matrix &res) const;
+  //condensation 
+  dd22invdd21  = dd21/dd22(0);
+
+  this->tangent   = dd11; 
+  for (i=0; i<2; i++) 
+    for (j=0; j<2; j++) 
+  this->tangent(i,j) -= (dd12(i)*dd22invdd21(j));
+
   return this->tangent;
 }
 
 const Matrix&  
 PlaneStressRCFiberMaterial::getInitialTangent()
 {
-  //static Matrix dd11(2,2);
-  //static Matrix dd12(2,1);
-  //static Matrix dd21(1,2);
-  //static Matrix dd22(1,1);
-  //static Matrix dd22invdd21(1,2);
+  static Matrix dd11(2,2);
+  static Vector dd12(2);
+  static Vector dd21(2);
+  static Vector dd22(1);
+  static Vector dd22invdd21(2);
   static Matrix twoDtangentCopy(3,3);
 
-  const Matrix &twoDtangent = theMaterial->getInitialTangent();
+  const Matrix &twoDtangent = theMaterial->getTangent();
 
-  double dd22 = twoDtangent(1,1);
+  //swap matrix indices to sort out-of-plane components 
+  int i, j , ii, jj;
+  for (i=0; i<3; i++) {
+    ii = this->indexMap(i);
+    for (j=0; j<3; j++) {
+      jj = this->indexMap(j);
+      twoDtangentCopy(ii,jj) = twoDtangent(i,j);
+    }//end for j
+  }//end for i
 
-  this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
-  this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
-  this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
-  this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
+  for (i=0; i<2; i++) 
+    for (j=0; j<2; j++) 
+      dd11(i,j) = twoDtangentCopy(i,  j );
+
+  for (int i = 0; i < 2; i++)
+      dd12(i) = twoDtangentCopy(i,  2);
+
+  for (int j = 0; j < 2; j++)
+      dd21(j) = twoDtangentCopy(2,j );
+
+  dd22(0) = twoDtangentCopy(2,2);
+
+  //int Solve(const Vector &V, Vector &res) const;
+  //int Solve(const Matrix &M, Matrix &res) const;
+  //condensation 
+  dd22invdd21  = dd21/dd22(0);
+
+  this->tangent   = dd11; 
+  for (i=0; i<2; i++) 
+    for (j=0; j<2; j++) 
+  this->tangent(i,j) -= (dd12(i)*dd22invdd21(j));
 
   return this->tangent;
 }
