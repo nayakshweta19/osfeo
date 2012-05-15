@@ -148,51 +148,63 @@ PlaneStressRCFiberMaterial::getRho(void)
 int 
 PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 {
+  static const double tolerance = 1.0e-05;
 
   this->strain(0) = strainFromElement(0);
   this->strain(1) = strainFromElement(1);
 
   //newton loop to solve for out-of-plane strains
-  int i, j, ii, jj;
-  double norm, dd23, dd22, dd21;
-  static double factor = 10;
+  double norm;
   static double condensedStress;
   static double strainIncrement;
   static Vector twoDstress(3);
   static Vector twoDstrain(3);
   static Matrix twoDtangent(3,3);
-  //static Vector twoDstressCopy(3); 
-  //static Matrix twoDtangentCopy(3,3);
+  static Vector twoDstressCopy(3); 
+  static Matrix twoDtangentCopy(3,3);
 
-  //int maxSubdivisions = 5;
-  //int numSubdivide    = 1;
-  //bool converged      = false;
-  //maxIters            = 20;
-  //tol                 = 1.0e-5;
+  int i, j;
+  int ii, jj;
 
-  //set two dimensional strain
-  
-  twoDstrain(0) = this->strain(0);     //Tstrain11    eps_xx
-  twoDstrain(1) = this->Tstrain22;     //Tstrain22;   eps_yy
-  twoDstrain(2) = this->strain(1);     //Tstrain12;   gamma_xy -> eps_xy*2.0
+  do 
+  {  
+    //set two dimensional strain
+    twoDstrain(0) = this->strain(0);     //Tstrain11    eps_xx
+    twoDstrain(1) = this->Tstrain22;     //Tstrain22;   eps_yy
+    twoDstrain(2) = this->strain(1);     //Tstrain12;   gamma_xy -> eps_xy*2.0
 
-    if (theMaterial->setTrialStrain(twoDstrain) < 0) {
+	if (theMaterial->setTrialStrain(twoDstrain) < 0) {
       opserr << "PlaneStressRCFiberMaterial::setTrialStrain - setStrain failed in material with strain " << twoDstrain;
       return -1;
     }
-	
+
+	//two dimensional stress
     twoDstress = theMaterial->getStress();
 
+	//two dimensional tangent 
 	twoDtangent = theMaterial->getTangent();
-	dd22 = twoDtangent(1,1);
 
-  this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
-  this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
-  this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
-  this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
-  
-  this->stress(0) = tangent(0,0)*strain(0)+tangent(0,1)*strain(1);
-  this->stress(1) = tangent(1,0)*strain(0)+tangent(1,1)*strain(1);
+    //Plane stress material strain order = 11, 22, 33, 12, 23, 31
+    //BeamFiber 2d material strain order = 11, 12, 31, 22, 33, 23
+    //swap matrix indices to sort out-of-plane components
+    for (i=0; i<6; i++) {
+      ii = this->indexMap(i);
+      twoDstressCopy(ii) = twoDstress(i);
+      for (j=0; j<6; j++) {
+	jj = this->indexMap(j);
+	twoDtangentCopy(ii,jj) = twoDtangent(i,j);
+      }//end for j
+    }//end for i
+
+  } while (norm > tolerance);
+
+	//this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
+	//this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
+	//this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
+	//this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
+	
+	//this->stress(0) = tangent(0,0)*strain(0)+tangent(0,1)*strain(1);
+	//this->stress(1) = tangent(1,0)*strain(0)+tangent(1,1)*strain(1);
 
   return 0;
 }
