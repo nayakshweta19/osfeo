@@ -166,8 +166,8 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   int i, j;
   int ii, jj;
 
-  do 
-  {  
+  do
+  {
     //set two dimensional strain
     twoDstrain(0) = this->strain(0);     //Tstrain11    eps_xx
     twoDstrain(1) = this->Tstrain22;     //Tstrain22;   eps_yy
@@ -207,13 +207,13 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 
   } while (norm > tolerance);
 
-	//this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
-	//this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
-	//this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
-	//this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
-	
-	//this->stress(0) = tangent(0,0)*strain(0)+tangent(0,1)*strain(1);
-	//this->stress(1) = tangent(1,0)*strain(0)+tangent(1,1)*strain(1);
+  //this->tangent(0,0) = twoDtangent(0,0) + (twoDtangent(0,1)+twoDtangent(1,0))/dd22; 
+  //this->tangent(0,1) = twoDtangent(0,2) + (twoDtangent(0,1)+twoDtangent(1,2))/dd22;
+  //this->tangent(1,0) = twoDtangent(2,0) + (twoDtangent(2,1)+twoDtangent(1,0))/dd22;
+  //this->tangent(1,1) = twoDtangent(2,2) + (twoDtangent(2,1)+twoDtangent(1,2))/dd22;
+
+  //this->stress(0) = tangent(0,0)*strain(0)+tangent(0,1)*strain(1);
+  //this->stress(1) = tangent(1,0)*strain(0)+tangent(1,1)*strain(1);
 
   return 0;
 }
