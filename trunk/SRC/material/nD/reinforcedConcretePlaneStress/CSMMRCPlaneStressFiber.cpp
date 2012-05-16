@@ -330,8 +330,12 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
 {
 
   // Set values for strain_vec
-  strain_vec = v;
-  
+  strain_vec(0) = v(0);
+  strain_vec(1) = 0.0;
+  strain_vec(2) = v(1);
+
+  Vector Tstrain(3);     //epslonx,epslony,0.5*gammaxy	
+
   // Set initial values for Tstress
   Tstress.Zero();
   
@@ -342,8 +346,61 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
   TTwoReverseStatus = CTwoReverseStatus;         
   TTwoNowMaxComStrain = CTwoNowMaxComStrain;
   TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
+
   determineTrialStress();
+
+  while (abs(Tstress(0)) > 1.e-6)
+  {
+    // Get strain values from strain of element
+    Tstrain(0) = strain_vec(0);
+    Tstrain(1) = strain_vec(1);
+    Tstrain(2) = 0.5*strain_vec(2);
+	// Get citaR based on Tstrain
+    double citaR; // principal strain direction
+    double ratio;
+    //double eps = 1e-12;
+    double AA = (Tstrain(0)-Tstrain(1))/2.;
+    double BB = Tstrain(2);
+    //double C = pow(A,2.)+pow(B,2.);
+    
+    if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON) {
+      citaR = 0.25*PI;
+    } else {  // Tstrain(0) != Tstrain(1) 
+      ratio = BB/AA;
+      citaR = atan(ratio)/2.;
+    }
+
+	while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
+      citaOne = citaOne - PI/360.0;
+      citaTwo = citaTwo + PI/360.0;
+        
+      if ( citaOne > -0.5*PI ) {
+        error = getAngleError(citaOne);
+  	    if ( minError > error ) {
+  	      minError = error;
+  	      citaFinal = citaOne;
+  	    }
+  	    if ( error < tolerance ) {
+  	      status = 1;
+  	      citaFinal = citaOne;
+  	    }
+  	  }
+        
+      if ( citaTwo < 0.5*PI ) {
+        error = getAngleError(citaTwo);
+  	    if ( minError > error ) {
+  	      minError = error;
+  	      citaFinal = citaTwo;
+  	    }
+  	    if ( error < tolerance ) {
+  	      status = 1;
+  	      citaFinal = citaTwo;
+  	    }
+  	  }
+        
+      iteration_counter++;
+    }
+  }
   
   return 0;
 }
@@ -524,7 +581,6 @@ CSMMRCPlaneStressFiber::getCopy(const char *type)
 }
 
 //added by Ln
-
 Response*
 CSMMRCPlaneStressFiber::setResponse (const char **argv, int argc, OPS_Stream &output)
 {
@@ -577,7 +633,6 @@ CSMMRCPlaneStressFiber::getResponse (int responseID, Information &matInfo)
 	}
 }
 //end by LN
-
 
 void 
 CSMMRCPlaneStressFiber::Print(OPS_Stream &s, int flag )
