@@ -326,86 +326,6 @@ CSMMRCPlaneStressFiber::getRho(void)
 }
 
 int 
-CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
-{
-
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = 0.0;
-  strain_vec(2) = v(1);
-
-  Vector Tstrain(3);     //epslonx,epslony,0.5*gammaxy	
-
-  // Set initial values for Tstress
-  Tstress.Zero();
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-
-  determineTrialStress();
-
-  while (abs(Tstress(0)) > 1.e-6)
-  {
-    // Get strain values from strain of element
-    Tstrain(0) = strain_vec(0);
-    Tstrain(1) = strain_vec(1);
-    Tstrain(2) = 0.5*strain_vec(2);
-	// Get citaR based on Tstrain
-    double citaR; // principal strain direction
-    double ratio;
-    //double eps = 1e-12;
-    double AA = (Tstrain(0)-Tstrain(1))/2.;
-    double BB = Tstrain(2);
-    //double C = pow(A,2.)+pow(B,2.);
-    
-    if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON) {
-      citaR = 0.25*PI;
-    } else {  // Tstrain(0) != Tstrain(1) 
-      ratio = BB/AA;
-      citaR = atan(ratio)/2.;
-    }
-
-	while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
-      citaOne = citaOne - PI/360.0;
-      citaTwo = citaTwo + PI/360.0;
-        
-      if ( citaOne > -0.5*PI ) {
-        error = getAngleError(citaOne);
-  	    if ( minError > error ) {
-  	      minError = error;
-  	      citaFinal = citaOne;
-  	    }
-  	    if ( error < tolerance ) {
-  	      status = 1;
-  	      citaFinal = citaOne;
-  	    }
-  	  }
-        
-      if ( citaTwo < 0.5*PI ) {
-        error = getAngleError(citaTwo);
-  	    if ( minError > error ) {
-  	      minError = error;
-  	      citaFinal = citaTwo;
-  	    }
-  	    if ( error < tolerance ) {
-  	      status = 1;
-  	      citaFinal = citaTwo;
-  	    }
-  	  }
-        
-      iteration_counter++;
-    }
-  }
-  
-  return 0;
-}
-
-int 
 CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v, const Vector &r)
 {
   opserr << "error: CSMMRCPlaneStressFiber::setTrialStrain(&v, &r) -- not really responsibility" << endln;
@@ -841,6 +761,92 @@ CSMMRCPlaneStressFiber::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectB
 }
 
 int 
+CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
+{
+
+  // Set values for strain_vec
+  strain_vec(0) = v(0);
+  strain_vec(1) = 0.0;
+  strain_vec(2) = v(1);
+
+  Vector Tstrain(3);     //epslonx,epslony,0.5*gammaxy	
+
+  // Set initial values for Tstress
+  Tstress.Zero();
+  
+  TOneReverseStatus = COneReverseStatus;         
+  TOneNowMaxComStrain = COneNowMaxComStrain;
+  TOneLastMaxComStrain = COneLastMaxComStrain;
+  
+  TTwoReverseStatus = CTwoReverseStatus;         
+  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
+  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
+
+  determineTrialStress();
+  // Get strain values from strain of element
+  Tstrain(0) = strain_vec(0);
+  Tstrain(1) = strain_vec(1);
+  Tstrain(2) = 0.5*strain_vec(2);
+
+  // Get citaR based on Tstrain
+  double citaR; // principal strain direction
+  double ratio;
+  //double eps = 1e-12;
+  double AA = (Tstrain(0)-Tstrain(1))/2.;
+  double BB = Tstrain(2);
+  //double C = pow(A,2.)+pow(B,2.);
+  
+  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON) {
+    citaR = 0.25*PI;
+  } else {  // Tstrain(0) != Tstrain(1) 
+    ratio = BB/AA;
+    citaR = atan(ratio)/2.;
+  }
+  
+  int status = 0; // status to check if iteration for principal stress direction
+  double tolerance = 1.0e-6;
+  int iteration_counter = 0;
+  double error;
+  
+  if (abs(stress_vec(1)) < tolerance)
+	status = 1;
+
+  double citaOne = citaR;
+  double citaTwo = citaR;
+  double minError = 100;
+  double citaFinal = 100;
+  
+  while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
+    citaOne = citaOne - PI/360.0;
+    citaTwo = citaTwo + PI/360.0;
+      
+    if ( citaOne > -0.5*PI ) {
+      Tstrain(1) = Tstrain(0)-2.*Tstrain(2)/tan(2.*citaOne);
+  	  determineTrialStress();
+      if ( abs(stress_vec(1)) < tolerance ) {
+        status = 1;
+        citaFinal = citaOne;
+      }
+    }
+      
+    if ( citaTwo < 0.5*PI ) {
+      Tstrain(1) = Tstrain(0)-2.*Tstrain(2)/tan(2.*citaTwo);
+  	  determineTrialStress();
+      if ( abs(stress_vec(1)) < tolerance ) {
+        status = 1;
+        citaFinal = citaTwo;
+      }
+    }
+    
+    iteration_counter++;
+  }
+  opserr << Tstrain(1) << "\t" << citaFinal << endln;
+  opserr << iteration_counter << endln;
+  
+  return 0;
+}
+
+int 
 CSMMRCPlaneStressFiber::determineTrialStress(void)
 { 
   // Get Principal strain direction first
@@ -897,7 +903,7 @@ CSMMRCPlaneStressFiber::determineTrialStress(void)
   while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
     citaOne = citaOne - PI/360.0;
     citaTwo = citaTwo + PI/360.0;
-      
+
     if ( citaOne > -0.5*PI ) {
 	  error = getAngleError(citaOne);
 	  if ( minError > error ) {
