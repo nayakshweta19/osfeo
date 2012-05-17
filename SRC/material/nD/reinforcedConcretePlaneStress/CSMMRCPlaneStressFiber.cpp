@@ -769,7 +769,7 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
   strain_vec(1) = 0.0;
   strain_vec(2) = v(1);
 
-  Vector Tstrain(3);     //epslonx,epslony,0.5*gammaxy	
+  //Vector Tstrain(3);     //epslonx,epslony,0.5*gammaxy	
 
   // Set initial values for Tstress
   Tstress.Zero();
@@ -784,19 +784,19 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
 
   determineTrialStress();
   // Get strain values from strain of element
-  Tstrain(0) = strain_vec(0);
-  Tstrain(1) = strain_vec(1);
-  Tstrain(2) = 0.5*strain_vec(2);
+  //Tstrain(0) = strain_vec(0);
+  //Tstrain(1) = strain_vec(1);
+  //Tstrain(2) = 0.5*strain_vec(2);
 
   // Get citaR based on Tstrain
   double citaR; // principal strain direction
   double ratio;
   //double eps = 1e-12;
-  double AA = (Tstrain(0)-Tstrain(1))/2.;
-  double BB = Tstrain(2);
+  double AA = (strain_vec(0)-strain_vec(1))/2.;
+  double BB = 0.5 * strain_vec(2);
   //double C = pow(A,2.)+pow(B,2.);
   
-  if ( fabs(Tstrain(0)-Tstrain(1)) < DBL_EPSILON) {
+  if ( fabs(strain_vec(0)-strain_vec(1)) < DBL_EPSILON) {
     citaR = 0.25*PI;
   } else {  // Tstrain(0) != Tstrain(1) 
     ratio = BB/AA;
@@ -821,26 +821,34 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
     citaTwo = citaTwo + PI/360.0;
       
     if ( citaOne > -0.5*PI ) {
-      Tstrain(1) = Tstrain(0)-2.*Tstrain(2)/tan(2.*citaOne);
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaOne);
   	  determineTrialStress();
       if ( abs(stress_vec(1)) < tolerance ) {
         status = 1;
         citaFinal = citaOne;
       }
+	  if ( minError > abs(stress_vec(1)) ) {
+	    minError = abs(stress_vec(1));
+	    citaFinal = citaOne;
+	  }
     }
       
     if ( citaTwo < 0.5*PI ) {
-      Tstrain(1) = Tstrain(0)-2.*Tstrain(2)/tan(2.*citaTwo);
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaTwo);
   	  determineTrialStress();
       if ( abs(stress_vec(1)) < tolerance ) {
         status = 1;
         citaFinal = citaTwo;
       }
+	  if ( minError > abs(stress_vec(1)) ) {
+	    minError = abs(stress_vec(1));
+	    citaFinal = citaTwo;
+	  }
     }
     
     iteration_counter++;
   }
-  opserr << Tstrain(1) << "\t" << citaFinal << endln;
+  opserr << strain_vec(0) << strain_vec(1) << strain_vec(2) << "\t" << citaFinal << endln;
   opserr << iteration_counter << endln;
   
   return 0;
