@@ -139,7 +139,7 @@ OPS_NewRARCPlaneStressFiberMaterial()
   return theMaterial;
 }
 
-RARCPlaneStressFiber ::RARCPlaneStressFiber (int      tag, 
+RARCPlaneStressFiber::RARCPlaneStressFiber (int      tag, 
 							       double   RHO,
 							       UniaxialMaterial *s1,
 							       UniaxialMaterial *s2,
@@ -155,7 +155,8 @@ RARCPlaneStressFiber ::RARCPlaneStressFiber (int      tag,
 							       double   EPSC0) :
   NDMaterial(tag, ND_TAG_RARCPlaneStressFiber), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
-  fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3)
+  fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3),
+  fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   steelStatus = 0;
   dirStatus = 0;
@@ -263,7 +264,7 @@ RARCPlaneStressFiber ::RARCPlaneStressFiber (int      tag,
 
 RARCPlaneStressFiber::RARCPlaneStressFiber()
  :NDMaterial(0, ND_TAG_RARCPlaneStressFiber), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3), fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -332,7 +333,7 @@ RARCPlaneStressFiber::getStress(void)
 }
 
 const Vector& 
-RARCPlaneStressFiber :: getStrain()
+RARCPlaneStressFiber::getStrain()
 {
   return strain_vec;
 }
@@ -677,7 +678,92 @@ RARCPlaneStressFiber::setTrialStrain(const Vector &v)
   TTwoLastMaxComStrain = CTwoLastMaxComStrain;
 
   determineTrialStress();
+
+  // Get strain values from strain of element
+  //Tstrain(0) = strain_vec(0);
+  //Tstrain(1) = strain_vec(1);
+  //Tstrain(2) = 0.5*strain_vec(2);
+
+  // Get citaR based on Tstrain
+  double citaR; // principal strain direction
+  double ratio;
+  //double eps = 1e-12;
+  double AA = (strain_vec(0)-strain_vec(1))/2.;
+  double BB = 0.5 * strain_vec(2);
+  //double C = pow(A,2.)+pow(B,2.);
   
+  if ( fabs(strain_vec(0)-strain_vec(1)) < DBL_EPSILON) {
+    citaR = 0.25*PI;
+  } else {  // Tstrain(0) != Tstrain(1) 
+    ratio = BB/AA;
+    citaR = atan(ratio)/2.;
+  }
+  
+  int status = 0; // status to check if iteration for principal stress direction
+  double tolerance = 1.0e-3;
+  int iteration_counter = 0;
+  double error;
+  
+  if (abs(stress_vec(1)) < tolerance)
+	status = 1;
+
+  double cita1 = citaR;
+  double cita2 = citaR;
+  double mine = 100;
+  double citaEnd = 100;
+  
+  while ( (status == 0) && ( cita1>-0.5*PI || cita2<0.5*PI ) ) {
+    cita1 = cita1 - PI/360.0;
+    cita2 = cita2 + PI/360.0;
+      
+    if ( cita1 > -0.5*PI ) {
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita1);
+  	  determineTrialStress();
+      if ( abs(stress_vec(1)) < tolerance ) {
+        status = 1;
+        citaEnd = cita1;
+      }
+	  if ( mine > abs(stress_vec(1)) ) {
+	    mine = abs(stress_vec(1));
+	    citaEnd = cita1;
+	  }
+    }
+      
+    if ( cita2 < 0.5*PI ) {
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita2);
+  	  determineTrialStress();
+      if ( abs(stress_vec(1)) < tolerance ) {
+        status = 1;
+        citaEnd = cita2;
+      }
+	  if ( mine > abs(stress_vec(1)) ) {
+	    mine = abs(stress_vec(1));
+	    citaEnd = cita2;
+	  }
+    }
+    
+    iteration_counter++;
+  }
+  strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaEnd);
+  determineTrialStress();
+  opserr << strain_vec(0) << "  " << strain_vec(1) << "  "  << strain_vec(2) << "\t" << citaEnd/3.1415926*180 << endln;
+  opserr << iteration_counter << endln;
+  
+  double D11 = tangent_matrix(0,0), D12 = tangent_matrix(0,1), D13 = tangent_matrix(0,2);
+  double D21 = tangent_matrix(1,0), D22 = tangent_matrix(1,1), D23 = tangent_matrix(1,2);
+  double D31 = tangent_matrix(2,0), D32 = tangent_matrix(2,1), D33 = tangent_matrix(2,2);
+  
+  fiberTangent(0,0) = D11-(D12-D21)/D22;
+  fiberTangent(0,1) = D13-(D12-D23)/D22;
+  fiberTangent(1,0) = D31-(D32-D21)/D22;
+  fiberTangent(1,1) = D33-(D32-D23)/D22;
+  
+  fiberStress(0) = stress_vec(0)-D12/D22*stress_vec(1);
+  fiberStress(1) = stress_vec(1)-D32/D22*stress_vec(1);
+
+  fiberStrain(0) = strain_vec(0);
+  fiberStrain(1) = strain_vec(2);
+
   return 0;
 }
 
@@ -1160,21 +1246,19 @@ RARCPlaneStressFiber::determineTrialStress(void)
 
   DC_bar[0][0] = theMaterial[2]->getTangent();
 
-  //FMK DC_bar[0][1] = theMaterial[2])->getPD();
+  //DC_bar[0][1] = theMaterial[2])->getPD();
 
   //DC_bar[0][1] = 0.0;
   theResponses[4]->getResponse();
   Information &theInfoC1 = theResponses[4]->getInformation();
   DC_bar[0][1] = theInfoC1.theDouble;
-  /* END FMK */
 
   DC_bar[0][2] = 0.0;
   
-  // FMK  DC_bar[1][0] = theMaterial[3])->getPD();
+  //DC_bar[1][0] = theMaterial[3])->getPD();
   theResponses[5]->getResponse();
   Information &theInfoC2 = theResponses[5]->getInformation();
   DC_bar[1][0] = theInfoC2.theDouble;
-  /* END FMK */
 
   //DC_bar[1][0] = 0.0;
   DC_bar[1][1] = theMaterial[3]->getTangent();
@@ -1232,96 +1316,96 @@ RARCPlaneStressFiber::determineTrialStress(void)
     for (j=0;j<3;j++)
       DSL[i][j] = tempD[i][j];			
     
-     double strainSL_b; //uniaxial strain of steel in L direction
-	 strainSL_b = DSL[0][0]*Tstrain[0] + DSL[0][1]*Tstrain[1] + DSL[0][2]*Tstrain[2];
-
-     //get stiffness
-	 double tangentSL;
-	 theMaterial[0]->setTrialStrain( strainSL_b );
-	 tangentSL = theMaterial[0]->getTangent();
-	 stressSL = theMaterial[0]->getStress();
-
-	 for (j=0;j<3;j++)
-	 {
-		 DSL[0][j] = rou1*tangentSL*DSL[0][j];
-		 DSL[1][j] = 0.0;
-		 DSL[2][j] = 0.0;
-	 }
-
-     //get [DSL]=[TML][Dsl][TLMOne][V][TOne]
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-		{
-			tempD[i][j] = 0.0;
-			for (k=0;k<3;k++)
-				tempD[i][j] += TMSL[i][k]*DSL[k][j];
-		}
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-			DSL[i][j] = tempD[i][j];
+    double strainSL_b; //uniaxial strain of steel in L direction
+    strainSL_b = DSL[0][0]*Tstrain[0] + DSL[0][1]*Tstrain[1] + DSL[0][2]*Tstrain[2];
+    
+    //get stiffness
+    double tangentSL;
+    theMaterial[0]->setTrialStrain( strainSL_b );
+    tangentSL = theMaterial[0]->getTangent();
+    stressSL = theMaterial[0]->getStress();
+    
+    for (j=0;j<3;j++)
+    {
+      DSL[0][j] = rou1*tangentSL*DSL[0][j];
+      DSL[1][j] = 0.0;
+      DSL[2][j] = 0.0;
+    }
+    
+    //get [DSL]=[TML][Dsl][TLMOne][V][TOne]
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+      {
+        tempD[i][j] = 0.0;
+        for (k=0;k<3;k++)
+          tempD[i][j] += TMSL[i][k]*DSL[k][j];
+      }
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+        DSL[i][j] = tempD[i][j];
 
     //**************** get [DST] ****************     
 	//get [DST]=[V][TOne]
     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-		{
-			tempD[i][j] = 0.0;
-			for (k=0;k<3;k++)
-				tempD[i][j] += V[i][k]*TOne[k][j];
-		}   
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-			DST[i][j] = tempD[i][j];
-
-	//get [DST]=[TST_One][V][TOne]
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-		{
-			tempD[i][j] = 0.0;
-			for (k=0;k<3;k++)
-				tempD[i][j] += TST_One[i][k]*DST[k][j];
-		}
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-			DST[i][j] = tempD[i][j];
+      for (j=0;j<3;j++)
+      {
+        tempD[i][j] = 0.0;
+        for (k=0;k<3;k++)
+          tempD[i][j] += V[i][k]*TOne[k][j];
+      }   
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+        DST[i][j] = tempD[i][j];
     
-     double strainST_b; //uniaxial strain of steel in L direction
-	 strainST_b = DST[0][0]*Tstrain[0] + DST[0][1]*Tstrain[1] + DST[0][2]*Tstrain[2];
-
-	 double tangentST;
-	 theMaterial[1]->setTrialStrain( strainST_b );
-	 tangentST = theMaterial[1]->getTangent();
-     stressST = theMaterial[1]->getStress();
-     
-	 for (j=0;j<3;j++)
-	 {
-         DST[0][j] = rou2*tangentST*DST[0][j];
-		 DST[1][j] = 0.0;
-		 DST[2][j] = 0.0;
-	 }
-     
-     //get [DST]=[TMT][Dst][TTMOne][V][TOne]
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-		{
-			tempD[i][j] = 0.0;
-			for (k=0;k<3;k++)
-				tempD[i][j] += TMST[i][k]*DST[k][j];
-		}   
-     for (i=0;i<3;i++)
-		for (j=0;j<3;j++)
-			DST[i][j] = tempD[i][j];			
-  
+	//get [DST]=[TST_One][V][TOne]
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+      {
+        tempD[i][j] = 0.0;
+        for (k=0;k<3;k++)
+          tempD[i][j] += TST_One[i][k]*DST[k][j];
+      }
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+        DST[i][j] = tempD[i][j];
+    
+    double strainST_b; //uniaxial strain of steel in L direction
+    strainST_b = DST[0][0]*Tstrain[0] + DST[0][1]*Tstrain[1] + DST[0][2]*Tstrain[2];
+    
+    double tangentST;
+    theMaterial[1]->setTrialStrain( strainST_b );
+    tangentST = theMaterial[1]->getTangent();
+    stressST = theMaterial[1]->getStress();
+    
+    for (j=0;j<3;j++)
+    {
+      DST[0][j] = rou2*tangentST*DST[0][j];
+      DST[1][j] = 0.0;
+      DST[2][j] = 0.0;
+    }
+    
+    //get [DST]=[TMT][Dst][TTMOne][V][TOne]
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+      {
+        tempD[i][j] = 0.0;
+        for (k=0;k<3;k++)
+          tempD[i][j] += TMST[i][k]*DST[k][j];
+      }   
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
+        DST[i][j] = tempD[i][j];			
+    
     //****************** get tangent_matrix  ****************    
 	// Get tangent_matrix
 	for (i=0;i<3;i++)
 	{
-		for (j=0;j<3;j++)
-		{
-			D[i][j] = 0.0;
-			D[i][j] = DC[i][j] + DSL[i][j] + DST[i][j];
-			tangent_matrix(i,j) = D[i][j];
-		}
+	  for (j=0;j<3;j++)
+	  {
+	    D[i][j] = 0.0;
+	    D[i][j] = DC[i][j] + DSL[i][j] + DST[i][j];
+	    tangent_matrix(i,j) = D[i][j];
+	  }
 	}
     tangent_matrix(0,2) = 0.5*D[0][2];
 	tangent_matrix(1,2) = 0.5*D[1][2];
@@ -1350,29 +1434,29 @@ RARCPlaneStressFiber::determineTrialStress(void)
 	double temp_citaP;
 
     if ( fabs(Tstress[0]-Tstress[1]) < 1e-7 ) {
-	   citaP = 0.25*PI;	
+	  citaP = 0.25*PI;	
 	} else {
-	    temp_citaP = 0.5 * atan(fabs(2.0*1000000.0*Tstress[2]/(1000000.0*Tstress[0]-1000000.0*Tstress[1]))); 
-		if ( fabs(Tstress[2]) < 1e-7 ) {
-			citaP = 0;
-		} else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] > 0) ) {			
-			citaP = temp_citaP;
-		} else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] < 0) ) {
-			citaP = PI - temp_citaP;
-		} else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] > 0) ) {
-			citaP = 0.5*PI - temp_citaP;
-		} else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] < 0) ) {
-			citaP = 0.5*PI + temp_citaP;
-		} else {
-			opserr << "RARCPlaneStressFiber::determineTrialStress: Failure to calculate principal stress direction\n";
-			opserr << " Tstress[0] = " << Tstress[0] << endln;
-			opserr << " Tstress[1] = " << Tstress[1] << endln;
-			opserr << " Tstress[2] = " << Tstress[2] << endln;
-		}
+	  temp_citaP = 0.5 * atan(fabs(2.0*1000000.0*Tstress[2]/(1000000.0*Tstress[0]-1000000.0*Tstress[1]))); 
+	  if ( fabs(Tstress[2]) < 1e-7 ) {
+	    citaP = 0;
+	  } else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] > 0) ) {			
+	    citaP = temp_citaP;
+	  } else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] < 0) ) {
+	    citaP = PI - temp_citaP;
+	  } else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] > 0) ) {
+	    citaP = 0.5*PI - temp_citaP;
+	  } else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] < 0) ) {
+	    citaP = 0.5*PI + temp_citaP;
+	  } else {
+	    opserr << "RARCPlaneStressFiber::determineTrialStress: Failure to calculate principal stress direction\n";
+	    opserr << " Tstress[0] = " << Tstress[0] << endln;
+	    opserr << " Tstress[1] = " << Tstress[1] << endln;
+	    opserr << " Tstress[2] = " << Tstress[2] << endln;
+	  }
 	}
 
     while ( (citaP - 0.5*PI) > 1e-8 ) 
-		citaP = citaP-0.5*PI;		
+	  citaP = citaP-0.5*PI;		
 
 	citaStress = citaP; // assign for screen output
 
