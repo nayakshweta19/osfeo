@@ -183,7 +183,8 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
   NDMaterial(tag, ND_TAG_CSMMRCPlaneStressFiber), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), lastStress(3), Tstress(3), 
-  strain_vec(3), stress_vec(3),tangent_matrix(3,3)
+  strain_vec(3), stress_vec(3),tangent_matrix(3,3),
+  fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
     steelStatus = 0;
     dirStatus = 0;
@@ -284,19 +285,21 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
     
     delete theDummyStream;
     /* END FMK */
-    determineTrialStress();
+    //determineTrialStress();
     this->revertToStart();
+	this->setTrialStrain(strain_vec);
 }
 
 CSMMRCPlaneStressFiber::CSMMRCPlaneStressFiber()
  :NDMaterial(0, ND_TAG_CSMMRCPlaneStressFiber), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3),
+  fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   theMaterial = 0;
   theResponses = 0;
-  determineTrialStress();
+  //determineTrialStress();
+  this->setTrialStrain(strain_vec);
 }
-
 
 CSMMRCPlaneStressFiber::~CSMMRCPlaneStressFiber()
 {
@@ -349,41 +352,38 @@ CSMMRCPlaneStressFiber::setTrialStrainIncr(const Vector &v, const Vector &r)
 const Matrix& 
 CSMMRCPlaneStressFiber::getTangent(void)
 {
-  return tangent_matrix;
+  return fiberTangent;
 }
 
 const Vector& 
 CSMMRCPlaneStressFiber::getStress(void)
 {
-
-  return stress_vec;
+  return fiberStress;
 }
 
 const Vector& 
 CSMMRCPlaneStressFiber::getStrain()
 {
-  return strain_vec;
+  return fiberStrain;
 }
     
 const Vector& 
 CSMMRCPlaneStressFiber::getCommittedStress(void)
 {
-  return stress_vec;
+  return fiberStress;
 }
 
 const Vector& 
 CSMMRCPlaneStressFiber::getCommittedStrain(void)
 {
-  return strain_vec;
+  return fiberStrain;
 }
     
 int 
 CSMMRCPlaneStressFiber::commitState(void)
 {
   for (int i=0; i<4; i++)
-  {
     theMaterial[i]->commitState();
-  }
   
   COneReverseStatus = TOneReverseStatus;         
   COneNowMaxComStrain = TOneNowMaxComStrain;
@@ -403,9 +403,7 @@ CSMMRCPlaneStressFiber::revertToLastCommit(void)
 {
 
   for (int i=0; i<4; i++)
-    {
-      theMaterial[i]->revertToLastCommit();
-    }
+    theMaterial[i]->revertToLastCommit();
   
   TOneReverseStatus = COneReverseStatus;         
   TOneNowMaxComStrain = COneNowMaxComStrain;
@@ -421,17 +419,15 @@ CSMMRCPlaneStressFiber::revertToLastCommit(void)
 int 
 CSMMRCPlaneStressFiber::revertToStart(void)
 {
-  int i;
-  for (i=0; i<4; i++)
-  {
+  for (int i=0; i<4; i++)
     theMaterial[i]->revertToStart();
-  }
   
   Tstress.Zero();
-  
   strain_vec.Zero();
   stress_vec.Zero();
-  
+  fiberStrain.Zero();
+  fiberStress.Zero();
+
   steelStatus = 0;
   dirStatus = 0;
   G12 = 0;
@@ -474,6 +470,7 @@ CSMMRCPlaneStressFiber::getCopy(void)
 					 E0, 
 					 epsc0 );
   theCopy->strain_vec = strain_vec;
+
   return theCopy;
 }
 
@@ -582,7 +579,6 @@ CSMMRCPlaneStressFiber::Print(OPS_Stream &s, int flag )
 
 	//int i, j;
 
-
 	s << "\t call the material print() function : "<< endln;
 	
 	s << "\t the steel 1 information is : " << endln;
@@ -594,7 +590,6 @@ CSMMRCPlaneStressFiber::Print(OPS_Stream &s, int flag )
 	s << "\t the concrete 2 information is : " << endln;
 	theMaterial[3]->Print(s,flag);
 
-
 	s << "\tStrain and stress of the uniaxial materials:"<<endln;
 	for (int i=0; i<4; i++)
 	{
@@ -603,7 +598,6 @@ CSMMRCPlaneStressFiber::Print(OPS_Stream &s, int flag )
 	  s << "\t            Stress : " << theMaterial[i]->getStress() << endln;
 	  s << "\t  Uniaxial Tangent : " << theMaterial[i]->getTangent() << endln;
 	}
-
 }
 
 int 
@@ -783,6 +777,7 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
   TTwoLastMaxComStrain = CTwoLastMaxComStrain;
 
   determineTrialStress();
+  /*
   // Get strain values from strain of element
   //Tstrain(0) = strain_vec(0);
   //Tstrain(1) = strain_vec(1);
@@ -804,53 +799,70 @@ CSMMRCPlaneStressFiber::setTrialStrain(const Vector &v)
   }
   
   int status = 0; // status to check if iteration for principal stress direction
-  double tolerance = 1.0e-6;
+  double tolerance = 1.0e-3;
   int iteration_counter = 0;
   double error;
   
   if (abs(stress_vec(1)) < tolerance)
 	status = 1;
 
-  double citaOne = citaR;
-  double citaTwo = citaR;
-  double minError = 100;
-  double citaFinal = 100;
+  double cita1 = citaR;
+  double cita2 = citaR;
+  double mine = 100;
+  double citaEnd = 100;
   
-  while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
-    citaOne = citaOne - PI/360.0;
-    citaTwo = citaTwo + PI/360.0;
+  while ( (status == 0) && ( cita1>-0.5*PI || cita2<0.5*PI ) ) {
+    cita1 = cita1 - PI/360.0;
+    cita2 = cita2 + PI/360.0;
       
-    if ( citaOne > -0.5*PI ) {
-      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaOne);
+    if ( cita1 > -0.5*PI ) {
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita1);
   	  determineTrialStress();
       if ( abs(stress_vec(1)) < tolerance ) {
         status = 1;
-        citaFinal = citaOne;
+        citaEnd = cita1;
       }
-	  if ( minError > abs(stress_vec(1)) ) {
-	    minError = abs(stress_vec(1));
-	    citaFinal = citaOne;
+	  if ( mine > abs(stress_vec(1)) ) {
+	    mine = abs(stress_vec(1));
+	    citaEnd = cita1;
 	  }
     }
       
-    if ( citaTwo < 0.5*PI ) {
-      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaTwo);
+    if ( cita2 < 0.5*PI ) {
+      strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita2);
   	  determineTrialStress();
       if ( abs(stress_vec(1)) < tolerance ) {
         status = 1;
-        citaFinal = citaTwo;
+        citaEnd = cita2;
       }
-	  if ( minError > abs(stress_vec(1)) ) {
-	    minError = abs(stress_vec(1));
-	    citaFinal = citaTwo;
+	  if ( mine > abs(stress_vec(1)) ) {
+	    mine = abs(stress_vec(1));
+	    citaEnd = cita2;
 	  }
     }
     
     iteration_counter++;
   }
-  opserr << strain_vec(0) << strain_vec(1) << strain_vec(2) << "\t" << citaFinal << endln;
+  strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*citaEnd);
+  determineTrialStress();
+  opserr << strain_vec(0) << "  " << strain_vec(1) << "  "  << strain_vec(2) << "\t" << citaEnd/3.1415926*180 << endln;
   opserr << iteration_counter << endln;
   
+  double D11 = tangent_matrix(0,0), D12 = tangent_matrix(0,1), D13 = tangent_matrix(0,2);
+  double D21 = tangent_matrix(1,0), D22 = tangent_matrix(1,1), D23 = tangent_matrix(1,2);
+  double D31 = tangent_matrix(2,0), D32 = tangent_matrix(2,1), D33 = tangent_matrix(2,2);
+  
+  fiberTangent(0,0) = D11-(D12-D21)/D22;
+  fiberTangent(0,1) = D13-(D12-D23)/D22;
+  fiberTangent(1,0) = D31-(D32-D21)/D22;
+  fiberTangent(1,1) = D33-(D32-D23)/D22;
+  
+  fiberStress(0) = stress_vec(0)-D12/D22*stress_vec(1);
+  fiberStress(1) = stress_vec(1)-D32/D22*stress_vec(1);
+
+  fiberStrain(0) = strain_vec(0);
+  fiberStrain(1) = strain_vec(2);
+  */
   return 0;
 }
 
