@@ -130,6 +130,10 @@ class RARCPlaneStressFiber : public NDMaterial
     Vector stress_vec;	
     Matrix tangent_matrix;
     
+	Vector fiberStrain;
+	Vector fiberStress;
+	Matrix fiberTangent;
+
     int determineTrialStress(void);
 	
 };
