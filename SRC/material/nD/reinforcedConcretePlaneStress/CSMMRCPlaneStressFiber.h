@@ -152,11 +152,13 @@ class CSMMRCPlaneStressFiber : public NDMaterial
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
     
-    
     Vector strain_vec;
     Vector stress_vec;	
     Matrix tangent_matrix;
 
+	Vector fiberStrain;
+	Vector fiberStress;
+	Matrix fiberTangent;
 
     int determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
