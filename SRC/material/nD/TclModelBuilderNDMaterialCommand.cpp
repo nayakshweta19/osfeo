@@ -88,6 +88,7 @@ extern  void *OPS_NewFAReinforcedConcretePlateFiberMaterial(void);
 extern  void *OPS_NewCSMMRCPlateFiberMaterial(void);
 extern  void *OPS_NewNonlinearBSMaterial(void);
 extern  void *OPS_NewCSMMRCPlaneStressFiberMaterial(void);
+extern  void *OPS_NewRARCPlaneStressFiberMaterial(void);
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -300,6 +301,15 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	else if ((strcmp(argv[1],"CSMMRCPlaneStressFiber") == 0)) {
 
 	  void *theMat = OPS_NewCSMMRCPlaneStressFiberMaterial();
+	  if (theMat != 0)
+	    theMaterial = (NDMaterial *)theMat;
+	  else 
+	    return TCL_ERROR;
+    }
+
+	else if ((strcmp(argv[1],"RARCPlaneStressFiber") == 0)) {
+
+	  void *theMat = OPS_NewRARCPlaneStressFiberMaterial();
 	  if (theMat != 0)
 	    theMaterial = (NDMaterial *)theMat;
 	  else 
