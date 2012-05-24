@@ -38,6 +38,7 @@ RELIABILITY_OBJS = $(FE)/domain/pattern/DiscretizedRandomProcessSeries.o \
 		$(FE)/reliability/analysis/curvature/CurvaturesBySearchAlgorithm.o \
 		$(FE)/reliability/analysis/curvature/FindCurvatures.o \
 		$(FE)/reliability/analysis/curvature/FirstPrincipalCurvature.o \
+        $(FE)/reliability/analysis/curvature/CurvatureFitting.o \
 		$(FE)/reliability/analysis/designPoint/SearchWithStepSizeAndStepDirection.o \
 		$(FE)/reliability/analysis/designPoint/FindDesignPointAlgorithm.o \
 		$(FE)/reliability/analysis/direction/HLRFSearchDirection.o \
@@ -48,8 +49,8 @@ RELIABILITY_OBJS = $(FE)/domain/pattern/DiscretizedRandomProcessSeries.o \
 		$(FE)/reliability/analysis/gradient/GradientEvaluator.o \
 		$(FE)/reliability/analysis/gradient/FiniteDifferenceGradient.o \
 		$(FE)/reliability/analysis/gradient/ImplicitGradient.o \
-		$(FE)/reliability/analysis/hessianApproximation/HessianApproximation.o \
-		$(FE)/reliability/analysis/hessianApproximation/Hessian.o \
+		$(FE)/reliability/analysis/hessian/HessianEvaluator.o \
+		$(FE)/reliability/analysis/hessian/FiniteDifferenceHessian.o \
 		$(FE)/reliability/analysis/meritFunction/AdkZhangMeritFunctionCheck.o \
 		$(FE)/reliability/analysis/meritFunction/CriteriaReductionMeritFunctionCheck.o \
 		$(FE)/reliability/analysis/meritFunction/MeritFunctionCheck.o \
