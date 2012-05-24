@@ -40,7 +40,7 @@
 #include <ProbabilityTransformation.h>
 #include <FunctionEvaluator.h>
 #include <GradientEvaluator.h>
-#include <HessianApproximation.h>
+#include <HessianEvaluator.h>
 #include <ReliabilityConvergenceCheck.h>
 #include <Matrix.h>
 #include <Vector.h>
@@ -65,12 +65,13 @@ public:
 					StepSizeRule *passedStepSizeRule,
 					SearchDirection *passedSearchDirection,
 					ProbabilityTransformation *passedProbabilityTransformation,
-					HessianApproximation *theHessianApproximation,
+					HessianEvaluator *theHessianEvaluator,
 					ReliabilityConvergenceCheck *theReliabilityConvergenceCheck,
 					int printFlag,
 					char *fileNamePrint);
 	~SearchWithStepSizeAndStepDirection();
-	
+    
+    int gradientStandardNormal(double gFunctionValue);
 	int findDesignPoint();
 
 	const Vector &get_x();
@@ -78,8 +79,7 @@ public:
 	const Vector &get_alpha();
 	const Vector &get_gamma();
 	int getNumberOfSteps();
-	const Vector &getSecondLast_u();
-	const Vector &getSecondLast_alpha();
+    double getFirstCurvature();
 	const Vector &getLastSearchDirection();
 	double getFirstGFunValue();
 	double getLastGFunValue();
@@ -98,7 +98,7 @@ private:
 	StepSizeRule *theStepSizeRule;
 	SearchDirection *theSearchDirection;
 	ProbabilityTransformation *theProbabilityTransformation;
-	HessianApproximation *theHessianApproximation;
+	HessianEvaluator *theHessianEvaluator;
 	ReliabilityConvergenceCheck *theReliabilityConvergenceCheck;
 
 	// Private member functions to do the job
@@ -117,6 +117,8 @@ private:
 	Vector *uSecondLast;
 	Vector *alphaSecondLast;
 	Vector *searchDirection;
+    Matrix *Jux;
+    Matrix *Jxu;
 	
 	int steps;
 	double Gfirst;
@@ -124,6 +126,7 @@ private:
 	int printFlag;
 	char fileNamePrint[256];
 	int numberOfEvaluations;
+    double firstCurvature;
 };
 
 #endif

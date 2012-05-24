@@ -1,8 +1,7 @@
 include ../../../../Makefile.def
 
-OBJS       = 	CurvaturesBySearchAlgorithm.o  FindCurvatures.o \
-		FirstPrincipalCurvature.o CurvatureFitting.o
-
+OBJS       = 	FiniteDifferenceHessian.o \
+	HessianEvaluator.o
 
 # Compilation control
 all:         $(OBJS)

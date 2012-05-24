@@ -16,54 +16,36 @@
 **   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
 **   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
 **                                                                    **
+** Reliability module developed by:                                   **
+**   Terje Haukaas (haukaas@ce.berkeley.edu)                          **
+**   Armen Der Kiureghian (adk@ce.berkeley.edu)                       **
+**                                                                    **
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2008-08-26 15:38:37 $
-// $Source: /usr/local/cvs/OpenSees/SRC/domain/component/Parameter.h,v $
+// $Date: 2010-09-13 21:37:56 $
+// $Source: /usr/local/cvs/OpenSees/SRC/reliability/analysis/sensitivity/HessianEvaluator.cpp,v $
 
-#ifndef RVParameter_h
-#define RVParameter_h
+//
+// Written by: 
+// Kevin Mackie (kmackie@mail.ucf.edu)
+// Michael Scott (mhscott@engr.orst.edu)
+//
 
-#include <Parameter.h>
-#include <string.h>
+#include <HessianEvaluator.h>
+#include <ReliabilityDomain.h>
 
-class RandomVariable;
-class MovableObject;
-class Channel;
-class FEM_ObjectBroker;
-class Domain;
-
-class RVParameter : public Parameter
+HessianEvaluator::HessianEvaluator(ReliabilityDomain *passedReliabilityDomain,
+				     FunctionEvaluator *passedGFunEvaluator)
 {
- public:
-  RVParameter(int tag, RandomVariable *theRV, Parameter *theParam = 0);
-  virtual ~RVParameter();
+
+  theReliabilityDomain = passedReliabilityDomain;
+  theFunctionEvaluator = passedGFunEvaluator;
   
-  virtual void Print(OPS_Stream &s, int flag =0);
-  
-  virtual int update(int newValue); 
-  virtual int update(double newValue); 
-  virtual int activate(bool active);
-  virtual double getValue(void);
-  virtual void setValue(double newValue);
+}
 
-  virtual bool isImplicit(void);
-  virtual double getSensitivity(int index);
-  virtual double getPerturbation(void);
-  virtual const char *getType(void) {return "RandomVariable";}
-  virtual int getPointerTag(void);
 
-  virtual void setDomain(Domain *theDomain);
-  virtual int sendSelf(int commitTag, Channel &theChannel);  
-  virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
+HessianEvaluator::~HessianEvaluator()
+{
 
- protected:
-  
- private:
-  RandomVariable *myRV;
-  Parameter *myParam;
-  double currentValue;
-};
-
-#endif
+}

@@ -16,54 +16,48 @@
 **   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
 **   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
 **                                                                    **
+** Reliability module developed by:                                   **
+**   Terje Haukaas (haukaas@ce.berkeley.edu)                          **
+**   Armen Der Kiureghian (adk@ce.berkeley.edu)                       **
+**                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 1.7 $
-// $Date: 2008-08-26 15:38:37 $
-// $Source: /usr/local/cvs/OpenSees/SRC/domain/component/Parameter.h,v $
+// $Revision: 1.5 $
+// $Date: 2008-05-27 20:04:30 $
+// $Source: /usr/local/cvs/OpenSees/SRC/reliability/analysis/sensitivity/HessianEvaluator.h,v $
 
-#ifndef RVParameter_h
-#define RVParameter_h
+//
+// Written by: 
+// Kevin Mackie (kmackie@mail.ucf.edu)
+// Michael Scott (mhscott@engr.orst.edu)
+//
 
-#include <Parameter.h>
-#include <string.h>
+#ifndef HessianEvaluator_h
+#define HessianEvaluator_h
 
-class RandomVariable;
-class MovableObject;
-class Channel;
-class FEM_ObjectBroker;
-class Domain;
+#include <Matrix.h>
+#include <ReliabilityDomain.h>
+#include <FunctionEvaluator.h>
 
-class RVParameter : public Parameter
+
+class HessianEvaluator
 {
  public:
-  RVParameter(int tag, RandomVariable *theRV, Parameter *theParam = 0);
-  virtual ~RVParameter();
+  HessianEvaluator(ReliabilityDomain *theReliabilityDomain, 
+		    FunctionEvaluator *theGFunEvaluator);
+  virtual ~HessianEvaluator();
   
-  virtual void Print(OPS_Stream &s, int flag =0);
-  
-  virtual int update(int newValue); 
-  virtual int update(double newValue); 
-  virtual int activate(bool active);
-  virtual double getValue(void);
-  virtual void setValue(double newValue);
-
-  virtual bool isImplicit(void);
-  virtual double getSensitivity(int index);
-  virtual double getPerturbation(void);
-  virtual const char *getType(void) {return "RandomVariable";}
-  virtual int getPointerTag(void);
-
-  virtual void setDomain(Domain *theDomain);
-  virtual int sendSelf(int commitTag, Channel &theChannel);  
-  virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
-
+  // Methods provided by the sub-classes
+  virtual int computeHessian(void) = 0;
+  virtual Matrix getHessian(void) = 0;
+    
  protected:
+  // one day these should find themselves a better home than protected
+  ReliabilityDomain *theReliabilityDomain;
+  FunctionEvaluator *theFunctionEvaluator;
   
  private:
-  RandomVariable *myRV;
-  Parameter *myParam;
-  double currentValue;
+    
 };
 
 #endif
