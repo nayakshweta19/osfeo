@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <Domain.h>
+#include <elementAPI.h>
+#include <Information.h>
 
 #include "TimoshenkoBeam2d.h"
 #include "Timoshenko2d01.h"
@@ -501,95 +503,119 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
 
 	// get the id and end nodes 
 	int eleTag, iNode, jNode, nIP, secTag, transfTag;
-	int argi = 2;
+	int numData;
+    // Variables to retrieve input
+    int iData[10];
+    double dData[10];
+    int sDataLength = 40;
+    char *sData  = new char[sDataLength]; 
+	char *sData2  = new char[sDataLength];
 
-	if (Tcl_GetInt(interp, argv[argi++], &eleTag) != TCL_OK) {
-	  opserr << "WARNING invalid Timoshenko2d04 eleTag" << endln;
-	  return TCL_ERROR;
-	}
+    numData = 6;
+    if (OPS_GetIntInput(&numData, iData) != 0) {
+      opserr << "WARNING invalid element data - mixedBeamColumn2d\n";
+      return 0;
+    }
 
-	if (Tcl_GetInt(interp, argv[argi++], &iNode) != TCL_OK) {
-	  opserr << "WARNING invalid iNode ";
-	  opserr << "Timoshenko2d04 element: " << eleTag << endln;
-	  return TCL_ERROR;
-	}
+    eleTag = iData[0];
+    iNode = iData[1];
+    jNode = iData[2];
+    nIP = iData[3];
+    secTag = iData[4];
+    transfTag = iData[5];
 
-	if (Tcl_GetInt(interp, argv[argi++], &jNode) != TCL_OK) {
-	  opserr << "WARNING invalid jNode ";
-	  opserr << "Timoshenko2d04 element: " << eleTag << endln;
-	  return TCL_ERROR;
-	}
+    // Get the section
+    SectionForceDeformation *theSection = OPS_GetSectionForceDeformation(secTag);
+    if (theSection == 0) {
+      opserr << "WARNING section with tag " << secTag << "not found for element " << eleTag << endln;
+      return 0;
+    }
+    
+    SectionForceDeformation **sections = new SectionForceDeformation *[nIP];
+    for (int i = 0; i < nIP; i++)
+      sections[i] = theSection;
 
-	if (Tcl_GetInt(interp, argv[argi++], &nIP) != TCL_OK) {
-		opserr << "WARNING invalid nIP ";
-		opserr << "Timoshenko2d04 element: " << eleTag << endln;
-		return TCL_ERROR;
-	}  
-
-	if (Tcl_GetInt(interp, argv[argi++], &secTag) != TCL_OK) {
-	  opserr << "WARNING invalid secTag - element Timoshenko2d04 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
-	  return TCL_ERROR;
-	}
-
-	if (argi >= argc || Tcl_GetInt(interp, argv[argi++], &transfTag) != TCL_OK) {
-	  opserr << "WARNING invalid transfTag? - element Timoshenko2d04 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
-	  return TCL_ERROR;
-	}
+    // Get the coordinate transformation
+    CrdTransf *theTransf = OPS_GetCrdTransfPtr(transfTag);
+    if (theTransf == 0) {
+      opserr << "WARNING geometric transformation with tag " << transfTag << "not found for element " << eleTag << endln;
+      return 0;
+    }
 
 	double massDens = 0.0;
-
-	while (argi != argc) {
-	  if (strcmp(argv[argi++],"-mass") == 0 && argi < argc) {
-	  	if (Tcl_GetDouble(interp, argv[argi++], &massDens) != TCL_OK) {
-	  	  opserr << "WARNING invalid massDens - element Timoshenko2d04 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
-	  	  return TCL_ERROR;
-	  	}
-	  }
-	}
-
-	SectionForceDeformation **sections = new SectionForceDeformation* [nIP];
-
-	if (!sections) {
-	  opserr << "WARNING TclTimoshenkoBeamCommand - Insufficient memory to create sections\n";
-	  return TCL_ERROR;
-	}
-
-	for (int j=0; j<nIP; j++) {
-	  SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
-	  
-	  if (theSection == 0) {
-	    opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
-	    opserr << secTag << endln;
-	    delete [] sections;
-	    return TCL_ERROR;
-	  }
-	  
-	  sections[j] = theSection;
-	}
-
-	CrdTransf *theTransf2d = 0;
-	CrdTransf *theTransf3d = 0;
-	Element *theElement = 0;
-
 	BeamIntegration *beamIntegr = 0;
-	beamIntegr = new LobattoBeamIntegration();
 
-	if (ndm == 2) {
-	  theTransf2d = OPS_GetCrdTransf(transfTag);
-	  
-	  if (theTransf2d == 0) {
-	  	opserr << "WARNING transformation not found\n";
-	  	opserr << "transformation: " << transfTag;
-	  	opserr << argv[1] << " element: " << eleTag << endln;
-	  	return TCL_ERROR;
-	  }
-	  
-      // now create the Timoshenko2d04 and add it to the Domain
-	  theElement = new Timoshenko2d04(eleTag, iNode, jNode, nIP, sections,
-		                              *theTransf2d,*beamIntegr,massDens);
-	  delete [] sections;
-	}
+    // Loop through remaining arguments to get optional input
+    while ( OPS_GetNumRemainingInputArgs() > 0 ) {
+      if ( OPS_GetString(sData, sDataLength) != 0 ) {
+        opserr << "WARNING invalid input";
+        return 0;
+      }
+    
+      if ( strcmp(sData,"-mass") == 0 ) {
+        int numData = 1;
+        if (OPS_GetDoubleInput(&numData, dData) != 0) {
+          opserr << "WARNING invalid input, want: -mass $massDens \n";
+          return 0;
+        }
+        massDens = dData[0];
+    
+      } else if ( strcmp(sData,"-integration") == 0 ) {
+        if ( OPS_GetString(sData2, sDataLength) != 0 ) {
+          opserr << "WARNING invalid input, want: -integration $intType";
+          return 0;
+        }
+    
+        if (strcmp(sData2,"Lobatto") == 0) {
+          beamIntegr = new LobattoBeamIntegration();
+        } else if (strcmp(sData2,"Legendre") == 0) {
+          beamIntegr = new LegendreBeamIntegration();
+        } else if (strcmp(sData2,"Radau") == 0) {
+          beamIntegr = new RadauBeamIntegration();
+        } else if (strcmp(sData2,"NewtonCotes") == 0) {
+          beamIntegr = new NewtonCotesBeamIntegration();
+        } else if (strcmp(sData2,"Trapezoidal") == 0) {
+          beamIntegr = new TrapezoidalBeamIntegration();
+        } else if (strcmp(sData2,"RegularizedLobatto") == 0 || strcmp(sData2,"RegLobatto") == 0) {
+          int numData = 4;
+          if (OPS_GetDoubleInput(&numData, dData) != 0) {
+            opserr << "WARNING invalid input, want: -integration RegularizedLobatto $lpI $lpJ $zetaI $zetaJ \n";
+            return 0;
+          }
+          BeamIntegration *otherBeamInt = 0;
+          otherBeamInt = new LobattoBeamIntegration();
+          beamIntegr = new RegularizedHingeIntegration(*otherBeamInt, dData[0], dData[1], dData[2], dData[3]);
+          if (otherBeamInt != 0)
+            delete otherBeamInt;
 
+        } else {
+        opserr << "WARNING invalid integration type, element: " << eleTag;
+          return 0;
+        }
+    
+      } else {
+        opserr << "WARNING unknown option " << sData << "\n";
+      }
+    }
+    
+    // Set the beam integration object if not in options
+    if (beamIntegr == 0) {
+      beamIntegr = new LobattoBeamIntegration();
+    }
+
+    theTransf = OPS_GetCrdTransf(transfTag);
+    
+    if (theTransf == 0) {
+    	opserr << "WARNING transformation not found\n";
+    	opserr << "transformation: " << transfTag;
+    	opserr << argv[1] << " element: " << eleTag << endln;
+    	return TCL_ERROR;
+    }
+    
+    // now create the Timoshenko2d04 and add it to the Domain
+    Element *theElement = new Timoshenko2d04(eleTag, iNode, jNode, nIP, sections,
+                                  *theTransf,*beamIntegr,massDens);
+    
 	if (theElement == 0) {
 	  opserr << "WARNING ran out of memory creating element\n";
 	  opserr << "Timoshenko2d04 element: " << eleTag << endln;
