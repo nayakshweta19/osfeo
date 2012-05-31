@@ -38,7 +38,7 @@ class Timoshenko2d04 : public Element
 			SectionForceDeformation **s,
 			CrdTransf &coordTransf, 
 			BeamIntegration &bi,
-			double rho = 0.0);
+			double rho = 0.0, double shearCF = 1.0);
 
     Timoshenko2d04();
     virtual ~Timoshenko2d04();
@@ -112,7 +112,7 @@ class Timoshenko2d04 : public Element
     double p0[3];   // Reactions in the basic system due to element loads
 
     double rho;	    // Mass density per unit length
-	
+	double shearCF; // shear corrector factor
 	double Omega;   // shear contribution factor
 
 	static Matrix *bd;

@@ -38,11 +38,11 @@ Timoshenko2d04::Timoshenko2d04(int tag,
 					 SectionForceDeformation **s,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
-					 double r)
+					 double r, double SCF)
     :Element (tag, ELE_TAG_Timoshenko2d04),
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2),
-    Q(6), q(3), rho(r), Omega(0.0)
+    Q(6), q(3), rho(r), shearCF(SCF), Omega(0.0)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
@@ -298,7 +298,7 @@ Timoshenko2d04::update(void)
 	for (int i = 0; i<numSections; i++) {
 	  //const Matrix &ks = theSections[i]->getSectionTangent(); //double zh = theSections[i]->getZh();
 	  // A.Bazoune & Y.A. Khulief, 2006
-	  temp = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
+	  temp = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
       Omega += temp*wts[i];
 	}
     // Loop over the integration points
@@ -321,7 +321,7 @@ Timoshenko2d04::update(void)
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
-      e(j) = oneOverL*v(0); break; //+0.0551831*pow(v(1),2.) - 0.0563005*v(1)*v(2) + 0.0551831*pow(v(2),2.)
+      e(j) = oneOverL*v(0); break;
         case SECTION_RESPONSE_MZ:    // curvature
       e(j) = phi3p * v(1) + phi4p * v(2); break;
         case SECTION_RESPONSE_VY:    // shear strain
@@ -563,7 +563,7 @@ Timoshenko2d04::addInertiaLoadToUnbalance(const Vector &accel)
 const Vector&
 Timoshenko2d04::getResistingForce()
 {
-  crdTransf->update();  // Will remove once we clean up the corotational 3d transformation -- MHS
+  crdTransf->update();  // Will remove once we clean up the corotational 3d transformation
   double L = crdTransf->getInitialLength();
 
   double pts[maxNumSections];
