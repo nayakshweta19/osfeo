@@ -543,6 +543,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
     }
 
 	double massDens = 0.0;
+	double shearCF = 1.0;
 	BeamIntegration *beamIntegr = 0;
 
     // Loop through remaining arguments to get optional input
@@ -593,7 +594,15 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
           return 0;
         }
     
-      } else {
+      } else if ( strcmp(sData, "-shearCF") == 0 ) {
+		int numData = 1;
+		if ( OPS_GetDoubleInput(&numData, dData) != 0 ) {
+		  opserr << "WARNING invalid input, want: -shearCF $shearCorrectFactor";
+		  return 0;
+		}
+		shearCF = dData[0];
+
+	  }else {
         opserr << "WARNING unknown option " << sData << "\n";
       }
     }
@@ -614,7 +623,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
     
     // now create the Timoshenko2d04 and add it to the Domain
     Element *theElement = new Timoshenko2d04(eleTag, iNode, jNode, nIP, sections,
-                                  *theTransf,*beamIntegr,massDens);
+                                  *theTransf,*beamIntegr,massDens,shearCF);
     
 	if (theElement == 0) {
 	  opserr << "WARNING ran out of memory creating element\n";
