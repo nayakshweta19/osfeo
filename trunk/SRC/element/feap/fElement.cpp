@@ -437,40 +437,39 @@ fElement::revertToStart()
 const Matrix &
 fElement::getTangentStiff(void)
 {
-
-    // check for quick return
-    if (nen == 0)
-	return (*fElementM[0]);
-    
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 1.0; ctan[1] = 0.0; ctan[2] = 0.0;
-    int ior = 0; int iow = 0;
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int nstR = this->readyfRoutine(false);
-
-    // zero the matrix
-    fElementM[nstR]->Zero();    
-    
-    // invoke the fortran subroutine
-    int isw = 3; 
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
-    
-    // check nst is as determined in readyfRoutine()
-    if (nstI != nstR) {
-	opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
-	opserr << " ready: " << nstR << " invoke: " << nstI << endln;
-	exit(-1);
-    }
-
-    // return the matrix
-
-    return *(fElementM[nstR]);
+  // check for quick return
+  if (nen == 0)
+    return (*fElementM[0]);
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 1.0; ctan[1] = 0.0; ctan[2] = 0.0;
+  int ior = 0; int iow = 0;
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int nstR = this->readyfRoutine(false);
+  
+  // zero the matrix
+  fElementM[nstR]->Zero();    
+  
+  // invoke the fortran subroutine
+  int isw = 3; 
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  
+  // check nst is as determined in readyfRoutine()
+  if (nstI != nstR) {
+    opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
+    opserr << " ready: " << nstR << " invoke: " << nstI << endln;
+    exit(-1);
+  }
+  
+  // return the matrix
+  
+  return *(fElementM[nstR]);
 
 }
 
@@ -478,84 +477,82 @@ fElement::getTangentStiff(void)
 const Matrix &
 fElement::getDamp(void)
 {
-    // check for quick return
-    if (nen == 0)
-	return (*fElementM[0]);
-    
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 0.0; ctan[1] = 1.0; ctan[2] = 0.0;
-    int ior = 0; int iow = 0;
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int NH1, NH2, NH3;    
-    int nstR = this->readyfRoutine(true);
-    
-    // zero the matrix
-    fElementM[nstR]->Zero();    
-    
-    // invoke the fortran subroutine
-    int isw = 3; int nst = nen*ndf; int n = this->getTag();
-
-
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
-    
-    // check nst is as determined in readyfRoutine()
-    if (nstI != nstR) {
-	opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
-	opserr << " ready: " << nstR << " invoke: " << nstI << endln;
-	exit(-1);
-    }
-    
-    // return the matrix
-    return *(fElementM[nstR]);
+  // check for quick return
+  if (nen == 0)
+    return (*fElementM[0]);
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 0.0; ctan[1] = 1.0; ctan[2] = 0.0;
+  int ior = 0; int iow = 0;
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int NH1, NH2, NH3;    
+  int nstR = this->readyfRoutine(true);
+  
+  // zero the matrix
+  fElementM[nstR]->Zero();    
+  
+  // invoke the fortran subroutine
+  int isw = 3; int nst = nen*ndf; int n = this->getTag();
+  
+  
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  
+  // check nst is as determined in readyfRoutine()
+  if (nstI != nstR) {
+    opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
+    opserr << " ready: " << nstR << " invoke: " << nstI << endln;
+    exit(-1);
+  }
+  
+  // return the matrix
+  return *(fElementM[nstR]);
 }
 
 
 const Matrix &
 fElement::getMass(void)
 {
-    // check for quick return
-    if (nen == 0)
-	return (*fElementM[0]);
-    
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 1.0;
-    int ior = 0; int iow = 0;
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int NH1, NH2, NH3;    
-    int nstR = this->readyfRoutine(true);
-    
-    // zero the matrix and vector (consistant and lumped)
-    fElementM[nstR]->Zero();    
-    fElementV[nstR]->Zero();        
-    
-    // invoke the fortran subroutine
-    int isw = 5; int nst = nen*ndf; int n = this->getTag();
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
-    
-    // check nst is as determined in readyfRoutine()
-    if (nstI != nstR) {
-	opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
-	opserr << " ready: " << nstR << " invoke: " << nstI << endln;
-	exit(-1);
-    }
-    
-    // return the matrix
-    return *(fElementM[nstR]);
+  // check for quick return
+  if (nen == 0)
+    return (*fElementM[0]);
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 1.0;
+  int ior = 0; int iow = 0;
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int NH1, NH2, NH3;    
+  int nstR = this->readyfRoutine(true);
+  
+  // zero the matrix and vector (consistant and lumped)
+  fElementM[nstR]->Zero();    
+  fElementV[nstR]->Zero();        
+  
+  // invoke the fortran subroutine
+  int isw = 5; int nst = nen*ndf; int n = this->getTag();
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  
+  // check nst is as determined in readyfRoutine()
+  if (nstI != nstR) {
+    opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
+    opserr << " ready: " << nstR << " invoke: " << nstI << endln;
+    exit(-1);
+  }
+  
+  // return the matrix
+  return *(fElementM[nstR]);
 }
-
-
 
 void 
 fElement::zeroLoad(void)
@@ -571,8 +568,6 @@ fElement::addLoad(ElementalLoad *theLoad, double loadFactor)
   opserr <<"fElement::addLoad - load type unknown for truss with tag: " << this->getTag() << endln;
   return -1;
 }
-
-
 
 int 
 fElement::addInertiaLoadToUnbalance(const Vector &accel)
@@ -597,95 +592,93 @@ fElement::addInertiaLoadToUnbalance(const Vector &accel)
   // add -M * RV(accel) to the load vector
   theLoad->addMatrixVector(1.0, mass, resid, -1.0);
 
-  
   return 0;
 }
-
 
 const Vector &
 fElement::getResistingForce()
 {		
-    // check for quick return
-    if (nen == 0)
-	return (*fElementV[0]);
-    
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
-    int ior = 0; int iow = 0;
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int NH1, NH2, NH3;    
-    int nstR = this->readyfRoutine(false);
-
-    // zero the vector
-    fElementV[nstR]->Zero();        
-    
-    // invoke the fortran subroutine
-    int isw = 6; int nst = nen*ndf; int n = this->getTag();
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
-    
-    // check nst is as determined in readyfRoutine()
-    if (nstI != nstR) {
-	opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
-	opserr << " ready: " << nstR << " invoke: " << nstI << endln;
-	exit(-1);
-    }
-
-    // negate the sign of the loads -- feap elements return -ku
-    (*fElementV[nstR]) *= -1.0;
-    
-    // add the applied loads from other sources
-    (*fElementV[nstR]) -= *theLoad;
-    
-    // return the matrix
-    return *(fElementV[nstR]);    
+  // check for quick return
+  if (nen == 0)
+    return (*fElementV[0]);
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
+  int ior = 0; int iow = 0;
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int NH1, NH2, NH3;    
+  int nstR = this->readyfRoutine(false);
+  
+  // zero the vector
+  fElementV[nstR]->Zero();        
+  
+  // invoke the fortran subroutine
+  int isw = 6; int nst = nen*ndf; int n = this->getTag();
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  
+  // check nst is as determined in readyfRoutine()
+  if (nstI != nstR) {
+    opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
+    opserr << " ready: " << nstR << " invoke: " << nstI << endln;
+    exit(-1);
+  }
+  
+  // negate the sign of the loads -- feap elements return -ku
+  (*fElementV[nstR]) *= -1.0;
+  
+  // add the applied loads from other sources
+  (*fElementV[nstR]) -= *theLoad;
+  
+  // return the matrix
+  return *(fElementV[nstR]);    
 }
 
 
 const Vector &
 fElement::getResistingForceIncInertia()
 {	
-    // check for quick return
-    if (nen == 0)
-	return (*fElementV[0]);
-    
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
-    int ior = 0; int iow = 0;
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int NH1, NH2, NH3;    
-    int nstR = this->readyfRoutine(true);
-
-    // zero the vector
-    fElementV[nstR]->Zero();        
-    
-    // invoke the fortran subroutine
-    int isw = 6; int nst = nen*ndf; int n = this->getTag();
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
-    
-    // check nst is as determined in readyfRoutine()
-    if (nstI != nstR) {
-	opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
-	opserr << " ready: " << nstR << " invoke: " << nstI << endln;
-	exit(-1);
-    }
-
-    // negate the sign of the loads -- feap elements return -ku
-    (*fElementV[nstR]) *= -1.0;
-    
-    // return the matrix
-    return *(fElementV[nstR]);    
+  // check for quick return
+  if (nen == 0)
+    return (*fElementV[0]);
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
+  int ior = 0; int iow = 0;
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int NH1, NH2, NH3;    
+  int nstR = this->readyfRoutine(true);
+  
+  // zero the vector
+  fElementV[nstR]->Zero();        
+  
+  // invoke the fortran subroutine
+  int isw = 6; int nst = nen*ndf; int n = this->getTag();
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  
+  // check nst is as determined in readyfRoutine()
+  if (nstI != nstR) {
+    opserr << "FATAL fElement::getTangentStiff() problems with incompatable nst";
+    opserr << " ready: " << nstR << " invoke: " << nstI << endln;
+    exit(-1);
+  }
+  
+  // negate the sign of the loads -- feap elements return -ku
+  (*fElementV[nstR]) *= -1.0;
+  
+  // return the matrix
+  return *(fElementV[nstR]);    
 }
 
 
@@ -703,39 +696,37 @@ fElement::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBrok
   return -1;
 }
 
-
 int
 fElement::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
     return 0;
 }
 
-
 void
 fElement::Print(OPS_Stream &s, int flag)
 {
-    int ior = 0; int iow = 1;    
-    ior = -1;
-
-    s << "fElement::Print() - can only print to cerr at present\n";
-    ior = -1;
-
-    // get the current load factor
-    Domain *theDomain=this->getDomain();
-    double dm = theDomain->getCurrentTime();
-    
-    // set ctan, ior and iow
-    double ctan[3];
-    ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
-
-    
-    // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
-    int NH1, NH2, NH3;    
-    int nstR = this->readyfRoutine(false);
-
-    // invoke the fortran subroutine
-    int isw = 4; int nst = nen*ndf; int n = this->getTag();
-    int nstI = this->invokefRoutine(ior, iow, ctan, isw);
+  int ior = 0; int iow = 1;    
+  ior = -1;
+  
+  s << "fElement::Print() - can only print to cerr at present\n";
+  ior = -1;
+  
+  // get the current load factor
+  Domain *theDomain=this->getDomain();
+  double dm = theDomain->getCurrentTime();
+  
+  // set ctan, ior and iow
+  double ctan[3];
+  ctan[0] = 0.0; ctan[1] = 0.0; ctan[2] = 0.0;
+  
+  
+  // call the ready routine to set ul, xl, tl and ix, NH1, NH2 and NH3
+  int NH1, NH2, NH3;    
+  int nstR = this->readyfRoutine(false);
+  
+  // invoke the fortran subroutine
+  int isw = 4; int nst = nen*ndf; int n = this->getTag();
+  int nstI = this->invokefRoutine(ior, iow, ctan, isw);
 }
 
 #ifdef _WIN32
@@ -784,28 +775,22 @@ extern "C" int getcommon_(int *mynh1, int *mynh3, int *sizeH, double *myh);
 
 extern "C" int fillcommon_(int *mynen, double *mydm, int *myn, int *myior, 
                            int *myiow, int *mynh1, int *mynh2, int *mynh3,
-                           int *sumnh, double *myh, double *myctan,
-			   int *nrCount);
+                           int *sumnh, double *myh, double *myctan, int *nrCount);
 
 extern "C" int elmt01_(double *d, double *ul, double *xl, int *ix, double *tl, 
-                       double *s, double *r, int *ndf, int *ndm, int *nst, 
-		       int *isw);
+                       double *s, double *r, int *ndf, int *ndm, int *nst, int *isw);
 
 extern "C" int elmt02_(double *d, double *ul, double *xl, int *ix, double *tl, 
-                       double *s, double *r, int *ndf, int *ndm, int *nst, 
-		       int *isw);
+                       double *s, double *r, int *ndf, int *ndm, int *nst, int *isw);
 		       
 extern "C" int elmt03_(double *d, double *ul, double *xl, int *ix, double *tl, 
-                       double *s, double *r, int *ndf, int *ndm, int *nst, 
-		       int *isw);
+                       double *s, double *r, int *ndf, int *ndm, int *nst, int *isw);
 		       
 extern "C" int elmt04_(double *d, double *ul, double *xl, int *ix, double *tl, 
-                       double *s, double *r, int *ndf, int *ndm, int *nst, 
-		       int *isw);
-		       
+                       double *s, double *r, int *ndf, int *ndm, int *nst, int *isw);
+
 extern "C" int elmt05_(double *d, double *ul, double *xl, int *ix, double *tl, 
-                       double *s, double *r, int *ndf, int *ndm, int *nst, 
-		       int *isw); 
+                       double *s, double *r, int *ndf, int *ndm, int *nst, int *isw);
 #endif	       
 
 int
@@ -815,13 +800,13 @@ fElement::invokefRoutine(int ior, int iow, double *ctan, int isw)
     // determine position in h of nh1, nh2 and nh3 - remember Fortarn indexing
     int NH1, NH2, NH3;
     if (nh1 != 0) { 
-	NH1 = 1; 
-	NH2 = nh1 + NH1; 
-	NH3 = nh1 + NH2; 
+	  NH1 = 1; 
+	  NH2 = nh1 + NH1; 
+	  NH3 = nh1 + NH2; 
     } else {
-	NH1 = 1;
-	NH2 = 1;
-	NH3 = 1;
+	  NH1 = 1;
+	  NH2 = 1;
+	  NH3 = 1;
     }
     
     int NDM = ndm;
@@ -830,7 +815,6 @@ fElement::invokefRoutine(int ior, int iow, double *ctan, int isw)
     int n = this->getTag();
     int sum = 2*nh1 + nh3;    
     int count = nrCount;
-
 
     double dm = 0.0; // load factor
 
@@ -891,26 +875,26 @@ fElement::invokefInit(int isw, int iow)
 
     int nst = nen*ndf;
     if (nst != 0) {
-	if (eleType == 1)
-	    elmt01_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);
-	else if (eleType == 2)
-	    elmt02_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
-	else if (eleType == 3)
-	    elmt03_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
-	else if (eleType == 4)
-	    elmt04_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
-	else if (eleType == 5)
-	    elmt05_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
-	else {
-	    opserr << "fElement::invokefRoutine() unknown element type ";
-	    opserr << eleType << endln;
-	}
+	  if (eleType == 1)
+	      elmt01_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);
+	  else if (eleType == 2)
+	      elmt02_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
+	  else if (eleType == 3)
+	      elmt03_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
+	  else if (eleType == 4)
+	      elmt04_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
+	  else if (eleType == 5)
+	      elmt05_(d,ul,xl,ix,tl,s,r,&NDF,&NDM,&nst,&isw);	    
+	  else {
+	      opserr << "fElement::invokefRoutine() unknown element type ";
+	      opserr << eleType << endln;
+	  }
 
-	if (nst < 0) {
-	    opserr << "FATAL: fElement::fElement() - eleTag: " << this->getTag();
-	    opserr << " ran out of memory creating h of size " << nst << endln;
-	    exit(-1);
-	}
+	  if (nst < 0) {
+	      opserr << "FATAL: fElement::fElement() - eleTag: " << this->getTag();
+	      opserr << " ran out of memory creating h of size " << nst << endln;
+	      exit(-1);
+	  }
     }
 
     // now get the size of the state info needed by the element
@@ -930,71 +914,69 @@ fElement::readyfRoutine(bool incInertia)
     int posUl = 0;
     int posXl = 0;
     for (int j=0; j<nen; j++) {
-	Node *theNode = theNodes[j];
-
-        // add the node tag to ix
-	ix[j] = theNode->getTag();
-        
-        // add displacement, velocity, accel and  increments to ul
-	// Note: we get nodal vel and accel only if inertia is true, this
-	// will save memory in static analysis -- look at Node implementation	
-	const Vector &trialDisp = theNode->getTrialDisp();
-	const Vector &commitDisp = theNode->getDisp();        
-        const Vector &crd = theNode->getCrds();
-
-	// add the coordinates to xl		
-	int crdSize = crd.Size();
-
-	for (int i=0; i<crdSize; i++) {
+	  Node *theNode = theNodes[j];
+	  
+      // add the node tag to ix
+	  ix[j] = theNode->getTag();
+          
+      // add displacement, velocity, accel and  increments to ul
+	  // Note: we get nodal vel and accel only if inertia is true, this
+	  // will save memory in static analysis -- look at Node implementation	
+	  const Vector &trialDisp = theNode->getTrialDisp();
+	  const Vector &commitDisp = theNode->getDisp();        
+      const Vector &crd = theNode->getCrds();
+	  
+	  // add the coordinates to xl		
+	  int crdSize = crd.Size();
+	  
+	  for (int i=0; i<crdSize; i++) {
 	    xl[posXl] = crd(i);	    
 	    posXl++;
-	}
-	
-	if (incInertia == true) { 
+	  }
+	  
+	  if (incInertia == true) { 
 	    const Vector &trialVel = theNode->getTrialVel();
 	    const Vector &trialAccel = theNode->getTrialAccel();
 	    const Vector &commitVel = theNode->getVel();        
 	    for (int i=0; i<trialDisp.Size(); i++) {
-		double trialDispI = trialDisp(i);
-		ul[posUl] = trialDispI;
-		ul[posUl+nst] = trialDispI - commitDisp(i);
-		ul[posUl+2*nst] = trialDispI - u[posUl];	    	    
-		ul[posUl+3*nst] = trialVel(i);
-		ul[posUl+4*nst] = trialAccel(i);	    
-		ul[posUl+5*nst] = commitVel(i);	    	    		
-		u[posUl] = trialDispI; // u(k-1) on next call
-		posUl++;				    
+	      double trialDispI = trialDisp(i);
+	      ul[posUl] = trialDispI;
+	      ul[posUl+nst] = trialDispI - commitDisp(i);
+	      ul[posUl+2*nst] = trialDispI - u[posUl];	    	    
+	      ul[posUl+3*nst] = trialVel(i);
+	      ul[posUl+4*nst] = trialAccel(i);	    
+	      ul[posUl+5*nst] = commitVel(i);	    	    		
+	      u[posUl] = trialDispI; // u(k-1) on next call
+	      posUl++;				    
 	    }
-	} else {
+	  } else {
 	    for (int i=0; i<trialDisp.Size(); i++) {
-		double trialDispI = trialDisp(i);
-		ul[posUl] = trialDispI;
-		ul[posUl+nst] = trialDispI - commitDisp(i);
-		ul[posUl+2*nst] = trialDispI - u[posUl];	    	    
-		ul[posUl+3*nst] = 0.0;
-		ul[posUl+4*nst] = 0.0;	    
-		ul[posUl+5*nst] = 0.0;	    	    
-		u[posUl] = trialDispI;	    
-		posUl++;
+	    double trialDispI = trialDisp(i);
+	    ul[posUl] = trialDispI;
+	    ul[posUl+nst] = trialDispI - commitDisp(i);
+	    ul[posUl+2*nst] = trialDispI - u[posUl];	    	    
+	    ul[posUl+3*nst] = 0.0;
+	    ul[posUl+4*nst] = 0.0;	    
+	    ul[posUl+5*nst] = 0.0;	    	    
+	    u[posUl] = trialDispI;	    
+	    posUl++;
 	    }
-	}
+	  }
     }
 
     // check we have a matrix and vector created for an object of this size
     if (fElementM[nst] == 0) {
-	fElementM[nst] = new Matrix(s,nst,nst);
-    	fElementV[nst] = new Vector(r,nst);
-    
-	if (fElementM[nst] == 0 || fElementV[nst] == 0) {
+	  fElementM[nst] = new Matrix(s,nst,nst);
+      fElementV[nst] = new Vector(r,nst);
+      
+	  if (fElementM[nst] == 0 || fElementV[nst] == 0) {
 	    opserr << "FATAL fElement::getTangentStiff() nst: " << nst;
 	    opserr << "ran out of memory\n";
 	    exit(-1);
-	}  
+	  }  
     }
     return nst;
 }
-
-
 
 int
 fElement::update()
