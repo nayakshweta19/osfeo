@@ -35,8 +35,8 @@ c.... common declarations
       integer         nh1,nh2,nh3
       common /hdata/  nh1,nh2,nh3
 
-      real*8  h
-      common  h(1000)
+      real*8  hr
+      common  hr(10000)
 
 c ... subroutine arguments
       integer ix(*)

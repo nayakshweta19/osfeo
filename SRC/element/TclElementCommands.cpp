@@ -121,10 +121,12 @@ extern void * OPS_mixedBeamColumn2dS(void);
 //extern void * OPS_mixedBeamColumn3dS(void);
 //////////////////////////////////////////////////////////////////////////
 
-extern int TclModelBuilder_addFeapTruss(ClientData clientData, Tcl_Interp *interp,  int argc,
+extern int 
+TclModelBuilder_addFeapTruss(ClientData clientData, Tcl_Interp *interp,  int argc,
 					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
-
-
+extern int 
+TclModelBuilder_addFeapFrame2D(ClientData clientData, Tcl_Interp *interp,  int argc,
+					TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
 extern int
 Tcl_addWrapperElement(eleObj *, ClientData clientData, Tcl_Interp *interp,  int argc,
@@ -854,6 +856,12 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
   if (strcmp(argv[1],"fTruss") == 0) {
     int eleArgStart = 1;
     int result = TclModelBuilder_addFeapTruss(clientData, interp, argc, argv,
+					      theTclDomain, theTclBuilder, eleArgStart);
+    return result;
+
+  } else if (strcmp(argv[1],"fFrame2D") == 0) {
+    int eleArgStart = 1;
+    int result = TclModelBuilder_addFeapFrame2D(clientData, interp, argc, argv,
 					      theTclDomain, theTclBuilder, eleArgStart);
     return result;
 

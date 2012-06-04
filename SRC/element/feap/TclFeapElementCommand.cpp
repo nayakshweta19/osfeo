@@ -39,6 +39,7 @@
 #include <string.h>
 #include <Domain.h>
 
+#include <fElmt01.h>
 #include <fElmt02.h>
 #include <TclModelBuilder.h>
 
@@ -114,6 +115,79 @@ TclModelBuilder_addFeapTruss(ClientData clientData, Tcl_Interp *interp, int argc
 	  opserr << "WARNING could not add element to the domain\n";
 	  opserr << "truss element: " << trussId << endln;
 	  delete theTruss;
+	  return TCL_ERROR;
+   }
+   return TCL_OK;
+}
+
+int
+TclModelBuilder_addFeapFrame2D(ClientData clientData, Tcl_Interp *interp, int argc, 
+			     TCL_Char **argv, Domain *theTclDomain, TclModelBuilder *theTclBuilder,
+			     int eleArgStart)
+{
+  // ensure the destructor has not been called - 
+  if (theTclBuilder == 0) {
+    opserr << "WARNING builder has been destroyed\n";    
+    return TCL_ERROR;
+  }
+
+  int ndm = theTclBuilder->getNDM();
+  int ndf = theTclBuilder->getNDF();
+
+  if (ndm != 2 && ndf != 3) {
+	  opserr << "WARNING - fFrame2D eleTag? iNode? jNode? A? E? needs ndm=2, ndf=3\n";
+	  return TCL_ERROR;
+  }
+
+  // check the number of arguments is correct
+  if ((argc-eleArgStart) < 5) {
+    opserr << "WARNING insufficient arguments\n";
+    printCommand(argc, argv);
+    opserr << "Want: element fFrame2D eleTag? iNode? jNode? A? E?\n";
+
+    return TCL_ERROR;
+  }    
+
+  // get the id and end nodes 
+  int eleId, iNode, jNode;
+  double A,E;
+  if (Tcl_GetInt(interp, argv[1+eleArgStart], &eleId) != TCL_OK) {
+    opserr << "WARNING invalid fFrame2D eleTag" << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[2+eleArgStart], &iNode) != TCL_OK) {
+    opserr << "WARNING invalid iNode\n";
+    opserr << "fFrame2D element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[3+eleArgStart], &jNode) != TCL_OK) {
+     opserr << "WARNING invalid jNode\n";
+     opserr << "fFrame2D element: " << eleId << endln;
+     return TCL_ERROR;
+  }
+  if (Tcl_GetDouble(interp, argv[4+eleArgStart], &A) != TCL_OK) {
+	  opserr << "WARNING invalid A\n";
+	  opserr << "fFrame2D element: " << eleId << endln;
+	  return TCL_ERROR;
+  }
+  if (Tcl_GetDouble(interp, argv[5+eleArgStart], &E) != TCL_OK) {
+	  opserr << "WARNING invalid E\n";
+	  opserr << "fFrame2D element: " << eleId << endln;
+	  return TCL_ERROR;
+  }
+
+   // now create the truss and add it to the Domain
+   fElmt01 *theEle = new fElmt01(eleId,iNode,jNode,A,E);
+   if (theEle == 0) {
+	  opserr << "WARNING ran out of memory creating element\n";
+	  opserr << "fFrame2D element: " << eleId << endln;
+	  return TCL_ERROR;
+   }
+
+   if (theTclDomain->addElement(theEle) == false) {
+	  opserr << "WARNING could not add element to the domain\n";
+	  opserr << "fFrame2D element: " << eleId << endln;
+	  delete theEle;
 	  return TCL_ERROR;
    }
    return TCL_OK;
