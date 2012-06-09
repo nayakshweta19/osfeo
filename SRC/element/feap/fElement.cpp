@@ -72,33 +72,32 @@ fElement::fElement(int tag,
 :Element(tag,classTag), nh1(numNh1), nh3(numNh3), h(0), eleType(EleType),
   theNodes(0), u(0), nen(NEN), ndf(NDF), ndm(NDM), d(0), data(0), 
  connectedNodes(0),nrCount(0), theLoad(0), Ki(0)
-  
 {
     // allocate space for h array
     if (nh1 < 0) nh1 = 0;
     if (nh3 < 0) nh3 = 0;
     if (nh1 != 0 || nh3 != 0) {
-	int sizeH = 2*nh1 + nh3;
-	h = new double[sizeH];
-	if (sizeWork < sizeH) {
-	  if (work != 0)
+	  int sizeH = 2*nh1 + nh3;
+	  h = new double[sizeH];
+	  if (sizeWork < sizeH) {
+	    if (work != 0)
 	    delete [] work;
-	  work = new double[sizeH];
-	  if (work == 0) {
+	    work = new double[sizeH];
+	    if (work == 0) {
+	      opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
+	      opserr << " ran out of memory creating h of size " << 2*nh1+nh3 << endln;
+	      exit(-1);
+	    }	    
+	    sizeWork = sizeH;
+	  }
+	  if (h == 0 || work == 0) {
 	    opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
 	    opserr << " ran out of memory creating h of size " << 2*nh1+nh3 << endln;
 	    exit(-1);
 	  }	    
-	  sizeWork = sizeH;
-	}
-	if (h == 0 || work == 0) {
-	    opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
-	    opserr << " ran out of memory creating h of size " << 2*nh1+nh3 << endln;
-	    exit(-1);
-	}	    
 
-	for (int i=0; i<sizeH; i++) 
-	  h[i] = 0.0;
+	  for (int i=0; i<sizeH; i++) 
+	    h[i] = 0.0;
     }
 
     connectedNodes = new ID(NEN);
@@ -108,36 +107,35 @@ fElement::fElement(int tag,
 
     // allocate space for static varaibles on creation of first instance
     if (numfElements == 0) {
-	fElementM = new Matrix *[MAX_NST+1];
-	fElementV = new Vector *[MAX_NST+1];
-	s = new double[(MAX_NST+1)*(MAX_NST+1)];
-	r = new double[MAX_NST+1];
-	ul = new double[(MAX_NST+1)*6];
-	xl = new double[MAX_NST+1];
-	tl = new double[MAX_NST+1];
-	ix = new int[MAX_NST+1];	
+	  fElementM = new Matrix *[MAX_NST+1];
+	  fElementV = new Vector *[MAX_NST+1];
+	  s = new double[(MAX_NST+1)*(MAX_NST+1)];
+	  r = new double[MAX_NST+1];
+	  ul = new double[(MAX_NST+1)*6];
+	  xl = new double[MAX_NST+1];
+	  tl = new double[MAX_NST+1];
+	  ix = new int[MAX_NST+1];	
 
-	// check space was available -- otherwise exit
-	if (fElementM == 0 || fElementV == 0 || ix == 0 ||
+	  // check space was available -- otherwise exit
+	  if (fElementM == 0 || fElementV == 0 || ix == 0 ||
 	    r == 0 || s == 0 || ul == 0 || xl == 0 || tl == 0) {
 
 	    opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
 	    opserr << " ran out of memory initialising static stuff\n";
 	    exit(-1);	    
-	}
+	  }
 	
-	for (int i=0; i<MAX_NST+1; i++) {
+	  for (int i=0; i<MAX_NST+1; i++) {
 	    fElementM[i] = 0;
 	    fElementV[i] = 0;
-	}
-        fElementM[0] = new Matrix(1,1); // dummy for error
-	fElementV[0] = new Vector(1);
+	  }
+      fElementM[0] = new Matrix(1,1); // dummy for error
+	  fElementV[0] = new Vector(1);
     }
     
     // increment number of elements
     numfElements++;
 }
-
 
 fElement::fElement(int tag, 
 		   int classTag,
@@ -152,9 +150,9 @@ fElement::fElement(int tag,
     d = new double[sizeD];
     data = new Vector(d, sizeD);
     if (d == 0 || data == 0) {
-	opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
-	opserr << " ran out of memory creating d of size " << sizeD << endln;
-	exit(-1);
+	  opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
+	  opserr << " ran out of memory creating d of size " << sizeD << endln;
+	  exit(-1);
     }	    
     for (int i=0; i<sizeD; i++) d[i] = 0.0;    
 
@@ -166,54 +164,54 @@ fElement::fElement(int tag,
     if (nh1 < 0) nh1 = 0;
     if (nh3 < 0) nh3 = 0;
     if (nh1 != 0 || nh3 != 0) {
-	int sizeH = 2*nh1+nh3;
-	h = new double[sizeH];
-	if (sizeWork < sizeH) {
-	  if (work != 0)
-	    delete [] work;
-	  work = new double[sizeH];
-	  if (work == 0) {
-	    opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
-	    opserr << " ran out of memory creating h of size " << 2*nh1+nh3 << endln;
-	    exit(-1);
+	  int sizeH = 2*nh1+nh3;
+	  h = new double[sizeH];
+	  if (sizeWork < sizeH) {
+	    if (work != 0)
+	      delete [] work;
+	    work = new double[sizeH];
+	    if (work == 0) {
+			opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
+			opserr << " ran out of memory creating h of size " << 2*nh1+nh3 << endln;
+			exit(-1);
+			}	    
+		sizeWork = sizeH;
+	  }
+	  if (h == 0 || work == 0) {
+	      opserr << "FATAL: fElement::fElement() - eleTag: " << this->getTag();
+	      opserr << " ran out of memory creating h of size " << sizeH << endln;
+	      exit(-1);
 	  }	    
-	  sizeWork = sizeH;
-	}
-	if (h == 0 || work == 0) {
-	    opserr << "FATAL: fElement::fElement() - eleTag: " << this->getTag();
-	    opserr << " ran out of memory creating h of size " << sizeH << endln;
-	    exit(-1);
-	}	    
-	else
+	  else
 	    for (int i=0; i<sizeH; i++) h[i] = 0.0;
     }
 
     // allocate space for static varaibles on creation of first instance
     if (numfElements == 0) {
-	fElementM = new Matrix *[MAX_NST+1];
-	fElementV = new Vector *[MAX_NST+1];
-	s = new double[(MAX_NST+1)*(MAX_NST+1)];
-	r = new double[MAX_NST+1];
-	ul = new double[(MAX_NST+1)*6];
-	xl = new double[MAX_NST+1];
-	tl = new double[MAX_NST+1];
-	ix = new int[MAX_NST+1];	
-
-	// check space was available -- otherwise exit
-	if (fElementM == 0 || fElementV == 0 || ix == 0 ||
+	  fElementM = new Matrix *[MAX_NST+1];
+	  fElementV = new Vector *[MAX_NST+1];
+	  s = new double[(MAX_NST+1)*(MAX_NST+1)];
+	  r = new double[MAX_NST+1];
+	  ul = new double[(MAX_NST+1)*6];
+	  xl = new double[MAX_NST+1];
+	  tl = new double[MAX_NST+1];
+	  ix = new int[MAX_NST+1];	
+	  
+	  // check space was available -- otherwise exit
+	  if (fElementM == 0 || fElementV == 0 || ix == 0 ||
 	    r == 0 || s == 0 || ul == 0 || xl == 0 || tl == 0) {
 
 	    opserr << "FATAL: fElement::fElement() - eleTag: " << tag;
 	    opserr << " ran out of memory initialising static stuff\n";
 	    exit(-1);	    
-	}
+	  }
 	
-	for (int i=0; i<MAX_NST+1; i++) {
+	  for (int i=0; i<MAX_NST+1; i++) {
 	    fElementM[i] = 0;
 	    fElementV[i] = 0;
-	}
-        fElementM[0] = new Matrix(1,1); // dummy for error
-	fElementV[0] = new Vector(1);
+	  }
+      fElementM[0] = new Matrix(1,1); // dummy for error
+	  fElementV[0] = new Vector(1);
     }
 
     // increment number of elements
@@ -619,7 +617,9 @@ fElement::getResistingForce()
   fElementV[nstR]->Zero();        
   
   // invoke the fortran subroutine
-  int isw = 6; int nst = nen*ndf; int n = this->getTag();
+  int isw = 6;
+  int nst = nen*ndf;
+  int n = this->getTag();
   int nstI = this->invokefRoutine(ior, iow, ctan, isw);
   
   // check nst is as determined in readyfRoutine()
@@ -858,11 +858,11 @@ fElement::invokefInit(int isw, int iow)
     int NH3 =0;
 
     int NDM = ndm;
-    int NDF = ndf;   
-    double ctan[3];    
+    int NDF = ndf;
+    double ctan[3];
 
     int n = this->getTag();
-    int sum = 0;    
+    int sum = 0;
     int ior = 0;
     int count = nrCount;
 

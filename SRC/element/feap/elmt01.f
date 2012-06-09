@@ -66,33 +66,33 @@ c     CHECK ELEMENT FOR ERRORS
 c     check of mesh if desired (chec)
 
 c     Body force computation
-c      elseif(isw.eq.15 .or. isw.eq.23) then
+      elseif(isw.eq.15 .or. isw.eq.23) then
 
-c        call fbody2d(d,xl,ul, r,s, ndm,ndf,nst, isw)
+        call fbody2d(d,xl,ul, r,s, ndm,ndf,nst, isw)
 
 c     Initialize element strains for activation
 
-c      elseif(isw.eq.17) then
+      elseif(isw.eq.17) then
 
-c        j = nh3
-c        do i = 1,2
-c          h(j  ) = ul(1,i,1)
-c          h(j+1) = ul(2,i,1)
-c          h(j+2) = ul(3,i,1)
-c          j       = j + 3
-c        end do ! i
+        j = nh3
+        do i = 1,2
+          hr(j  ) = ul(1,i,1)
+          hr(j+1) = ul(2,i,1)
+          hr(j+2) = ul(3,i,1)
+          j       = j + 3
+        end do ! i
 
 c     Initialize element strains for deactivation
 
-c      elseif(isw.eq.18) then
+      elseif(isw.eq.18) then
 
-c        do i = 0,5
-c          h(nh3+i) = 0.0d0
-c        end do ! i
+        do i = 0,5
+          hr(nh3+i) = 0.0d0
+        end do ! i
 
 c     External nodes
 
-c      elseif(isw.eq.26) then
+      elseif(isw.eq.26) then
 
 c     Compute element arrays
 
@@ -294,8 +294,15 @@ c     Compute element length and direction cosines
       endif
 
 c     Read data
+      if(isw.eq.0) then
+c     output element type
+         if(iow.lt.0) then
+            write(*,*) '   Elmt01: 2d Frame Element.'
+         else
+            write(iow,*) '   Elmt01: 2d Frame Element.'
+         endif
 
-      if(isw.eq.1) then
+      else if(isw.eq.1) then
 
 c       Increment history storage if necessary
 
@@ -417,11 +424,11 @@ c       Compute kinetic energy for lumped mass
 
 c     Initialize history variables
 
-c      elseif(isw.eq.14) then
+      elseif(isw.eq.14) then
 
-c        istrt  = nint(d(84))
-c        call modl1d(d,le,xx,hr(nh1),hr(nh2),nint(d(15)),1,istrt,
-c     &              forc,aa,isw)
+        istrt  = nint(d(84))
+        call modl1d(d,le,xx,hr(nh1),hr(nh2),nint(d(15)),1,istrt,
+     &              forc,aa,isw)
 
 c     Residual, tangent, stress, projection options
 

@@ -82,14 +82,13 @@ Matrix *mixedBeamColumn2d::nd2T = 0;
 #elif _MACOSX
 #define OPS_Export extern "C" __attribute__((visibility("default")))
 #else
-//#define OPS_Export extern "C"
-#define OPS_Export
+#define OPS_Export extern "C"
 #endif
 
 
-//OPS_Export void localInit() {
-//  OPS_Error("mixedBeamColumn2d element \nWritten by Mark D Denavit, University of Illinois at Urbana-Champaign, Copyright 2010\n", 1);
-//}
+OPS_Export void localInit() {
+  OPS_Error("mixedBeamColumn2d element \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign\n", 1);
+}
 
 // Documentation: Two Dimensional Mixed Beam Column Element
 // element mixedBeamColumn2d $tag $iNode $jNode $numIntgrPts $secTag $transfTag <-mass $massDens>
@@ -1104,7 +1103,7 @@ int mixedBeamColumn2d::addLoad(ElementalLoad *theLoad, double loadFactor) {
     p0[1] -= V;
     p0[2] -= V;
 
-  } else if (type == LOAD_TAG_Beam2dPointLoad) {
+  } else if (type == LOAD_TAG_Beam3dPointLoad) {
     double Py = data(0)*loadFactor;
     double N  = data(1)*loadFactor;
     double aOverL = data(2);
@@ -1206,44 +1205,6 @@ OPS_Stream &operator<<(OPS_Stream &s, mixedBeamColumn2d &E) {
     return s;
 }
 
-int
-mixedBeamColumn2d::displaySelf(Renderer &theViewer, int displayMode, float fact)
-{
-  // first determine the end points of the beam based on
-  // the display factor (a measure of the distorted image)
-  const Vector &end1Crd = theNodes[0]->getCrds();
-  const Vector &end2Crd = theNodes[1]->getCrds();	
-
-  static Vector v1(3);
-  static Vector v2(3);
-
-  if (displayMode >= 0) {
-    const Vector &end1Disp = theNodes[0]->getDisp();
-    const Vector &end2Disp = theNodes[1]->getDisp();
-    
-    for (int i = 0; i < 2; i++) {
-      v1(i) = end1Crd(i) + end1Disp(i)*fact;
-      v2(i) = end2Crd(i) + end2Disp(i)*fact;    
-    }
-  } else {
-    int mode = displayMode  *  -1;
-    const Matrix &eigen1 = theNodes[0]->getEigenvectors();
-    const Matrix &eigen2 = theNodes[1]->getEigenvectors();
-    if (eigen1.noCols() >= mode) {
-      for (int i = 0; i < 2; i++) {
-	v1(i) = end1Crd(i) + eigen1(i,mode-1)*fact;
-	v2(i) = end2Crd(i) + eigen2(i,mode-1)*fact;    
-      }    
-    } else {
-      for (int i = 0; i < 2; i++) {
-	v1(i) = end1Crd(i);
-	v2(i) = end2Crd(i);
-      }    
-    }
-  }
-  
-  return theViewer.drawLine (v1, v2, 1.0, 1.0);
-}
 
 Response* mixedBeamColumn2d::setResponse(const char **argv, int argc,
                                          OPS_Stream &output) {
@@ -1298,6 +1259,47 @@ Response* mixedBeamColumn2d::setResponse(const char **argv, int argc,
 
     theResponse = new ElementResponse(this, 3, Vector(3));
 
+  } else if (strcmp(argv[0],"sectionDeformation_Force") == 0) {
+
+    int i;
+    char *q  = new char[15];
+    for ( i = 0; i < numSections; i++ ){
+      sprintf(q,"axialStrain_%i",i+1);
+      output.tag("ResponseType",q);
+      sprintf(q,"curvature_%i",i+1);
+      output.tag("ResponseType",q);
+    }
+    delete [] q;
+
+    theResponse =  new ElementResponse(this, 4, Vector(2*numSections));
+
+  } else if (strcmp(argv[0],"plasticSectionDeformation_Force") == 0) {
+
+    int i;
+    char *q  = new char[25];
+    for ( i = 0; i < numSections; i++ ){
+      sprintf(q,"plasticAxialStrain_%i",i+1);
+      output.tag("ResponseType",q);
+      sprintf(q,"plasticCurvature_%i",i+1);
+      output.tag("ResponseType",q);
+    }
+    delete [] q;
+
+    theResponse =  new ElementResponse(this, 5, Vector(2*numSections));
+
+  } else if (strcmp(argv[0],"integrationPoints") == 0) {
+    theResponse =  new ElementResponse(this, 100, Vector(numSections));
+
+  } else if (strcmp(argv[0],"integrationWeights") == 0) {
+    theResponse =  new ElementResponse(this, 101, Vector(numSections));
+
+  } else if (strcmp(argv[0],"connectedNodes") == 0) {
+    theResponse =  new ElementResponse(this, 102, Vector(2));
+
+  } else if (strcmp(argv[0],"numSections") == 0 ||
+             strcmp(argv[0],"numberOfSections") == 0 ) {
+    theResponse =  new ElementResponse(this, 103, Vector(1));
+
   } else if (strcmp(argv[0],"section") ==0) {
     if (argc > 2) {
 
@@ -1348,6 +1350,71 @@ int mixedBeamColumn2d::getResponse(int responseID, Information &eleInfo) {
 
   } else if (responseID == 3) { // basic forces
     return eleInfo.setVector(internalForce);
+
+  } else if (responseID == 4) { // section deformation (from forces)
+
+    int i;
+    Vector tempVector(2*numSections);
+    tempVector.Zero();
+    for ( i = 0; i < numSections; i++ ){
+      tempVector(2*i)   = sectionDefFibers[i](0);
+      tempVector(2*i+1) = sectionDefFibers[i](1);
+    }
+
+    return eleInfo.setVector(tempVector);
+
+  } else if (responseID == 5) { // plastic section deformation (from forces)
+
+    int i;
+    Vector tempVector(2*numSections);
+    Vector sectionForce(NDM_SECTION);
+    Vector plasticSectionDef(NDM_SECTION);
+    Matrix ks(NDM_SECTION,NDM_SECTION);
+    Matrix fs(NDM_SECTION,NDM_SECTION);
+    tempVector.Zero();
+    for ( i = 0; i < numSections; i++ ){
+
+      getSectionStress(i,sectionForce);
+      getSectionTangent(i,2,ks);
+      invertMatrix(NDM_SECTION,ks,fs);
+
+      plasticSectionDef = sectionDefFibers[i] - fs*sectionForce;
+
+      tempVector(2*i)   = plasticSectionDef(0);
+      tempVector(2*i+1) = plasticSectionDef(1);
+    }
+
+    return eleInfo.setVector(tempVector);
+
+  } else if (responseID == 100) { // integration points
+
+    double L = crdTransf->getInitialLength();
+    double pts[MAX_NUM_SECTIONS];
+    beamIntegr->getSectionLocations(numSections, L, pts);
+    Vector locs(numSections);
+    for (int i = 0; i < numSections; i++)
+      locs(i) = pts[i]*L;
+    return eleInfo.setVector(locs);
+
+  } else if (responseID == 101) { // integration weights
+      double L = crdTransf->getInitialLength();
+      double wts[MAX_NUM_SECTIONS];
+      beamIntegr->getSectionWeights(numSections, L, wts);
+      Vector weights(numSections);
+      for (int i = 0; i < numSections; i++)
+        weights(i) = wts[i]*L;
+      return eleInfo.setVector(weights);
+
+  } else if (responseID == 102) { // connected nodes
+    Vector tempVector(2);
+    tempVector(0) = connectedExternalNodes(0);
+    tempVector(1) = connectedExternalNodes(1);
+    return eleInfo.setVector(tempVector);
+
+  } else if (responseID == 103) { // number of sections
+    Vector tempVector(1);
+    tempVector(0) = numSections;
+    return eleInfo.setVector(tempVector);
 
   } else {
     return -1;
