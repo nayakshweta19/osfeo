@@ -326,7 +326,6 @@ CSMMRCPlaneStress::getRho(void)
 int 
 CSMMRCPlaneStress::setTrialStrain(const Vector &v)
 {
-
   // Set values for strain_vec
   strain_vec = v;
   
@@ -376,7 +375,6 @@ CSMMRCPlaneStress::getTangent(void)
 const Vector& 
 CSMMRCPlaneStress::getStress(void)
 {
-
   return stress_vec;
 }
 
@@ -834,9 +832,10 @@ CSMMRCPlaneStress::determineTrialStress(void)
   
   double citaOne = citaR;
   double citaTwo = citaR;
-  double minError = 100;
+  double minError = error;
   double citaFinal = 100;
-  
+  double citaMinError = citaR;
+
   while ( (status == 0) && ( citaOne>-0.5*PI || citaTwo<0.5*PI ) ) {
     citaOne = citaOne - PI/360.0;
     citaTwo = citaTwo + PI/360.0;
@@ -845,7 +844,7 @@ CSMMRCPlaneStress::determineTrialStress(void)
 	  error = getAngleError(citaOne);
 	  if ( minError > error ) {
 	    minError = error;
-	    citaFinal = citaOne;
+	    citaMinError = citaOne;
 	  }
 	  if ( error < tolerance ) {
 	    status = 1;
@@ -857,26 +856,26 @@ CSMMRCPlaneStress::determineTrialStress(void)
 	  error = getAngleError(citaTwo);
 	  if ( minError > error ) {
 	    minError = error;
-	    citaFinal = citaTwo;
+	    citaMinError = citaTwo;
 	  }
 	  if ( error < tolerance ) {
 	    status = 1;
 	    citaFinal = citaTwo;
 	  }
 	}
-      
+    
     iteration_counter++;
   }
   
   if ( status == 0 ) {  // does not get converged after iteration
       //getAngleError(citaFinal);
-      getAngleError(citaR);
-	  citaFinal = citaR + 10./180.*PI;
+      getAngleError(citaMinError);
+	  citaFinal = citaMinError; // + 10./180.*PI;
       // if ( minError > 0.05 )
       //    opserr << "CSMMRCPlaneStress::determineTrialStress: Warning, failure to get converged principal stress direction\n";
   } 
   
-  citaStress = citaFinal;  // assign value for output in the screen
+  //citaStress = citaFinal;  // assign value for output in the screen
   
   return 0;
 }

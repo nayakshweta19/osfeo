@@ -31,8 +31,8 @@ c.... common declarations
       integer         nh1,nh2,nh3
       common /hdata/  nh1,nh2,nh3
 
-      real*8  h
-      common  h(1000)
+      real*8  hr
+      common  hr(10000)
 
 c ... subroutine arguments
       integer mynh1, mynh3, sumnh
@@ -47,7 +47,7 @@ c ... simply retrieve the variables from the common blocks
 
 c ... copy the stuff from the common block to the h array
       do i=1,sumnh
-         myh(i) = h(i)
+         myh(i) = hr(i)
       enddo
 
       end
