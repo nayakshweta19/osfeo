@@ -70,14 +70,14 @@
 #elif _MACOSX
 #define OPS_Export extern "C" __attribute__((visibility("default")))
 #else
-#define OPS_Export extern "C"
+#define OPS_Export
 #endif
 
-OPS_Export void
-localInit()
-{
-  OPS_Error("changManderConcrete01 unaxial material \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign\n", 1);
-}
+//OPS_Export void
+//localInit()
+//{
+//  OPS_Error("changManderConcrete01 unaxial material \nWritten by Mark D. Denavit, University of Illinois at Urbana-Champaign\n", 1);
+//}
 
 OPS_Export void *
 OPS_changManderConcrete01()
