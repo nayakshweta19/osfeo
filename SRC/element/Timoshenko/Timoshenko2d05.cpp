@@ -294,20 +294,20 @@ Timoshenko2d05::update(void)
   double wts[maxNumSections];
   beamInt->getSectionWeights(numSections, L, wts);
 
-  double Omega[maxNumSections];
+  double Omega[maxNumSections], OmegaM;
   double mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
-  //while (error > 1.e-3) {
-	//for (int i = 0; i<numSections; i++) {
-	  //const Matrix &ks = theSections[i]->getSectionTangent(); //double zh = theSections[i]->getZh();
-	  // A.Bazoune & Y.A. Khulief, 2006
-	  //temp = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
-      // += temp*wts[i];
-	//}
+  Vector Rslt(3), Defo(3);
+  while (error > 1.e-3) {
+	OmegaM = 0.;
     // Loop over the integration points
     for (int i = 0; i<numSections; i++) {
       int order = theSections[i]->getOrder();
       const ID &code = theSections[i]->getType();
-	  Omega[i] = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L;
+	  Rslt = theSections[i]->getStressResultant();
+	  Defo  = theSections[i]->getSectionDeformation();
+	  if (Rslt(3) != 0 && Defo(2) != 0) 
+		Omega[i] = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
+	  else Omega[i] = 0.;
       mu    = 1./(1.+12.*Omega[i]);
       x     = L * pts[i];
       //phi1  =  mu*x*(L-x)*(L-x-6*Omega[i]*L)                    /L/L;
@@ -336,12 +336,12 @@ Timoshenko2d05::update(void)
         
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-    
+      OmegaM += Omega[i];
     }
   
-    //error = fabs(OmegaM-temp);
-    //temp = OmegaM;
-  //}
+    error = fabs(OmegaM-temp);
+    temp = OmegaM;
+  }
 
   if (err != 0) {
     opserr << "Timoshenko2d05::update() - failed setTrialSectionDeformations(e)\n";
@@ -994,7 +994,11 @@ Timoshenko2d05::getNd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
-  double Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
+  Vector Rslt = theSections[sec]->getStressResultant();
+  Vector Defo  = theSections[sec]->getSectionDeformation();
+  if (Rslt(3) != 0 && Defo(2) != 0) 
+    Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
+  else Omega = 0.;
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   double phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
@@ -1023,7 +1027,11 @@ Timoshenko2d05::getBd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
-  double Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
+  Vector Rslt = theSections[sec]->getStressResultant();
+  Vector Defo  = theSections[sec]->getSectionDeformation();
+  if (Rslt(3) != 0 && Defo(2) != 0) 
+    Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
+  else Omega = 0.;
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   //double phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
