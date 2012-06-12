@@ -114,6 +114,8 @@ class Timoshenko2d : public Element
     double rho;	    // Mass density per unit length
 	double shearCF; // shear corrector factor
 	double Omega;   // shear contribution factor
+	Vector Rslt;
+	Vector Defo;
 
 	static Matrix *bd;
 	static Matrix *nd;

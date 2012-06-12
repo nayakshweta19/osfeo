@@ -87,7 +87,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
       Qy += zLoc*Area;
       a  += Area;
 
-      matData[i*3]   = yLoc;
+      matData[i*3]   = -yLoc;
       matData[i*3+1] = zLoc;
       matData[i*3+2] = Area;
 
@@ -104,7 +104,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
     }
 	zh   = yHmax - yHmin;
 	yh   = zHmax - zHmin;
-    yBar = Qz/a;
+    yBar = -Qz/a;
     zBar = Qy/a;
   }
 
@@ -198,8 +198,8 @@ TimoshenkoSection3d::setTrialSectionDeformation (const Vector &deforms)
     // determine material strain and set it
 
 	eps(0) = e(0) - y*e(1) + z*e(2);
-	eps(1) = root56*e(3) - z*e(5);       //e(3) - z*e(5);
-	eps(2) = root56*e(4) + y*e(5);       //e(4) + y*e(5);
+	eps(1) = e(3) - z*e(5);       // root56*e(3) - z*e(5);
+	eps(2) = e(4) + y*e(5);       // root56*e(4) + y*e(5);
 
     res += theMaterials[i]->setTrialStrain(eps);
 
@@ -383,10 +383,10 @@ TimoshenkoSection3d::getSectionTangent(void)
     kData[13] += tmp;     //(2,1)
     
     // Shear terms
-    kData[21] += five6*d11; //(3,3)
-    kData[22] += five6*d12; //(3,4)
-    kData[27] += five6*d21; //(4,3)
-    kData[28] += five6*d22; //(4,4)
+    kData[21] += d11; //(3,3)
+    kData[22] += d12; //(3,4)
+    kData[27] += d21; //(4,3)
+    kData[28] += d22; //(4,4)
     
     // Torsion term
 	kData[35] += z2*d11 - yz*(d12+d21) + y2*d22; //(5,5)
@@ -402,9 +402,9 @@ TimoshenkoSection3d::getSectionTangent(void)
     kData[32] += z*tmp; //(5,2)
     
     // Hit tangent terms with root56
-    d01 *= root56; d02 *= root56;
-    d10 *= root56; d11 *= root56; d12 *= root56;
-    d20 *= root56; d21 *= root56; d22 *= root56;
+    //d01 *= root56; d02 *= root56;
+    //d10 *= root56; d11 *= root56; d12 *= root56;
+    //d20 *= root56; d21 *= root56; d22 *= root56;
     
     // Bending-shear coupling terms
     kData[3] += d01;    //(0,3)
@@ -469,8 +469,8 @@ TimoshenkoSection3d::getStressResultant(void)
     sData[0] += sig0;
     sData[1] -= y*sig0;
     sData[2] += z*sig0;
-    sData[3] += root56*sig1;   //sig1;
-    sData[4] += root56*sig2;   //sig2;
+    sData[3] += sig1;   //sig1;
+    sData[4] += sig2;   //sig2;
     sData[5] += -z*sig1 + y*sig2;
   }
 

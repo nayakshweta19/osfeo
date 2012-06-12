@@ -116,6 +116,8 @@ class Timoshenko3d : public Element
 	double shearCF; // shear corrector factor
 	double OmegaY;   // shear contribution factor
 	double OmegaZ;   // shear contribution factor
+	Vector Rslt;
+	Vector Defo;
 
 	static Matrix *bd;
 	static Matrix *nd;

@@ -45,7 +45,7 @@ Timoshenko3d::Timoshenko3d(int tag,
 					 double r)
     :Element (tag, ELE_TAG_Timoshenko3d), 
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
-    connectedExternalNodes(2), 
+    connectedExternalNodes(2), Rslt(6), Defo(6),
 	Q(12), q(6), rho(r), parameterID(0)
 {
   // Allocate arrays of pointers to SectionForceDeformations
@@ -115,7 +115,7 @@ Timoshenko3d::Timoshenko3d(int tag,
 Timoshenko3d::Timoshenko3d()
 	:Element (0, ELE_TAG_Timoshenko3d),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
-	connectedExternalNodes(2),
+	connectedExternalNodes(2), Rslt(6), Defo(6),
 	Q(12), q(6), rho(0.0), parameterID(0)
 {
   q0[0] = 0.0;
@@ -300,12 +300,10 @@ Timoshenko3d::update(void)
   beamInt->getSectionLocations(numSections, L, pts);
 
   double x, error = 1.0, temp=0., OmegaM;
-  double OmegaZ[maxNumSections], muZ, zh, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ;
-  double OmegaY[maxNumSections], muY, yh, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY;
+  double OmegaZ[maxNumSections], muZ, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ;
+  double OmegaY[maxNumSections], muY, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY;
 
-  Vector Rslt(3), Defo(3);
   while (error > 1.e-3) {
-
 	OmegaM = 0.;
     // Loop over the integration points
     for (int i = 0; i< numSections; i++) {
@@ -314,33 +312,36 @@ Timoshenko3d::update(void)
       const ID &code = theSections[i]->getType();
 	  Rslt = theSections[i]->getStressResultant();
 	  Defo  = theSections[i]->getSectionDeformation();
-      if (Rslt(3) != 0 && Defo(2) != 0) {
-		OmegaZ[i] = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
-	    OmegaY[i] = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
+      if (fabs(Rslt(5)) < DBL_EPSILON ||
+        fabs(Defo(2)) < DBL_EPSILON || 
+        fabs(Rslt(4)) < DBL_EPSILON || 
+        fabs(Defo(3)) < DBL_EPSILON ) {
+		OmegaZ[i] = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+	    OmegaY[i] = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
 	  } else {
 		OmegaZ[i] = 0.;
 		OmegaY[i] = 0.;
 	  }
 
       muZ    = 1./(1.+12.*OmegaZ[i]);
-      //phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ[i])                      /L/L;
-      phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ[i])-4.*L*(x+3.*x*OmegaZ[i]))/L/L;
-      //phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ[i])                      /L/L;
-      phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ[i]  +2.*L*x*(6.*OmegaZ[i]-1))/L/L;
-      phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ[i])                     /L/L;
-      phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ[i]))                  /L/L;
-      phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ[i]-1))                    /L/L;
-      phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ[i]-1))                      /L/L;
+      //phi1Z  =  muZ*x*(L-x)*(L-x-6*Omega[i]*L)                    /L/L;
+      phi1pZ =  muZ*(3*x*x-4*L*x*(1-3*OmegaZ[i])-L*L*(6*OmegaZ[i]-1))/L/L;
+      //phi2Z  =  muZ*x*(L-x)*(6*OmegaZ[i]*L-x)                      /L/L;
+      phi2pZ =  muZ*(6*L*(L-2*x)*OmegaZ[i]-(2*L-3*x)*x)             /L/L;
+      phi3Z  =  (L-x)*muZ*(L-3*x-12*L*OmegaZ[i])                    /L/L;
+      phi3pZ =  2*muZ*(3*x+L*(6*OmegaZ[i]-2))                       /L/L;
+      phi4Z  =  x*muZ*(3*x-2*L*(1+6*OmegaZ[i]))                     /L/L;
+      phi4pZ =  -2*muZ*(L-3*x+6*L*OmegaZ[i])                        /L/L;
       
       muY    = 1./(1.+12.*OmegaY[i]);
-      //phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY[i])                      /L/L;
-      phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY[i])-4.*L*(x+3.*x*OmegaY[i]))/L/L;
-      //phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY[i])                      /L/L;
-      phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY[i]  +2.*L*x*(6.*OmegaY[i]-1))/L/L;
-      phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY[i])                     /L/L;
-      phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY[i]))                  /L/L;
-      phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY[i]-1))                    /L/L;
-      phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY[i]-1))                      /L/L;
+      //phi1Y  =  muY*x*(L-x)*(L-x-6*OmegaY[i]*L)                    /L/L;
+      phi1pY =  muY*(3*x*x-4*L*x*(1-3*OmegaY[i])-L*L*(6*OmegaY[i]-1))/L/L;
+      //phi2Y  =  muY*x*(L-x)*(6*OmegaY[i]*L-x)                      /L/L;
+      phi2pY =  muY*(6*L*(L-2*x)*OmegaY[i]-(2*L-3*x)*x)             /L/L;
+      phi3Y  =  (L-x)*muY*(L-3*x-12*L*OmegaY[i])                    /L/L;
+      phi3pY =  2*muY*(3*x+L*(6*OmegaY[i]-2))                       /L/L;
+      phi4Y  =  x*muY*(3*x-2*L*(1+6*OmegaY[i]))                     /L/L;
+      phi4pY =  -2*muY*(L-3*x+6*L*OmegaY[i])                        /L/L;
       
       Vector e(workArea, order);
       //P, Mz, My, Vy, Vz, T
@@ -408,8 +409,7 @@ Timoshenko3d::getTangentStiff(void)
 	// Get the section tangent stiffness and stress resultant
     const Matrix &ks = theSections[i]->getSectionTangent();			
     const Vector &s = theSections[i]->getStressResultant();			
-    
-	
+
     // Perform numerical integration
 	bd[i] = this->getBd(i, v, L);
 	//kb = kb + wts[i] * bdT[i] * ks * bd[i];
@@ -1214,11 +1214,14 @@ Timoshenko3d::getNd(int sec, const Vector &v, double L)
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
   double x     = L * pts[sec];
-  Vector Rslt = theSections[sec]->getStressResultant();
-  Vector Defo  = theSections[sec]->getSectionDeformation();
-  if (Rslt(3) != 0 && Defo(2) != 0) {
-    OmegaZ = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
-    OmegaY = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
+  Rslt = theSections[sec]->getStressResultant();
+  Defo  = theSections[sec]->getSectionDeformation();
+  if (fabs(Rslt(5)) < DBL_EPSILON ||
+    fabs(Defo(2)) < DBL_EPSILON || 
+    fabs(Rslt(4)) < DBL_EPSILON || 
+    fabs(Defo(3)) < DBL_EPSILON ) {
+    OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+    OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
   } else {
     OmegaZ = 0.;
     OmegaY = 0.;
@@ -1233,7 +1236,6 @@ Timoshenko3d::getNd(int sec, const Vector &v, double L)
   double phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
   //double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
-  //double yh = theSections[sec]->getYh();
   double OmegaY = theSections[sec]->getEIy()/theSections[sec]->getGAy()/(5./6.)/L/L;
   double muY    = 1./(1.+12.*OmegaY);
   double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
@@ -1269,34 +1271,37 @@ Timoshenko3d::getBd(int sec, const Vector &v, double L)
   beamInt->getSectionLocations(numSections, L, pts);
   
   double x = L * pts[sec];
-  Vector Rslt = theSections[sec]->getStressResultant();
-  Vector Defo  = theSections[sec]->getSectionDeformation();
-  if (Rslt(3) != 0 && Defo(2) != 0) {
-    OmegaZ = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
-    OmegaY = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/L/L;
+  Rslt = theSections[sec]->getStressResultant();
+  Defo  = theSections[sec]->getSectionDeformation();
+  if (fabs(Rslt(5)) < DBL_EPSILON ||
+	  fabs(Defo(2)) < DBL_EPSILON || 
+	  fabs(Rslt(4)) < DBL_EPSILON || 
+	  fabs(Defo(3)) < DBL_EPSILON ) {
+    OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+    OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
   } else {
     OmegaZ = 0.;
     OmegaY = 0.;
   }
   double muZ    = 1./(1.+12.*OmegaZ);
-  double phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
-  double phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
-  double phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
-  double phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
-  double phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
-  double phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
-  double phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
-  double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
+  //double phi1Z  =  muZ*x*(L-x)*(L-x-6*OmegaZ*L)                    /L/L;
+  double phi1pZ =  muZ*(3*x*x-4*L*x*(1-3*OmegaZ)-L*L*(6*OmegaZ-1))/L/L;
+  //double phi2Z  =  muZ*x*(L-x)*(6*OmegaZ*L-x)                      /L/L;
+  double phi2pZ =  muZ*(6*L*(L-2*x)*OmegaZ-(2*L-3*x)*x)             /L/L;
+  double phi3Z  =  (L-x)*muZ*(L-3*x-12*L*OmegaZ)                    /L/L;
+  double phi3pZ =  2*muZ*(3*x+L*(6*OmegaZ-2))                       /L/L;
+  double phi4Z  =  x*muZ*(3*x-2*L*(1+6*OmegaZ))                     /L/L;
+  double phi4pZ =  -2*muZ*(L-3*x+6*L*OmegaZ)                        /L/L;
 
   double muY    = 1./(1.+12.*OmegaY);
-  double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
-  double phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
-  double phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
-  double phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
-  double phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
-  double phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
-  double phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
-  double phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
+  //double phi1Y  =  muY*x*(L-x)*(L-x-6*OmegaY*L)                    /L/L;
+  double phi1pY =  muY*(3*x*x-4*L*x*(1-3*OmegaY)-L*L*(6*OmegaY-1))/L/L;
+  //double phi2Y  =  muY*x*(L-x)*(6*OmegaY*L-x)                      /L/L;
+  double phi2pY =  muY*(6*L*(L-2*x)*OmegaY-(2*L-3*x)*x)             /L/L;
+  double phi3Y  =  (L-x)*muY*(L-3*x-12*L*OmegaY)                    /L/L;
+  double phi3pY =  2*muY*(3*x+L*(6*OmegaY-2))                       /L/L;
+  double phi4Y  =  x*muY*(3*x-2*L*(1+6*OmegaY))                     /L/L;
+  double phi4pY =  -2*muY*(L-3*x+6*L*OmegaY)                        /L/L;
 
   Matrix Bd(6,6);
   Bd.Zero();

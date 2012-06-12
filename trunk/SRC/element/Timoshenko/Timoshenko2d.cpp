@@ -41,7 +41,7 @@ Timoshenko2d::Timoshenko2d(int tag,
 					 double r, double SCF)
     :Element (tag, ELE_TAG_Timoshenko2d),
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
-    connectedExternalNodes(2),
+    connectedExternalNodes(2), Rslt(3), Defo(3),
     Q(6), q(3), rho(r), shearCF(SCF), Omega(0.0)
 {
   // Allocate arrays of pointers to SectionForceDeformations
@@ -111,7 +111,7 @@ Timoshenko2d::Timoshenko2d(int tag,
 Timoshenko2d::Timoshenko2d()
 	:Element (0, ELE_TAG_Timoshenko2d),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
-	connectedExternalNodes(2),
+	connectedExternalNodes(2), Rslt(3), Defo(3),
 	Q(6), q(3), rho(0.0), Omega(0.0)
 {
   q0[0] = 0.0;
@@ -294,7 +294,7 @@ Timoshenko2d::update(void)
 
   double Omega[maxNumSections], OmegaM;
   double mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
-  Vector Rslt(3), Defo(3);
+
   while (error > 1.e-3) {
 	OmegaM = 0.;
     // Loop over the integration points
@@ -992,8 +992,9 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
-  Vector Rslt = theSections[sec]->getStressResultant();
-  Vector Defo  = theSections[sec]->getSectionDeformation();
+  Rslt = theSections[sec]->getStressResultant();
+  Defo  = theSections[sec]->getSectionDeformation();
+
   if (Rslt(3) != 0 && Defo(2) != 0) 
     Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
   else Omega = 0.;
@@ -1025,8 +1026,9 @@ Timoshenko2d::getBd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
-  Vector Rslt = theSections[sec]->getStressResultant();
-  Vector Defo  = theSections[sec]->getSectionDeformation();
+  Rslt = theSections[sec]->getStressResultant();
+  Defo  = theSections[sec]->getSectionDeformation();
+
   if (Rslt(3) != 0 && Defo(2) != 0) 
     Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
   else Omega = 0.;
