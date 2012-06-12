@@ -1,12 +1,12 @@
-// $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko2d05.cpp,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko2d.cpp,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
 // Modified by: Li Ning 
-// Description: This file contains the class implementation of Timoshenko2d05.Based on Timoshenko2d05.cpp.
+// Description: This file contains the class implementation of Timoshenko2d.Based on Timoshenko2d.cpp.
 
-#include <Timoshenko2d05.h>
+#include <Timoshenko2d.h>
 #include <Node.h>
 #include <FiberSection2d.h>
 #include <TimoshenkoSection2d.h>
@@ -24,16 +24,14 @@
 #include <ElementalLoad.h>
 #include <BeamIntegration.h>
 
-#define ELE_TAG_Timoshenko2d05 102015
+Matrix Timoshenko2d::K(6,6);
+Vector Timoshenko2d::P(6);
+double Timoshenko2d::workArea[100];
 
-Matrix Timoshenko2d05::K(6,6);
-Vector Timoshenko2d05::P(6);
-double Timoshenko2d05::workArea[100];
+Matrix *Timoshenko2d::bd = 0;
+Matrix *Timoshenko2d::nd = 0;
 
-Matrix *Timoshenko2d05::bd = 0;
-Matrix *Timoshenko2d05::nd = 0;
-
-Timoshenko2d05::Timoshenko2d05(int tag, 
+Timoshenko2d::Timoshenko2d(int tag, 
 					 int nd1, 
 					 int nd2,	
 					 int numSec,
@@ -41,7 +39,7 @@ Timoshenko2d05::Timoshenko2d05(int tag,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
 					 double r, double SCF)
-    :Element (tag, ELE_TAG_Timoshenko2d05),
+    :Element (tag, ELE_TAG_Timoshenko2d),
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2),
     Q(6), q(3), rho(r), shearCF(SCF), Omega(0.0)
@@ -50,7 +48,7 @@ Timoshenko2d05::Timoshenko2d05(int tag,
   theSections = new SectionForceDeformation *[numSections];
     
   if (theSections == 0) {
-    opserr << "Timoshenko2d05::Timoshenko2d05 - failed to allocate section model pointer\n";
+    opserr << "Timoshenko2d::Timoshenko2d - failed to allocate section model pointer\n";
     exit(-1);
   }
 
@@ -62,7 +60,7 @@ Timoshenko2d05::Timoshenko2d05(int tag,
 		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
 	default:
-		opserr << "Timoshenko2d05::Timoshenko2d05() --default secTag at sec " << i+1 << endln;
+		opserr << "Timoshenko2d::Timoshenko2d() --default secTag at sec " << i+1 << endln;
 		theSections[i] = theSection;
 		break;
     }
@@ -71,14 +69,14 @@ Timoshenko2d05::Timoshenko2d05(int tag,
   crdTransf = coordTransf.getCopy2d();
   
   if (crdTransf == 0) {
-    opserr << "Timoshenko2d05::Timoshenko2d05 - failed to copy coordinate transformation\n";
+    opserr << "Timoshenko2d::Timoshenko2d - failed to copy coordinate transformation\n";
     exit(-1);
   }
   
   beamInt = bi.getCopy();
 
   if (beamInt == 0) {
-	  opserr << "Timoshenko2d05::Timoshenko2d05() - failed to copy beam integration\n";
+	  opserr << "Timoshenko2d::Timoshenko2d() - failed to copy beam integration\n";
 	  exit(-1);
   }
 
@@ -101,7 +99,7 @@ Timoshenko2d05::Timoshenko2d05(int tag,
   if (bd == 0)	bd = new Matrix [maxNumSections];
 
   if (!nd || !bd ) {
-    opserr << "Timoshenko2d05::Timoshenko2d05() -- failed to allocate static section arrays";
+    opserr << "Timoshenko2d::Timoshenko2d() -- failed to allocate static section arrays";
     exit(-1);
   }
 
@@ -110,8 +108,8 @@ Timoshenko2d05::Timoshenko2d05(int tag,
 // AddingSensitivity:END //////////////////////////////////////
 }
 
-Timoshenko2d05::Timoshenko2d05()
-	:Element (0, ELE_TAG_Timoshenko2d05),
+Timoshenko2d::Timoshenko2d()
+	:Element (0, ELE_TAG_Timoshenko2d),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
 	connectedExternalNodes(2),
 	Q(6), q(3), rho(0.0), Omega(0.0)
@@ -131,7 +129,7 @@ Timoshenko2d05::Timoshenko2d05()
   if (bd == 0)	bd  = new Matrix [maxNumSections];
 
   if (!nd || !bd ) {
-    opserr << "Timoshenko2d05::Timoshenko2d05() -- failed to allocate static section arrays";
+    opserr << "Timoshenko2d::Timoshenko2d() -- failed to allocate static section arrays";
     exit(-1);
   }
 
@@ -140,7 +138,7 @@ Timoshenko2d05::Timoshenko2d05()
 // AddingSensitivity:END //////////////////////////////////////
 }
 
-Timoshenko2d05::~Timoshenko2d05()
+Timoshenko2d::~Timoshenko2d()
 {    
     for (int i = 0; i<numSections; i++)
 	  if (theSections[i])
@@ -158,31 +156,31 @@ Timoshenko2d05::~Timoshenko2d05()
 }
 
 int
-Timoshenko2d05::getNumExternalNodes() const
+Timoshenko2d::getNumExternalNodes() const
 {
     return 2;
 }
 
 const ID&
-Timoshenko2d05::getExternalNodes()
+Timoshenko2d::getExternalNodes()
 {
     return connectedExternalNodes;
 }
 
 Node **
-Timoshenko2d05::getNodePtrs()
+Timoshenko2d::getNodePtrs()
 {
     return theNodes;
 }
 
 int
-Timoshenko2d05::getNumDOF()
+Timoshenko2d::getNumDOF()
 {
     return 6;
 }
 
 void
-Timoshenko2d05::setDomain(Domain *theDomain)
+Timoshenko2d::setDomain(Domain *theDomain)
 {
 	// Check Domain is not null - invoked when object removed from a domain
     if (theDomain == 0) {
@@ -205,7 +203,7 @@ Timoshenko2d05::setDomain(Domain *theDomain)
     int dofNd2 = theNodes[1]->getNumberDOF();
     
     if (dofNd1 != 3 || dofNd2 != 3) {
-	  opserr << "FATAL ERROR Timoshenko2d05 (tag: %d), has differing number of DOFs at its nodes",
+	  opserr << "FATAL ERROR Timoshenko2d (tag: %d), has differing number of DOFs at its nodes",
 	  this->getTag();
 	  return;
     }
@@ -226,13 +224,13 @@ Timoshenko2d05::setDomain(Domain *theDomain)
 }
 
 int
-Timoshenko2d05::commitState()
+Timoshenko2d::commitState()
 {
     int retVal = 0;
 
     // call element commitState to do any base class stuff
     if ((retVal = this->Element::commitState()) != 0) {
-      opserr << "Timoshenko2d05::commitState () - failed in base class";
+      opserr << "Timoshenko2d::commitState () - failed in base class";
     }    
 
     // Loop over the integration points and commit the material states
@@ -245,7 +243,7 @@ Timoshenko2d05::commitState()
 }
 
 int
-Timoshenko2d05::revertToLastCommit()
+Timoshenko2d::revertToLastCommit()
 {
     int retVal = 0;
 
@@ -261,7 +259,7 @@ Timoshenko2d05::revertToLastCommit()
 }
 
 int
-Timoshenko2d05::revertToStart()
+Timoshenko2d::revertToStart()
 {
     int retVal = 0;
 	
@@ -277,7 +275,7 @@ Timoshenko2d05::revertToStart()
 }
 
 int
-Timoshenko2d05::update(void)
+Timoshenko2d::update(void)
 {
   int err = 0;
 
@@ -344,7 +342,7 @@ Timoshenko2d05::update(void)
   }
 
   if (err != 0) {
-    opserr << "Timoshenko2d05::update() - failed setTrialSectionDeformations(e)\n";
+    opserr << "Timoshenko2d::update() - failed setTrialSectionDeformations(e)\n";
 	return err;
   }
 
@@ -352,7 +350,7 @@ Timoshenko2d05::update(void)
 }
 
 const Matrix&
-Timoshenko2d05::getTangentStiff(void)
+Timoshenko2d::getTangentStiff(void)
 {
   static Matrix kb(3,3);
 
@@ -396,7 +394,7 @@ Timoshenko2d05::getTangentStiff(void)
 }
 
 const Matrix&
-Timoshenko2d05::getInitialBasicStiff()
+Timoshenko2d::getInitialBasicStiff()
 {
   static Matrix kb(3,3);
 
@@ -428,7 +426,7 @@ Timoshenko2d05::getInitialBasicStiff()
 }
 
 const Matrix&
-Timoshenko2d05::getInitialStiff()
+Timoshenko2d::getInitialStiff()
 {
   const Matrix &kb = this->getInitialBasicStiff();
 
@@ -439,7 +437,7 @@ Timoshenko2d05::getInitialStiff()
 }
 
 const Matrix&
-Timoshenko2d05::getMass()
+Timoshenko2d::getMass()
 {
   K.Zero();
 
@@ -455,7 +453,7 @@ Timoshenko2d05::getMass()
 }
 
 void
-Timoshenko2d05::zeroLoad(void)
+Timoshenko2d::zeroLoad(void)
 {
   Q.Zero();
 
@@ -471,7 +469,7 @@ Timoshenko2d05::zeroLoad(void)
 }
 
 int 
-Timoshenko2d05::addLoad(ElementalLoad *theLoad, double loadFactor)
+Timoshenko2d::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
   int type;
   const Vector &data = theLoad->getData(type, loadFactor);
@@ -525,8 +523,8 @@ Timoshenko2d05::addLoad(ElementalLoad *theLoad, double loadFactor)
     q0[2] += M2;
 
   } else {
-    opserr << "Timoshenko2d05::Timoshenko2d05 -- load type unknown for element with tag: "
-	   << this->getTag() << "Timoshenko2d05::addLoad()\n"; 
+    opserr << "Timoshenko2d::Timoshenko2d -- load type unknown for element with tag: "
+	   << this->getTag() << "Timoshenko2d::addLoad()\n"; 
 			    
     return -1;
   }
@@ -535,7 +533,7 @@ Timoshenko2d05::addLoad(ElementalLoad *theLoad, double loadFactor)
 }
 
 int 
-Timoshenko2d05::addInertiaLoadToUnbalance(const Vector &accel)
+Timoshenko2d::addInertiaLoadToUnbalance(const Vector &accel)
 {
 	// Check for a quick return
 	if (rho == 0.0) 
@@ -546,7 +544,7 @@ Timoshenko2d05::addInertiaLoadToUnbalance(const Vector &accel)
 	const Vector &Raccel2 = theNodes[1]->getRV(accel);
 
     if (3 != Raccel1.Size() || 3 != Raccel2.Size()) {
-      opserr << "Timoshenko2d05::addInertiaLoadToUnbalance matrix and vector sizes are incompatable\n";
+      opserr << "Timoshenko2d::addInertiaLoadToUnbalance matrix and vector sizes are incompatable\n";
       return -1;
     }
 
@@ -564,7 +562,7 @@ Timoshenko2d05::addInertiaLoadToUnbalance(const Vector &accel)
 }
 
 const Vector&
-Timoshenko2d05::getResistingForce()
+Timoshenko2d::getResistingForce()
 {
   crdTransf->update();  // Will remove once we clean up the corotational 3d transformation
   double L = crdTransf->getInitialLength();
@@ -616,7 +614,7 @@ Timoshenko2d05::getResistingForce()
 }
 
 const Vector&
-Timoshenko2d05::getResistingForceIncInertia()
+Timoshenko2d::getResistingForceIncInertia()
 {
   // Add the inertial forces
   if (rho != 0.0) {
@@ -645,7 +643,7 @@ Timoshenko2d05::getResistingForceIncInertia()
 }
 
 int
-Timoshenko2d05::sendSelf(int commitTag, Channel &theChannel)
+Timoshenko2d::sendSelf(int commitTag, Channel &theChannel)
 {
   // place the integer data into an ID
 
@@ -668,14 +666,14 @@ Timoshenko2d05::sendSelf(int commitTag, Channel &theChannel)
   idData(5) = crdTransfDbTag;
   
   if (theChannel.sendID(dbTag, commitTag, idData) < 0) {
-    opserr << "Timoshenko2d05::sendSelf() - failed to send ID data\n";
+    opserr << "Timoshenko2d::sendSelf() - failed to send ID data\n";
      return -1;
   }    
 
   // send the coordinate transformation
   
   if (crdTransf->sendSelf(commitTag, theChannel) < 0) {
-     opserr << "Timoshenko2d05::sendSelf() - failed to send crdTranf\n";
+     opserr << "Timoshenko2d::sendSelf() - failed to send crdTranf\n";
      return -1;
   }      
 
@@ -701,7 +699,7 @@ Timoshenko2d05::sendSelf(int commitTag, Channel &theChannel)
   }
 
   if (theChannel.sendID(dbTag, commitTag, idSections) < 0)  {
-    opserr << "Timoshenko2d05::sendSelf() - failed to send ID data\n";
+    opserr << "Timoshenko2d::sendSelf() - failed to send ID data\n";
     return -1;
   }    
 
@@ -709,7 +707,7 @@ Timoshenko2d05::sendSelf(int commitTag, Channel &theChannel)
   
   for (j = 0; j<numSections; j++) {
     if (theSections[j]->sendSelf(commitTag, theChannel) < 0) {
-      opserr << "Timoshenko2d05::sendSelf() - section " << 
+      opserr << "Timoshenko2d::sendSelf() - section " << 
 	j << "failed to send itself\n";
       return -1;
     }
@@ -719,7 +717,7 @@ Timoshenko2d05::sendSelf(int commitTag, Channel &theChannel)
 }
 
 int
-Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
+Timoshenko2d::recvSelf(int commitTag, Channel &theChannel,
 			   FEM_ObjectBroker &theBroker)
 {
   // receive the integer data containing tag, numSections and coord transformation info
@@ -730,7 +728,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
   static ID idData(7); // one bigger than needed so no clash with section ID
 
   if (theChannel.recvID(dbTag, commitTag, idData) < 0)  {
-    opserr << "Timoshenko2d05::recvSelf() - failed to recv ID data\n";
+    opserr << "Timoshenko2d::recvSelf() - failed to recv ID data\n";
     return -1;
   }    
 
@@ -749,7 +747,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
       crdTransf = theBroker.getNewCrdTransf(crdTransfClassTag);
 
       if (crdTransf == 0) {
-	opserr << "Timoshenko2d05::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
+	opserr << "Timoshenko2d::recvSelf() - failed to obtain a CrdTrans object with classTag " <<
 	  crdTransfClassTag << endln;
 	  return -2;	  
       }
@@ -759,7 +757,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
 
   // invoke recvSelf on the crdTransf object
   if (crdTransf->recvSelf(commitTag, theChannel, theBroker) < 0) {
-    opserr << "Timoshenko2d05::sendSelf() - failed to recv crdTranf\n";
+    opserr << "Timoshenko2d::sendSelf() - failed to recv crdTranf\n";
     return -3;
   }      
   
@@ -771,7 +769,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
   int loc = 0;
 
   if (theChannel.recvID(dbTag, commitTag, idSections) < 0)  {
-    opserr << "Timoshenko2d05::recvSelf() - failed to recv ID data\n";
+    opserr << "Timoshenko2d::recvSelf() - failed to recv ID data\n";
     return -1;
   }    
 
@@ -794,7 +792,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
     // create a new array to hold pointers
     theSections = new SectionForceDeformation *[idData(3)];
     if (theSections == 0) {
-      opserr << "Timoshenko2d05::recvSelf() - out of memory creating sections array of size " <<
+      opserr << "Timoshenko2d::recvSelf() - out of memory creating sections array of size " <<
       idData(3) << endln;
       return -1;
     }    
@@ -809,18 +807,18 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
       loc += 2;
 	  switch (sectClassTag) {
 	  default:
-		  opserr << "Timoshenko2d05::recvSelf() --default secTag at sec " << i+1 << endln;
+		  opserr << "Timoshenko2d::recvSelf() --default secTag at sec " << i+1 << endln;
 		  theSections[i] = new FiberSection2d();
 		  break;
 	  }
       if (theSections[i] == 0) {
-	opserr << "Timoshenko2d05::recvSelf() - Broker could not create Section of class type " <<
+	opserr << "Timoshenko2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
 	exit(-1);
       }
       theSections[i]->setDbTag(sectDbTag);
       if (theSections[i]->recvSelf(commitTag, theChannel, theBroker) < 0) {
-	opserr << "Timoshenko2d05::recvSelf() - section " << i << " failed to recv itself\n";
+	opserr << "Timoshenko2d::recvSelf() - section " << i << " failed to recv itself\n";
 	return -1;
       }     
     }
@@ -842,12 +840,12 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
 	delete theSections[i];
 	switch (sectClassTag) {
 	default:
-		opserr << "Timoshenko2d05::recvSelf() --default secTag at sec " << i+1 << endln;
+		opserr << "Timoshenko2d::recvSelf() --default secTag at sec " << i+1 << endln;
 		theSections[i] = new FiberSection2d();
 		break;
 	}
 	if (theSections[i] == 0) {
-	opserr << "Timoshenko2d05::recvSelf() - Broker could not create Section of class type " <<
+	opserr << "Timoshenko2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
 	exit(-1);
 	}
@@ -856,7 +854,7 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
       // recvSelf on it
       theSections[i]->setDbTag(sectDbTag);
       if (theSections[i]->recvSelf(commitTag, theChannel, theBroker) < 0) {
-	opserr << "Timoshenko2d05::recvSelf() - section " << i << " failed to recv itself\n";
+	opserr << "Timoshenko2d::recvSelf() - section " << i << " failed to recv itself\n";
 	return -1;
       }     
     }
@@ -866,9 +864,9 @@ Timoshenko2d05::recvSelf(int commitTag, Channel &theChannel,
 }
 
 void
-Timoshenko2d05::Print(OPS_Stream &s, int flag)		
+Timoshenko2d::Print(OPS_Stream &s, int flag)		
 {
-  s << "\nTimoshenko2d05, element id:  " << this->getTag() << endln;
+  s << "\nTimoshenko2d, element id:  " << this->getTag() << endln;
   s << "\tConnected external nodes:  " << connectedExternalNodes;
   s << "\tCoordTransf: " << crdTransf->getTag() << endln;
   s << "\tmass density:  " << rho << endln;
@@ -891,7 +889,7 @@ Timoshenko2d05::Print(OPS_Stream &s, int flag)
 }
 
 int
-Timoshenko2d05::displaySelf(Renderer &theViewer, int displayMode, float fact)
+Timoshenko2d::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
     // first determine the end points of the quad based on
     // the display factor (a measure of the distorted image)
@@ -913,7 +911,7 @@ Timoshenko2d05::displaySelf(Renderer &theViewer, int displayMode, float fact)
 }
 
 Response*
-Timoshenko2d05::setResponse(const char **argv, int argc, OPS_Stream &s)
+Timoshenko2d::setResponse(const char **argv, int argc, OPS_Stream &s)
 {
     // global force - 
     if (strcmp(argv[0],"forces") == 0 || strcmp(argv[0],"force") == 0
@@ -950,7 +948,7 @@ Timoshenko2d05::setResponse(const char **argv, int argc, OPS_Stream &s)
 }
 
 int 
-Timoshenko2d05::getResponse(int responseID, Information &eleInfo)		//LN modify
+Timoshenko2d::getResponse(int responseID, Information &eleInfo)		//LN modify
 {
 
   if (responseID == 1) // global forces
@@ -990,7 +988,7 @@ Timoshenko2d05::getResponse(int responseID, Information &eleInfo)		//LN modify
 }
 
 Matrix
-Timoshenko2d05::getNd(int sec, const Vector &v, double L)
+Timoshenko2d::getNd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
@@ -1023,7 +1021,7 @@ Timoshenko2d05::getNd(int sec, const Vector &v, double L)
 }
 
 Matrix
-Timoshenko2d05::getBd(int sec, const Vector &v, double L)
+Timoshenko2d::getBd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
@@ -1058,21 +1056,21 @@ Timoshenko2d05::getBd(int sec, const Vector &v, double L)
 // AddingSensitivity:BEGIN ///////////////////////////////////
 
 const Matrix &
-Timoshenko2d05::getKiSensitivity(int gradNumber)
+Timoshenko2d::getKiSensitivity(int gradNumber)
 {
 	K.Zero();
 	return K;
 }
 
 const Matrix &
-Timoshenko2d05::getMassSensitivity(int gradNumber)
+Timoshenko2d::getMassSensitivity(int gradNumber)
 {
 	K.Zero();
 	return K;
 }
 
 const Vector &
-Timoshenko2d05::getResistingForceSensitivity(int gradNumber)
+Timoshenko2d::getResistingForceSensitivity(int gradNumber)
 {
 	static Vector dummy(3);		// No distributed loads
 	return dummy;
@@ -1080,7 +1078,7 @@ Timoshenko2d05::getResistingForceSensitivity(int gradNumber)
 
 // NEW METHOD
 int
-Timoshenko2d05::commitSensitivity(int gradNumber, int numGrads)
+Timoshenko2d::commitSensitivity(int gradNumber, int numGrads)
 {
  	return 0;
 }

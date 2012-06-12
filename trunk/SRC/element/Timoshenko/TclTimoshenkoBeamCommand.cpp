@@ -14,7 +14,8 @@
 #include "Timoshenko2d02.h"
 #include "Timoshenko2d03.h"
 #include "Timoshenko2d04.h"
-#include "Timoshenko2d05.h"
+#include "Timoshenko2d.h"
+#include "Timoshenko3d.h"
 #include "Timoshenko3d01.h"
 #include "Timoshenko3d04.h"
 
@@ -643,9 +644,9 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
 	return TCL_OK;
 }
 
-//element Timoshenko2d04 eleTag? iNode? jNode? nIP? secTag? transfTag?
+//element Timoshenko2d eleTag? iNode? jNode? nIP? secTag? transfTag?
 int
-TclModelBuilder_addTimoshenko2d05(ClientData clientData, Tcl_Interp *interp,  
+TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,  
 				int argc, 
 				TCL_Char **argv, 
 				Domain*theTclDomain,
@@ -797,8 +798,8 @@ TclModelBuilder_addTimoshenko2d05(ClientData clientData, Tcl_Interp *interp,
     	return TCL_ERROR;
     }
     
-    // now create the Timoshenko2d04 and add it to the Domain
-    Element *theElement = new Timoshenko2d05(eleTag, iNode, jNode, nIP, sections,
+    // now create the Timoshenko2d and add it to the Domain
+    Element *theElement = new Timoshenko2d(eleTag, iNode, jNode, nIP, sections,
                                   *theTransf,*beamIntegr,massDens,shearCF);
     
 	if (theElement == 0) {
@@ -1091,6 +1092,157 @@ TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp,
 	  
       // now create the Timoshenko3d04 and add it to the Domain
 	  theElement = new Timoshenko3d04(eleTag,iNode,jNode,nIP, sections,*theTransf3d,*beamIntegr,massDens);
+	  
+	  delete [] sections;
+	}
+
+	if (theElement == 0) {
+	  opserr << "WARNING ran out of memory creating element\n";
+	  opserr << "Timoshenko3d01 element: " << eleTag << endln;
+	  return TCL_ERROR;
+	}
+
+	if (theTclDomain->addElement(theElement) == false) {
+	  opserr << "WARNING could not add element to the domain\n";
+	  opserr << "Timoshenko3d01 element: " << eleTag << endln;
+	  delete theElement;
+	  return TCL_ERROR;
+	}
+
+	// if get here we have successfully created the element and added it to the domain
+	return TCL_OK;
+}
+
+//element Timoshenko3d05 eleTag? iNode? jNode? nIP? secTag? transfTag?
+int
+TclModelBuilder_addTimoshenko3d(ClientData clientData, Tcl_Interp *interp,  
+				int argc, 
+				TCL_Char **argv, 
+				Domain*theTclDomain,
+				TclModelBuilder *theTclBuilder)
+{
+	// ensure the destructor has not been called - 
+	if (theTclBuilder == 0) {
+	  opserr << "WARNING builder has been destroyed\n";    
+	  return TCL_ERROR;
+	}
+
+	int ndm = theTclBuilder->getNDM();
+	int ndf = theTclBuilder->getNDF();
+
+	int ok = 0;
+	if (ndm == 3 && ndf == 6)
+	  ok = 1;
+
+	if (ok == 0) {
+	  opserr << "WARNING -- NDM = " << ndm << " and NDF = " << ndf
+	    << " not compatible with Timoshenko3d element" << endln;
+	  return TCL_ERROR;
+	}
+
+	if (argc < 8) {			//8
+	  opserr << "WARNING insufficient arguments\n";
+	  printCommand(argc, argv);
+	  opserr << "Want: element Timoshenko3d eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
+	  return TCL_ERROR;
+	}
+
+	// get the id and end nodes 
+	int eleTag, iNode, jNode, nIP, transfTag, secTag;
+	int argi = 2;
+
+	if (Tcl_GetInt(interp, argv[argi++], &eleTag) != TCL_OK) {
+	  opserr << "WARNING invalid Timoshenko3d eleTag" << endln;
+	  return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &iNode) != TCL_OK) {
+	  opserr << "WARNING invalid iNode ";
+	  opserr << "Timoshenko3d element: " << eleTag << endln;
+	  return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &jNode) != TCL_OK) {
+	  opserr << "WARNING invalid jNode ";
+	  opserr << "Timoshenko3d element: " << eleTag << endln;
+	  return TCL_ERROR;
+	}
+
+	if (Tcl_GetInt(interp, argv[argi++], &nIP) != TCL_OK) {
+	  opserr << "WARNING invalid nIP ";
+	  opserr << "Timoshenko3d element: " << eleTag << endln;
+	  return TCL_ERROR;
+	}  
+
+	if (Tcl_GetInt(interp, argv[argi++], &secTag) != TCL_OK) {
+	  opserr << "WARNING invalid secTag - element Timoshenko3d eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
+	  return TCL_ERROR;
+	}
+
+	if (argi >= argc || Tcl_GetInt(interp, argv[argi++], &transfTag) != TCL_OK) {
+	  opserr << "WARNING invalid transfTag? - element Timoshenko3d eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
+	  return TCL_ERROR;
+	}
+
+	double massDens = 0.0;
+
+	while (argi != argc) {
+	  if (strcmp(argv[argi++],"-mass") == 0 && argi < argc) {
+	  	if (Tcl_GetDouble(interp, argv[argi++], &massDens) != TCL_OK) {
+	  	  opserr << "WARNING invalid massDens - element Timoshenko3d eleTag? iNode? jNode?"
+			  << " nIP? secTag? transfTag? -mass massDens?\n";
+	  	  return TCL_ERROR;
+	  	}
+	  }
+	}
+
+	SectionForceDeformation **sections = new SectionForceDeformation* [nIP];
+
+	if (!sections) {
+	  opserr << "WARNING TclTimoshenkoBeamCommand - Insufficient memory to create sections\n";
+	  return TCL_ERROR;
+	}
+
+	SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
+
+	if (theSection == 0) {
+	  opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
+	  opserr << secTag << endln;
+	  delete [] sections;
+	  return TCL_ERROR;
+	}
+
+	for (int j=0; j<nIP; j++) {
+	  SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
+	  
+	  if (theSection == 0) {
+	    opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
+	    opserr << secTag << endln;
+	    delete [] sections;
+	    return TCL_ERROR;
+	  }
+	  
+	  sections[j] = theSection;
+	}
+	
+	CrdTransf *theTransf3d = 0;
+	Element *theElement = 0;
+
+	BeamIntegration *beamIntegr = 0;
+	beamIntegr = new LobattoBeamIntegration();
+
+	if (ndm == 3) {
+	  theTransf3d = OPS_GetCrdTransf(transfTag);
+	  
+	  if (theTransf3d == 0) {
+	  	opserr << "WARNING transformation not found\n";
+	  	opserr << "transformation: " << transfTag;
+	  	opserr << argv[1] << " element: " << eleTag << endln;
+	  	return TCL_ERROR;
+	  }
+	  
+      // now create the Timoshenko3d04 and add it to the Domain
+	  theElement = new Timoshenko3d(eleTag,iNode,jNode,nIP, sections,*theTransf3d,*beamIntegr,massDens);
 	  
 	  delete [] sections;
 	}

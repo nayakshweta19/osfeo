@@ -1,14 +1,14 @@
-// $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/Timoshenko2d05.h,v $
+// $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/Timoshenko2d.h,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
 // Modified by: Li Ning 
-// Description: This file contains the class implementation of TimoshenkoBeam.Based on Timoshenko2d05.cpp.
+// Description: This file contains the class implementation of TimoshenkoBeam.Based on Timoshenko2d.cpp.
 
   
-#ifndef Timoshenko2d05_h
-#define Timoshenko2d05_h
+#ifndef Timoshenko2d_h
+#define Timoshenko2d_h
 
 #ifndef _bool_h
 #include "bool.h"
@@ -28,10 +28,10 @@ class CrdTransf;
 class TimoshenkoLinearCrdTransf2d;
 class Response;
 
-class Timoshenko2d05 : public Element
+class Timoshenko2d : public Element
 {
   public:
-    Timoshenko2d05(int tag, 
+    Timoshenko2d(int tag, 
 			int nd1, 
 			int nd2,
 			int numSec, 
@@ -40,8 +40,8 @@ class Timoshenko2d05 : public Element
 			BeamIntegration &bi,
 			double rho = 0.0, double shearCF = 1.0);
 
-    Timoshenko2d05();
-    virtual ~Timoshenko2d05();
+    Timoshenko2d();
+    virtual ~Timoshenko2d();
 
     int getNumExternalNodes(void) const;
     const ID &getExternalNodes(void);
