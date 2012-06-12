@@ -896,6 +896,9 @@
 #define SEC_TAG_TimoshenkoSection2d 191275
 #define SEC_TAG_TimoshenkoSection3d 191276
 
+#define ELE_TAG_Timoshenko2d 103001
+#define ELE_TAG_Timoshenko3d 103002
+
 #define ELE_TAG_Timoshenko2d01 102007
 #define ELE_TAG_Timoshenko2d02 102008
 #define ELE_TAG_Timoshenko2d03 102009

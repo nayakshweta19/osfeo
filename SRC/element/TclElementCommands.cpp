@@ -395,7 +395,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,  in
 	TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
-TclModelBuilder_addTimoshenko2d05(ClientData clientData, Tcl_Interp *interp,  int argc, 
+TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,  int argc, 
 	TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
@@ -404,6 +404,10 @@ TclModelBuilder_addTimoshenko3d01(ClientData clientData, Tcl_Interp *interp,  in
 
 extern int
 TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp,  int argc, 
+	TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko3d(ClientData clientData, Tcl_Interp *interp,  int argc, 
 	TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
@@ -1262,8 +1266,8 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
-  else if (strcmp(argv[1],"Timoshenko2d05") == 0) {
-	  int result = TclModelBuilder_addTimoshenko2d05(clientData, interp, argc, argv,
+  else if (strcmp(argv[1],"Timoshenko2d") == 0) {
+	  int result = TclModelBuilder_addTimoshenko2d(clientData, interp, argc, argv,
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
@@ -1274,6 +1278,11 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
   }
   else if (strcmp(argv[1],"Timoshenko3d04") == 0) {
 	  int result = TclModelBuilder_addTimoshenko3d04(clientData, interp, argc, argv,
+		  theTclDomain, theTclBuilder);
+	  return result;
+  }
+  else if (strcmp(argv[1],"Timoshenko3d") == 0) {
+	  int result = TclModelBuilder_addTimoshenko3d(clientData, interp, argc, argv,
 		  theTclDomain, theTclBuilder);
 	  return result;
   }
