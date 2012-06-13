@@ -176,7 +176,6 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
   static Matrix dd22(4,4);
 
   int i, j;
-  int ii, jj;
 
   do {
     //set three dimensional strain
