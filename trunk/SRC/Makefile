@@ -413,7 +413,9 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/UWelements/BeamContact2D.o \
 	$(FE)/element/UWelements/BeamContact2Dp.o \
 	$(FE)/element/UWelements/BeamContact3D.o \
+	$(FE)/element/UWelements/BeamContact3Dp.o \
 	$(FE)/element/UWelements/BeamEndContact3D.o \
+	$(FE)/element/UWelements/BeamEndContact3Dp.o \
 	$(FE)/element/feap/elmt01.o \
 	$(FE)/element/feap/elmt02.o \
 	$(FE)/element/feap/elmt03.o \
@@ -469,6 +471,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/elastomericBearing/ElastomericBearing2d.o \
 	$(FE)/element/elastomericBearing/ElastomericBearing3d.o \
 	$(FE)/element/elastomericBearing/TclElastomericBearingCommand.o \
+	$(FE)/element/frictionBearing/MultiFP2d.o \
 	$(FE)/element/frictionBearing/TFP_Bearing.o \
 	$(FE)/element/frictionBearing/TFP_Bearing2d.o \
 	$(FE)/element/frictionBearing/TPB1D.o \
@@ -505,6 +508,8 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/TclReinforcingSteel.o \
 	$(FE)/material/uniaxial/ElasticPPMaterial.o \
 	$(FE)/material/uniaxial/ElasticBilin.o \
+	$(FE)/material/uniaxial/MultiLinear.o \
+	$(FE)/material/uniaxial/HookGap.o \
 	$(FE)/material/uniaxial/HardeningMaterial.o \
 	$(FE)/material/uniaxial/ParallelMaterial.o \
 	$(FE)/material/uniaxial/SeriesMaterial.o \
@@ -763,6 +768,7 @@ MODEL_BUILDER_LIBS = $(FE)/modelbuilder/ModelBuilder.o \
 DOMAIN_LIBS =  $(FE)/domain/component/DomainComponent.o \
 	$(FE)/domain/component/Parameter.o \
 	$(FE)/domain/component/RVParameter.o \
+	$(FE)/domain/component/DVParameter.o \
 	$(FE)/domain/component/NodeResponseParameter.o \
 	$(FE)/domain/component/MaterialStageParameter.o \
 	$(FE)/domain/component/TclUpdateMaterialCommand.o \

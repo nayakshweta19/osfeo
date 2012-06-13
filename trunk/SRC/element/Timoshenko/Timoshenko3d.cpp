@@ -312,16 +312,12 @@ Timoshenko3d::update(void)
       const ID &code = theSections[i]->getType();
 	  Rslt = theSections[i]->getStressResultant();
 	  Defo  = theSections[i]->getSectionDeformation();
-      if (fabs(Rslt(5)) < DBL_EPSILON ||
-        fabs(Defo(2)) < DBL_EPSILON || 
-        fabs(Rslt(4)) < DBL_EPSILON || 
-        fabs(Defo(3)) < DBL_EPSILON ) {
-		OmegaZ[i] = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
-	    OmegaY[i] = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
-	  } else {
-		OmegaZ[i] = 0.;
-		OmegaY[i] = 0.;
-	  }
+
+      if (Rslt(5)*Defo(2) != 0.0)  OmegaZ[i] = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+	  else                         OmegaZ[i] = 0.;
+
+      if (Rslt(4)*Defo(3) != 0.0)  OmegaY[i] = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
+	  else                         OmegaY[i] = 0.;
 
       muZ    = 1./(1.+12.*OmegaZ[i]);
       //phi1Z  =  muZ*x*(L-x)*(L-x-6*Omega[i]*L)                    /L/L;
@@ -1216,16 +1212,14 @@ Timoshenko3d::getNd(int sec, const Vector &v, double L)
   double x     = L * pts[sec];
   Rslt = theSections[sec]->getStressResultant();
   Defo  = theSections[sec]->getSectionDeformation();
-  if (fabs(Rslt(5)) < DBL_EPSILON ||
-    fabs(Defo(2)) < DBL_EPSILON || 
-    fabs(Rslt(4)) < DBL_EPSILON || 
-    fabs(Defo(3)) < DBL_EPSILON ) {
-    OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
-    OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
-  } else {
-    OmegaZ = 0.;
-    OmegaY = 0.;
-  }
+
+  double OmegaZ, OmegaY;
+  if (Rslt(5)*Defo(2) != 0.0) OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+  else                        OmegaZ = 0.;
+
+  if (Rslt(4)*Defo(3) != 0.0) OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
+  else                        OmegaY = 0.;
+
   double muZ    = 1./(1.+12.*OmegaZ);
   double phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
   //double phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
@@ -1236,7 +1230,6 @@ Timoshenko3d::getNd(int sec, const Vector &v, double L)
   double phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
   //double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
-  double OmegaY = theSections[sec]->getEIy()/theSections[sec]->getGAy()/(5./6.)/L/L;
   double muY    = 1./(1.+12.*OmegaY);
   double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
   //double phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
@@ -1273,16 +1266,14 @@ Timoshenko3d::getBd(int sec, const Vector &v, double L)
   double x = L * pts[sec];
   Rslt = theSections[sec]->getStressResultant();
   Defo  = theSections[sec]->getSectionDeformation();
-  if (fabs(Rslt(5)) < DBL_EPSILON ||
-	  fabs(Defo(2)) < DBL_EPSILON || 
-	  fabs(Rslt(4)) < DBL_EPSILON || 
-	  fabs(Defo(3)) < DBL_EPSILON ) {
-    OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
-    OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
-  } else {
-    OmegaZ = 0.;
-    OmegaY = 0.;
-  }
+
+  double OmegaZ, OmegaY;
+  if (Rslt(5)*Defo(2) != 0.0) OmegaZ = Rslt(2)*Defo(5)/Rslt(5)/Defo(2)/L/L; 
+  else                        OmegaZ = 0.;
+
+  if (Rslt(4)*Defo(3) != 0.0) OmegaY = Rslt(3)*Defo(4)/Rslt(4)/Defo(3)/L/L;
+  else                        OmegaY = 0.;
+
   double muZ    = 1./(1.+12.*OmegaZ);
   //double phi1Z  =  muZ*x*(L-x)*(L-x-6*OmegaZ*L)                    /L/L;
   double phi1pZ =  muZ*(3*x*x-4*L*x*(1-3*OmegaZ)-L*L*(6*OmegaZ-1))/L/L;
