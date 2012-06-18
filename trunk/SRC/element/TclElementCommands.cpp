@@ -115,6 +115,8 @@ extern void *OPS_SSPbrickUP(void);
 extern void *OPS_NewShellMITC4(void);
 extern void *OPS_NewShell02(void);
 extern void *OPS_NewShellNL(void);
+extern void *OPS_Quad4FiberOverlay(void);
+extern void *OPS_Brick8FiberOverlay(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
@@ -802,6 +804,25 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
 
   } 
   
+  else if ((strcmp(argv[1],"Quad4FiberOverlay") == 0)) { 	//////////////////////// mmc
+    
+    void *theEle = OPS_Quad4FiberOverlay();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  } else if ((strcmp(argv[1],"Brick8FiberOverlay") == 0)) { //////////////////////// mmc
+    
+    void *theEle = OPS_Brick8FiberOverlay();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  }
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   else if ((strcmp(argv[1],"shell02") == 0) || (strcmp(argv[1],"Shell02") == 0)) {
     
