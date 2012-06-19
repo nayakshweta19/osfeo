@@ -1,10 +1,32 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko3d.cpp,v $
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
-// Modified by: Li Ning 
-// Description: This file contains the class implementation of Timoshenko3d.Based on Timoshenko3d.cpp.
+// Created by: Li Ning (neallee@tju.edu.cn)
+// Description: This file contains the class implementation of Timoshenko3d.
+//              Make use of Neddy(1997) Interdependent Integration Element 
+//              procecess.
 // Referred to R.L. Taylor FEM 6th Ed. Timoshenko Rod Element with Constant STrain
 
 #include <Timoshenko3d.h>
