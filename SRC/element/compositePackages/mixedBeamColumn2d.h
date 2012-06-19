@@ -46,6 +46,7 @@ class Response;
 class BeamIntegration;
 class SectionForceDeformation;
 
+#define ELE_TAG_mixedBeamColumn2d 30766
 
 class mixedBeamColumn2d : public Element
 {
@@ -88,7 +89,6 @@ class mixedBeamColumn2d : public Element
     int sendSelf(int cTag, Channel &theChannel);
     int recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
     void Print(OPS_Stream &s, int flag = 0);
-	int displaySelf(Renderer &theViewer, int displayMode, float fact);
     friend OPS_Stream &operator<<(OPS_Stream &s, mixedBeamColumn2d &E);
 
     Response* setResponse(const char **argv, int argc, OPS_Stream &output);
@@ -161,11 +161,30 @@ class mixedBeamColumn2d : public Element
 
     // static data - single copy for all objects of the class
     static Matrix theMatrix;
+    static Matrix theNaturalMatrix;
+    static Matrix G;
+    static Matrix G2;
+    static Matrix H;
+    static Matrix H12;
+    static Matrix H22;
+    static Matrix Md;
+    static Matrix Kg;
+    static Matrix GT;
+    static Matrix G2T;
+    static Matrix GMHT;
+    static Matrix ks;
+    static Matrix fs;
+    static Matrix theSectionNaturalMatrix;
+
     static Vector theVector;
-    static double workArea[];
+    static Vector theNaturalVector;
+    static Vector naturalDisp;
+    static Vector naturalIncrDeltaDisp;
+    static Vector V2;
 
     // These variable are always recomputed, so there is no need to store them for each instance of the element
     static Vector *sectionDefShapeFcn;
+    static Vector *sectionForceShapeFcn;
     static Matrix *nldhat;
     static Matrix *nd1;
     static Matrix *nd2;
