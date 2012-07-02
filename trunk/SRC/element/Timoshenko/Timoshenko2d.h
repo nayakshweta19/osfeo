@@ -59,7 +59,7 @@ class Timoshenko2d : public Element
 			SectionForceDeformation **s,
 			CrdTransf &coordTransf, 
 			BeamIntegration &bi,
-			double rho = 0.0, double shearCF = 1.0);
+			double rho = 0.0, double shearCF = 1.0, int noIter = 0);
 
     Timoshenko2d();
     virtual ~Timoshenko2d();
@@ -134,6 +134,7 @@ class Timoshenko2d : public Element
 
     double rho;	    // Mass density per unit length
 	double shearCF; // shear corrector factor
+	int    iterSwitch; // Iteration switch of the IIE shape function
 	//double Omega;   // shear contribution factor
 	Vector Rslt;
 	Vector Defo;

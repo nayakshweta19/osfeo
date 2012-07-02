@@ -60,11 +60,11 @@ Timoshenko2d::Timoshenko2d(int tag,
 					 SectionForceDeformation **s,
 					 CrdTransf &coordTransf, 
 					 BeamIntegration& bi,
-					 double r, double SCF)
+					 double r, double SCF, int noIter)
     :Element (tag, ELE_TAG_Timoshenko2d),
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
     connectedExternalNodes(2), Rslt(3), Defo(3),
-    Q(6), q(3), rho(r), shearCF(SCF)
+	Q(6), q(3), rho(r), shearCF(SCF), iterSwitch(noIter)
 {
   // Allocate arrays of pointers to SectionForceDeformations
   theSections = new SectionForceDeformation *[numSections];
@@ -361,6 +361,8 @@ Timoshenko2d::update(void)
   
     error = fabs(OmegaM-temp);
     temp = OmegaM;
+	if (iterSwitch == 1) // 1 = no iteration, 0 = iteration
+	  break;
   }
 
   if (err != 0) {
@@ -376,7 +378,7 @@ Timoshenko2d::getTangentStiff(void)
 {
   static Matrix kb(3,3);
 
-  // Zero for integral
+  // Zero for integration
   kb.Zero();
   q.Zero();
   
@@ -420,7 +422,7 @@ Timoshenko2d::getInitialBasicStiff()
 {
   static Matrix kb(3,3);
 
-  // Zero for integral
+  // Zero for integration
   kb.Zero();
   
   double L = crdTransf->getInitialLength();
@@ -461,6 +463,7 @@ Timoshenko2d::getInitialStiff()
 const Matrix&
 Timoshenko2d::getMass()
 {
+  // Zero for integration
   K.Zero();
 
   if (rho == 0.0)

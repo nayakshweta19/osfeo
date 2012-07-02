@@ -744,6 +744,7 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
 
 	double massDens = 0.0;
 	double shearCF = 1.0;
+	int noIter = 0;
 	BeamIntegration *beamIntegr = 0;
 
     // Loop through remaining arguments to get optional input
@@ -802,7 +803,10 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
 		}
 		shearCF = dData[0];
 
-	  }else {
+	  } else if ( strcmp(sData, "-noIterative") == 0 ) {
+	    noIter = 1;
+	  
+	  } else {
         opserr << "WARNING unknown option " << sData << "\n";
       }
     }
@@ -823,7 +827,7 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
     
     // now create the Timoshenko2d and add it to the Domain
     Element *theElement = new Timoshenko2d(eleTag, iNode, jNode, nIP, sections,
-                                  *theTransf,*beamIntegr,massDens,shearCF);
+                                  *theTransf, *beamIntegr, massDens, shearCF, noIter);
     
 	if (theElement == 0) {
 	  opserr << "WARNING ran out of memory creating element\n";
