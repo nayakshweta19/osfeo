@@ -323,11 +323,14 @@ Timoshenko2d::update(void)
     for (int i = 0; i<numSections; i++) {
       int order = theSections[i]->getOrder();
       const ID &code = theSections[i]->getType();
+
 	  Rslt = theSections[i]->getStressResultant();
 	  Defo  = theSections[i]->getSectionDeformation();
-	  if (Rslt(3) != 0 && Defo(2) != 0) 
-		Omega[i] = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
-	  else Omega[i] = 0.;
+	  if (Rslt(2) != 0 && Defo(1) != 0) 
+		  Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+	  else                             
+		  Omega[i] = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L;
+
       mu    = 1./(1.+12.*Omega[i]);
       x     = L * pts[i];
       //phi1  =  mu*x*(L-x)*(L-x-6*Omega[i]*L)                    /L/L;
@@ -1015,15 +1018,15 @@ Timoshenko2d::getResponse(int responseID, Information &eleInfo)		//LN modify
 Matrix
 Timoshenko2d::getNd(int sec, const Vector &v, double L)
 {
-  double pts[maxNumSections];
+  double pts[maxNumSections], Omega;
   beamInt->getSectionLocations(numSections, L, pts);
   Rslt = theSections[sec]->getStressResultant();
   Defo  = theSections[sec]->getSectionDeformation();
-
-  double Omega;
-  if (Rslt(3) != 0 && Defo(2) != 0) 
-    Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
-  else Omega = 0.;
+  
+  if (Rslt(2) != 0 && Defo(1) != 0)
+	  Omega = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+  else                            
+	  Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
 
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
@@ -1051,14 +1054,15 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
 Matrix
 Timoshenko2d::getBd(int sec, const Vector &v, double L)
 {
-  double pts[maxNumSections];
+  double pts[maxNumSections], Omega;
   beamInt->getSectionLocations(numSections, L, pts);
   Rslt = theSections[sec]->getStressResultant();
   Defo  = theSections[sec]->getSectionDeformation();
-  double Omega;
-  if (Rslt(3) != 0 && Defo(2) != 0) 
-    Omega = Rslt(2)*Defo(3)/Rslt(3)/Defo(2)/shearCF/L/L;
-  else Omega = 0.;
+
+  if (Rslt(2) != 0 && Defo(1) != 0)
+	  Omega = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+  else                             
+	  Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
 
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
