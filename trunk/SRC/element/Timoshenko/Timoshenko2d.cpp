@@ -86,6 +86,7 @@ Timoshenko2d::Timoshenko2d(int tag,
 		theSections[i] = theSection;
 		break;
     }
+	Omega[i]=0.0;
   }
 
   crdTransf = coordTransf.getCopy2d();
@@ -314,7 +315,7 @@ Timoshenko2d::update(void)
   double wts[maxNumSections];
   beamInt->getSectionWeights(numSections, L, wts);
 
-  double Omega[maxNumSections], OmegaM;
+  double OmegaM;
   double mu, x, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
 
   while (error > 1.e-3) {
@@ -324,12 +325,13 @@ Timoshenko2d::update(void)
       int order = theSections[i]->getOrder();
       const ID &code = theSections[i]->getType();
 
-	  //Rslt = theSections[i]->getStressResultant();
-	  //Defo  = theSections[i]->getSectionDeformation();
-	  //if (Rslt(2) != 0 && Defo(1) != 0) 
-	//	  Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
-	  //else                             
-		  Omega[i] = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L;
+	  Rslt = theSections[i]->getStressResultant();
+	  Defo  = theSections[i]->getSectionDeformation();
+	  const Matrix &ks = theSections[i]->getSectionTangent();
+	  if (Rslt(2) != 0 && Defo(1) != 0) 
+		  Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+	  else
+		  Omega[i] = ks(1,1)/ks(2,2)/shearCF/L/L;
 
       mu    = 1./(1.+12.*Omega[i]);
       x     = L * pts[i];
@@ -1018,26 +1020,20 @@ Timoshenko2d::getResponse(int responseID, Information &eleInfo)		//LN modify
 Matrix
 Timoshenko2d::getNd(int sec, const Vector &v, double L)
 {
-  double pts[maxNumSections], Omega;
+  double pts[maxNumSections];
+  double Omegai = Omega[sec];
   beamInt->getSectionLocations(numSections, L, pts);
-  //Rslt = theSections[sec]->getStressResultant();
-  //Defo  = theSections[sec]->getSectionDeformation();
   
-  //if (Rslt(2) != 0 && Defo(1) != 0)
-	//  Omega = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
-  //else                            
-	  Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
-
-  double mu    = 1./(1.+12.*Omega);
+  double mu    = 1./(1.+12.*Omegai);
   double x     = L * pts[sec];
-  double phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
-  //double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omega)-L*L*(6*Omega-1))/L/L;
-  double phi2  =  mu*x*(L-x)*(6*Omega*L-x)                      /L/L;
-  //double phi2p =  mu*(6*L*(L-2*x)*Omega-(2*L-3*x)*x)             /L/L;
-  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omega)                    /L/L;
-  //double phi3p =  2*mu*(3*x+L*(6*Omega-2))                       /L/L;
-  double phi4  =  x*mu*(3*x-2*L*(1+6*Omega))                     /L/L;
-  //double phi4p =  -2*mu*(L-3*x+6*L*Omega)                        /L/L;
+  double phi1  =  mu*x*(L-x)*(L-x-6*Omegai*L)                    /L/L;
+  //double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omega-1))/L/L;
+  double phi2  =  mu*x*(L-x)*(6*Omegai*L-x)                      /L/L;
+  //double phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
+  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
+  //double phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
+  double phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
+  //double phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
 
   Matrix Nd(3,3);
   Nd.Zero();
@@ -1054,26 +1050,20 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
 Matrix
 Timoshenko2d::getBd(int sec, const Vector &v, double L)
 {
-  double pts[maxNumSections], Omega;
+  double pts[maxNumSections];
+  double Omegai = Omega[sec];
   beamInt->getSectionLocations(numSections, L, pts);
-  //Rslt = theSections[sec]->getStressResultant();
-  //Defo  = theSections[sec]->getSectionDeformation();
 
-  //if (Rslt(2) != 0 && Defo(1) != 0)
-	//  Omega = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
-  //else                             
-	  Omega = theSections[sec]->getEIz()/theSections[sec]->getGAy()/shearCF/L/L;
-
-  double mu    = 1./(1.+12.*Omega);
+  double mu    = 1./(1.+12.*Omegai);
   double x     = L * pts[sec];
   //double phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
-  double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omega)-L*L*(6*Omega-1))/L/L;
+  double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
   //double phi2  =  mu*x*(L-x)*(6*Omega*L-x)                      /L/L;
-  double phi2p =  mu*(6*L*(L-2*x)*Omega-(2*L-3*x)*x)             /L/L;
-  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omega)                    /L/L;
-  double phi3p =  2*mu*(3*x+L*(6*Omega-2))                       /L/L;
-  double phi4  =  x*mu*(3*x-2*L*(1+6*Omega))                     /L/L;
-  double phi4p =  -2*mu*(L-3*x+6*L*Omega)                        /L/L;
+  double phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
+  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
+  double phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
+  double phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
+  double phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
 
   Matrix Bd(3,3);
   Bd.Zero();
