@@ -143,6 +143,7 @@ class Timoshenko2d : public Element
 	static Matrix *nd;
 
 	enum {maxNumSections = 20};
+	double Omega[maxNumSections];
     static double workArea[];
     // AddingSensitivity:BEGIN //////////////////////////////////////////
     int parameterID;
