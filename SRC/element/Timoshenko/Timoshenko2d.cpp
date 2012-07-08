@@ -315,64 +315,64 @@ Timoshenko2d::update(void)
   double wts[maxNumSections];
   beamInt->getSectionWeights(numSections, L, wts);
 
-  double OmegaM;
   double mu, x, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
+  double OmegaTrial, tol = 1.e-3;
+  // Loop over the integration points
+  for (int i = 0; i<numSections; i++) {
+    int order = theSections[i]->getOrder();
+    const ID &code = theSections[i]->getType();
 
-  while (error > 1.e-3) {
-	OmegaM = 0.;
-    // Loop over the integration points
-    for (int i = 0; i<numSections; i++) {
-      int order = theSections[i]->getOrder();
-      const ID &code = theSections[i]->getType();
+	const Matrix &ks = theSections[i]->getSectionTangent();
+	OmegaTrial = ks(1,1)/ks(2,2)/shearCF/L/L;
+	do
+	{
+	  mu    = 1./(1.+12.*OmegaTrial);
+	  x     = L * pts[i];
+	  //phi1  =  mu*x*(L-x)*(L-x-6*OmegaTrial*L)                    /L/L;
+	  phi1p =  mu*(3*x*x-4*L*x*(1-3*OmegaTrial)-L*L*(6*OmegaTrial-1))/L/L;
+	  //phi2  =  mu*x*(L-x)*(6*OmegaTrial*L-x)                      /L/L;
+	  phi2p =  mu*(6*L*(L-2*x)*OmegaTrial-(2*L-3*x)*x)             /L/L;
+	  phi3  =  (L-x)*mu*(L-3*x-12*L*OmegaTrial)                    /L/L;
+	  phi3p =  2*mu*(3*x+L*(6*OmegaTrial-2))                       /L/L;
+	  phi4  =  x*mu*(3*x-2*L*(1+6*OmegaTrial))                     /L/L;
+	  phi4p =  -2*mu*(L-3*x+6*L*OmegaTrial)                        /L/L;
 
-	  Rslt = theSections[i]->getStressResultant();
-	  Defo  = theSections[i]->getSectionDeformation();
-	  const Matrix &ks = theSections[i]->getSectionTangent();
-	  if (Rslt(2) != 0 && Defo(1) != 0) 
-		  Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
-	  else
-		  Omega[i] = ks(1,1)/ks(2,2)/shearCF/L/L;
+	  Vector e(workArea, order);
 
-      mu    = 1./(1.+12.*Omega[i]);
-      x     = L * pts[i];
-      //phi1  =  mu*x*(L-x)*(L-x-6*Omega[i]*L)                    /L/L;
-      phi1p =  mu*(3*x*x-4*L*x*(1-3*Omega[i])-L*L*(6*Omega[i]-1))/L/L;
-      //phi2  =  mu*x*(L-x)*(6*Omega[i]*L-x)                      /L/L;
-      phi2p =  mu*(6*L*(L-2*x)*Omega[i]-(2*L-3*x)*x)             /L/L;
-      phi3  =  (L-x)*mu*(L-3*x-12*L*Omega[i])                    /L/L;
-      phi3p =  2*mu*(3*x+L*(6*Omega[i]-2))                       /L/L;
-      phi4  =  x*mu*(3*x-2*L*(1+6*Omega[i]))                     /L/L;
-      phi4p =  -2*mu*(L-3*x+6*L*Omega[i])                        /L/L;
-        
-      Vector e(workArea, order);
-        
-      for (int j = 0; j < order; j++) {
-        switch(code(j)) {
-        case SECTION_RESPONSE_P:     // axial strain
-      e(j) = oneOverL*v(0); break;
-        case SECTION_RESPONSE_MZ:    // curvature
-      e(j) = phi3p * v(1) + phi4p * v(2); break;
-        case SECTION_RESPONSE_VY:    // shear strain
-      e(j) = (phi1p - phi3) * v(1) + (phi2p - phi4) * v(2); break;
-        default:
-      break;
-        }
-      }
-        
-      // Set the section deformations
-      err += theSections[i]->setTrialSectionDeformation(e);
-      OmegaM += Omega[i];
-    }
-  
-    error = fabs(OmegaM-temp);
-    temp = OmegaM;
-	if (iterSwitch == 1) // 1 = no iteration, 0 = iteration
-	  break;
-  }
+	  for (int j = 0; j < order; j++) {
+		switch(code(j)) {
+		case SECTION_RESPONSE_P:     // axial strain
+		  e(j) = oneOverL*v(0); break;
+		case SECTION_RESPONSE_MZ:    // curvature
+		  e(j) = phi3p * v(1) + phi4p * v(2); break;
+		case SECTION_RESPONSE_VY:    // shear strain
+		  e(j) = (phi1p - phi3) * v(1) + (phi2p - phi4) * v(2); break;
+		default:
+		  break;
+		}
+	  }
+	  // Set the section deformations
+	  err += theSections[i]->setTrialSectionDeformation(e);
 
-  if (err != 0) {
-    opserr << "Timoshenko2d::update() - failed setTrialSectionDeformations(e)\n";
-	return err;
+	  if (err != 0) {
+		opserr << "Timoshenko2d::update() - failed setTrialSectionDeformations(e)\n";
+		return err;
+	  }
+
+      Rslt = theSections[i]->getStressResultant();
+	  if (Rslt(2) != 0 && e(1) != 0) 
+	    Omega[i] = Rslt(1)/e(1)*e(2)/Rslt(2)/shearCF/L/L;
+	  else 
+		Omega[i] = OmegaTrial;
+
+	  if (Omega[i]-OmegaTrial > tol)
+		OmegaTrial = Omega[i];
+
+	} while (iterSwitch == 0 && Omega[i]-OmegaTrial > tol); // 1 = no iteration, 0 = iteration
+
+	//Defo  = theSections[i]->getSectionDeformation();
+	//Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+
   }
 
   return 0;
@@ -835,12 +835,12 @@ Timoshenko2d::recvSelf(int commitTag, Channel &theChannel,
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
-	  switch (sectClassTag) {
-	  default:
+	  //switch (sectClassTag) {
+	  //default:
 		  opserr << "Timoshenko2d::recvSelf() --default secTag at sec " << i+1 << endln;
 		  theSections[i] = new FiberSection2d();
-		  break;
-	  }
+		//  break;
+	  //}
       if (theSections[i] == 0) {
 	opserr << "Timoshenko2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
@@ -868,12 +868,12 @@ Timoshenko2d::recvSelf(int commitTag, Channel &theChannel,
       if (theSections[i]->getClassTag() !=  sectClassTag) {
 	// delete the old section[i] and create a new one
 	delete theSections[i];
-	switch (sectClassTag) {
-	default:
+	//switch (sectClassTag) {
+	//default:
 		opserr << "Timoshenko2d::recvSelf() --default secTag at sec " << i+1 << endln;
 		theSections[i] = new FiberSection2d();
-		break;
-	}
+	//	break;
+	//}
 	if (theSections[i] == 0) {
 	opserr << "Timoshenko2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
