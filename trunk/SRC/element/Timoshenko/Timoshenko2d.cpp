@@ -316,7 +316,7 @@ Timoshenko2d::update(void)
   beamInt->getSectionWeights(numSections, L, wts);
 
   double mu, x, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
-  double OmegaTrial, tol = 1.e-3;
+  double OmegaTrial, OmegaNext, tol = 1.e-3;
   // Loop over the integration points
   for (int i = 0; i<numSections; i++) {
     int order = theSections[i]->getOrder();
@@ -324,8 +324,9 @@ Timoshenko2d::update(void)
 
 	const Matrix &ks = theSections[i]->getSectionTangent();
 	OmegaTrial = ks(1,1)/ks(2,2)/shearCF/L/L;
-	do
-	{
+	Omega[i] = OmegaTrial;
+
+	do {
 	  mu    = 1./(1.+12.*OmegaTrial);
 	  x     = L * pts[i];
 	  //phi1  =  mu*x*(L-x)*(L-x-6*OmegaTrial*L)                    /L/L;
@@ -360,18 +361,20 @@ Timoshenko2d::update(void)
 	  }
 
       Rslt = theSections[i]->getStressResultant();
-	  if (Rslt(2) != 0 && e(1) != 0) 
-	    Omega[i] = Rslt(1)/e(1)*e(2)/Rslt(2)/shearCF/L/L;
-	  else 
+
+	  if (Rslt(2) != 0 && e(1) != 0) {
+	    OmegaNext = Rslt(1)/e(1)*e(2)/Rslt(2)/shearCF/L/L;
+	  } else {
+        OmegaNext = OmegaTrial;
+	  }
+
+	  if (abs(OmegaNext-OmegaTrial) < tol) {
 		Omega[i] = OmegaTrial;
-
-	  if (Omega[i]-OmegaTrial > tol)
-		OmegaTrial = Omega[i];
-
-	} while (iterSwitch == 0 && Omega[i]-OmegaTrial > tol); // 1 = no iteration, 0 = iteration
-
-	//Defo  = theSections[i]->getSectionDeformation();
-	//Omega[i] = Rslt(1)*Defo(2)/Rslt(2)/Defo(1)/shearCF/L/L;
+		break;
+	  } else {
+		OmegaTrial = OmegaNext;
+	  }
+	} while (iterSwitch == 0); // 1 = no iteration, 0 = iteration
 
   }
 
