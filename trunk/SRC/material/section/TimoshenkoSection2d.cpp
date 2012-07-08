@@ -89,7 +89,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
  	  Qy += zLoc*Area;
  	  a  += Area;
       
- 	  matData[i*3] = -yLoc;
+ 	  matData[i*3] = yLoc;
  	  matData[i*3+1] = zLoc;
  	  matData[i*3+2] = Area;
       
@@ -102,7 +102,7 @@ TimoshenkoSection2d::TimoshenkoSection2d(int tag, int num, Fiber **fibers):
 	  if (yLoc > yHmax ) yHmax=yLoc;
 	  if (zLoc > zHmax ) zHmax=zLoc;
     }
-    yBar = -Qz/a;
+    yBar = Qz/a;
     zBar = Qy/a;
 	zh   = yHmax - yHmin;
 	yh   = zHmax - zHmin;
@@ -187,7 +187,7 @@ TimoshenkoSection2d::addFiber(Fiber &newFiber)
   double yLoc, zLoc, Area;
   newFiber.getFiberLocation(yLoc, zLoc);
   Area = newFiber.getArea();
-  newMatData[numFibers*3] = -yLoc;
+  newMatData[numFibers*3] = yLoc;
   newMatData[numFibers*3+1] = zLoc;
   newMatData[numFibers*3+2] = Area;
   NDMaterial *theMat = newFiber.getNDMaterial();
@@ -215,7 +215,7 @@ TimoshenkoSection2d::addFiber(Fiber &newFiber)
 
   // Recompute centroid
   for (i = 0; i < numFibers; i++) {
-    yLoc = -matData[3*i];
+    yLoc = matData[3*i];
 	zLoc = matData[3*i+1];
 	Area = matData[3*i+1];
     A  += Area;
@@ -223,7 +223,7 @@ TimoshenkoSection2d::addFiber(Fiber &newFiber)
 	Qy += zLoc*Area;
   }
 
-  yBar = -Qz/A;
+  yBar = Qz/A;
   zBar = Qy/A;
 
   return 0;
@@ -251,7 +251,7 @@ int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
     y = matData[i*3] - yBar;
     z = matData[i*3+1] - zBar;
       
-    eps(0) = e(0) + y * e(1);
+    eps(0) = e(0) - y * e(1);
     eps(1) = e(2);
     
     res += theMaterials[i]->setTrialStrain(eps);
@@ -270,7 +270,7 @@ double
 TimoshenkoSection2d::getZh(void)
 {
   double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
-  double yLoc, zLoc;
+  double yLoc; //, zLoc
   for (int i = 0; i < numFibers; i++) {
 	yLoc=matData[i*3];
  	//zLoc=matData[i*3+1];
@@ -368,7 +368,7 @@ TimoshenkoSection2d::getSectionTangent(void)
     kData[4] += y2*d00; //1,1           M
     kData[8] += d11;    //2,2 five6*    V
 
-    tmp = y*d00;
+    tmp = -y*d00;
     kData[1] += tmp; // 0,1
     kData[3] += tmp; // 1,0
     
@@ -378,8 +378,8 @@ TimoshenkoSection2d::getSectionTangent(void)
     kData[2] += d01; //0,2
     kData[6] += d10; //2,0
 
-    kData[5] += y*d01; //1,2
-    kData[7] += y*d10; //2,1
+    kData[5] -= y*d01; //1,2
+    kData[7] -= y*d10; //2,1
     
   }
 
@@ -401,7 +401,7 @@ TimoshenkoSection2d::getStressResultant(void)
   double y, z, w;
   double sig0, sig1;
   
-  double root56 = sqrt(5./6.);
+  //double root56 = sqrt(5./6.);
 
   for (int i = 0; i < numFibers; i++) {
     
@@ -415,7 +415,7 @@ TimoshenkoSection2d::getStressResultant(void)
     sig1 = sig(1)*w;
     
     sData[0] += sig0;
-    sData[1] += y*sig0;
+    sData[1] -= y*sig0;
     sData[2] += sig1;
 
   }
@@ -675,7 +675,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
 
     // Recompute centroid
     for (i = 0; i < numFibers; i++) {
-      yLoc = -matData[3*i];
+      yLoc = matData[3*i];
       zLoc = matData[3*i+1];
       Area = matData[3*i+1];
       A  += Area;
@@ -683,7 +683,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
 	  Qy += zLoc*Area;
     }
     
-    yBar = -Qz/A;
+    yBar = Qz/A;
     zBar = Qy/A;
   }    
 
@@ -828,7 +828,7 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
     int numData = numFibers*5;
     for (int j = 0; j < numFibers; j++) {
       output.tag("FiberOutput");
-      output.attr("yLoc", -matData[3*j]);
+      output.attr("yLoc", matData[3*j]);
       output.attr("zLoc", matData[3*j+1]);
       output.attr("area", matData[3*j+2]);    
       output.tag("ResponseType","yCoord");
@@ -866,7 +866,7 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
 	// Find first fiber with specified material tag
 	for (j = 0; j < numFibers; j++) {
 	  if (matTag == theMaterials[j]->getTag()) {
-	    ySearch = -matData[3*j];
+	    ySearch =  matData[3*j];
 	    zSearch =  matData[3*j+1];
 	    dy = ySearch-yCoord;
 	    dz = zSearch-zCoord;
@@ -879,7 +879,7 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
 	// Search the remaining fibers
 	for ( ; j < numFibers; j++) {
 	  if (matTag == theMaterials[j]->getTag()) {
-	    ySearch = -matData[3*j];
+	    ySearch =  matData[3*j];
 	    zSearch =  matData[3*j+1];
 	    dy = ySearch-yCoord;
 	    dz = zSearch-zCoord;
@@ -899,14 +899,14 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
 	double closestDist;
 	double ySearch, zSearch, dy, dz;
 	double distance;
-	ySearch = -matData[0];
+	ySearch =  matData[0];
 	zSearch =  matData[1];
 	dy = ySearch-yCoord;
 	dz = zSearch-zCoord;
 	closestDist = sqrt(dy*dy + dz*dz);
 	key = 0;
 	for (int j = 1; j < numFibers; j++) {
-	  ySearch = -matData[3*j];
+	  ySearch =  matData[3*j];
 	  zSearch =  matData[3*j+1];
 	  dy = ySearch-yCoord;
 	  dz = zSearch-zCoord;
@@ -921,7 +921,7 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
       
       if (key < numFibers && key >= 0) {
 	output.tag("FiberOutput");
-	output.attr("yLoc",-matData[3*key]);
+	output.attr("yLoc",matData[3*key]);
 	output.attr("zLoc",matData[3*key+1]);
 	output.attr("area",matData[3*key+2]);
 	
@@ -949,7 +949,7 @@ TimoshenkoSection2d::getResponse(int responseID, Information &sectInfo)
     for (int j = 0; j < numFibers; j++) {
       double yLoc, zLoc, A;
 	  Vector stress, strain;
-      yLoc = -matData[3*j];
+      yLoc =  matData[3*j];
       zLoc =  matData[3*j+1];
       A = matData[3*j+2];
       stress = theMaterials[j]->getStress();
