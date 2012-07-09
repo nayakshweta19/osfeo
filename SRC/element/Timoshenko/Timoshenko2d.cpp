@@ -327,6 +327,18 @@ Timoshenko2d::update(void)
 	Omega[i] = OmegaTrial;
 
 	do {
+		if ( abs(OmegaTrial) > 1.0e12) {
+	  mu    = 0.0;
+	  x     = L * pts[i];
+	  //phi1  =  (L-x)*x/L/2.;
+	  phi1p  =  0.5-x/L;
+	  //phi2  = -(L-x)*x/L/2.;
+	  phi2p =  -0.5-x/L;
+	  phi3  =  1.0-x/L;
+	  phi3p = -1.0/L;
+	  phi4  =  x/L;
+	  phi4p =  1.0/L;
+		} else {
 	  mu    = 1./(1.+12.*OmegaTrial);
 	  x     = L * pts[i];
 	  //phi1  =  mu*x*(L-x)*(L-x-6*OmegaTrial*L)                    /L/L;
@@ -337,7 +349,7 @@ Timoshenko2d::update(void)
 	  phi3p =  2*mu*(3*x+L*(6*OmegaTrial-2))                       /L/L;
 	  phi4  =  x*mu*(3*x-2*L*(1+6*OmegaTrial))                     /L/L;
 	  phi4p =  -2*mu*(L-3*x+6*L*OmegaTrial)                        /L/L;
-
+		}
 	  Vector e(workArea, order);
 
 	  for (int j = 0; j < order; j++) {
@@ -1025,18 +1037,30 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   double Omegai = Omega[sec];
+  double mu, x, phi1p, phi2p, phi3, phi1, phi4, phi2;
   beamInt->getSectionLocations(numSections, L, pts);
-  
-  double mu    = 1./(1.+12.*Omegai);
-  double x     = L * pts[sec];
-  double phi1  =  mu*x*(L-x)*(L-x-6*Omegai*L)                    /L/L;
-  //double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omega-1))/L/L;
-  double phi2  =  mu*x*(L-x)*(6*Omegai*L-x)                      /L/L;
-  //double phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
-  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
-  //double phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
-  double phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
-  //double phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
+  x     = L * pts[sec];
+  if (Omegai > 1.0e12) {
+	mu    = 0.0;
+	phi1  =  (L-x)*x/L/2.;
+	//phi1p  =  0.5-x/L;
+	phi2  = -(L-x)*x/L/2.;
+	//phi2p =  -0.5-x/L;
+	phi3  =  1.0-x/L;
+	//phi3p = -1.0/L;
+	phi4  =  x/L;
+	//phi4p =  1.0/L;
+  } else {
+    mu    = 1./(1.+12.*Omegai);
+    phi1  =  mu*x*(L-x)*(L-x-6*Omegai*L)                    /L/L;
+    //phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
+    phi2  =  mu*x*(L-x)*(6*Omegai*L-x)                      /L/L;
+    //phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
+    phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
+    //phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
+    phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
+    //phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
+  }
 
   Matrix Nd(3,3);
   Nd.Zero();
@@ -1055,18 +1079,30 @@ Timoshenko2d::getBd(int sec, const Vector &v, double L)
 {
   double pts[maxNumSections];
   double Omegai = Omega[sec];
+  double mu, x, phi1p, phi2p, phi3, phi3p, phi4, phi4p;
   beamInt->getSectionLocations(numSections, L, pts);
-
-  double mu    = 1./(1.+12.*Omegai);
-  double x     = L * pts[sec];
-  //double phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
-  double phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
-  //double phi2  =  mu*x*(L-x)*(6*Omega*L-x)                      /L/L;
-  double phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
-  double phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
-  double phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
-  double phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
-  double phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
+  x     = L * pts[sec];
+  if (Omegai > 1.0e12) {
+	mu    = 0.0;
+	//phi1  =  (L-x)*x/L/2.;
+	phi1p  =  0.5-x/L;
+	//phi2  = -(L-x)*x/L/2.;
+	phi2p =  -0.5-x/L;
+	phi3  =  1.0-x/L;
+	phi3p = -1.0/L;
+	phi4  =  x/L;
+	phi4p =  1.0/L;
+  } else {
+    mu    = 1./(1.+12.*Omegai);
+    //phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
+    phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
+    //phi2  =  mu*x*(L-x)*(6*Omega*L-x)                      /L/L;
+    phi2p =  mu*(6*L*(L-2*x)*Omegai-(2*L-3*x)*x)             /L/L;
+    phi3  =  (L-x)*mu*(L-3*x-12*L*Omegai)                    /L/L;
+    phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
+    phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
+    phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
+  }
 
   Matrix Bd(3,3);
   Bd.Zero();
