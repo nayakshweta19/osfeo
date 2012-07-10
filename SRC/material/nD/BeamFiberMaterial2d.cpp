@@ -175,7 +175,7 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
   static Matrix threeDtangentCopy(6,6);
   static Matrix dd22(4,4);
 
-  int i, j;
+  int i, j, ii, jj;
 
   do {
     //set three dimensional strain
@@ -201,7 +201,21 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
     //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
 
     //swap matrix indices to sort out-of-plane components 
-    
+    for (i=0; i<6; i++) {
+
+      ii = this->indexMap(i);
+
+      threeDstressCopy(ii) = threeDstress(i);
+
+      for (j=0; j<6; j++) {
+
+	jj = this->indexMap(j);
+	
+	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
+
+      }//end for j
+       
+    }//end for i
 
     //out of plane stress and tangents
     for (i=0; i<4; i++) {

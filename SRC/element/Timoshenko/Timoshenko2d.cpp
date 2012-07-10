@@ -324,21 +324,20 @@ Timoshenko2d::update(void)
 
 	const Matrix &ks = theSections[i]->getSectionTangent();
 	OmegaTrial = ks(1,1)/ks(2,2)/shearCF/L/L;
-	Omega[i] = OmegaTrial;
 
 	do {
-		if ( abs(OmegaTrial) > 1.0e12) {
-	  mu    = 0.0;
-	  x     = L * pts[i];
-	  //phi1  =  (L-x)*x/L/2.;
-	  phi1p  =  0.5-x/L;
-	  //phi2  = -(L-x)*x/L/2.;
-	  phi2p =  -0.5-x/L;
-	  phi3  =  1.0-x/L;
-	  phi3p = -1.0/L;
-	  phi4  =  x/L;
-	  phi4p =  1.0/L;
-		} else {
+//		if ( abs(OmegaTrial) > 1.0e12) {
+//	  mu    = 0.0;
+//	  x     = L * pts[i];
+//	  //phi1  =  (L-x)*x/L/2.;
+//	  phi1p  =  0.5-x/L;
+//	  //phi2  = -(L-x)*x/L/2.;
+//	  phi2p =  -0.5-x/L;
+//	  phi3  =  1.0-x/L;
+//	  phi3p = -1.0/L;
+//	  phi4  =  x/L;
+//	  phi4p =  1.0/L;
+//		} else {
 	  mu    = 1./(1.+12.*OmegaTrial);
 	  x     = L * pts[i];
 	  //phi1  =  mu*x*(L-x)*(L-x-6*OmegaTrial*L)                    /L/L;
@@ -349,7 +348,7 @@ Timoshenko2d::update(void)
 	  phi3p =  2*mu*(3*x+L*(6*OmegaTrial-2))                       /L/L;
 	  phi4  =  x*mu*(3*x-2*L*(1+6*OmegaTrial))                     /L/L;
 	  phi4p =  -2*mu*(L-3*x+6*L*OmegaTrial)                        /L/L;
-		}
+//		}
 	  Vector e(workArea, order);
 
 	  for (int j = 0; j < order; j++) {
@@ -389,7 +388,8 @@ Timoshenko2d::update(void)
 	} while (iterSwitch == 0); // 1 = no iteration, 0 = iteration
 
   }
-
+  double OmegaMean = 0.25*(Omega[0]+Omega[1]+Omega[2]+Omega[3]);
+  opserr << "OmegaMean:" << OmegaMean <<"Omega[i]:" << Omega[0] << "   " << Omega[1] << "   " <<Omega[2]<< "   " << Omega[3] << endln;
   return 0;
 }
 
@@ -1040,17 +1040,17 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
   double mu, x, phi1p, phi2p, phi3, phi1, phi4, phi2;
   beamInt->getSectionLocations(numSections, L, pts);
   x     = L * pts[sec];
-  if (Omegai > 1.0e12) {
-	mu    = 0.0;
-	phi1  =  (L-x)*x/L/2.;
-	//phi1p  =  0.5-x/L;
-	phi2  = -(L-x)*x/L/2.;
-	//phi2p =  -0.5-x/L;
-	phi3  =  1.0-x/L;
-	//phi3p = -1.0/L;
-	phi4  =  x/L;
-	//phi4p =  1.0/L;
-  } else {
+//  if (Omegai > 1.0e12) {
+//	mu    = 0.0;
+//	phi1  =  (L-x)*x/L/2.;
+//	//phi1p  =  0.5-x/L;
+//	phi2  = -(L-x)*x/L/2.;
+//	//phi2p =  -0.5-x/L;
+//	phi3  =  1.0-x/L;
+//	//phi3p = -1.0/L;
+//	phi4  =  x/L;
+//	//phi4p =  1.0/L;
+//  } else {
     mu    = 1./(1.+12.*Omegai);
     phi1  =  mu*x*(L-x)*(L-x-6*Omegai*L)                    /L/L;
     //phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
@@ -1060,7 +1060,7 @@ Timoshenko2d::getNd(int sec, const Vector &v, double L)
     //phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
     phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
     //phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
-  }
+//  }
 
   Matrix Nd(3,3);
   Nd.Zero();
@@ -1082,17 +1082,17 @@ Timoshenko2d::getBd(int sec, const Vector &v, double L)
   double mu, x, phi1p, phi2p, phi3, phi3p, phi4, phi4p;
   beamInt->getSectionLocations(numSections, L, pts);
   x     = L * pts[sec];
-  if (Omegai > 1.0e12) {
-	mu    = 0.0;
-	//phi1  =  (L-x)*x/L/2.;
-	phi1p  =  0.5-x/L;
-	//phi2  = -(L-x)*x/L/2.;
-	phi2p =  -0.5-x/L;
-	phi3  =  1.0-x/L;
-	phi3p = -1.0/L;
-	phi4  =  x/L;
-	phi4p =  1.0/L;
-  } else {
+//  if (Omegai > 1.0e12) {
+//	mu    = 0.0;
+//	//phi1  =  (L-x)*x/L/2.;
+//	phi1p  =  0.5-x/L;
+//	//phi2  = -(L-x)*x/L/2.;
+//	phi2p =  -0.5-x/L;
+//	phi3  =  1.0-x/L;
+//	phi3p = -1.0/L;
+//	phi4  =  x/L;
+//	phi4p =  1.0/L;
+//  } else {
     mu    = 1./(1.+12.*Omegai);
     //phi1  =  mu*x*(L-x)*(L-x-6*Omega*L)                    /L/L;
     phi1p =  mu*(3*x*x-4*L*x*(1-3*Omegai)-L*L*(6*Omegai-1))/L/L;
@@ -1102,7 +1102,7 @@ Timoshenko2d::getBd(int sec, const Vector &v, double L)
     phi3p =  2*mu*(3*x+L*(6*Omegai-2))                       /L/L;
     phi4  =  x*mu*(3*x-2*L*(1+6*Omegai))                     /L/L;
     phi4p =  -2*mu*(L-3*x+6*L*Omegai)                        /L/L;
-  }
+//  }
 
   Matrix Bd(3,3);
   Bd.Zero();
