@@ -380,13 +380,12 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,
 	if (argc < 8) {			//8
 	  opserr << "WARNING insufficient arguments\n";
 	  printCommand(argc, argv);
-	  opserr << "Want: element Timoshenko2d03 eleTag? iNode? jNode? secTag? transfTag? C1?\n";
+	  opserr << "Want: element Timoshenko2d03 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
 	  return TCL_ERROR;
 	}
 
 	// get the id and end nodes 
-	int eleTag, iNode, jNode, transfTag, secTag;
-	double C1;
+	int eleTag, iNode, jNode, nIP, transfTag, secTag;
 	int argi = 2;
 
 	if (Tcl_GetInt(interp, argv[argi++], &eleTag) != TCL_OK) {
@@ -406,18 +405,19 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,
 	  return TCL_ERROR;
 	}
 
+	if (Tcl_GetInt(interp, argv[argi++], &nIP) != TCL_OK) {
+	  opserr << "WARNING invalid nIP? ";
+	  opserr << "Timoshenko2d03 element: " << eleTag << endln;
+	  return TCL_ERROR;
+	}
+
 	if (Tcl_GetInt(interp, argv[argi++], &secTag) != TCL_OK) {
-	  opserr << "WARNING invalid secTag - element Timoshenko2d03 eleTag? iNode? jNode? secTag? transfTag? C1?\n";
+	  opserr << "WARNING invalid secTag - element Timoshenko2d03 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
 	  return TCL_ERROR;
 	}
 
 	if (argi >= argc || Tcl_GetInt(interp, argv[argi++], &transfTag) != TCL_OK) {
-	  opserr << "WARNING invalid transfTag? - element Timoshenko2d03 eleTag? iNode? jNode? secTag? transfTag? C1?\n";
-	  return TCL_ERROR;
-	}
-
-	if (argi >= argc || Tcl_GetDouble(interp, argv[argi++], &C1) != TCL_OK) {
-	  opserr << "WARNING invalid transfTag? - element Timoshenko2d03 eleTag? iNode? jNode? secTag? transfTag? C1?\n";
+	  opserr << "WARNING invalid transfTag? - element Timoshenko2d03 eleTag? iNode? jNode? nIP? secTag? transfTag?\n";
 	  return TCL_ERROR;
 	}
 
@@ -427,13 +427,13 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,
 	  if (strcmp(argv[argi++],"-mass") == 0 && argi < argc) {
 	  	if (Tcl_GetDouble(interp, argv[argi++], &massDens) != TCL_OK) {
 	  	  opserr << "WARNING invalid massDens - element Timoshenko2d03 eleTag? iNode? jNode? "
-			  << "secTag? transfTag? C1? -mass massDens?\n";
+			  << "nIP? secTag? transfTag? -mass massDens?\n";
 	  	  return TCL_ERROR;
 	  	}
 	  }
 	}
 
-	SectionForceDeformation **sections = new SectionForceDeformation* [1];
+	SectionForceDeformation **sections = new SectionForceDeformation* [nIP];
 
 	if (!sections) {
 	  opserr << "WARNING TclTimoshenkoBeamCommand - Insufficient memory to create sections\n";
@@ -449,15 +449,15 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,
 	  return TCL_ERROR;
 	}
 
-	sections[0] = theSection;
+	for (int i = 0; i < nIP; i++)
+      sections[i] = theSection;
 	
-
 	CrdTransf *theTransf2d = 0;
 	//CrdTransf *theTransf3d = 0;
 	Element *theElement = 0;
 
 	BeamIntegration *beamIntegr = 0;
-	beamIntegr = new LegendreBeamIntegration();
+	beamIntegr = new LobattoBeamIntegration();
 
 	if (ndm == 2) {
 	  theTransf2d = OPS_GetCrdTransf(transfTag);
@@ -470,7 +470,7 @@ TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp,
 	  }
 	  
       // now create the Timoshenko2d03 and add it to the Domain
-	  theElement = new Timoshenko2d03(eleTag,iNode,jNode,sections,*theTransf2d,*beamIntegr,C1,massDens);
+	  theElement = new Timoshenko2d03(eleTag,iNode,jNode,nIP,sections,*theTransf2d,*beamIntegr,massDens);
 	  
 	  delete [] sections;
 	}

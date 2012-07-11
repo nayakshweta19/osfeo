@@ -388,8 +388,8 @@ Timoshenko2d::update(void)
 	} while (iterSwitch == 0); // 1 = no iteration, 0 = iteration
 
   }
-  double OmegaMean = 0.25*(Omega[0]+Omega[1]+Omega[2]+Omega[3]);
-  opserr << "OmegaMean:" << OmegaMean <<"Omega[i]:" << Omega[0] << "   " << Omega[1] << "   " <<Omega[2]<< "   " << Omega[3] << endln;
+  double OmegaMean = Omega[0]*wts[0]+Omega[1]*wts[1]+Omega[2]*wts[2];
+  opserr << "OmegaMean: " << OmegaMean <<"   Omega[i]:" << Omega[0] << "   " << Omega[1] << "   " <<Omega[2] << endln;
   return 0;
 }
 
