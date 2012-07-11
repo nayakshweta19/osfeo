@@ -291,20 +291,19 @@ Timoshenko2d04::update(void)
   beamInt->getSectionLocations(numSections, L, pts);
   double wts[maxNumSections];
   beamInt->getSectionWeights(numSections, L, wts);
+  int order = theSections[0]->getOrder();     // Section 0 for all
+  const ID &code = theSections[0]->getType(); // Section 0 for all
 
   double mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
-  //while (error > 1.e-3) {
-    Omega = 0.0;
-	for (int i = 0; i<numSections; i++) {
-	  //const Matrix &ks = theSections[i]->getSectionTangent(); //double zh = theSections[i]->getZh();
-	  // A.Bazoune & Y.A. Khulief, 2006
-	  temp = theSections[i]->getEIz()/theSections[i]->getGAy()/shearCF/L/L; //3.*zh*zh/10/L; //ks(1,1)/ks(2,2)/5.*6./L; //1./(1+2*6/5*(1+0.25)*pow(zh/L,2.0))
-      Omega += temp*wts[i];
-	}
+  double EI, GA;
+  Vector Rslt(3);
+  Vector e(workArea, order);
+
+  do {
+	if (Omega != temp) Omega = temp; //
+	temp =0.0;
     // Loop over the integration points
     for (int i = 0; i<numSections; i++) {
-      int order = theSections[i]->getOrder();
-      const ID &code = theSections[i]->getType();
       mu    = 1./(1.+12.*Omega);
       x     = L * pts[i];
       //phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                      /L/L;
@@ -315,8 +314,6 @@ Timoshenko2d04::update(void)
       phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
       phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
       phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
-        
-      Vector e(workArea, order);
         
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
@@ -330,15 +327,26 @@ Timoshenko2d04::update(void)
       break;
         }
       }
-        
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-    
-    }
-  
-    //error = fabs(OmegaM-temp);
-    //temp = OmegaM;
-  //}
+	  Rslt = theSections[i]->getStressResultant();
+	  const Matrix &ks = theSections[i]->getSectionTangent();
+	
+	  if (Rslt(2) != 0 && e(1) != 0) {
+	    EI = Rslt(1)/e(1);
+		GA = Rslt(2)/e(2);
+	  } else {
+        EI = ks(1,1);
+		GA = ks(2,2);
+	  }
+	  temp += EI/GA/shearCF/L/L * wts[i];
+	}
+
+	error = abs(temp - Omega);
+
+  } while (error > 1.0e-3);
+
+  opserr << "Omega: "<< Omega << endln;
 
   if (err != 0) {
     opserr << "Timoshenko2d04::update() - failed setTrialSectionDeformations(e)\n";
