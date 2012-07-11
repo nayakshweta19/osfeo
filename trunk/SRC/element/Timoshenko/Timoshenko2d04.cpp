@@ -294,7 +294,7 @@ Timoshenko2d04::update(void)
   int order = theSections[0]->getOrder();     // Section 0 for all
   const ID &code = theSections[0]->getType(); // Section 0 for all
 
-  double mu, x, phi1, phi2, phi3, phi4, phi1p, phi2p, phi3p, phi4p, error = 1.0, temp=0.;
+  double mu, x, N1,N2,N3, error = 1.0, temp=0.;
   double EI, GA;
   Vector Rslt(3);
   Vector e(workArea, order);
@@ -307,22 +307,24 @@ Timoshenko2d04::update(void)
       mu    = 1./(1.+12.*Omega);
       x     = L * pts[i];
       //phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                      /L/L;
-      phi1p =  mu*(3.*x*x+L*L*(1.+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+      //phi1p =  mu*(3.*x*x+L*L*(1.+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
       //phi2  = -mu*x*(L-x)*(x + 6.*L*Omega)                      /L/L;
-      phi2p =  mu*(3.*x*x-L*L* 6. *Omega +2.*L*x*(6.*Omega-1.))/L/L;
-      phi3  =  mu*(L-x)*(L-3.*x+12.*L*Omega)                    /L/L;
-      phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
-      phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
-      phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
-        
+      //phi2p =  mu*(3.*x*x-L*L* 6. *Omega +2.*L*x*(6.*Omega-1.))/L/L;
+      //phi3  =  mu*(L-x)*(L-3.*x+12.*L*Omega)                    /L/L;
+      //phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
+      //phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
+      //phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
+      N1 = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;
+	  N2 = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;
+	  N3 = -6.*mu*Omega/L/L;
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
       e(j) = oneOverL*v(0); break;
         case SECTION_RESPONSE_MZ:    // curvature
-      e(j) = phi3p * v(1) + phi4p * v(2); break;
+      e(j) = N1 * v(1) + N2* v(2); break;
         case SECTION_RESPONSE_VY:    // shear strain
-      e(j) = (phi1p - phi3) * v(1) + (phi2p - phi4) * v(2); break;
+      e(j) = N3 * v(1) + N3 * v(2); break;
         default:
       break;
         }
@@ -332,9 +334,9 @@ Timoshenko2d04::update(void)
 	  Rslt = theSections[i]->getStressResultant();
 	  const Matrix &ks = theSections[i]->getSectionTangent();
 	
-	  if (Rslt(2) != 0 && e(1) != 0) {
-	    EI = Rslt(1)/e(1);
-		GA = Rslt(2)/e(2);
+	  if (e(1) != 0 && e(2) != 0) {
+	    EI = abs(Rslt(1)/e(1));
+		GA = abs(Rslt(2)/e(2));
 	  } else {
         EI = ks(1,1);
 		GA = ks(2,2);
@@ -1032,22 +1034,22 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   double mu    = 1./(1.+12.*Omega);
   double x     = L * pts[sec];
   //double phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                      /L/L;
-  double phi1p =  mu*(3.*x*x+L*L*(1.+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
+  //double phi1p =  mu*(3.*x*x+L*L*(1.+6.*Omega)-4.*L*(x+3.*x*Omega))/L/L;
   //double phi2  = -mu*x*(L-x)*(x + 6.*L*Omega)                      /L/L;
-  double phi2p =  mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1.))/L/L;
-  double phi3  =  mu*(L-x)*(L-3.*x+12.*L*Omega)                    /L/L;
-  double phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
-  double phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
-  double phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
+  //double phi2p =  mu*(3.*x*x-L*L* 6. *Omega  +2.*L*x*(6.*Omega-1.))/L/L;
+  //double phi3  =  mu*(L-x)*(L-3.*x+12.*L*Omega)                    /L/L;
+  //double phi3p =  mu*(6.*x - 4.*L*(1.+3.*Omega))                   /L/L;
+  //double phi4  =  mu*x*(  3.*x+2.*L*(6.*Omega-1.))                 /L/L;
+  //double phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
 
   Matrix Bd(3,3);
   Bd.Zero();
   
   Bd(0,0) = 1./L;
-  Bd(1,1) = phi3p;      // sectional curvature
-  Bd(1,2) = phi4p;      //
-  Bd(2,1) = phi1p-phi3; // shear components 
-  Bd(2,2) = phi2p-phi4; //
+  Bd(1,1) = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;      // sectional curvature
+  Bd(1,2) = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;      //
+  Bd(2,1) = -6.*mu*Omega/L/L; // shear components 
+  Bd(2,2) = -6.*mu*Omega/L/L; //
   
   return Bd;
 }
