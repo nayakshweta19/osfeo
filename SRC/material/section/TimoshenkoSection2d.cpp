@@ -340,14 +340,11 @@ TimoshenkoSection2d::getSectionTangent(void)
  
   double y, z, w;
   double y2, z2, yz;
-  
   double d00, d01;
   double d10, d11;
-  
   double tmp;
-  
-  double five6  = 5./6.;
-  double root56 = sqrt(five6);
+  //double five6  = 5./6.;
+  //double root56 = sqrt(five6);
   
   for (int i = 0; i < numFibers; i++) {
     
@@ -677,7 +674,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
     for (i = 0; i < numFibers; i++) {
       yLoc = matData[3*i];
       zLoc = matData[3*i+1];
-      Area = matData[3*i+1];
+      Area = matData[3*i+2];
       A  += Area;
       Qz += yLoc*Area;
 	  Qy += zLoc*Area;
@@ -725,15 +722,6 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
       case SECTION_RESPONSE_VY:
 	output.tag("ResponseType","gammaY");
 	break;
-      case SECTION_RESPONSE_MY:
-	output.tag("ResponseType","kappaY");
-	break;
-      case SECTION_RESPONSE_VZ:
-	output.tag("ResponseType","gammaZ");
-	break;
-      case SECTION_RESPONSE_T:
-	output.tag("ResponseType","theta");
-	break;
       default:
 	output.tag("ResponseType","Unknown");
       }
@@ -753,15 +741,6 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
 	break;
       case SECTION_RESPONSE_VY:
 	output.tag("ResponseType","Vy");
-	break;
-      case SECTION_RESPONSE_MY:
-	output.tag("ResponseType","My");
-	break;
-      case SECTION_RESPONSE_VZ:
-	output.tag("ResponseType","Vz");
-	break;
-      case SECTION_RESPONSE_T:
-	output.tag("ResponseType","T");
 	break;
       default:
 	output.tag("ResponseType","Unknown");
@@ -783,15 +762,6 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
       case SECTION_RESPONSE_VY:
 	output.tag("ResponseType","gammaY");
 	break;
-      case SECTION_RESPONSE_MY:
-	output.tag("ResponseType","kappaY");
-	break;
-      case SECTION_RESPONSE_VZ:
-	output.tag("ResponseType","gammaZ");
-	break;
-      case SECTION_RESPONSE_T:
-	output.tag("ResponseType","theta");
-	break;
       default:
 	output.tag("ResponseType","Unknown");
       }
@@ -807,15 +777,6 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
 	break;
       case SECTION_RESPONSE_VY:
 	output.tag("ResponseType","Vy");
-	break;
-      case SECTION_RESPONSE_MY:
-	output.tag("ResponseType","My");
-	break;
-      case SECTION_RESPONSE_VZ:
-	output.tag("ResponseType","Vz");
-	break;
-      case SECTION_RESPONSE_T:
-	output.tag("ResponseType","T");
 	break;
       default:
 	output.tag("ResponseType","Unknown");
