@@ -316,7 +316,7 @@ Timoshenko2d04::update(void)
       //phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
       N1 = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;
 	  N2 = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;
-	  N3 = -6.*mu*Omega/L/L;
+	  N3 = 6.*mu*Omega;
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
@@ -331,17 +331,17 @@ Timoshenko2d04::update(void)
       }
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-	  Rslt = theSections[i]->getStressResultant();
+	  //Rslt = theSections[i]->getStressResultant();
 	  const Matrix &ks = theSections[i]->getSectionTangent();
 	
-	  if (e(1) != 0 && e(2) != 0) {
-	    EI = abs(Rslt(1)/e(1));
-		GA = abs(Rslt(2)/e(2));
-	  } else {
+	  //if (e(1) != 0 && e(2) != 0) {
+	  //  EI = Rslt(1)/e(1);
+		//GA = Rslt(2)/e(2);
+	  //} else {
         EI = ks(1,1);
 		GA = ks(2,2);
-	  }
-	  temp += EI/GA/shearCF/L/L * wts[i];
+	  //}
+	  temp += EI/GA/shearCF/L/L /numSections;//* wts[i]
 	}
 
 	error = abs(temp - Omega);
@@ -814,13 +814,10 @@ Timoshenko2d04::recvSelf(int commitTag, Channel &theChannel,
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
-	  switch (sectClassTag) {
-	  default:
-		  opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
-		  theSections[i] = new FiberSection2d();
-		  break;
-	  }
-      if (theSections[i] == 0) {
+	  opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
+	  theSections[i] = new FiberSection2d();
+
+	  if (theSections[i] == 0) {
 	opserr << "Timoshenko2d04::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
 	exit(-1);
@@ -847,12 +844,9 @@ Timoshenko2d04::recvSelf(int commitTag, Channel &theChannel,
       if (theSections[i]->getClassTag() !=  sectClassTag) {
 	// delete the old section[i] and create a new one
 	delete theSections[i];
-	switch (sectClassTag) {
-	default:
-		opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
-		theSections[i] = new FiberSection2d();
-		break;
-	}
+	opserr << "Timoshenko2d04::recvSelf() --default secTag at sec " << i+1 << endln;
+	theSections[i] = new FiberSection2d();
+	
 	if (theSections[i] == 0) {
 	opserr << "Timoshenko2d04::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
@@ -1048,8 +1042,8 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   Bd(0,0) = 1./L;
   Bd(1,1) = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;      // sectional curvature
   Bd(1,2) = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;      //
-  Bd(2,1) = -6.*mu*Omega/L/L; // shear components 
-  Bd(2,2) = -6.*mu*Omega/L/L; //
+  Bd(2,1) = 6.*mu*Omega; // shear components 
+  Bd(2,2) = 6.*mu*Omega; //
   
   return Bd;
 }
