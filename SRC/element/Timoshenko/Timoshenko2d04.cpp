@@ -302,11 +302,11 @@ Timoshenko2d04::update(void)
 
   do {
 	if (Omega != temp) Omega = temp; //
-	//opserr << "\tTrial Omega: "<< Omega << endln;
+	opserr << "\tTrial Omega: "<< Omega << endln;
 	temp =0.0;
     // Loop over the integration points
     for (int i = 0; i<numSections; i++) {
-	  //opserr << "\t\tSection point: " << i << endln;
+	  opserr << "\t\tSection point: " << i << endln;
       mu    = 1./(1.+12.*Omega);
       x     = L * pts[i];
       //phi1  =  mu*x*(L-x)*(L-x+6.*L*Omega)                      /L/L;
@@ -319,8 +319,8 @@ Timoshenko2d04::update(void)
       //phi4p =  mu*2.*(3.*x+L*(6.*Omega-1.))                     /L/L;
       N1 = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;
 	  N2 = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;
-	  N3 = 12.*mu*Omega*x/L;
-	  N4 = 12.*mu*Omega*(1-x/L);
+	  N3 = -12.*mu*Omega*x/L;
+	  N4 = -12.*mu*Omega*(1-x/L);
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
@@ -335,7 +335,7 @@ Timoshenko2d04::update(void)
       }
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-	  //opserr << "\t\t\t\t\t Vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
+	  opserr << "\t\t\t\t\t Vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
 	  //Rslt = theSections[i]->getStressResultant();
 	  const Matrix &ks = theSections[i]->getSectionTangent();
 	
@@ -347,14 +347,14 @@ Timoshenko2d04::update(void)
 		GA = ks(2,2);
 	  }
 	  temp += EI/GA/shearCF/L/L * wts[i]; //(1.-wts[i])/(numSections-1);
-	  //opserr << "\t\t\t\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
+	  opserr << "\t\t\t\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
 	}
 
 	error = abs(temp - Omega);
-	//opserr << "\tmean Omega=" << temp << endln;
+	opserr << "\tmean Omega=" << temp << endln;
   } while (error > tol);
 
-  //opserr << "Final Omega: "<< Omega << endln;
+  opserr << "Final Omega: "<< Omega << endln;
 
   if (err != 0) {
     opserr << "Timoshenko2d04::update() - failed setTrialSectionDeformations(e)\n";
@@ -1048,8 +1048,8 @@ Timoshenko2d04::getBd(int sec, const Vector &v, double L)
   Bd(0,0) = 1./L;
   Bd(1,1) = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;      // sectional curvature
   Bd(1,2) = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;      //
-  Bd(2,1) = 12.*mu*Omega*x/L; // shear components 
-  Bd(2,2) = 12.*mu*Omega*(1-x/L); //
+  Bd(2,1) = -12.*mu*Omega*x/L; // shear components 
+  Bd(2,2) = -12.*mu*Omega*(1-x/L); //
 
   return Bd;
 }
