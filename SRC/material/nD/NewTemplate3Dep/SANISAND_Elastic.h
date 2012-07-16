@@ -23,56 +23,58 @@
 // VERSION:
 // LANGUAGE:          C++
 // TARGET OS:         
-// DESIGNER:          Zhao Cheng, Boris Jeremic
-// PROGRAMMER:        Zhao Cheng 
-// Note:              Helpful discuss with Mahdi Taiebat and Professor Y.F. Dafalias
-// DATE:              Fall 2005
-// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec. 2006
+// DESIGNER:          Mahdi Taiebat, Boris Jeremic
+// PROGRAMMER:        Mahdi Taiebat, Boris Jeremic 
+// Note:              
+// DATE:              Spring 2007
+// UPDATE HISTORY:    Nima Tafazzoli updated for API (Mar 2009)
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 
-#ifndef DM04_Elastic_H
-#define DM04_Elastic_H
+#ifndef SANISAND_Elastic_H
+#define SANISAND_Elastic_H
 
 #include "ElasticState.h"
-#define ES_TAG_DM04 123001
+#define ES_TAG_SANISAND 123005
 
-class DM04_Elastic : public ElasticState
+class SANISAND_Elastic : public ElasticState
 {  
   public:
   
-    DM04_Elastic() : ElasticState(ES_TAG_DM04) {}; //Guanzhou added for parallel processing
+    SANISAND_Elastic() : ElasticState(ES_TAG_SANISAND) {}; //Guanzhou added for parallel processing
 
-//! rf: Dafalias-Manzari 2004
-//! Elastic function for Dafalias-Manzari:
+
+//! Reference: Taiebat & Dafalias (2008)
+//! Elastic function for SANISAND:
 //! inputs:
-//! - G0_in: to locate the position in the defined (constant) MaterialParameter command for G0
-//! - v_in: to locate the position in the defined (constant) MaterialParameter command for v (Poisson's ratio)
-//! - Pat_in: to locate the position in the defined (constant) MaterialParameter command for Pat (atmospheric pressure)
-//! - k_c_in,: to locate the position in the defined (constant) MaterialParameter command for k_c (pressure cut-off ratio)
-//! - e0_in: to locate the position in the defined (constant) MaterialParameter command for e0 (initial viod ratio)
-//! - stresstensor& initialStress: to input the intial stress
-//! - straintensor& initialStrain: to input the intial strain
-//!
-    DM04_Elastic(int G0_in, 
-                 int v_in,
-                 int Pat_in,
-                 int k_c_in,
-                 int e0_in,
-                 const stresstensor& initialStress = zerostress, 
-                 const straintensor& initialStrain = zerostrain);                    
+//! - G0_in:                         Reference elastic shear modulus (same unit as stress);
+//! - K0_in:                         Reference elastic bulk modulus (same unit as stress); 
+//! - Pat_in:                        Atmospheric pressure;
+//! - k_c_in:                        cut-off factor;                
+//!                                  for p < k_c*Pat, use p = k_c*Pat for calculation of G;
+//!                                  (a default value of k_c = 0.01 should work fine)
+//! - e0_in:                         initial void ratio;
+//! - stresstensor& initialStress:   stress tensor;
+//! - straintensor& initialStrain:   strain tensor;
+
+    SANISAND_Elastic(int G0_in, 
+                     int K0_in,
+                     int Pat_in,
+                     int k_c_in,
+                     int e0_in,
+                     const stresstensor& initialStress = zerostress, 
+                     const straintensor& initialStrain = zerostrain);                    
     
     ElasticState* newObj();
 
-//! rf: Dafalias-Manzari 2004
+//! Reference: Taiebat & Dafalias (2008)
 //! getElasticStiffness: 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter
-    
     const BJtensor& getElasticStiffness (const MaterialParameter &MaterialParameter_in) const;
 
-//! rf: Dafalias-Manzari 2004
+//! Reference: Taiebat & Dafalias (2008)
 //! getStress: 
     const stresstensor& getStress() const;    
     
@@ -82,33 +84,33 @@ class DM04_Elastic : public ElasticState
 //! recvSelf: for parallel computing
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
 
- private:
-
-//! rf: Dafalias-Manzari 2004
+  private:
+  
+//! Reference: Taiebat & Dafalias (2008)
 //! getG0: to get 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter 
     double getG0(const MaterialParameter &MaterialParameter_in) const;
 
-//! rf: Dafalias-Manzari 2004
-//! getv: to get 
+//! Reference: Taiebat & Dafalias (2008)
+//! getK0: to get 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter 
-    double getv(const MaterialParameter &MaterialParameter_in) const;
+    double getK0(const MaterialParameter &MaterialParameter_in) const;
 
-//! rf: Dafalias-Manzari 2004
+//! Reference: Taiebat & Dafalias (2008)
 //! getPat: to get 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter 
     double getPat(const MaterialParameter &MaterialParameter_in) const;
 
-//! rf: Dafalias-Manzari 2004
+//! Reference: Taiebat & Dafalias (2008)
 //! getk_c: to get 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter 
     double getk_c(const MaterialParameter &MaterialParameter_in) const;
 
-//! rf: Dafalias-Manzari 2004
+//! Reference: Taiebat & Dafalias (2008)
 //! gete0: to get 
 //! inputs:
 //! - MaterialParameter &MaterialParameter_in: the class of material parameter 
@@ -119,12 +121,11 @@ class DM04_Elastic : public ElasticState
     static BJtensor ElasticStiffness;
   
     int G0_index;   
-    int v_index;
+    int K0_index;
     int Pat_index;
     int k_c_index;
     int e0_index;    
 };
 
 #endif
-
 

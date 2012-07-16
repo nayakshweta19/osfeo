@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -37,26 +37,64 @@
 #include "TensorEvolution.h"
 
 straintensor TensorEvolution::TensorEvolutionHij;
+tensor TensorEvolution::TE_tensorR2(2, def_dim_2, 0.0);
+tensor TensorEvolution::TE_tensorR4(4, def_dim_4, 0.0);
 
-TensorEvolution::TensorEvolution(int tag)
-  :MovableObject(tag)
-{
+///////////////////////////////////////////////////////////////////////////////
+//Guanzhou TensorEvolution::TensorEvolution()
+//Guanzhou {
+//Guanzhou 
+//Guanzhou }
 
-}
-
-//TensorEvolution* TensorEvolution::newObj()
-//{
-//	TensorEvolution* nObj = new TensorEvolution();
-//	
-//	return nObj;
-//}
-
-const straintensor& TensorEvolution::Hij(const straintensor& plastic_flow, const stresstensor& Stre, 
+///////////////////////////////////////////////////////////////////////////////
+const straintensor& TensorEvolution::Hij(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                                          const straintensor& Stra, const MaterialParameter& material_parameter)
 {   
+    straintensor Z2;
+    TensorEvolution::TensorEvolutionHij.Initialize(Z2);
+
     return TensorEvolution::TensorEvolutionHij;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+const tensor& TensorEvolution::DHij_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                                         const straintensor& Stra, const MaterialParameter& material_parameter)
+{   
+    tensor TE_R4(4, def_dim_4, 0.0);
+    TensorEvolution::TE_tensorR4.Initialize(TE_R4);
+    
+    return TensorEvolution::TE_tensorR4;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& TensorEvolution::DHij_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                                         const straintensor& Stra, const MaterialParameter& material_parameter)
+{   
+    tensor TE_R2(2, def_dim_2, 0.0);
+    TensorEvolution::TE_tensorR2.Initialize(TE_R2);
+    
+    return TensorEvolution::TE_tensorR2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& TensorEvolution::DHij_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                                         const straintensor& Stra, const MaterialParameter& material_parameter)
+{   
+    tensor TE_R4(4, def_dim_4, 0.0);
+    TensorEvolution::TE_tensorR4.Initialize(TE_R4);
+    
+    return TensorEvolution::TE_tensorR4;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& TensorEvolution::DHij_Dkin2(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                                         const straintensor& Stra, const MaterialParameter& material_parameter)
+{   
+    tensor TE_R4(4, def_dim_4, 0.0);
+    TensorEvolution::TE_tensorR4.Initialize(TE_R4);
+    
+    return TensorEvolution::TE_tensorR4;
+}
 
 #endif
 

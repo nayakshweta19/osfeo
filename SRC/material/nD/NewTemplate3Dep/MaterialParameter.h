@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -34,47 +34,52 @@
 #ifndef MaterialParameter_H
 #define MaterialParameter_H
 
-#define MATERIAL_PARAMATER_TAGS_MaterialParameter 1
-
-#include <MovableObject.h>
 #include <stresst.h>
-		
+#include <FEM_ObjectBroker.h>
+#include <Channel.h>
+# include <ID.h>
+# include <Vector.h>
+#include <MovableObject.h>
+
+
 class MaterialParameter : public MovableObject
 {  
   public:
 
-    MaterialParameter(const double *Material_Parameter_in = NULL, 
-                      int Num_Material_Parameter_in = 0, 
+    MaterialParameter(const double *Material_Constant_in = NULL, 
+                      int Num_Material_Constant_in = 0, 
 		      const double *Internal_Scalar_in = NULL, 
 		      int Num_Internal_Scalar_in = 0, 
 		      const stresstensor *Internal_Tensor_in = NULL, 
 		      int Num_Internal_Tensor_in = 0);
-    MaterialParameter(const double *Material_Parameter_in, 
-                      int Num_Material_Parameter_in, 
+    MaterialParameter(const double *Material_Constant_in, 
+                      int Num_Material_Constant_in, 
 		      const stresstensor *Internal_Tensor_in, 
 		      int Num_Internal_Tensor_in);
+    //Guanzhou MaterialParameter( );
     ~MaterialParameter( );
     MaterialParameter(const MaterialParameter &refer_MaterialParameter);
     MaterialParameter* newObj();
 
-    int getNum_Material_Parameter() const;
+    int getNum_Material_Constant() const;
     int getNum_Internal_Scalar() const;
     int getNum_Internal_Tensor() const;
-    double getMaterial_Parameter(int which) const;
+    double getMaterial_Constant(int which) const;
     double getInternal_Scalar(int which) const;
     const stresstensor& getInternal_Tensor(int which) const;
     
-    int setMaterial_Parameter(int which, double newMaterial_Parameter);
+    int setMaterial_Constant(int which, double newMaterial_Constant);
     int setInternal_Scalar(int which, double newInternal_Scalar);
     int setInternal_Tensor(int which, const stresstensor &newInternal_Tensor);    
-
+  
+    //Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-  
+
   private:
                  
-    double *Material_Parameter; 
-    int Num_Material_Parameter;
+    double *Material_Constant; 
+    int Num_Material_Constant;
     double *Internal_Scalar;    
     int Num_Internal_Scalar;
     stresstensor *Internal_Tensor;  

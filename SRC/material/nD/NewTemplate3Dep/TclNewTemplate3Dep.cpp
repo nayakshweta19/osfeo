@@ -55,18 +55,26 @@
 #include "elnp_Elastic.h"
 #include "PressureDependent_Elastic.h"
 #include "DM04_Elastic.h"
+//Mahdi
+#include "SANISAND_Elastic.h"
 
 #include "YieldFunction.h"
 #include "DP_YF.h"
 #include "VM_YF.h"
+#include "RMC_YF.h"
 #include "CC_YF.h"
 #include "DM04_YF.h"
+//Mahdi
+#include "SANISAND_YF.h"
 
 #include "PlasticFlow.h"
 #include "DP_PF.h"
 #include "VM_PF.h"
+#include "RMC_PF.h"
 #include "CC_PF.h"
 #include "DM04_PF.h"
+//Mahdi
+#include "SANISAND_PF.h"
 
 #include "ScalarEvolution.h"
 #include "Linear_Eeq.h"
@@ -78,6 +86,10 @@
 #include "AF_Eij.h"
 #include "DM04_alpha_Eij.h"
 #include "DM04_z_Eij.h"
+//Mahdi
+#include "SANISAND_p0_bar.h"
+#include "SANISAND_alpha_Eij.h"
+#include "SANISAND_z_Eij.h"
 
 int n_mc = 0;
 int n_is = 0;
@@ -90,6 +102,9 @@ PlasticFlow*        EvaluatePlasticFlow(ClientData, Tcl_Interp*, TCL_Char* tclSt
 ScalarEvolution**   EvaluateSE(ClientData, Tcl_Interp*, TCL_Char* tclString);
 TensorEvolution**   EvaluateTE(ClientData, Tcl_Interp*, TCL_Char* tclString);
 
+const stresstensor& EvaluateStressTensor(ClientData, Tcl_Interp*, TCL_Char* tclString);
+
+static stresstensor st00;
 
 static void cleanup(TCL_Char **argv) {
     Tcl_Free((char *) argv);
@@ -110,6 +125,7 @@ TclModelBuilder_addNewTemplate3Dep(ClientData clientData, Tcl_Interp *interp,  i
   ScalarEvolution**   SSE = NULL;
   TensorEvolution**   TTE = NULL;
   int CI = 0;
+  int ss = 1;
 
   int loc = eleArgStart;
 
@@ -181,6 +197,14 @@ TclModelBuilder_addNewTemplate3Dep(ClientData clientData, Tcl_Interp *interp,  i
       }
       loc += 2;
     }
+
+    else if ( strcmp(argv[loc],"-subStep") == 0 ) {
+      if (Tcl_GetInt(interp, argv[loc+1], &ss) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid  sub-step index " << argv[loc] << endln;
+        exit (1);
+      }
+      loc += 2;
+    }
     
     else {
         opserr << "Warning:  TclNewTemplate3Dep - unknown keyword/command : " << argv[loc] << endln;
@@ -192,9 +216,9 @@ TclModelBuilder_addNewTemplate3Dep(ClientData clientData, Tcl_Interp *interp,  i
   NewTemplate3Dep *theMaterial = 0;
 
   if ( (MatP != NULL) && (ES != NULL) && (YF != NULL) && (PF != NULL) && (SSE != NULL) )
-    theMaterial = new NewTemplate3Dep(tag, MatP, ES, YF, PF, SSE, TTE, CI);
+    theMaterial = new NewTemplate3Dep(tag, MatP, ES, YF, PF, SSE, TTE, CI, ss);
   else if ( (MatP != NULL) && (ES != NULL) && (YF != NULL) && (PF != NULL) && (SSE == NULL) )
-    theMaterial = new NewTemplate3Dep(tag, MatP, ES, YF, PF, TTE, CI);
+    theMaterial = new NewTemplate3Dep(tag, MatP, ES, YF, PF, TTE, CI, ss);
   else
     opserr << "Warning: invalid args used to create a NewTemplate3Dep material." << endln;
 
@@ -374,7 +398,7 @@ ElasticState *EvaluateElasticState(ClientData clientData, Tcl_Interp *interp, TC
     if (argc > (2 + 9) ) {
       double a[9];
         for (int j = 0; j < 9; j++) {
-          if (Tcl_GetDouble(interp, argv[4+1+j], &a[j]) != TCL_OK) {
+          if (Tcl_GetDouble(interp, argv[2+1+j], &a[j]) != TCL_OK) {
             opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[2+1+j] << endln;
             exit (1);
           }
@@ -501,7 +525,7 @@ ElasticState *EvaluateElasticState(ClientData clientData, Tcl_Interp *interp, TC
     if (argc > (5 + 18) ) {
       double a[9];
         for (int j = 0; j < 9; j++) {
-          if (Tcl_GetDouble(interp, argv[4+10+j], &a[j]) != TCL_OK) {
+          if (Tcl_GetDouble(interp, argv[5+10+j], &a[j]) != TCL_OK) {
             opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[5+10+j] << endln;
             exit (1);
           }
@@ -574,6 +598,67 @@ ElasticState *EvaluateElasticState(ClientData clientData, Tcl_Interp *interp, TC
     ElS = new DM04_Elastic(a1, a2, a3, a4, a5, initStre, initStra);
   }
 
+//Mahdi
+ // 5. SANISAND elastic model
+ else if ( strcmp(argv[0],"SANISAND") == 0 ) {
+   int a1 = 0;
+   int a2 = 0;
+   int a3 = 0;
+   int a4 = 0;
+   int a5 = 0;
+   stresstensor initStre;
+   straintensor initStra;
+
+   if (argc > 5 ) {
+     if (Tcl_GetInt(interp, argv[1], &a1) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[1] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[2], &a2) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[2] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[3], &a3) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[3] << endln;
+       exit (1);
+     }    
+     if (Tcl_GetInt(interp, argv[4], &a4) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[4] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[5], &a5) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[5] << endln;
+       exit (1);
+     }      
+   }
+   if (argc > (5 + 9) ) {
+     double a[9];
+       for (int j = 0; j < 9; j++) {
+         if (Tcl_GetDouble(interp, argv[5+1+j], &a[j]) != TCL_OK) {
+           opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[5+1+j] << endln;
+           exit (1);
+         }
+       }
+       initStre.val(1,1) = a[0]; initStre.val(1,2) = a[1]; initStre.val(1,3) = a[2];
+       initStre.val(2,1) = a[3]; initStre.val(2,2) = a[4]; initStre.val(2,3) = a[5];
+       initStre.val(3,1) = a[6]; initStre.val(3,2) = a[7]; initStre.val(3,3) = a[8];
+   }
+   if (argc > (5 + 18) ) {
+     double a[9];
+       for (int j = 0; j < 9; j++) {
+         if (Tcl_GetDouble(interp, argv[5+10+j], &a[j]) != TCL_OK) {
+           opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[5+10+j] << endln;
+           exit (1);
+         }
+       }
+       initStra.val(1,1) = a[0]; initStra.val(1,2) = a[1]; initStra.val(1,3) = a[2];
+       initStra.val(2,1) = a[3]; initStra.val(2,2) = a[4]; initStra.val(2,3) = a[5];
+       initStra.val(3,1) = a[6]; initStra.val(3,2) = a[7]; initStra.val(3,3) = a[8];
+   }
+
+   ElS = new SANISAND_Elastic(a1, a2, a3, a4, a5, initStre, initStra);
+ }
+
   // if others
   else {
     opserr << "Warning: invalid elastic state object: " << argv[0] << endln;
@@ -641,6 +726,40 @@ YieldFunction *EvaluateYieldFunction(ClientData clientData, Tcl_Interp *interp, 
   else if ( (strcmp(argv[0],"Drucker-Prager") == 0) ) {
     int a1 = -1;  int b1 = 0;
     int a2 = -1;  int b2 = 0;
+
+    if (argc <= 2)  {
+        opserr << "Warning:  TclNewTemplate3Dep - Yield Function (DP) - input parameters < 2" << endln;
+        exit (1);
+    }
+
+    if (argc > 2 ) {
+      if (Tcl_GetInt(interp, argv[1], &a1) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[1] << endln;
+        exit (1);
+      }
+      if (Tcl_GetInt(interp, argv[2], &b1) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[2] << endln;
+        exit (1);
+      }
+    }
+    if (argc > 4 ) {
+      if (Tcl_GetInt(interp, argv[3], &a2) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[3] << endln;
+        exit (1);
+      }
+      if (Tcl_GetInt(interp, argv[4], &b2) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[4] << endln;
+        exit (1);
+      }
+    }   
+
+    YF = new DP_YF(a1,b1, a2,b2);
+  }
+
+  // 3. RMC (WW) Yield Function
+  else if ( (strcmp(argv[0],"Rounded-Mohr-Coulomb") == 0) || (strcmp(argv[0],"RMC") == 0) ) {
+    int a1 = -1;  int b1 = 0;
+    int a2 = -1;  int b2 = 0;
     int a3 = -1;  int b3 = 0;
 
     if (argc <= 2)  {
@@ -679,10 +798,10 @@ YieldFunction *EvaluateYieldFunction(ClientData clientData, Tcl_Interp *interp, 
       }
     }
 
-    YF = new DP_YF(a1,b1, a2,b2, a3, b3);
-  }
-
-  // 3. Cam-Clay Yield Function
+    YF = new RMC_YF(a1,b1, a2,b2, a3, b3);
+  }  
+  
+  // 4. Cam-Clay Yield Function
   else if ( (strcmp(argv[0],"Cam-Clay") == 0) ) {
     int a1 = -1;  int b1 = 0;
     int a2 = -1;  int b2 = 0;
@@ -714,7 +833,7 @@ YieldFunction *EvaluateYieldFunction(ClientData clientData, Tcl_Interp *interp, 
     YF = new CC_YF(a1,b1, a2,b2);
   }
 
-  // 4. Dafalias-Manzari Yield Function
+  // 5. Dafalias-Manzari Yield Function
   else if ( strcmp(argv[0],"Dafalias-Manzari") == 0 ) {
     int a1 = -1;  int b1 = 0;
     int a2 = -1;  int b2 = 0;
@@ -745,6 +864,49 @@ YieldFunction *EvaluateYieldFunction(ClientData clientData, Tcl_Interp *interp, 
 
     YF = new DM04_YF(a1,b1, a2,b2);
   }                                            
+
+//Mahdi
+
+ // 6. SANISAND Yield Function
+ else if ( strcmp(argv[0],"SANISAND") == 0 ) {
+   int a1 = -1;  int b1 = 0;
+   int a2 = -1;  int b2 = 0;
+   int a3 = -1;  int b3 = 0;
+
+   if (argc <= 3)  {
+       opserr << "Warning:  TclNewTemplate3Dep - Yield Function (SANISAND) - input parameters < 3" << endln;
+       exit (1);
+   }
+
+   if (argc > 3 ) {
+     if (Tcl_GetInt(interp, argv[1], &a1) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[1] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[2], &b1) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[2] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[3], &a2) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[3] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[4], &b2) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[4] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[5], &a3) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[5] << endln;
+       exit (1);
+     }
+     if (Tcl_GetInt(interp, argv[6], &b3) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[6] << endln;
+       exit (1);
+     }
+   }   
+
+   YF = new SANISAND_YF(a1,b1, a2,b2, a3,b3);
+ }                                            
 
   // if others
   else {
@@ -832,7 +994,41 @@ PlasticFlow *EvaluatePlasticFlow(ClientData clientData, Tcl_Interp *interp, TCL_
     PF = new DP_PF(a1,b1, a2,b2);
   }
 
-  // 3. Cam-Clay Plastic Flow
+  // 3. RMC (WW) Yield Function
+  else if ( (strcmp(argv[0],"Rounded-Mohr-Coulomb") == 0) || (strcmp(argv[0],"RMC") == 0) ) {
+    int a1 = -1;  int b1 = 0;
+    int a2 = -1;  int b2 = 0;
+
+    if (argc <= 2)  {
+        opserr << "Warning:  TclNewTemplate3Dep - Plastic Flow (DP) - input parameters < 2" << endln;
+        exit (1);
+    }
+
+    if (argc > 2 ) {
+      if (Tcl_GetInt(interp, argv[1], &a1) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[1] << endln;
+        exit (1);
+      }
+      if (Tcl_GetInt(interp, argv[2], &b1) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[2] << endln;
+        exit (1);
+      }
+    }
+    if (argc > 4 ) {
+      if (Tcl_GetInt(interp, argv[3], &a2) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[3] << endln;
+        exit (1);
+      }
+      if (Tcl_GetInt(interp, argv[4], &b2) != TCL_OK) {
+        opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[4] << endln;
+        exit (1);
+      }
+    }   
+    
+    PF = new RMC_PF(a1,b1, a2,b2);
+  }  
+  
+  // 4. Cam-Clay Plastic Flow
   else if ( (strcmp(argv[0],"Cam-Clay") == 0) ) {
     int a1 = -1;  int b1 = 0;
     int a2 = -1;  int b2 = 0;
@@ -866,7 +1062,7 @@ PlasticFlow *EvaluatePlasticFlow(ClientData clientData, Tcl_Interp *interp, TCL_
     PF = new CC_PF(a1,b1, a2,b2);
   }
 
-  // 4. Dafalias--Manzari Plastic Flow
+  // 5. Dafalias--Manzari Plastic Flow
   else if ( strcmp(argv[0],"Dafalias-Manzari") == 0 ) {
     int a[12] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};  
     int b[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
@@ -892,6 +1088,34 @@ PlasticFlow *EvaluatePlasticFlow(ClientData clientData, Tcl_Interp *interp, TCL_
     PF = new DM04_PF( a[0],b[0], a[1],b[1], a[2],b[2], a[3],b[3], a[4],b[4], a[5],b[5], a[6],b[6], 
                       a[7],b[7], a[8],b[8], a[9],b[9], a[10],b[10], a[11],b[11]);
   }
+
+//Mahdi
+ // 6. SANISAND Plastic Flow
+ else if ( strcmp(argv[0],"SANISAND") == 0 ) {
+   int a[13] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};  
+   int b[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+   if (argc <= 24)  {
+       opserr << "Warning:  TclNewTemplate3Dep - Plastic Flow (SANISAND) - input parameters < 24" << endln;
+       exit (1);
+   }
+
+   if (argc > 26 ) {
+     for (int i = 0; i < 13; i++) {
+       if (Tcl_GetInt(interp, argv[i*2+1], &a[i]) != TCL_OK) {
+         opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[i*2+1] << endln;
+         exit (1);
+       }
+       if (Tcl_GetInt(interp, argv[i*2+2], &b[i]) != TCL_OK) {
+         opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[i*2+2] << endln;
+         exit (1);
+       }
+     }
+   }  
+
+   PF = new SANISAND_PF( a[0],b[0], a[1],b[1], a[2],b[2], a[3],b[3], a[4],b[4], a[5],b[5], a[6],b[6], 
+                     a[7],b[7], a[8],b[8], a[9],b[9], a[10],b[10], a[11],b[11], a[12],b[12]);
+ }
 
   // if others
   else {
@@ -944,17 +1168,33 @@ ScalarEvolution** EvaluateSE(ClientData clientData, Tcl_Interp *interp, TCL_Char
 
        // CC
        else if ( strcmp(argv[0],"Cam-Clay") == 0 ) {
-         int a[4] = {0,0,0,0};
-         for (int j = 0; j < 4; j++) {
+         int a[5] = {0,0,0,0,0};
+         for (int j = 0; j < 5; j++) {
            loc++;
            if (Tcl_GetInt(interp, argv[loc], &a[j]) != TCL_OK) {
              opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[loc] << endln;
              exit (1);
            }
          }   
-         ISS[i] = new CC_Ev(a[0], a[1], a[2], a[3]);
+         ISS[i] = new CC_Ev(a[0], a[1], a[2], a[3], a[4]);
          loc++;
        }
+
+//Mahdi
+      // SANISAND_p0
+      else if ( strcmp(argv[loc],"SANISAND") == 0 ) {
+        int a[9] = {0,0,0,0,0,0,0,0,0};
+        for (int j = 0; j < 9; j++) {
+          loc++;
+          if (Tcl_GetInt(interp, argv[loc], &a[j]) != TCL_OK) {
+            opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[loc] << endln;
+            exit (1);
+          }
+        }   
+        ISS[i] = new SANISAND_p0_bar(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+        loc++;
+      }
+
 
        // other
        else {
@@ -1036,17 +1276,47 @@ TensorEvolution** EvaluateTE(ClientData clientData, Tcl_Interp *interp, TCL_Char
 
        // DM04-z
        else if ( strcmp(argv[loc],"Dafalias-Manzari-fabric") == 0 ) {
-         int a[5] = {0,0,0,0,0};
-         for (int j = 0; j < 5; j++) {
+         int a[14] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+         for (int j = 0; j < 14; j++) {
            loc++;
            if (Tcl_GetInt(interp, argv[loc], &a[j]) != TCL_OK) {
              opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[loc] << endln;
              exit (1);
            }
          }   
-         ITT[i] = new DM04_z_Eij(a[0], a[1], a[2], a[3], a[4]);
+         ITT[i] = new DM04_z_Eij(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
          loc++;
        }
+
+//Mahdi
+
+      // SANISAND-alpha
+      else if ( strcmp(argv[loc],"SANISAND") == 0 ) {
+        int a[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+        for (int j = 0; j < 13; j++) {
+          loc++;
+          if (Tcl_GetInt(interp, argv[loc], &a[j]) != TCL_OK) {
+            opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[loc] << endln;
+            exit (1);
+          }
+        }   
+        ITT[i] = new SANISAND_alpha_Eij(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12]);
+        loc++;
+      }
+
+      // SANISAND-z
+      else if ( strcmp(argv[loc],"SANISAND-fabric") == 0 ) {
+        int a[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        for (int j = 0; j < 16; j++) {
+          loc++;
+          if (Tcl_GetInt(interp, argv[loc], &a[j]) != TCL_OK) {
+            opserr << "Warning:  TclNewTemplate3Dep - invalid input " << argv[loc] << endln;
+            exit (1);
+          }
+        }   
+        ITT[i] = new SANISAND_z_Eij(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
+        loc++;
+      }
 
        // other
        else {
@@ -1061,151 +1331,38 @@ TensorEvolution** EvaluateTE(ClientData clientData, Tcl_Interp *interp, TCL_Char
 }
 
 
-
-
-
-MaterialParameter *
-getMaterialParameter(int classTag)
+//**************************************************************************************
+// Function - to create a Stress Tensor object
+const stresstensor& EvaluateStressTensor(ClientData clientData, Tcl_Interp *interp, TCL_Char *tclString)
 {
-  switch(classTag) {
+  int argc;
+  TCL_Char **argv;
 
-  case MATERIAL_PARAMATER_TAGS_MaterialParameter:
-    return new MaterialParameter();
-    
-  default:
-    opserr << "TclNewTemplate3Dep::getMaterialParameter - unknown type: " << classTag << endln;
-    return 0;
+  // split the list
+  if (Tcl_SplitList(interp, tclString, &argc, &argv) != TCL_OK)
+    exit (1);
+
+  if (argc == 0)
+    exit (1);
+
+  int loc = 0;
+  double a[9];
+
+  for (int j = 0; j < 9; j++) {
+    if (Tcl_GetDouble(interp, argv[loc++], &a[j]) != TCL_OK) {
+       opserr << "Warning:  TclNewTemplate3Dep - invalid stresstensor input " << argv[loc] << endln;
+       exit (1);
+    }
   }
-  return 0;
+ 
+  st00.val(1,1) = a[0]; st00.val(1,2) = a[1]; st00.val(1,3) = a[2];
+  st00.val(2,1) = a[3]; st00.val(2,2) = a[4]; st00.val(2,3) = a[5];
+  st00.val(3,1) = a[6]; st00.val(3,2) = a[7]; st00.val(3,3) = a[8];
+      
+  cleanup(argv);
+
+  return st00;
 }
 
-ElasticState      *
-getElasticState(int classTag)
-{
-  switch(classTag) {
-
-  case ELASTICSTATE_TAGS_Isotropic_Elastic:
-    return new Isotropic_Elastic();
-
-  case ELASTICSTATE_TAGS_elnp_Elastic:
-    return new elnp_Elastic();    
-
-  case ELASTICSTATE_TAGS_PressureDependent_Elastic:
-    return new PressureDependent_Elastic();
-
-  case ELASTICSTATE_TAGS_DM04_Elastic:
-    return new DM04_Elastic();
-
-  default:
-    opserr << "TclNewTemplate3Dep::getElasticState - unknown type: " << classTag << endln;
-    return 0;
-  }
-
-  return 0;
-}
-
-YieldFunction     *
-getYieldFunction(int classTag)
-{
-  switch(classTag) {
-
-  case YIELDFUNCTION_TAGS_VM_YF:
-    return new VM_YF();
-
-    /*
-  case YIELDFUNCTION_TAGS_RMC_YF:
-    return new RMC_YF();
-    */
-
-  case YIELDFUNCTION_TAGS_DP_YF:
-    return new DP_YF();
-
-  case YIELDFUNCTION_TAGS_CC_YF:
-    return new CC_YF();
-
-  case YIELDFUNCTION_TAGS_DM04_YF:
-    return new DM04_YF();
-
-  default:
-    opserr << "TclNewTemplate3Dep::getYieldFunction - unknown type: " << classTag << endln;
-    return 0;
-  }
 
 
-  return 0;
-}
-
-PlasticFlow       *
-getPlasticFlow(int classTag)
-{
-  switch(classTag) {
-
-  case PLASTICFLOW_TAGS_VM_PF:
-    return new VM_PF();
-
-    /*
-  case PLASTICFLOW_TAGS_RMC_PF:
-    return new RMC_PF();
-    */
-
-  case PLASTICFLOW_TAGS_DP_PF:
-    return new DP_PF();
-
-  case PLASTICFLOW_TAGS_CC_PF:
-    return new CC_PF();
-
-  case PLASTICFLOW_TAGS_DM04_PF:
-    return new DM04_PF();
-
-  default:
-    opserr << "TclNewTemplate3Dep::getPlasticFlow - unknown type: " << classTag << endln;
-    return 0;
-  }
-
-
-  return 0;
-}
-
-ScalarEvolution   *
-getScalarEvolution(int classTag)
-{
-  switch(classTag) {
-
-  case SCALAR_EVOLUTION_TAGS_Linear_Eeq:
-    return new Linear_Eeq();
-
-  case SCALAR_EVOLUTION_TAGS_CC_Ev:
-    return new CC_Ev();
-
-  default:
-    opserr << "TclNewTemplate3Dep::getScalarEvolution - unknown type: " << classTag << endln;
-    return 0;
-  }
-
-  return 0;
-}
-
-TensorEvolution   *
-getTensorEvolution(int classTag)
-{
-  switch(classTag) {
-
-  case TENSOR_EVOLUTION_TAGS_Linear_Eij:
-    return new Linear_Eij();
-
-  case TENSOR_EVOLUTION_TAGS_AF_Eij:
-    return new AF_Eij();
-
-  case TENSOR_EVOLUTION_TAGS_DM04_alpha_Eij:
-    return new DM04_alpha_Eij();
-
-  case TENSOR_EVOLUTION_TAGS_DM04_z_Eij:
-    return new DM04_z_Eij();
-
-  default:
-    opserr << "TclNewTemplate3Dep::getTensorEvolution - unknown type: " << classTag << endln;
-    return 0;
-  }
-
-  return 0;
-}

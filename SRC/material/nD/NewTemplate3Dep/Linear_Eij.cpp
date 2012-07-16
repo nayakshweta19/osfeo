@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -35,16 +35,14 @@
 #define Linear_Eij_CPP
 
 #include "Linear_Eij.h"
-#include <Channel.h>
-#include <ID.h>
 
 Linear_Eij::Linear_Eij(int LinearFactor_index_in)
-  :TensorEvolution(TENSOR_EVOLUTION_TAGS_Linear_Eij),
-   LinearFactor_index(LinearFactor_index_in)
+: TensorEvolution(TE_TAG_Linear_Eij), LinearFactor_index(LinearFactor_index_in)
 {
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
 TensorEvolution* Linear_Eij::newObj()
 {
    TensorEvolution* nObj = new Linear_Eij(this->LinearFactor_index);
@@ -52,54 +50,123 @@ TensorEvolution* Linear_Eij::newObj()
    return nObj;
 }
 
-const straintensor& Linear_Eij::Hij(const straintensor& plastic_flow, const stresstensor& Stre, 
+///////////////////////////////////////////////////////////////////////////////
+const straintensor& Linear_Eij::Hij(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                             const straintensor& Stra, const MaterialParameter& material_parameter)
 {
-    TensorEvolution::TensorEvolutionHij = plastic_flow * getLinearFactor(material_parameter); 
+    // mainly for D-P "rotational" model
+    straintensor PF = plastic_flow.PlasticFlowTensor(Stre, Stra, material_parameter);    
+    double L = getLinearFactor(material_parameter);
+    
+    TensorEvolution::TensorEvolutionHij = PF.deviator() * L; 
+    
     return TensorEvolution::TensorEvolutionHij;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+const tensor& Linear_Eij::DHij_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    double L = getLinearFactor(material_parameter);
+    tensor I2("I", 2, def_dim_2);
+    tensor I_ijkl = I2("ij")*I2("kl");
+    I_ijkl.null_indices();
+    
+    tensor dmOds = plastic_flow.Dm_Ds(Stre, Stra, material_parameter);
+    tensor tensor1 = I_ijkl("pqij")*dmOds("pqmn");
+    tensor1.null_indices();
+    dmOds = dmOds - tensor1 *(1.0/3.0);
+    
+    TensorEvolution::TE_tensorR4 = dmOds * L;
+    
+    return TensorEvolution::TE_tensorR4;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& Linear_Eij::DHij_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    double L = getLinearFactor(material_parameter);
+    tensor I2("I", 2, def_dim_2);
+    tensor I_ijkl = I2("ij")*I2("kl");
+    I_ijkl.null_indices();
+    
+    tensor dmOdq = plastic_flow.Dm_Diso(Stre, Stra, material_parameter);
+    tensor tensor1 = I_ijkl("pqij")*dmOdq("pq");
+    tensor1.null_indices();
+    dmOdq = dmOdq - tensor1 *(1.0/3.0);
+    
+    TensorEvolution::TE_tensorR2 = dmOdq * L;
+    
+    return TensorEvolution::TE_tensorR2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& Linear_Eij::DHij_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    double L = getLinearFactor(material_parameter);
+    tensor I2("I", 2, def_dim_2);
+    tensor I_ijkl = I2("ij")*I2("kl");
+    I_ijkl.null_indices();
+    
+    tensor dmOda = plastic_flow.Dm_Dkin(Stre, Stra, material_parameter);
+    tensor tensor1 = I_ijkl("pqij")*dmOda("pqmn");
+    tensor1.null_indices();
+    dmOda = dmOda - tensor1 *(1.0/3.0);
+    
+    TensorEvolution::TE_tensorR4 = dmOda * L;
+    
+    return TensorEvolution::TE_tensorR4;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 double Linear_Eij::getLinearFactor(const MaterialParameter& material_parameter) const
 {
-    if ( LinearFactor_index <= material_parameter.getNum_Material_Parameter() && LinearFactor_index > 0)
-        return material_parameter.getMaterial_Parameter(LinearFactor_index -1);
+    if ( LinearFactor_index <= material_parameter.getNum_Material_Constant() && LinearFactor_index > 0)
+        return material_parameter.getMaterial_Constant(LinearFactor_index -1);
     else {
         opserr << "Linear_Eij: Invalid Input. " << endln;
         exit (1);
     }  
 }
 
-int 
-Linear_Eij::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int Linear_Eij::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(1);
-  iData(0) = LinearFactor_index;
+    int dataTag = this->getDbTag();
+    
+    static ID idData(1);
+    idData.Zero();
 
-  int dbTag = this->getDbTag();
+    idData(0) = LinearFactor_index; 
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "Linear_Eij::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  if (theChannel.sendID(dbTag, commitTag, iData) < 0) {
-    opserr << "Linear_Eij::sendSelf() - failed to send data\n";
-    return -1;
-  }
-
-  return 0;
+    return 0;
 }
 
-int 
-Linear_Eij::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+//Guanzhou added for parallel
+int Linear_Eij::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(1);
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(1);
+    idData.Zero();
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "Linear_Eij::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "Linear_Eij::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
+    
+    LinearFactor_index = idData(0);
 
-  LinearFactor_index = iData(0);
-
-  return 0;
+    return 0;
 }
+
 
 #endif
 

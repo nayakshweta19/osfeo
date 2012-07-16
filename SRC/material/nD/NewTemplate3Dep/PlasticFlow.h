@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,20 +36,49 @@
 #include <stresst.h>
 #include <straint.h>
 #include "MaterialParameter.h"
-#include <MovableObject.h>
+#include <FEM_ObjectBroker.h>
+#include <Channel.h>
 
 class PlasticFlow : public MovableObject
 {
   public:
-    PlasticFlow(int classTag);
-    virtual ~PlasticFlow();
+
+    PlasticFlow(int clsTag) : MovableObject(clsTag) {};//Guanzhou changed for parallel
+
+    virtual ~PlasticFlow() {};
     
     virtual PlasticFlow *newObj() = 0;
-    
+
+    virtual const char *getPlasticFlowType(void) const = 0;    
+
     virtual const straintensor& PlasticFlowTensor(const stresstensor &Stre, 
                                                   const straintensor &Stra, 
                                                   const MaterialParameter &MaterialParameter_in) const = 0;
+
+    virtual const tensor& Dm_Ds(const stresstensor &Stre, 
+                                                  const straintensor &Stra, 
+                                                  const MaterialParameter &MaterialParameter_in) const;
+
+    virtual const tensor& Dm_Diso(const stresstensor &Stre, 
+                                                  const straintensor &Stra, 
+                                                  const MaterialParameter &MaterialParameter_in) const;
+
+    virtual const tensor& Dm_Dkin(const stresstensor &Stre, 
+                                                  const straintensor &Stra, 
+                                                  const MaterialParameter &MaterialParameter_in) const;
+
+    virtual const tensor& Dm_Dkin2(const stresstensor &Stre, 
+                                                  const straintensor &Stra, 
+                                                  const MaterialParameter &MaterialParameter_in) const;
+
+    //Guanzhou added for parallel, pure virtual, subclasses must override
+    virtual int sendSelf(int commitTag, Channel &theChannel) = 0;  
+    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker) = 0;    
+
+  protected:
     
+    static tensor  PF_tensorR2;
+    static tensor  PF_tensorR4;   
 };
 
 #endif

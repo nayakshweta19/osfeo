@@ -35,15 +35,21 @@
 
 #include <stresst.h>
 #include "MaterialParameter.h"
-#include <MovableObject.h>
+#include <FEM_ObjectBroker.h>
+#include <Channel.h>
 
-class YieldFunction : public MovableObject
+class YieldFunction  : public MovableObject
 {
   public:    
-  YieldFunction(int classTag);
+
+    YieldFunction(int clsTag) : MovableObject(clsTag) {};//Guanzhou changed for parallel
+
     virtual ~YieldFunction() {};
+    
     virtual YieldFunction *newObj() = 0;
-  
+
+    virtual const char *getYieldFunctionType(void) const = 0;  
+
     virtual double YieldFunctionValue(const stresstensor &Stre, 
                                       const MaterialParameter &MaterialParameter_in) const = 0;
                      
@@ -58,12 +64,17 @@ class YieldFunction : public MovableObject
                                                    const MaterialParameter &MaterialParameter_in, 
                                                    int which) const;
 
-    //virtual int getTensionOrCompressionType() const;
+    //Guanzhou added for parallel, pure virtual, subclasses must override
+    virtual int sendSelf(int commitTag, Channel &theChannel) = 0;  
+    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker) = 0;    
 
-    virtual int getNumInternalScalar() const = 0;
+	virtual int getNumInternalScalar() const = 0;
     virtual int getNumInternalTensor() const = 0;
-    virtual int getYieldFunctionRank() const = 0;    
+    virtual int getYieldFunctionRank() const = 0;
     
+  private:
+    
+    static stresstensor stressYF;    
 };
 
 

@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie added for parallel, Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -34,27 +34,37 @@
 #ifndef AF_Eij_H
 #define AF_Eij_H 
 
-#define TENSOR_EVOLUTION_TAGS_AF_Eij 2
-
 #include "TensorEvolution.h"
-
+#define TE_TAG_AF 122001
 
 class AF_Eij : public TensorEvolution
 {
   public:
   
-    AF_Eij(int ha_index_in =0,
-           int Cr_index_in =0,
-           int alpha_index_in =0);
+    AF_Eij(int ha_index_in,
+           int Cr_index_in,
+           int alpha_index_in);
+
+    AF_Eij() : TensorEvolution(TE_TAG_AF) {}; //Guanzhou added
 
     TensorEvolution* newObj();
 
-    const straintensor& Hij(const straintensor& plastic_flow, const stresstensor& Stre, 
+    const straintensor& Hij(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                             const straintensor& Stra, const MaterialParameter& material_parameter);
 
+    const tensor& DHij_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    const tensor& DHij_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                            const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    const tensor& DHij_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                            const straintensor& Stra, const MaterialParameter& material_parameter);
+       
+    //Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-              
+
   private:
   
     double getha(const MaterialParameter& material_parameter) const;

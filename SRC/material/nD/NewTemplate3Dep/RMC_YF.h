@@ -26,14 +26,25 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
+//                    Nima Tafazzoli updated for API (Feb 2009)
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
+
+//!
+//! @mainpage
+//! \n
+//! \n
+//! This documentation is the API for Rounded Mohr-Coulomb material model. For more information about theory background 
+//! see the <A HREF="http://sokocalo.engr.ucdavis.edu/~jeremic/research/index.html#LectureNotes" target="_blank">Lecture Notes
+//! \n
+//! \n
+//!
+
+
 #ifndef RMC_YF_H
 #define RMC_YF_H
-
-#define YIELDFUNCTION_TAGS_RMC_YF 2
 
 #include "YieldFunction.h"
 #include <math.h>
@@ -45,7 +56,9 @@ class RMC_YF : public YieldFunction
           int k_which_in = -1, int index_k_in = 0,
           int r_which_in = -1, int index_r_in = 0);
     ~RMC_YF();
-      
+     
+    const char *getYieldFunctionType(void) const {return "RMC_YF";};
+     
     YieldFunction *newObj();
   
     double YieldFunctionValue(const stresstensor &Stre, 
@@ -62,6 +75,7 @@ class RMC_YF : public YieldFunction
     int getNumInternalTensor() const;
     int getYieldFunctionRank() const;
 
+    //Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
 

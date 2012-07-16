@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -34,24 +34,35 @@
 #ifndef Linear_Eij_H
 #define Linear_Eij_H 
 
-#define TENSOR_EVOLUTION_TAGS_Linear_Eij 1
-
 #include "TensorEvolution.h"
+#define TE_TAG_Linear_Eij 121005
 
 class Linear_Eij : public TensorEvolution
 {
   public:
 
-    Linear_Eij(int LinearFactor_index_in =0);
+    Linear_Eij() : TensorEvolution(TE_TAG_Linear_Eij) {}; //Guanzhou added for parallel processing
+
+	Linear_Eij(int LinearFactor_index_in);
 
     TensorEvolution* newObj();
 
-    const straintensor& Hij(const straintensor& plastic_flow, const stresstensor& Stre, 
+    const straintensor& Hij(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                             const straintensor& Stra, const MaterialParameter& material_parameter);
 
+    const tensor& DHij_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    const tensor& DHij_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                            const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    const tensor& DHij_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                            const straintensor& Stra, const MaterialParameter& material_parameter);
+       
+    //Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-       
+
   private:
 
     double getLinearFactor(const MaterialParameter& material_parameter) const;

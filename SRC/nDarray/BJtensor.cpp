@@ -1739,11 +1739,165 @@ BJtensor BJtensor::operator/( BJtensor & rval)
  }
 
 
+//##############################################################################
+// Nima Tafazzoli added Febuary, 2010
 
+// Creating I_1234 (I_ijkl)
+BJtensor BJtensor::I_1234() const
+  {
+    tensor temp(4, def_dim_4, 0.0);
+    temp.val(1,1,1,1) = 1.0;
+    temp.val(2,2,1,1) = 1.0;
+    temp.val(3,3,1,1) = 1.0;
+    temp.val(1,1,2,2) = 1.0;
+    temp.val(2,2,2,2) = 1.0;
+    temp.val(3,3,2,2) = 1.0;
+    temp.val(1,1,3,3) = 1.0;
+    temp.val(2,2,3,3) = 1.0;
+    temp.val(3,3,3,3) = 1.0;
+
+//    temp.print("I_ijkl","I_ijkl");
+    return temp;
+ }
+
+//##############################################################################
+// Nima Tafazzoli added Febuary, 2010
+
+// Creating I_1324 (I_ikjl)
+BJtensor BJtensor::I_1324() const
+  {
+    tensor temp(4, def_dim_4, 0.0);
+    temp.val(1,1,1,1) = 1.0;
+    temp.val(2,1,2,1) = 1.0;
+    temp.val(3,1,3,1) = 1.0;
+    temp.val(1,2,1,2) = 1.0;
+    temp.val(2,2,2,2) = 1.0;
+    temp.val(3,2,3,2) = 1.0;
+    temp.val(1,3,1,3) = 1.0;
+    temp.val(2,3,2,3) = 1.0;
+    temp.val(3,3,3,3) = 1.0;
+
+//    temp.print("I_ikjl","I_ikjl");
+    return temp;
+ }
+
+//##############################################################################
+// Nima Tafazzoli added Febuary, 2010
+
+// Creating I_3142 (I_kilj)
+BJtensor BJtensor::I_3142() const
+  {
+    tensor temp(4, def_dim_4, 0.0);
+    temp.val(1,1,1,1) = 1.0;
+    temp.val(2,1,2,1) = 1.0;
+    temp.val(3,1,3,1) = 1.0;
+    temp.val(1,2,1,2) = 1.0;
+    temp.val(2,2,2,2) = 1.0;
+    temp.val(3,2,3,2) = 1.0;
+    temp.val(1,3,1,3) = 1.0;
+    temp.val(2,3,2,3) = 1.0;
+    temp.val(3,3,3,3) = 1.0;
+
+//    temp.print("I_ikjl","I_ikjl");
+    return temp;
+ }
+
+//##############################################################################
+// Nima Tafazzoli added Febuary, 2010
+
+// Creating I_1423 (I_iljk)
+BJtensor BJtensor::I_1423() const
+  {
+    tensor temp(4, def_dim_4, 0.0);
+    temp.val(1,1,1,1) = 1.0;
+    temp.val(1,2,2,1) = 1.0;
+    temp.val(1,3,3,1) = 1.0;
+    temp.val(2,1,1,2) = 1.0;
+    temp.val(2,2,2,2) = 1.0;
+    temp.val(2,3,3,2) = 1.0;
+    temp.val(3,1,1,3) = 1.0;
+    temp.val(3,2,2,3) = 1.0;
+    temp.val(3,3,3,3) = 1.0;
+
+//    temp.print("I_ikjl","I_ikjl");
+    return temp;
+ }
+
+//##############################################################################
+// Nima Tafazzoli added Febuary, 2010
+
+// Creating I_1324 + I_1423 (I_ikjl + I_iljk)
+BJtensor BJtensor::I_1324plusI_1423() const
+  {
+    tensor temp(4, def_dim_4, 0.0);
+    temp.val(1,1,1,1) = 2.0;
+    temp.val(1,2,1,2) = 1.0;
+    temp.val(1,2,2,1) = 1.0;
+    temp.val(1,3,1,3) = 1.0;
+    temp.val(1,3,3,1) = 1.0;
+
+    temp.val(2,1,1,2) = 1.0;
+    temp.val(2,1,2,1) = 1.0;
+    temp.val(2,2,2,2) = 2.0;
+    temp.val(2,3,2,3) = 1.0;
+    temp.val(2,3,3,2) = 1.0;
+
+    temp.val(3,1,1,3) = 1.0;
+    temp.val(3,1,3,1) = 1.0;
+    temp.val(3,2,2,3) = 1.0;
+    temp.val(3,2,3,2) = 1.0;
+    temp.val(3,3,3,3) = 2.0;
+
+//    temp.print("I_ikjl","I_ikjl");
+    return temp;
+ }
+
+//##############################################################################
+// Nima Tafazzoli added August 27, 2009
+
+//! transpose function for 4th rank BJtensors:
+//     ijkl  -->> kilj
+BJtensor BJtensor::transpose_1234_3142() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(k, i, l, j);
+
+    trans1.null_indices();
+    return trans1;
+ }
+ 
+ 
 //##############################################################################
 ///* transpose function for 4th rank BJtensors:
 //     ijkl  -->> ikjl    */
 BJtensor BJtensor::transpose0110() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(i, k, j, l);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
+
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> ikjl    */
+BJtensor BJtensor::transpose_1234_1324() const
   {
 // construct BJtensor using the same control numbers as for the
 // original one and than transpose it.
@@ -1801,8 +1955,46 @@ BJtensor BJtensor::transpose0101() const
 
 //##############################################################################
 ///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> ilkj    */
+BJtensor BJtensor::transpose_1234_1432() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(i, l, k, j);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
 //     ijkl  -->> iljk    */
 BJtensor BJtensor::transpose0111() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(i, l, j, k);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> iljk    */
+BJtensor BJtensor::transpose_1234_1423() const
   {
 // construct BJtensor using the same control numbers as for the
 // original one and than transpose it.
@@ -1857,6 +2049,25 @@ BJtensor BJtensor::transpose1100() const
 //    null_indices();
     return trans1;
  }
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> jikl
+BJtensor BJtensor::transpose_1234_2134() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(j, i, k, l);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
 
 //##############################################################################
 ///* transpose function for 4th rank BJtensors:
@@ -1877,11 +2088,50 @@ BJtensor BJtensor::transpose0011() const
 //    null_indices();
     return trans1;
  }
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> ijlk
+BJtensor BJtensor::transpose_1234_1243() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(i, j, l, k);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
 
 //##############################################################################
 ///* transpose function for 4th rank BJtensors:
 //     ijkl  -->> iilk
 BJtensor BJtensor::transpose1001() const
+  {
+// construct BJtensor using the same control numbers as for the
+// original one and than transpose it.
+   BJtensor trans1(this->rank(), dim(), 0.0);
+
+   for ( int i=1 ; i<=dim()[0] ; i++ )
+     for ( int j=1 ; j<=dim()[1] ; j++ )
+       for ( int k=1 ; k<=dim()[2] ; k++ )
+         for ( int l=1 ; l<=dim()[3] ; l++ )
+           trans1.val(i, j, k, l) = cval(l, j, k, i);
+
+    trans1.null_indices();
+//    null_indices();
+    return trans1;
+ }
+
+//##############################################################################
+///* transpose function for 4th rank BJtensors:
+//     ijkl  -->> iilk
+BJtensor BJtensor::transpose_1234_4231() const
   {
 // construct BJtensor using the same control numbers as for the
 // original one and than transpose it.

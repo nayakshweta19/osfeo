@@ -94,6 +94,15 @@ class TCP_Socket : public Channel
 	       ID &theID, 
 	       ChannelAddress *theAddress =0);    
     
+	    //Guanzhou added
+    int sendnDarray(int dbTag, int commitTag,
+           const nDarray &theNDarray,
+           ChannelAddress *theAddress =0) {return 0;};
+
+    int recvnDarray(int dbTag, int commitTag,
+           nDarray &theNDarray,			
+           ChannelAddress *theAddress =0) {return 0;};
+
   protected:
     unsigned int getPortNumber() const;
     unsigned int getBytesAvailable();

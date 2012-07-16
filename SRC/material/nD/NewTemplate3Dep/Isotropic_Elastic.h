@@ -26,17 +26,16 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
-
-#define ELASTICSTATE_TAGS_Isotropic_Elastic 1
 
 #ifndef Isotropic_Elastic_H
 #define Isotropic_Elastic_H
 
 #include "ElasticState.h"
+#define ES_TAG_IsotropicElastic 123003
 
 //stresstensor zerostress;
 //straintensor zerostrain;
@@ -45,24 +44,33 @@ class Isotropic_Elastic : public ElasticState
 {  
   public:
                     
-    Isotropic_Elastic(int E_in =0, 
-                   int v_in =0,
+    Isotropic_Elastic() : ElasticState(ES_TAG_IsotropicElastic) {}; //Guanzhou added for parallel processing
+
+    Isotropic_Elastic(int E_in, 
+                   int v_in,
                    const stresstensor& initialStress = zerostress, 
                    const straintensor& initialStrain = zerostrain);
+
+// Nima Tafazzoli added for new material models (January 2010)    
+    Isotropic_Elastic(const stresstensor& initialStress, 
+                                     const straintensor& initialStrain);
 
     ElasticState *newObj();
     
     const BJtensor& getElasticStiffness(const MaterialParameter &MaterialParameter_in) const;
-
+    
+    //Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-    
+
   private:
     
     double getE(const MaterialParameter &MaterialParameter_in) const;
     double getv(const MaterialParameter &MaterialParameter_in) const;
   
   private:
+
+    static BJtensor ElasticStiffness;
     
     int E_index;   
     int v_index;

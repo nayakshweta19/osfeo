@@ -26,15 +26,15 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 
 // This is the container to store material constants:
-// Material_Parameter:      to store fixed scalar material constants;
+// Material_Constant:       to store fixed scalar material constants;
 //                          Note: the first one should be the density, input 0.0 if not involved;
-// Num_Material_Parameter:  the number of Material_Parameter, should not less than 2, 
+// Num_Material_Constant:   the number of Material_Constant, should not less than 2, 
 //                          given the 1st is the density and the 2nd is void ratio;
 // Internal_Scalar:         to store initial evolution scalar variables first time, 
 //                          and scalar variables thereafter;
@@ -48,34 +48,29 @@
 #define MaterialParameter_CPP
 
 #include "MaterialParameter.h"
-#include <classTags.h>
-#include <Vector.h>
-#include <ID.h>
-#include <Channel.h>
-#include <FEM_ObjectBroker.h>
+#define MP_TAG 120001
 
 // Constructor 1
-MaterialParameter::MaterialParameter(const double *Material_Parameter_in, 
-                                    int Num_Material_Parameter_in, 
+MaterialParameter::MaterialParameter(const double *Material_Constant_in, 
+                                    int Num_Material_Constant_in, 
                                     const double *Internal_Scalar_in, 
                                     int Num_Internal_Scalar_in, 
                                     const stresstensor *Internal_Tensor_in, 
-                                    int Num_Internal_Tensor_in)
-  :MovableObject(MATERIAL_PARAMATER_TAGS_MaterialParameter)
+                                    int Num_Internal_Tensor_in) : MovableObject(MP_TAG)
 {
     // Material Constants
-    if (Num_Material_Parameter_in > 0) {
-        Material_Parameter = new double [Num_Material_Parameter = Num_Material_Parameter_in];
-        if (!Material_Parameter) {
-            opserr << "MaterialParameter::Insufficient memory! " << endln;
+    if (Num_Material_Constant_in > 0) {
+        Material_Constant = new double [Num_Material_Constant = Num_Material_Constant_in];
+        if (!Material_Constant) {
+            opserr << "MaterialConstant::Insufficient memory! " << endln;
             exit (1);
         }        
-        for (int i = 0; i < Num_Material_Parameter; i++)
-            Material_Parameter[i] = Material_Parameter_in[i];
+        for (int i = 0; i < Num_Material_Constant; i++)
+            Material_Constant[i] = Material_Constant_in[i];
     }
     else {
-      Num_Material_Parameter = 0;
-      Material_Parameter = NULL;
+      Num_Material_Constant = 0;
+      Material_Constant = NULL;
     }
 
     // Scalar (Isotropic) Internal Variables
@@ -110,26 +105,25 @@ MaterialParameter::MaterialParameter(const double *Material_Parameter_in,
 }
 
 // Constructor 2
-MaterialParameter::MaterialParameter(const double *Material_Parameter_in, 
-                                     int Num_Material_Parameter_in, 
+MaterialParameter::MaterialParameter(const double *Material_Constant_in, 
+                                     int Num_Material_Constant_in, 
                                      const stresstensor *Internal_Tensor_in, 
                                      int Num_Internal_Tensor_in)
-  :MovableObject(MATERIAL_PARAMATER_TAGS_MaterialParameter),
-   Internal_Scalar(NULL), Num_Internal_Scalar(0)
+: MovableObject(MP_TAG), Internal_Scalar(NULL), Num_Internal_Scalar(0)
 {
     // Material Constants
-    if (Num_Material_Parameter_in > 0) {
-        Material_Parameter = new double [Num_Material_Parameter = Num_Material_Parameter_in];
-        if (!Material_Parameter) {
+    if (Num_Material_Constant_in > 0) {
+        Material_Constant = new double [Num_Material_Constant = Num_Material_Constant_in];
+        if (!Material_Constant) {
             opserr << "MaterialParameter::Insufficient memory! " << endln;
             exit (1);
         }        
-        for (int i = 0; i < Num_Material_Parameter; i++)
-            Material_Parameter[i] = Material_Parameter_in[i];
+        for (int i = 0; i < Num_Material_Constant; i++)
+            Material_Constant[i] = Material_Constant_in[i];
     }
     else {
-      Num_Material_Parameter = 0;
-      Material_Parameter = NULL;
+      Num_Material_Constant = 0;
+      Material_Constant = NULL;
     }
 
     // Tensor (Kinematic) Internal Variables
@@ -148,23 +142,20 @@ MaterialParameter::MaterialParameter(const double *Material_Parameter_in,
     }
 }
 
-// Constructor 3
-/*
-MaterialParameter::MaterialParameter( )
-  :MovableObject(MATERIAL_PARAMATER_TAGS_MaterialParameter),
-  Material_Parameter(NULL), Num_Material_Parameter(0), 
-  Internal_Scalar(NULL), Num_Internal_Scalar(0), 
-  Internal_Tensor(NULL), Num_Internal_Tensor(0)
-{
-
-}
-*/
+//Guanzhou // Constructor 3
+//Guanzhou MaterialParameter::MaterialParameter( )
+//Guanzhou : Material_Constant(NULL), Num_Material_Constant(0), 
+//Guanzhou   Internal_Scalar(NULL), Num_Internal_Scalar(0), 
+//Guanzhou   Internal_Tensor(NULL), Num_Internal_Tensor(0)
+//Guanzhou {
+//Guanzhou 
+//Guanzhou }
 
 // Destructor
 MaterialParameter::~MaterialParameter( )
 {
-	if (Material_Parameter)
-		delete [] Material_Parameter;
+	if (Material_Constant)
+		delete [] Material_Constant;
 
 	if (Internal_Scalar)
 		delete [] Internal_Scalar;
@@ -175,21 +166,21 @@ MaterialParameter::~MaterialParameter( )
 
 // Copy constructor
 MaterialParameter::MaterialParameter(const MaterialParameter &refer_MaterialParameter )
-  :MovableObject(MATERIAL_PARAMATER_TAGS_MaterialParameter)
+: MovableObject(MP_TAG)
 {
     // Material Constants
-    if (refer_MaterialParameter.getNum_Material_Parameter() > 0) {
-        Material_Parameter = new double [Num_Material_Parameter = refer_MaterialParameter.getNum_Material_Parameter()];
-        if (!Material_Parameter) {
+    if (refer_MaterialParameter.getNum_Material_Constant() > 0) {
+        Material_Constant = new double [Num_Material_Constant = refer_MaterialParameter.getNum_Material_Constant()];
+        if (!Material_Constant) {
             opserr << "MaterialParameter::Insufficient memory! " << endln;
             exit (1);
         }        
-        for (int i = 0; i < Num_Material_Parameter; i++)
-            Material_Parameter[i] = refer_MaterialParameter.getMaterial_Parameter(i);
+        for (int i = 0; i < Num_Material_Constant; i++)
+            Material_Constant[i] = refer_MaterialParameter.getMaterial_Constant(i);
     }
     else {
-      Num_Material_Parameter = 0;
-      Material_Parameter = NULL;
+      Num_Material_Constant = 0;
+      Material_Constant = NULL;
     }
 
     // Scalar (Isotropic) Internal Variables
@@ -226,8 +217,8 @@ MaterialParameter::MaterialParameter(const MaterialParameter &refer_MaterialPara
 
 // Create a new class pointer
 MaterialParameter* MaterialParameter::newObj() {
-	MaterialParameter *ptr_MaterialParameter = new  MaterialParameter ( this->Material_Parameter,
-                                                                        this->Num_Material_Parameter,
+	MaterialParameter *ptr_MaterialParameter = new  MaterialParameter ( this->Material_Constant,
+                                                                        this->Num_Material_Constant,
                                                                         this->Internal_Scalar,
                                                                         this->Num_Internal_Scalar,
                                                                         this->Internal_Tensor,
@@ -236,9 +227,9 @@ MaterialParameter* MaterialParameter::newObj() {
 }
 
 // getNum_Material_Parameter
-int MaterialParameter::getNum_Material_Parameter() const
+int MaterialParameter::getNum_Material_Constant() const
 {
-	return Num_Material_Parameter;
+	return Num_Material_Constant;
 }
 
 // getNum_Internal_Scalar
@@ -254,14 +245,14 @@ int MaterialParameter::getNum_Internal_Tensor() const
 }
 
 // getMaterial_Parameter
-double MaterialParameter::getMaterial_Parameter(int which) const
+double MaterialParameter::getMaterial_Constant(int which) const
 {
-	if (which < 0 || which > Num_Material_Parameter) {
-		opserr << "Error! MaterialParameter::getMaterial_Parameter - Invalid index of material constants. " << endln;
+	if (which < 0 || which > Num_Material_Constant) {
+		opserr << "Error! MaterialParameter::getMaterial_Constant - Invalid index of material constants. " << endln;
 		exit(1);
 	}	
 
-	return Material_Parameter[which];
+	return Material_Constant[which];
 }
 
 // getInternal_Scalar
@@ -287,14 +278,14 @@ const stresstensor& MaterialParameter::getInternal_Tensor(int which) const
 }
 
 // setMaterial_Parameter
-int MaterialParameter::setMaterial_Parameter(int which, double newMaterial_Parameter) 
+int MaterialParameter::setMaterial_Constant(int which, double newMaterial_Constant) 
 {
-	if (which < 0 || which > Num_Material_Parameter) {
-		opserr << "Error! MaterialParameter::setMaterial_Parameter - Invalid index of material constants. " << endln;
+	if (which < 0 || which > Num_Material_Constant) {
+		opserr << "Error! MaterialParameter::setMaterial_Constant - Invalid index of material constants. " << endln;
 		return (1);
 	}	
 	
-	Material_Parameter[which] = newMaterial_Parameter;
+	Material_Constant[which] = newMaterial_Constant;
 	
 	return 0;
 }
@@ -321,128 +312,123 @@ int MaterialParameter::setInternal_Tensor(int which, const stresstensor &newInte
 	}	
 		
 	Internal_Tensor[which] = newInternal_Tensor;
+
+// Nima Tafazzoli
+//        newInternal_Tensor.print("alpha after dfods" , "alpha after dfods");
 				
 	return 0;
 }
 
 
-int 
-MaterialParameter::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int MaterialParameter::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(3);
-  iData(0) = Num_Material_Parameter;
-  iData(1) = Num_Internal_Scalar;
-  iData(2) = Num_Internal_Tensor;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(3);
+    idData.Zero();
 
-  theChannel.sendID(dbTag, commitTag, iData);
+    idData(0) = Num_Material_Constant;
+    idData(1) = Num_Internal_Scalar;
+    idData(2) = Num_Internal_Tensor;
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "MaterialParameter::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  static Vector dData;
-  
-  if (Num_Material_Parameter != 0) {
-    dData.setData(Material_Parameter, Num_Material_Parameter);
-    theChannel.sendVector(dbTag, commitTag, dData);    
-  }
+    if ( Num_Material_Constant > 0 ) {
+        static Vector data(Material_Constant, Num_Material_Constant);
 
-  if (Num_Material_Parameter != 0) {
-    dData.setData(Internal_Scalar, Num_Internal_Scalar);
-    theChannel.sendVector(dbTag, commitTag, dData);    
-  }
+        if (theChannel.sendVector(dataTag, commitTag, data) < 0) {
+   	    opserr << "MaterialParameter::sendSelf -- failed to send Vector Material_Constant\n";
+   	    return -1;
+        }
+    }
 
-  for (int k=0; k<Num_Internal_Tensor; k++) {
-    Internal_Tensor[k].sendSelf(0, commitTag, theChannel);
-  }
+    if ( Num_Internal_Scalar > 0 ) {
+        static Vector data(Internal_Scalar, Num_Internal_Scalar);
 
-  return 0;
+        if (theChannel.sendVector(dataTag, commitTag, data) < 0) {
+   	    opserr << "MaterialParameter::sendSelf -- failed to send Vector Internal_Scalar\n";
+   	    return -1;
+        }
+    }
+    
+    if ( Num_Internal_Tensor > 0 ) {
+	for (int i = 0; i < Num_Internal_Tensor; i++) {
+            if (theChannel.sendnDarray(dataTag, commitTag, Internal_Tensor[i]) < 0) {
+   	    	opserr << "MaterialParameter::sendSelf -- failed to send Internal_Tensors\n";
+   	    	return -1;
+            }
+	}
+    }
+    
+    return 0;
+
 }
 
-int 
-MaterialParameter::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+//Guanzhou added for parallel
+int MaterialParameter::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(3);
-  int dbTag = this->getDbTag();
-
-  theChannel.recvID(dbTag, commitTag, iData);
-
-  Num_Material_Parameter = iData(0);
-  Num_Internal_Scalar = iData(1);
-
-  //
-  // make sure the arrays are large enough
-  //
-
-  if (Num_Material_Parameter != iData(0)) {
-    if (Num_Material_Parameter != 0) {
-      delete [] Material_Parameter;
-      Material_Parameter = 0;
-    }
-
-    Num_Material_Parameter = iData(0);
+    int dataTag = this->getDbTag();
     
-    if (Num_Material_Parameter != 0) {
-      Material_Parameter = new double [Num_Material_Parameter];
-      if (Material_Parameter == 0) {
-	opserr << "MaterialParameter::recvSelf() - out of memory for material parameter data\n";
+    static ID idData(3);
+    static Vector *data = NULL;
+    idData.Zero();
+
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "MaterialParameter::recvSelf -- failed to recv ID\n";
 	return -1;
-      }
-    }
-  }      
-
-  if (Num_Internal_Scalar != iData(1)) {
-    if (Num_Internal_Scalar != 0) {
-      delete [] Internal_Scalar;
-      Internal_Scalar = 0;
     }
 
-    Num_Internal_Scalar = iData(1);
+    Num_Material_Constant = idData(0);
+    Num_Internal_Scalar   = idData(1);
+    Num_Internal_Tensor   = idData(2);
     
-    if (Num_Internal_Scalar != 0) {
-      Internal_Scalar = new double [Num_Internal_Scalar];
-      if (Internal_Scalar == 0) {
-	opserr << "MaterialParameter::recvSelf() - out of memory for material scalar data\n";
-	return -1;
-      }
+    if ( Num_Material_Constant > 0 ) {
+    	Material_Constant = new double [Num_Material_Constant];
+        if (Material_Constant == NULL) {
+            opserr << "MaterialParameter::Insufficient memory! " << endln;
+            exit (1);
+        }        
+	//static Vector 
+	data = new Vector(Material_Constant, Num_Material_Constant);
+	if ( theChannel.recvVector(dataTag, commitTag, *data) < 0 ) {
+    	    opserr << "MaterialParameter::recvSelf -- failed to recv Material_Constant\n";
+	    return -1;
+	}
+	delete data;
     }
-  }    
-
-  if (Num_Internal_Tensor != iData(2)) {
-    if (Num_Internal_Tensor != 0) {
-      delete [] Internal_Tensor;
-      Internal_Tensor = 0;
+        
+    if ( Num_Internal_Scalar > 0 ) {
+    	Internal_Scalar = new double [Num_Internal_Scalar];
+        if (Internal_Scalar == NULL) {
+            opserr << "Internal_Scalar::Insufficient memory! " << endln;
+            exit (1);
+        }        
+	static Vector data(Internal_Scalar, Num_Internal_Scalar);
+	if ( theChannel.recvVector(dataTag, commitTag, data) < 0 ) {
+    	    opserr << "MaterialParameter::recvSelf -- failed to recv Internal_Scalar\n";
+	    return -1;
+	}
     }
-
-    Num_Internal_Tensor = iData(2);
-    if (Num_Internal_Tensor != 0) {
-      Internal_Tensor = new stresstensor[Num_Internal_Tensor];
-      if (Internal_Scalar == 0) {
-	opserr << "MaterialParameter::recvSelf() - out of memory for material scalar data\n";
-	return -1;
-      }
+    
+    if ( Num_Internal_Tensor > 0 ) {
+    	Internal_Tensor = new stresstensor[Num_Internal_Tensor];
+        if (Internal_Tensor == NULL) {
+            opserr << "Internal_Tensor::Insufficient memory! " << endln;
+            exit (1);
+        }        
+	for (int i = 0; i < Num_Internal_Tensor; i++) {
+	    if ( theChannel.recvnDarray(dataTag, commitTag, Internal_Tensor[i]) < 0 ) {
+    	    	opserr << "MaterialParameter::recvSelf -- failed to recv Internal_Tensor\n";
+	    	return -1;
+	    }
+	}
     }
-  }
-
-  //
-  // now recive the data
-  //
-
-  static Vector dData;
-
-  if (Num_Material_Parameter != 0) {
-    dData.setData(Material_Parameter, Num_Material_Parameter);
-    theChannel.recvVector(dbTag, commitTag, dData);    
-  }
-
-  if (Num_Material_Parameter != 0) {
-    dData.setData(Internal_Scalar, Num_Internal_Scalar);
-    theChannel.recvVector(dbTag, commitTag, dData);    
-  }
-
-  for (int k=0; k<Num_Internal_Tensor; k++) {
-    Internal_Tensor[k].recvSelf(0, commitTag, theChannel);
-  }
-
-  return 0;
-
+    
+    return 0;
 }
 
 

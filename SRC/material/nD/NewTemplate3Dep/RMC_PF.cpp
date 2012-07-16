@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -35,16 +35,14 @@
 #define RMC_PF_CPP
 
 #include "RMC_PF.h"
-#include <Channel.h>
-#include <ID.h>
+#define PF_TAG_RMC 120004
 
 straintensor RMC_PF::RMCm;
 
 //================================================================================
 RMC_PF::RMC_PF(int dilatant_which_in, int index_dilatant_in, int r_which_in, int index_r_in)
-  : PlasticFlow(PLASTICFLOW_TAGS_RMC_PF), 
-    dilatant_which(dilatant_which_in), index_dilatant(index_dilatant_in), 
-    r_which(r_which_in), index_r(index_r_in)
+: PlasticFlow(PF_TAG_RMC), dilatant_which(dilatant_which_in), index_dilatant(index_dilatant_in), 
+  r_which(r_which_in), index_r(index_r_in)
 {
 
 }
@@ -58,8 +56,10 @@ RMC_PF::~RMC_PF()
 //================================================================================
 PlasticFlow* RMC_PF::newObj() 
 {  
-     PlasticFlow  *new_PF = new RMC_PF(dilatant_which, index_dilatant, 
-                                      r_which, index_r);
+     PlasticFlow  *new_PF = new RMC_PF(this->dilatant_which, 
+                                       this->index_dilatant,
+                                       this->r_which, 
+                                       this->index_r);
      
      return new_PF;
 }
@@ -95,10 +95,10 @@ const straintensor& RMC_PF::PlasticFlowTensor(const stresstensor &Stre,
 //================================================================================
 double RMC_PF::getdilatant(const MaterialParameter &MaterialParameter_in) const
 {
-	// to dilatant
+	// to dilatancy
 	if ( dilatant_which == 0) {
-		if ( index_dilatant <= MaterialParameter_in.getNum_Material_Parameter() && index_dilatant > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_dilatant-1); 
+		if ( index_dilatant <= MaterialParameter_in.getNum_Material_Constant() && index_dilatant > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_dilatant-1); 
 		else {
 			opserr << "RMC_PF: Invalid Input. " << endln;
 			exit (1);
@@ -123,8 +123,8 @@ double RMC_PF::getr(const MaterialParameter &MaterialParameter_in) const
 {
 	// to get r
 	if ( r_which == 0) {
-		if ( index_r <= MaterialParameter_in.getNum_Material_Parameter() && index_r > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_r-1); 
+		if ( index_r <= MaterialParameter_in.getNum_Material_Constant() && index_r > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_r-1); 
 		else {
 			opserr << "RMC_YF: Invalid Input. " << endln;
 			exit (1);
@@ -170,40 +170,46 @@ double RMC_PF::RoundedFunctiondf2(double s, double r) const
 	return -8.0*(1 - r*r)*cos(s)*sin(s);
 }
 
-int 
-RMC_PF::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int RMC_PF::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(4);
-  iData(0) = dilatant_which;
-  iData(1) = index_dilatant;
-  iData(2) = r_which;
-  iData(3) = index_r;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(4);
+    idData.Zero();
 
-  if (theChannel.sendID(dbTag, commitTag, iData) < 0) {
-    opserr << "RMC_PF::sendSelf() - failed to send data\n";
-    return -1;
-  }
+    idData(0) = dilatant_which;
+    idData(1) = index_dilatant;
+    idData(2) = r_which;   
+    idData(3) = index_r;   
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "DP_PF::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  return 0;
+    return 0;
 }
-int 
-RMC_PF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+
+//Guanzhou added for parallel
+int RMC_PF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(4);
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(4);
+    idData.Zero();
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "RMC_PF::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "CC_PF::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  dilatant_which = iData(0);
-  index_dilatant = iData(1);
-  r_which = iData(2);
-  index_r= iData(3);
+    dilatant_which   = idData(0);
+    index_dilatant   = idData(1);
+    r_which   = idData(2);
+    index_r   = idData(3);
 
-  return 0;
+    return 0;
 }
 
 #endif

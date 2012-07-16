@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,52 +36,56 @@
 
 #include "ElasticState.h"
 
-BJtensor ElasticState::ElasticStiffness(4, def_dim_4, 0.0);
+BJtensor ElasticState::ElasticCompliance(4, def_dim_4, 0.0);
 const stresstensor ElasticState::zerostress(0.0);
 const straintensor ElasticState::zerostrain(0.0);
 
 ////////////////////////////////////////////////////////////////
-ElasticState::ElasticState(const stresstensor &initialStress, const straintensor &initialStrain, int classTag)
-  :MovableObject(classTag), Stress(initialStress), Strain(initialStrain)
+ElasticState::ElasticState(int clsTag, const stresstensor &initialStress, const straintensor &initialStrain)
+:MovableObject(clsTag)
 {
-
+    Stress.Initialize(initialStress);
+    Strain.Initialize(initialStrain);
 }
 
 ////////////////////////////////////////////////////////////////
-ElasticState::ElasticState(const stresstensor &initialStress, int classTag)
-  :MovableObject(classTag), Stress(initialStress)
+ElasticState::ElasticState(int clsTag, const stresstensor &initialStress)
+:MovableObject(clsTag)
 {
+    Stress.Initialize(initialStress);
+
     straintensor ZeroStra;
-    Strain = ZeroStra;
+    Strain.Initialize(ZeroStra);
 }
 
 ////////////////////////////////////////////////////////////////
-ElasticState::ElasticState(int classTag)
-  :MovableObject(classTag)
+ElasticState::ElasticState(int clsTag)
+:MovableObject(clsTag)
 {
     stresstensor ZeroStre;
-    Stress = ZeroStre;
+    Stress.Initialize(ZeroStre);
     
     straintensor ZeroStra;
-    Strain = ZeroStra;
+    Strain.Initialize(ZeroStra);
+}
+                                     
+
+////////////////////////////////////////////////////////////////
+const stresstensor& ElasticState::getStress() const 
+{ 
+    return this->Stress;
 }
 
 ////////////////////////////////////////////////////////////////
-stresstensor ElasticState::getStress() const 
+const straintensor& ElasticState::getStrain() const 
 { 
-    return Stress;
-}
-
-////////////////////////////////////////////////////////////////
-straintensor ElasticState::getStrain() const 
-{ 
-    return Strain;
+    return this->Strain;
 }
 
 /////////////////////////////////////////////////////////////////
 int ElasticState::setStress(const stresstensor &Stre_in) 
 {
-    Stress = Stre_in;
+    this->Stress.Initialize(Stre_in);
     
     return 0;
 }
@@ -89,7 +93,7 @@ int ElasticState::setStress(const stresstensor &Stre_in)
 /////////////////////////////////////////////////////////////////
 int ElasticState::setStrain(const straintensor &Stra_in) 
 {
-    Strain = Stra_in;
+    this->Strain.Initialize(Stra_in);
     
     return 0;
 }

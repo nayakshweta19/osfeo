@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006s
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -35,8 +35,7 @@
 #define RMC_YF_CPP
 
 #include "RMC_YF.h"
-#include <Channel.h>
-#include <ID.h>
+#define YF_TAG_RMC 124004
 
 stresstensor RMC_YF::RMCst;
 
@@ -44,10 +43,9 @@ stresstensor RMC_YF::RMCst;
 RMC_YF::RMC_YF(int a_which_in, int index_a_in, 
              int k_which_in, int index_k_in, 
              int r_which_in, int index_r_in)
-  : YieldFunction(YIELDFUNCTION_TAGS_RMC_YF),
-    a_which(a_which_in), index_a(index_a_in), 
-    k_which(k_which_in), index_k(index_k_in),
-    r_which(r_which_in), index_r(index_r_in)
+: YieldFunction(YF_TAG_RMC), a_which(a_which_in), index_a(index_a_in), 
+  k_which(k_which_in), index_k(index_k_in),
+  r_which(r_which_in), index_r(index_r_in)
 {
 
 }
@@ -61,9 +59,9 @@ RMC_YF::~RMC_YF()
 //================================================================================
 YieldFunction* RMC_YF::newObj() 
 {
-	YieldFunction  *new_YF = new RMC_YF(a_which, index_a, 
-	                                   k_which, index_k, 
-	                                   r_which, index_r);
+	YieldFunction  *new_YF = new RMC_YF(this->a_which, this->index_a, 
+	                                   this->k_which, this->index_k, 
+	                                   this->r_which, this->index_r);
 
 	return new_YF;
 }
@@ -102,13 +100,6 @@ const stresstensor& RMC_YF::StressDerivative(const stresstensor& Stre,
 	double df1 = RoundedFunctiondf1(theta, r);
 	double df2 = RoundedFunctiondf2(theta, r);
 	double dginv = (df2*f1 - df1*f2) /(f1*f1);
-	
-	//opserr << "theta = " << theta/3.1415926 << endln;
-	//opserr << "f1 = " << f1 << endln;
-	//opserr << "f2 = " << f2 << endln;
-	//opserr << "df1 = " << df1 << endln;
-	//opserr << "df2 = " << df2 << endln;
-	//opserr << "dginv = " << dginv << endln;
 	
 	double dfodp = -3.0*a;
 	double dfodq = f1/(f2*sqrt(3.0));
@@ -164,8 +155,8 @@ double RMC_YF::geta(const MaterialParameter &MaterialParameter_in) const
 {
 	// to get a
 	if ( a_which == 0) {
-		if ( index_a <= MaterialParameter_in.getNum_Material_Parameter() && index_a > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_a-1); 
+		if ( index_a <= MaterialParameter_in.getNum_Material_Constant() && index_a > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_a-1); 
 		else {
 			opserr << "RMC_YF: Invalid Input. " << endln;
 			exit (1);
@@ -190,8 +181,8 @@ double RMC_YF::getk(const MaterialParameter &MaterialParameter_in) const
 {
 	// to get k
 	if ( k_which == 0) {
-		if ( index_k <= MaterialParameter_in.getNum_Material_Parameter() && index_k > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_k-1); 
+		if ( index_k <= MaterialParameter_in.getNum_Material_Constant() && index_k > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_k-1); 
 		else {
 			opserr << "RMC_YF: Invalid Input. " << endln;
 			exit (1);
@@ -216,8 +207,8 @@ double RMC_YF::getr(const MaterialParameter &MaterialParameter_in) const
 {
 	// to get r
 	if ( r_which == 0) {
-		if ( index_r <= MaterialParameter_in.getNum_Material_Parameter() && index_r > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_r-1); 
+		if ( index_r <= MaterialParameter_in.getNum_Material_Constant() && index_r > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_r-1); 
 		else {
 			opserr << "RMC_YF: Invalid Input. " << endln;
 			exit (1);
@@ -272,47 +263,50 @@ double RMC_YF::RoundedFunction(double s, double r) const
 	return f1/f2;
 }
 
-int 
-RMC_YF::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int RMC_YF::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(6);
-  iData(0) = a_which;
-  iData(1) = index_a;
-  iData(2) = k_which;
-  iData(3) = index_k;
-  iData(4) = r_which;
-  iData(5) = index_r;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(6);
+    idData.Zero();
 
-  if (theChannel.sendID(dbTag, commitTag, iData) != 0) {
-    opserr << "RMC_YF::sendSelf() - failed to send data\n";
-    return -1;
-  }
+    idData(0) = a_which;    
+    idData(1) = index_a;    
+    idData(2) = k_which;    
+    idData(3) = index_k;    
+    idData(4) = r_which;
+    idData(5) = index_r;
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "DP_YF::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  return 0;
+    return 0;
 }
 
-int 
-RMC_YF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+//Guanzhou added for parallel
+int RMC_YF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(6);
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(6);
+    idData.Zero();
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "RMC_YF::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "DP_YF::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-
-  a_which = iData(0);
-  index_a = iData(1);
-  k_which = iData(2);
-  index_k = iData(3);
-  r_which = iData(4);
-  index_r = iData(5);
-
-  return 0;
-
+    a_which       = idData(0);
+    index_a       = idData(1);
+    k_which     = idData(2);
+    index_k     = idData(3);
+    r_which = idData(4);
+    index_r = idData(5);
+    
+    return 0;
 }
+
 #endif
-
