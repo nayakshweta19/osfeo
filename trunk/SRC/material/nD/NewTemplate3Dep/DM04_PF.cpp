@@ -24,16 +24,17 @@
 // LANGUAGE:          C++
 // TARGET OS:         
 // DESIGNER:          Zhao Cheng, Boris Jeremic
-// PROGRAMMER:        Zhao Cheng, Mahdi Taiebat
+// PROGRAMMER:        Zhao Cheng 
+// Note:              Helpful discuss with Mahdi Taiebat and Professor Y.F. Dafalias
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec. 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 
 // Ref: Dafalias and Manzari 2004: J. Eng. Mech. 130(6), pp 622-634
 // Parameters:
-//  1-e0:         initial void ratio at zero strain;
+//  1- e0:         initial void ratio at zero strain;
 //  2- e_r:       reference void for critical state line, ec = e_r - lambda_c*(pc/Pat)^xi;
 //  3- lambda_c:  parameter for critical state line, ec = e_r - lambda_c*(pc/Pat)^xi;
 //  4- xi:        parameter for critical state line, ec = e_r - lambda_c*(pc/Pat)^xi;
@@ -50,8 +51,6 @@
 #define DM04_PF_CPP
 
 #include "DM04_PF.h"
-#include <Channel.h>
-#include <ID.h>
 
 straintensor DM04_PF::DM04m;
 stresstensor DM04_PF::DM04temp;
@@ -69,19 +68,18 @@ DM04_PF::DM04_PF(int e0_which_in, int index_e0_in,
                  int nd_which_in, int index_nd_in,
                  int alpha_which_in, int index_alpha_in,
                  int z_which_in, int index_z_in)
-  : PlasticFlow(PLASTICFLOW_TAGS_DM04_PF), 
-    e0_which(e0_which_in), index_e0(index_e0_in), 
-    e_r_which(e_r_which_in), index_e_r(index_e_r_in), 
-    lambda_c_which(lambda_c_which_in), index_lambda_c(index_lambda_c_in),
-    xi_which(xi_which_in), index_xi(index_xi_in),
-    Pat_which(Pat_which_in), index_Pat(index_Pat_in),
-    m_which(m_which_in), index_m(index_m_in),
-    M_cal_which(M_cal_which_in), index_M_cal(index_M_cal_in),
-    cc_which(cc_which_in), index_cc(index_cc_in),
-    A0_which(A0_which_in), index_A0(index_A0_in),
-    nd_which(nd_which_in), index_nd(index_nd_in),
-    alpha_which(alpha_which_in), index_alpha(index_alpha_in),
-    z_which(z_which_in), index_z(index_z_in)
+: PlasticFlow(PF_TAG_DM04), e0_which(e0_which_in), index_e0(index_e0_in), 
+  e_r_which(e_r_which_in), index_e_r(index_e_r_in), 
+  lambda_c_which(lambda_c_which_in), index_lambda_c(index_lambda_c_in),
+  xi_which(xi_which_in), index_xi(index_xi_in),
+  Pat_which(Pat_which_in), index_Pat(index_Pat_in),
+  m_which(m_which_in), index_m(index_m_in),
+  M_cal_which(M_cal_which_in), index_M_cal(index_M_cal_in),
+  cc_which(cc_which_in), index_cc(index_cc_in),
+  A0_which(A0_which_in), index_A0(index_A0_in),
+  nd_which(nd_which_in), index_nd(index_nd_in),
+  alpha_which(alpha_which_in), index_alpha(index_alpha_in),
+  z_which(z_which_in), index_z(index_z_in)
 {
 
 }
@@ -95,18 +93,18 @@ DM04_PF::~DM04_PF()
 //================================================================================
 PlasticFlow* DM04_PF::newObj() 
 {  
-     PlasticFlow  *new_PF = new DM04_PF(e0_which, index_e0,
-                                        e_r_which, index_e_r,
-                                        lambda_c_which, index_lambda_c,
-                                        xi_which, index_xi,
-                                        Pat_which, index_Pat,
-                                        m_which, index_m,
-                                        M_cal_which, index_M_cal,
-                                        cc_which, index_cc,
-                                        A0_which, index_A0,
-                                        nd_which, index_nd,
-                                        alpha_which, index_alpha,
-                                        z_which, index_z);
+     PlasticFlow  *new_PF = new DM04_PF(this->e0_which, this->index_e0,
+                                        this->e_r_which, this->index_e_r,
+                                        this->lambda_c_which, this->index_lambda_c,
+                                        this->xi_which, this->index_xi,
+                                        this->Pat_which, this->index_Pat,
+                                        this->m_which, this->index_m,
+                                        this->M_cal_which, this->index_M_cal,
+                                        this->cc_which, this->index_cc,
+                                        this->A0_which, this->index_A0,
+                                        this->nd_which, this->index_nd,
+                                        this->alpha_which, this->index_alpha,
+                                        this->z_which, this->index_z);
      
      return new_PF;
 }
@@ -116,7 +114,9 @@ const straintensor& DM04_PF::PlasticFlowTensor(const stresstensor& Stre,
                                                const straintensor& Stra, 
                                                const MaterialParameter &MaterialParameter_in) const
 {
-	BJtensor KroneckerI("I", 2, def_dim_2);
+    const double oneOver3 = 1.0/3.0;
+    const double rt23 = sqrt(2.0/3.0);    
+    tensor I2("I", 2, def_dim_2);
 
     double e0 = gete0(MaterialParameter_in);
     double e_r = gete_r(MaterialParameter_in);
@@ -132,9 +132,6 @@ const straintensor& DM04_PF::PlasticFlowTensor(const stresstensor& Stre,
     stresstensor alpha = getalpha(MaterialParameter_in);
     stresstensor z = getz(MaterialParameter_in);
 
-    double p = Stre.p_hydrostatic();
-    stresstensor s = Stre.deviator();
-
     stresstensor n;
     stresstensor alpha_d;
     stresstensor alpha_d_alpha;
@@ -142,23 +139,29 @@ const straintensor& DM04_PF::PlasticFlowTensor(const stresstensor& Stre,
     double ec = e_r;
     double stateParameter = 0.0;
     double expnd = 1.0;
-    double ad = 0.0;
-    double z_n = 0.0;
+    //double ad = 0.0;
     double A_d = 0.0;
-    double B_cal = 1.0;
-    double C_cal = 0.0;
-    double D_cal = 0.0;
+    double B = 1.0;
+    double C = 0.0;
+    double D = 0.0;
+    double D0 = 0.0;
     stresstensor s_bar;
-    double lls_barll = 0.0;
+    double norm_s = 0.0;
     double epsilon_v = 0.0;
     double e = e0;
     double J3D;
     double cos3theta = 0.0;
+    double z_n = 0.0;
+    double alpha_n = 0.0;
+    double s_n = 0.0;
+
+    double p = Stre.p_hydrostatic();
+    stresstensor s = Stre.deviator();
             
     s_bar = s - (alpha *p);
-    lls_barll = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
-    if (p > 0.0 && lls_barll > 0.0)
-        n = s_bar * (1.0/lls_barll);
+    norm_s = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    if (p > 0.0 && norm_s > 0.0)
+      n = s_bar * (1.0/norm_s);
        
     J3D = n.Jinvariant3();
     cos3theta = -3.0*sqrt(6.0) *J3D;
@@ -178,39 +181,468 @@ const straintensor& DM04_PF::PlasticFlowTensor(const stresstensor& Stre,
       ec = getec(e_r, lambda_c, xi, Pat, p);
     
     epsilon_v = Stra.Iinvariant1();
-    e = e0 + (1 + e0) *epsilon_v;
+    e = e0 + (1.0 + e0) *epsilon_v;
     
-    stateParameter = e - ec;
+    stateParameter = e - ec;    
+    expnd = exp(nd*stateParameter);
     
-    expnd = exp( nd *stateParameter );
-    
-    // Just using another way
-    //ad = sqrt(2.0/3.0) * ( g *M_cal *expnd - m);
-    //D_cal = ad - (alpha("ij")*n("ij")).trace();
+    alpha_n = (alpha("ij")*n("ij")).trace();
+    s_n = (s("ij")*n("ij")).trace();
 
-    // Replacing the above
-    ad = sqrt(2.0/3.0) * g *M_cal *expnd;  
-    D_cal = ad - (s("ij")*n("ij")).trace() / p;
+    // way 1
+    //ad = g*M_cal*expnd - m;
+    //D0 = rt23 *ad - alpha_n;
+
+    // way 2, better use this when "p" is small
+    D0 = rt23*g*M_cal*expnd - s_n /p;
 
     z_n = (z("ij")*n("ij")).trace();
     if (z_n < 0.0) 
       z_n = 0.0;
     A_d = A0 * (1.0 + z_n);
-     
-    D_cal *= (-A_d);
 
-    B_cal = 1.0 + 1.5 *((1.0-cc)/cc) *g *cos3theta;
-    C_cal = 3.0 *sqrt(1.5) *((1.0-cc)/cc) *g;
+    D = D0 *(-A_d);
+
+    B = 1.0 + 1.5 *((1.0-cc)/cc) *g *cos3theta;
+    C = 3.0 *sqrt(1.5) *((1.0-cc)/cc) *g;
     
     stresstensor n_n = n("ik")*n("kj");
-        n_n.null_indices();
+      n_n.null_indices();
 
     // note different 'positive-negative' since we assume extension (dilation) positive 
-    // which is different from the Ref. 
-    DM04m = (n *B_cal) + (n_n *C_cal) + (KroneckerI *(( - C_cal + D_cal)/3.0));
+    // which is different from the Ref.
+    DM04_PF::DM04m = n *B + n_n *C + I2 *((D-C)*oneOver3);
+                           
+    return DM04_PF::DM04m;
+}
+
+//================================================================================
+const tensor& DM04_PF::Dm_Ds(const stresstensor &Stre, 
+                          const straintensor &Stra, 
+                          const MaterialParameter &MaterialParameter_in) const
+{
+    const double oneOver3 = 1.0/3.0;
+    const double rt23 = sqrt(2.0/3.0);
+
+    tensor I2("I", 2, def_dim_2);    
+    tensor I4 = I2("ij")*I2("kl");
+    tensor I4s = ( I4.transpose0110() + I4.transpose0111() ) *0.5;
+    tensor I4dev = I4s - I4 * oneOver3;
+
+    double e0 = gete0(MaterialParameter_in);
+    double e_r = gete_r(MaterialParameter_in);
+    double lambda_c = getlambda_c(MaterialParameter_in);
+    double xi = getxi(MaterialParameter_in);
+    double Pat = getPat(MaterialParameter_in);
+    //double m = getm(MaterialParameter_in);
+    double M_cal = getM_cal(MaterialParameter_in);
+    double cc = getcc(MaterialParameter_in);
+    double A0 = getA0(MaterialParameter_in);
+    double nd = getnd(MaterialParameter_in);    
+
+    stresstensor alpha = getalpha(MaterialParameter_in);
+    stresstensor z = getz(MaterialParameter_in);
+
+    stresstensor n;
+    stresstensor alpha_d;
+    stresstensor alpha_d_alpha;
+    double g = 0.0;
+    double ec = e_r;
+    double stateParameter = 0.0;
+    double expnd = 1.0;
+    //double ad = 0.0;
+    double A_d = 0.0;
+    double B = 1.0;
+    double C = 0.0;
+    double D0 = 0.0;
+    stresstensor s_bar;
+    double norm_s = 0.0;
+    double epsilon_v = 0.0;
+    double e = e0;
+    double J3D;
+    double cos3theta = 0.0;
+    double z_n = 0.0;
+    double alpha_n = 0.0;
+    double s_n = 0.0;
+
+    double p = Stre.p_hydrostatic();
+    stresstensor s = Stre.deviator();
+            
+    s_bar = s - (alpha *p);
+    norm_s = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    if (p > 0.0 && norm_s > 0.0)
+      n = s_bar * (1.0/norm_s);
+       
+    J3D = n.Jinvariant3();
+    cos3theta = -3.0*sqrt(6.0) *J3D;
     
-                       
-    return DM04m;
+    if (cos3theta > 1.0) 
+      cos3theta = 1.0;
+
+    if (cos3theta < -1.0) 
+      cos3theta = -1.0;
+    
+    g = getg(cc, cos3theta);
+
+    if ( (p/Pat) >= 0.0 )
+      ec = getec(e_r, lambda_c, xi, Pat, p);
+    
+    epsilon_v = Stra.Iinvariant1();
+    e = e0 + (1.0 + e0) *epsilon_v;
+    
+    stateParameter = e - ec;    
+    expnd = exp(nd*stateParameter);
+
+    alpha_n = (alpha("ij")*n("ij")).trace();
+    s_n = (s("ij")*n("ij")).trace();
+
+    // way 1
+    //ad = g*M_cal*expnd - m;
+    //D0 = rt23 * ad - alpha_n;
+
+    // way 2
+    D0 = rt23*g*M_cal*expnd - s_n /p;
+
+    z_n = (z("ij")*n("ij")).trace();
+    if (z_n < 0.0) 
+      z_n = 0.0;
+    A_d = A0 * (1.0 + z_n);
+
+    B = 1.0 + 1.5 *((1.0-cc)/cc) *g *cos3theta;
+    C = 3.0 *sqrt(1.5) *((1.0-cc)/cc) *g;
+    
+    tensor n_n = n("ik")*n("kj");
+      n_n.null_indices();
+
+    tensor nt_nt = n("ij")*n("kl");
+      nt_nt.null_indices();
+
+    tensor alpha_I = alpha("ij")*I2("kl");
+      alpha_I.null_indices();
+
+    tensor n_I = n("ij")*I2("kl");
+      n_I.null_indices();
+
+    // dn_ds:
+    tensor dn_ds = I4dev - nt_nt + alpha_I*oneOver3 - n_I*(alpha_n*oneOver3);
+    dn_ds = dn_ds *(1.0/norm_s);
+
+    // dphi_ds:
+    tensor dphi_ds = I2 * (-oneOver3*lambda_c*xi*pow(p, xi-1.0)/pow(Pat, xi));
+
+    // dcos3theta_ds:
+    tensor dcos3theta_ds = dn_ds("ijmn")*n_n("ji");
+      dcos3theta_ds.null_indices();
+    dcos3theta_ds = dcos3theta_ds *(-3.0*sqrt(6.0));
+
+    // dg_ds:
+    tensor dg_ds = dcos3theta_ds *(g*g*(1.0-cc)/(2.0*cc));
+
+    // dB_ds:
+    tensor dB_ds = (dg_ds*cos3theta + dcos3theta_ds*g) *(1.5*(1.0-cc)/cc);
+
+    // dC_ds:
+    tensor dC_ds = dg_ds *(3.0*sqrt(1.5)*(1.0-cc)/cc);
+
+    // dR_ds:
+    tensor tensor1 = n("ij")*dB_ds("mn");
+      tensor1.null_indices();
+    tensor tensor2 = n_n - I2 *oneOver3;
+    tensor tensor3 = tensor2("ij")*dC_ds("mn");
+      tensor3.null_indices();
+    tensor tensor4 = n("kj")*dn_ds("ikmn");
+      tensor4.null_indices();
+    tensor4.transpose1100(); 
+    tensor dR_ds = dn_ds *B + tensor1 + tensor4 *(2.0*C) + tensor3;
+
+    // dad_ds:
+    tensor dad_ds = (dg_ds + dphi_ds *(g*nd)) *(M_cal*expnd);
+
+    // dD_ds
+
+    // way 1
+    //tensor tensor5 = alpha("pq")*dn_ds("pqmn");
+    //  tensor5.null_indices();
+    // way 2
+    tensor tensor5 = s("pq")*dn_ds("pqmn");
+      tensor5.null_indices();
+    tensor5 = (tensor5 + n + I2*(s_n/3.0/p)) *(1.0/p);
+
+    tensor dD_ds = (dad_ds *rt23 - tensor5) *A_d;
+    if (z_n > 0.0) {
+      tensor tensor6 = z("pq")*dn_ds("pqmn");
+        tensor6.null_indices();
+      dD_ds += tensor6 *(-A0*D0);
+    }
+
+    // dm_ds:
+    tensor tensor7 = I2("ij")*dD_ds("mn");
+      tensor7.null_indices();
+    
+    PlasticFlow::PF_tensorR4 = dR_ds + tensor7 *oneOver3;   
+    
+    return PlasticFlow::PF_tensorR4;
+}
+
+//================================================================================
+const tensor& DM04_PF::Dm_Dkin(const stresstensor &Stre, 
+                          const straintensor &Stra, 
+                          const MaterialParameter &MaterialParameter_in) const
+{
+    const double oneOver3 = 1.0/3.0;
+    const double rt23 = sqrt(2.0/3.0);
+
+    tensor I2("I", 2, def_dim_2);    
+    tensor I4 = I2("ij")*I2("kl");
+    tensor I4s = ( I4.transpose0110() + I4.transpose0111() ) *0.5;
+
+    double e0 = gete0(MaterialParameter_in);
+    double e_r = gete_r(MaterialParameter_in);
+    double lambda_c = getlambda_c(MaterialParameter_in);
+    double xi = getxi(MaterialParameter_in);
+    double Pat = getPat(MaterialParameter_in);
+    //double m = getm(MaterialParameter_in);
+    double M_cal = getM_cal(MaterialParameter_in);
+    double cc = getcc(MaterialParameter_in);
+    double A0 = getA0(MaterialParameter_in);
+    double nd = getnd(MaterialParameter_in);    
+
+    stresstensor alpha = getalpha(MaterialParameter_in);
+    stresstensor z = getz(MaterialParameter_in);
+
+    stresstensor n;
+    stresstensor alpha_d;
+    stresstensor alpha_d_alpha;
+    double g = 0.0;
+    double ec = e_r;
+    double stateParameter = 0.0;
+    double expnd = 1.0;
+    //double ad = 0.0;
+    double A_d = 0.0;
+    double B = 1.0;
+    double C = 0.0;
+    double D0 = 0.0;
+    stresstensor s_bar;
+    double norm_s = 0.0;
+    double epsilon_v = 0.0;
+    double e = e0;
+    double J3D;
+    double cos3theta = 0.0;
+    double z_n = 0.0;
+    double alpha_n = 0.0;
+    double s_n = 0.0;
+
+    double p = Stre.p_hydrostatic();
+    stresstensor s = Stre.deviator();
+            
+    s_bar = s - (alpha *p);
+    norm_s = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    if (p > 0.0 && norm_s > 0.0)
+        n = s_bar * (1.0/norm_s);
+       
+    J3D = n.Jinvariant3();
+    cos3theta = -3.0*sqrt(6.0) *J3D;
+    
+    if (cos3theta > 1.0) 
+      cos3theta = 1.0;
+
+    if (cos3theta < -1.0) 
+      cos3theta = -1.0;
+    
+    g = getg(cc, cos3theta);
+
+    if ( (p/Pat) >= 0.0 )
+      ec = getec(e_r, lambda_c, xi, Pat, p);
+    
+    epsilon_v = Stra.Iinvariant1();
+    e = e0 + (1.0 + e0) *epsilon_v;
+    
+    stateParameter = e - ec;    
+    expnd = exp(nd*stateParameter);
+    
+    alpha_n = (alpha("ij")*n("ij")).trace();
+    s_n = (s("ij")*n("ij")).trace();
+
+    // way 1
+    //ad = g*M_cal*expnd - m;
+    //D0 = rt23 * ad - alpha_n;
+
+    // way 2
+    D0 = rt23*g*M_cal*expnd - s_n /p;
+
+    z_n = (z("ij")*n("ij")).trace();
+    if (z_n < 0.0) 
+      z_n = 0.0;
+    A_d = A0 * (1.0 + z_n);
+
+    B = 1.0 + 1.5 *((1.0-cc)/cc) *g *cos3theta;
+    C = 3.0 *sqrt(1.5) *((1.0-cc)/cc) *g;
+    
+    tensor n_n = n("ik")*n("kj");
+      n_n.null_indices();
+
+    tensor nt_nt = n("ij")*n("kl");
+      nt_nt.null_indices();
+
+    tensor alpha_I = alpha("ij")*I2("kl");
+      alpha_I.null_indices();
+
+    tensor n_I = n("ij")*I2("kl");
+      n_I.null_indices();
+
+    // dn_dalpha:
+    tensor dn_da = nt_nt - I4s;
+    dn_da = dn_da *(p/norm_s);
+
+    // dcos3theta_dalpha:
+    tensor dcos3theta_da = dn_da("ijmn")*n_n("ji");
+      dcos3theta_da.null_indices();
+    dcos3theta_da = dcos3theta_da *(-3.0*sqrt(6.0));
+
+    // dg_da:
+    tensor dg_da = dcos3theta_da *(g*g*(1.0-cc)/(2.0*cc));
+
+    // dB_da:
+    tensor dB_da = (dg_da*cos3theta + dcos3theta_da*g) *(1.5*(1.0-cc)/cc);
+
+    // dC_ds:
+    tensor dC_da = dg_da *(3.0*sqrt(1.5)*(1.0-cc)/cc);
+
+    // dR_da:
+    tensor tensor1 = n("ij")*dB_da("mn");
+      tensor1.null_indices();
+    tensor tensor2 = n_n - I2 *oneOver3;
+    tensor tensor3 = tensor2("ij")*dC_da("mn");
+      tensor3.null_indices();
+    tensor tensor4 = n("kj")*dn_da("ikmn");
+      tensor4.null_indices();
+    tensor4.transpose1100(); 
+    tensor dR_da = dn_da *B + tensor1 + tensor4 *(2.0*C) + tensor3;
+
+    // dad_da:
+    tensor dad_da = dg_da *(M_cal*expnd);
+
+    // dD_da:
+    
+    // way 1
+    //tensor tensor5 = alpha("pq")*dn_da("pqmn");
+    //  tensor5.null_indices();
+    //tensor dD_da = (dad_da *rt23 - n - tensor5) *(-A_d);
+    
+    // way 2
+    tensor tensor5 = s("pq")*dn_da("pqmn");
+      tensor5.null_indices();
+    tensor dD_da = (dad_da *rt23 - tensor5 *(1.0/p)) *(-A_d);
+
+    if (z_n > 0.0) {
+      tensor tensor6 = z("pq")*dn_da("pqmn");
+        tensor6.null_indices();
+      dD_da += tensor6 *(-A0*D0);
+    }
+
+    // dm_da:
+    tensor tensor7 = I2("ij")*dD_da("mn");
+      tensor7.null_indices();
+    
+    PlasticFlow::PF_tensorR4 = dR_da + tensor7 *oneOver3;   
+    
+    return PlasticFlow::PF_tensorR4;
+}
+
+//================================================================================
+const tensor& DM04_PF::Dm_Dkin2(const stresstensor &Stre, 
+                          const straintensor &Stra, 
+                          const MaterialParameter &MaterialParameter_in) const
+{
+    const double oneOver3 = 1.0/3.0;
+    const double rt23 = sqrt(2.0/3.0);
+    
+    tensor I2("I", 2, def_dim_2);    
+
+    double e0 = gete0(MaterialParameter_in);
+    double e_r = gete_r(MaterialParameter_in);
+    double lambda_c = getlambda_c(MaterialParameter_in);
+    double xi = getxi(MaterialParameter_in);
+    double Pat = getPat(MaterialParameter_in);
+    //double m = getm(MaterialParameter_in);
+    double M_cal = getM_cal(MaterialParameter_in);
+    double cc = getcc(MaterialParameter_in);
+    double A0 = getA0(MaterialParameter_in);
+    double nd = getnd(MaterialParameter_in);    
+
+    stresstensor alpha = getalpha(MaterialParameter_in);
+    stresstensor z = getz(MaterialParameter_in);
+
+    stresstensor n;
+    stresstensor alpha_d;
+    stresstensor alpha_d_alpha;
+    double g = 0.0;
+    double ec = e_r;
+    double stateParameter = 0.0;
+    double expnd = 1.0;
+    //double ad = 0.0;
+    double D0 = 0.0;
+    stresstensor s_bar;
+    double norm_s = 0.0;
+    double epsilon_v = 0.0;
+    double e = e0;
+    double J3D;
+    double cos3theta = 0.0;
+    double z_n = 0.0;
+    double alpha_n = 0.0;
+    double s_n = 0.0;
+
+    double p = Stre.p_hydrostatic();
+    stresstensor s = Stre.deviator();
+            
+    s_bar = s - (alpha *p);
+    norm_s = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    if (p > 0.0 && norm_s > 0.0)
+        n = s_bar * (1.0/norm_s);
+       
+    J3D = n.Jinvariant3();
+    cos3theta = -3.0*sqrt(6.0) *J3D;
+    
+    if (cos3theta > 1.0) 
+      cos3theta = 1.0;
+
+    if (cos3theta < -1.0) 
+      cos3theta = -1.0;
+    
+    g = getg(cc, cos3theta);
+
+    if ( (p/Pat) >= 0.0 )
+      ec = getec(e_r, lambda_c, xi, Pat, p);
+    
+    epsilon_v = Stra.Iinvariant1();
+    e = e0 + (1.0 + e0) *epsilon_v;
+    
+    stateParameter = e - ec;    
+    expnd = exp(nd*stateParameter);
+    
+    alpha_n = (alpha("ij")*n("ij")).trace();
+    s_n = (s("ij")*n("ij")).trace();
+
+    // way 1
+    //ad = g*M_cal*expnd - m;
+    //D0 = rt23 * ad - alpha_n;
+
+    // way 2
+    D0 = rt23*g*M_cal*expnd - s_n /p;
+
+    tensor dD_dz(2, def_dim_2, 0.0);
+
+    // dD_dz:
+    if (z_n > 0.0)
+      dD_dz = n *A0;
+
+    // dm_da:
+    tensor tensor1 = I2("ij")*dD_dz("mn");
+      tensor1.null_indices();
+    
+    PlasticFlow::PF_tensorR4 = tensor1 *(-D0*oneOver3);   
+    
+    return PlasticFlow::PF_tensorR4;
 }
 
 // to get e0
@@ -317,8 +749,8 @@ const stresstensor& DM04_PF::getz(const MaterialParameter &MaterialParameter_in)
 //================================================================================
 double DM04_PF::getParameters(const MaterialParameter &MaterialParameter_in, int parIndex, int which) const
 {
-	if ( parIndex == 0 && which <= MaterialParameter_in.getNum_Material_Parameter() && which > 0)
-		return MaterialParameter_in.getMaterial_Parameter(which-1);
+	if ( parIndex == 0 && which <= MaterialParameter_in.getNum_Material_Constant() && which > 0)
+		return MaterialParameter_in.getMaterial_Constant(which-1);
 	else if ( parIndex == 1 && which <= MaterialParameter_in.getNum_Internal_Scalar() && which > 0)
 		return MaterialParameter_in.getInternal_Scalar(which-1);
 	else {
@@ -347,81 +779,65 @@ double DM04_PF::getg(double c, double cos3theta) const
     return 2.0 * c / ( (1.0+c) - (1.0-c)*cos3theta );
 }
 
-int 
-DM04_PF::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int DM04_PF::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(24);
-  iData(0) = e0_which;
-  iData(1) = index_e0;
-  iData(2) = e_r_which;
-  iData(3) = index_e_r;
-  iData(4) = lambda_c_which;
-  iData(5) = index_lambda_c;
-  iData(6) = xi_which;
-  iData(7) = index_xi;
-  iData(8) = Pat_which;
-  iData(9) = index_Pat;
-  iData(10) = m_which;
-  iData(11) = index_m;
-  iData(12) = M_cal_which;
-  iData(13) = index_M_cal;
-  iData(14) = cc_which;
-  iData(15) = index_cc;
-  iData(16) = A0_which;
-  iData(17) = index_A0;
-  iData(18) = nd_which;
-  iData(19) = index_nd;
-  iData(20) = alpha_which;
-  iData(21) = index_alpha;
-  iData(22) = z_which;
-  iData(23) = index_z;
+    int dataTag = this->getDbTag();
+    
+    static ID idData(24);
+    idData.Zero();
 
-  int dbTag = this->getDbTag();
+    idData(0) = e0_which;      	  idData(12) = index_e0;      
+    idData(1) = e_r_which;     	  idData(13) = index_e_r;     
+    idData(2) = lambda_c_which;	  idData(14) = index_lambda_c;
+    idData(3) = xi_which;      	  idData(15) = index_xi;      
+    idData(4) = Pat_which;     	  idData(16) = index_Pat;     
+    idData(5) = m_which;       	  idData(17) = index_m;       
+    idData(6) = M_cal_which;   	  idData(18) = index_M_cal;   
+    idData(7) = cc_which;      	  idData(19) = index_cc;      
+    idData(8) = A0_which;      	  idData(20) = index_A0;      
+    idData(9) = nd_which;      	  idData(21) = index_nd;      
+    		               	  	                      
+    idData(10) = alpha_which;     idData(22) = index_alpha;   
+    idData(11) = z_which;         idData(23) = index_z;       
+    
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "DM04_PF::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  if (theChannel.sendID(dbTag, commitTag, iData) < 0) {
-    opserr << "DM04_PF::sendSelf() - failed to send data\n";
-    return -1;
-  }
-
-  return 0;
+    return 0;
 }
-int 
-DM04_PF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+
+//Guanzhou added for parallel
+int DM04_PF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(4);
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(24);
+    idData.Zero();
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "DM04_PF::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "DM04_PF::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  e0_which = iData(0);
-  index_e0 = iData(1);
-  e_r_which = iData(2);
-  index_e_r = iData(3);
-  lambda_c_which = iData(4);
-  index_lambda_c =iData(5);
-  xi_which = iData(6);
-  index_xi= iData(7);
-  Pat_which = iData(8);
-  index_Pat = iData(9);
-  m_which = iData(10);
-  index_m = iData(11);
-  M_cal_which = iData(12);
-  index_M_cal= iData(13);
-  cc_which = iData(14);
-  index_cc = iData(15);
-  A0_which = iData(16);
-  index_A0 = iData(17);
-  nd_which = iData(18);
-  index_nd = iData(19);
-  alpha_which = iData(20);
-  index_alpha = iData(21);
-  z_which = iData(22);
-  index_z = iData(23);
+    e0_which       = idData(0);    index_e0      = idData(12);
+    e_r_which      = idData(1);    index_e_r     = idData(13);
+    lambda_c_which = idData(2);    index_lambda_c= idData(14);
+    xi_which       = idData(3);    index_xi      = idData(15);
+    Pat_which      = idData(4);    index_Pat     = idData(16);
+    m_which        = idData(5);    index_m       = idData(17);
+    M_cal_which    = idData(6);    index_M_cal   = idData(18);
+    cc_which       = idData(7);    index_cc      = idData(19);
+    A0_which       = idData(8);    index_A0      = idData(20);
+    nd_which       = idData(9);    index_nd      = idData(21);
+                      	                            	                 
+    alpha_which   = idData(10);   index_alpha   = idData(22);
+    z_which       = idData(11);   index_z       = idData(23);
 
-  return 0;
+    return 0;
 }
 
 #endif

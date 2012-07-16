@@ -111,6 +111,14 @@ class FileDatastore: public FE_Datastore
     int recvID(int dbTag, int commitTag,
 	       ID &theID,
 	       ChannelAddress *theAddress =0);
+	//Guanzhou added
+    int sendnDarray(int dbTag, int commitTag,
+           const nDarray &theNDarray,
+           ChannelAddress *theAddress =0) {return 0;};
+
+    int recvnDarray(int dbTag, int commitTag,
+           nDarray &theNDarray,			
+           ChannelAddress *theAddress =0) {return 0;};
 
     int createTable(const char *tableName, int numColumns, char *columns[]);
     int insertData(const char *tableName, char *columns[], 

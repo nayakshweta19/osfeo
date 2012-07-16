@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,18 +36,57 @@
 
 #include "ScalarEvolution.h"
 
-ScalarEvolution::ScalarEvolution(int tag)
-  :MovableObject(tag)
-{
+tensor ScalarEvolution::SE_tensorR2(2, def_dim_2, 0.0);
 
-}
+///////////////////////////////////////////////////////////////////////////////
+//Guanzhou ScalarEvolution::ScalarEvolution()
+//Guanzhou {
+//Guanzhou 
+//Guanzhou }
 
-double ScalarEvolution::H(const straintensor& plastic_flow, const stresstensor& Stre, 
+///////////////////////////////////////////////////////////////////////////////
+double ScalarEvolution::H(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                           const straintensor& Stra, const MaterialParameter& material_parameter)
 {
     return 0.0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+const tensor& ScalarEvolution::DH_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    tensor SE_R2(2, def_dim_2, 0.0);
+    ScalarEvolution::SE_tensorR2.Initialize(SE_R2);
+
+    return ScalarEvolution::SE_tensorR2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+double ScalarEvolution::DH_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    return 0.0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& ScalarEvolution::DH_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    tensor SE_R2(2, def_dim_2, 0.0);
+    ScalarEvolution::SE_tensorR2.Initialize(SE_R2);
+
+    return ScalarEvolution::SE_tensorR2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const tensor& ScalarEvolution::DH_Dkin2(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                          const straintensor& Stra, const MaterialParameter& material_parameter)
+{
+    tensor SE_R2(2, def_dim_2, 0.0);
+    ScalarEvolution::SE_tensorR2.Initialize(SE_R2);
+
+    return ScalarEvolution::SE_tensorR2;
+}
 
 #endif
 

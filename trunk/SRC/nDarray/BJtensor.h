@@ -109,14 +109,29 @@ class BJtensor : public nDarray
     BJtensor operator/( BJtensor & rval);       // BJtensor division rval MUST BE BJtensor of
                                             // order 0 ( i.e. scalar in BJtensor form )
 
+	// Nima Tafazzoli added
+    BJtensor transpose_1234_3142( ) const;      // for Nima transpose ijkl  -->> kilj 
+    BJtensor I_1234() const; // creating unity tensor of rank 4
+    BJtensor I_1324() const;
+    BJtensor I_3142() const;
+    BJtensor I_1423() const;
+    BJtensor I_1324plusI_1423() const;
+
     BJtensor transpose0110( ) const;      // transpose ijkl  -->> ikjl
-    BJtensor transposeoverbar( ) const;   // transpose ijkl  -->> ikjl
+    BJtensor transpose_1234_1324( ) const;      // for Mahdi transpose ijkl  -->> ikjl
+    BJtensor transposeoverbar( ) const;   // for Runesson  transpose ijkl  -->> ikjl
     BJtensor transpose0101( ) const;      // transpose ijkl  -->> ilkj
+    BJtensor transpose_1234_1432( ) const;      // transpose ijkl  -->> ilkj
     BJtensor transpose0111( ) const;      // transpose ijkl  -->> iljk
+    BJtensor transpose_1234_1423( ) const;      // for Mahdi transpose ijkl  -->> iljk
     BJtensor transposeunderbar( ) const;  // transpose ijkl  -->> iljk
     BJtensor transpose1100( ) const;      // transpose ijkl  -->> jikl    First minor symm
+    BJtensor transpose_1234_2134( ) const;      // for Mahdi  transpose ijkl  -->> jikl    First minor symm
     BJtensor transpose0011( ) const;      // transpose ijkl  -->> ijlk    Second minor symm
+    BJtensor transpose_1234_1243( ) const;      // for Mahdi transpose ijkl  -->> ijlk    Second minor symm
     BJtensor transpose1001( ) const;      // transpose ijkl  -->> ljki
+    BJtensor transpose_1234_4231( ) const;      // transpose ijkl  -->> ljki
+    BJtensor transpose( ) const;      // transpose ijkl  -->> ljki
     BJtensor transpose11( ) const;        // transpose ij  -->> ji
 
     BJtensor symmetrize11( ) const;   // symmetrize with respect to ij
@@ -149,7 +164,9 @@ class BJtensor : public nDarray
 //K    int BJtensor::uncontracted_ind(int *, int *, int);
     int contracted_ind(char *, char *, int *, int *, int , int );
     int uncontracted_ind(int *, int *, int);
-
+	
+	void compare_ind(const char*, const char*, int, int, int *);
+    void matrix_formation( const char*, const char*, int, int, int*);
 
 
 };

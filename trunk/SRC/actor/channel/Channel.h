@@ -46,6 +46,7 @@ class Matrix;
 class Vector;
 class ID;
 class FEM_ObjectBroker;
+class nDarray;//Guanzhou added to send nDarray
 
 class Channel
 {
@@ -107,7 +108,16 @@ class Channel
 
     virtual int recvID(int dbTag, int commitTag, 
 		    ID &theID, 
-		    ChannelAddress *theAddress =0) =0;      
+		    ChannelAddress *theAddress =0) =0;
+
+	//Guanzhou added
+    virtual int sendnDarray(int dbTag, int commitTag,
+                       const nDarray &theNDarray,
+                       ChannelAddress *theAddress =0) =0;
+
+    virtual int recvnDarray(int dbTag, int commitTag,
+                       nDarray &theNDarray,
+                       ChannelAddress *theAddress =0) =0;
 
   protected:
     

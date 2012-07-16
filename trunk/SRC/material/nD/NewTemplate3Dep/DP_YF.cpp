@@ -26,8 +26,8 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
-//
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec 2006
+//                    
 ///////////////////////////////////////////////////////////////////////////////
 //
 
@@ -35,18 +35,18 @@
 #define DP_YF_CPP
 
 #include "DP_YF.h"
-#include <Channel.h>
-#include <ID.h>
+#define YF_TAG_DP 124003
+
+#include <iostream>
+using namespace std;
 
 stresstensor DP_YF::DPst;
+stresstensor DP_YF::DPa;
 
 //================================================================================
-DP_YF::DP_YF(int a_which_in, int index_a_in, 
-             int k_which_in, int index_k_in, 
+DP_YF::DP_YF(int M_which_in, int index_M_in, 
              int alpha_which_in, int index_alpha_in)
-  : YieldFunction(YIELDFUNCTION_TAGS_DP_YF),
-  a_which(a_which_in), index_a(index_a_in), 
-  k_which(k_which_in), index_k(index_k_in),
+: YieldFunction(YF_TAG_DP), M_which(M_which_in), index_M(index_M_in), 
   alpha_which(alpha_which_in), index_alpha(index_alpha_in)
 {
 
@@ -61,9 +61,8 @@ DP_YF::~DP_YF()
 //================================================================================
 YieldFunction* DP_YF::newObj() 
 {
-	YieldFunction  *new_YF = new DP_YF(a_which, index_a, 
-	                                   k_which, index_k, 
-	                                   alpha_which, index_alpha);
+	YieldFunction  *new_YF = new DP_YF(this->M_which, this->index_M, 
+	                                   this->alpha_which, this->index_alpha);
 
 	return new_YF;
 }
@@ -72,59 +71,94 @@ YieldFunction* DP_YF::newObj()
 double DP_YF::YieldFunctionValue( const stresstensor& Stre, 
                                  const MaterialParameter &MaterialParameter_in ) const
 {
-	// f = a*I1 + [0.5(sij-p*aij)(sij-p*aij)]^0.5 - k = 0
-    if (a_which == -1) {
-		opserr << "DP_YF: Invalid Input Parameter. " << endln;
-		exit(1);
-	}
-	if (alpha_which == -1)
-		return Stre.Iinvariant1() * geta(MaterialParameter_in) 
-		     + sqrt(Stre.Jinvariant2()) 
-		     - getk(MaterialParameter_in);
-	else {
-		double temp1 = Stre.Iinvariant1() * geta(MaterialParameter_in) - getk(MaterialParameter_in);
-		double p = Stre.p_hydrostatic();
-		stresstensor s_back = getalpha(MaterialParameter_in);
-		stresstensor sigma_b = Stre - (s_back * p);
-		stresstensor s_bar = sigma_b.deviator();
-		double temp2 = ( s_bar("ij") * s_bar("ij") ).trace();
-		return temp1 + sqrt(0.5*temp2);
-	}
+
+// f = [(sij-p*aij)(sij-p*aij)]^0.5 - sqrt(2/3)*(p*m) = 0
+
+
+    double M = getM(MaterialParameter_in);
+    double p = Stre.p_hydrostatic();
+    
+    stresstensor alpha;
+
+    if (alpha_which == 2) 
+       { 
+         alpha = getalpha(MaterialParameter_in);
+       }
+
+    stresstensor s_bar = Stre - alpha*p;
+    s_bar = s_bar.deviator();
+ 
+    double s_norm = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    double YF = s_norm - sqrt(2.0/3.0)*M*p;
+
+    
+// Nima
+/*
+    // g = 1.5*(sij-p*aij)(sij-p*aij) - (m*p)^2 = 0
+    double M = getM(MaterialParameter_in);
+    stresstensor alpha = getalpha(MaterialParameter_in);
+    double p = Stre.p_hydrostatic();
+    stresstensor s_bar = Stre - alpha*p;
+    s_bar = s_bar.deviator();
+    double s_norm = (s_bar("ij")*s_bar("ij")).trace();
+    double YF = s_norm * (3.0/2.0) + - (M * M * p * p);
+*/    
+    return YF;
 }
 
 //================================================================================
 const stresstensor& DP_YF::StressDerivative(const stresstensor& Stre, 
                                             const MaterialParameter &MaterialParameter_in) const
-{
-	double eps = pow( d_macheps(), 0.5 );
-	BJtensor KroneckerI("I", 2, def_dim_2);
-	if (alpha_which == -1) {
-		double temp0 = Stre.Jinvariant2();
-        temp0 = sqrt(temp0);
-		if (fabs(temp0) < eps) {
-			DPst = KroneckerI *geta(MaterialParameter_in);
-			return DPst;
-		}
-		DPst = KroneckerI *geta(MaterialParameter_in) + ( Stre.deviator() *(0.5/temp0) );
-		return DPst;
-	}
-	else {
-		double p = Stre.p_hydrostatic();
-		stresstensor s_back = getalpha(MaterialParameter_in);
-		stresstensor sigma_b = Stre - (s_back * p);
-		stresstensor s_bar = sigma_b.deviator();
-		double temp1 = ( s_bar("ij") * s_bar("ij") ).trace();
-        temp1 = sqrt(0.5*temp1);
-		if (fabs(temp1) < eps) {
-			DPst = KroneckerI *geta(MaterialParameter_in);
-			return DPst;
-		}
-		double temp2 = ( s_bar("ij") * s_back("ij") ).trace();
-		DPst = s_bar + ( KroneckerI * (temp2/3.0) );
-		DPst = DPst*(0.5/temp1);
-        DPst += ( KroneckerI *(geta(MaterialParameter_in)/3.0) );
-		return DPst;
-	}
+{    
+
+    tensor I2("I", 2, def_dim_2);
+    double M = getM(MaterialParameter_in);
+    double p = Stre.p_hydrostatic();
+
+    stresstensor alpha;
+
+    if (alpha_which == 2) 
+       { 
+         alpha = getalpha(MaterialParameter_in);
+       }
+
+    stresstensor s_bar = Stre - alpha*p;
+    s_bar = s_bar.deviator();
+
+    double s_norm = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+    stresstensor nij;
+    if (s_norm != 0.0)
+      nij =  s_bar *(1.0/s_norm);
+    double a_n = (alpha("ij")*nij("ij")).trace();
+
+    DP_YF::DPst = nij + I2 * (M*sqrt(2.0/27.0) + a_n/3.0);
+
+    return DP_YF::DPst;
+
+// Nima
+/*
+    tensor I2("I", 2, def_dim_2);
+    double M = getM(MaterialParameter_in);
+    double p = Stre.p_hydrostatic();
+    stresstensor alpha = getalpha(MaterialParameter_in);
+    stresstensor s_bar;
+    if (alpha_which == 2) 
+      { 
+        stresstensor alpha = getalpha(MaterialParameter_in);
+        s_bar = Stre - (alpha * p);
+      }
+    else
+      {
+        s_bar = Stre;
+      }
+
+    s_bar = s_bar.deviator();
+    double scalar1 = (alpha("ij")*s_bar("ij")).trace();
+
+    DP_YF::DPst = s_bar *3.0 + I2 *(scalar1 + M*M*p*2.0/3.0);
+*/
+
+
 }
 
 //================================================================================
@@ -132,13 +166,27 @@ double DP_YF::InScalarDerivative(const stresstensor& Stre,
                                  const MaterialParameter &MaterialParameter_in, 
                                  int which) const
 {
-	if (a_which == 1 && which == index_a)
-		return Stre.Iinvariant1();
-	
-	if (k_which == 1 && which == index_k)
-		return -1.0;
-		
-	return 0.0;
+
+    double scalar1 = 0.0;
+
+	if (M_which == 1 && which == 1) {
+      double p = Stre.p_hydrostatic();
+      scalar1 = -p * sqrt(2.0/3.0);
+	}
+
+
+// Nima
+/*
+    double scalar1 = 0.0;
+
+	if (M_which == 1 && which == 1) {
+      double p = Stre.p_hydrostatic();
+      double M = getM(MaterialParameter_in);
+      scalar1 = -2 * p * p * M;
+	}
+*/
+
+	return scalar1;
 }
 
 //================================================================================
@@ -146,38 +194,49 @@ const stresstensor& DP_YF::InTensorDerivative(const stresstensor& Stre,
                                               const MaterialParameter &MaterialParameter_in, 
                                               int which) const
 {
-	double eps = pow( d_macheps(), 0.5 );
-	if (alpha_which != 2 || which != 1){
-		opserr << "DP_YF: Invalid Input Parameter. " << endln;
-		exit (1);
-	}
-	
-	double p = Stre.p_hydrostatic();
-	stresstensor s_back = getalpha(MaterialParameter_in);
-	stresstensor sigma_b = Stre - (s_back * p);
-	stresstensor s_bar = sigma_b.deviator();
-	double temp1 = ( s_bar("ij") * s_bar("ij") ).trace();
-	temp1 = sqrt(0.5*temp1);
-	if (temp1 < eps) {
-		DPst = DPst*0.0;
-		return DPst;
-	}
-	DPst = s_bar *(-0.5*p/temp1);
-	return DPst;
+
+
+    stresstensor nij;
+    double p;
+
+    if (alpha_which == 2 || which == 1) {
+      stresstensor alpha = getalpha(MaterialParameter_in);
+      p = Stre.p_hydrostatic();
+      stresstensor s_bar = Stre - (alpha * p);
+      s_bar = s_bar.deviator();
+      double s_norm = sqrt( (s_bar("ij")*s_bar("ij")).trace() );
+      if (s_norm != 0.0)
+        nij = s_bar *(1.0/s_norm); 
+    }
+
+    DP_YF::DPst = nij *(-p);
+
+
+// Nima
+/*
+    stresstensor s_bar;
+    double p;
+
+    if (alpha_which == 2 || which == 1)
+    {
+      stresstensor alpha = getalpha(MaterialParameter_in);
+      p = Stre.p_hydrostatic();
+      stresstensor s_bar = Stre - (alpha * p);
+      s_bar = s_bar.deviator();
+    }
+    DP_YF::DPst = s_bar *(-3*p);
+*/
+
+    return DP_YF::DPst;
 }
 
 //================================================================================
 int DP_YF::getNumInternalScalar() const
 {
-	int Numyf = 0;
-	
-	if ( a_which == 1)
-		Numyf++;
-	
-	if ( k_which == 1)
-		Numyf++;
-	
-	return Numyf;
+	if (M_which == 1)
+		return 1;
+	else
+		return 0;
 }
 
 //================================================================================
@@ -196,46 +255,20 @@ int DP_YF::getYieldFunctionRank() const
 }
 
 //================================================================================   
-double DP_YF::geta(const MaterialParameter &MaterialParameter_in) const
+double DP_YF::getM(const MaterialParameter &MaterialParameter_in) const
 {
-	// to get a
-	if ( a_which == 0) {
-		if ( index_a <= MaterialParameter_in.getNum_Material_Parameter() && index_a > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_a-1); 
+	// to get M
+	if ( M_which == 0) {
+		if ( index_M <= MaterialParameter_in.getNum_Material_Constant() && index_M > 0)
+			return MaterialParameter_in.getMaterial_Constant(index_M-1); 
 		else {
 			opserr << "DP_YF: Invalid Input. " << endln;
 			exit (1);
 		}
 	}
-	else if ( a_which == 1) {
-		if ( index_a <= MaterialParameter_in.getNum_Internal_Scalar() && index_a > 0)
-			return MaterialParameter_in.getInternal_Scalar(index_a-1); 
-		else {
-			opserr << "DP_YF: Invalid Input. " << endln;
-			exit (1);
-		}
-    }
-	else {
-		opserr << "DP_YF: Invalid Input. " << endln;
-		exit(1);
-	}
-}
-
-//================================================================================   
-double DP_YF::getk(const MaterialParameter &MaterialParameter_in) const
-{
-	// to get k
-	if ( k_which == 0) {
-		if ( index_k <= MaterialParameter_in.getNum_Material_Parameter() && index_k > 0)
-			return MaterialParameter_in.getMaterial_Parameter(index_k-1); 
-		else {
-			opserr << "DP_YF: Invalid Input. " << endln;
-			exit (1);
-		}
-	}
-	else if ( k_which == 1) {
-		if ( index_k <= MaterialParameter_in.getNum_Internal_Scalar() && index_k > 0)
-			return MaterialParameter_in.getInternal_Scalar(index_k-1); 
+	else if ( M_which == 1) {
+		if ( index_M <= MaterialParameter_in.getNum_Internal_Scalar() && index_M > 0)
+			return MaterialParameter_in.getInternal_Scalar(index_M-1); 
 		else {
 			opserr << "DP_YF: Invalid Input. " << endln;
 			exit (1);
@@ -250,55 +283,62 @@ double DP_YF::getk(const MaterialParameter &MaterialParameter_in) const
 //================================================================================ 
 const stresstensor& DP_YF::getalpha(const MaterialParameter &MaterialParameter_in) const
 {
-	//to get alpha
+	//to get alpha(backstress)
 	if ( alpha_which == 2 && index_alpha <= MaterialParameter_in.getNum_Internal_Tensor() && index_alpha > 0) {
-		DPst = MaterialParameter_in.getInternal_Tensor(index_alpha-1);
-		return DPst;
+		DP_YF::DPa = MaterialParameter_in.getInternal_Tensor(index_alpha-1);
+		return DP_YF::DPa;
 	}
-	else {
+	else if ( alpha_which == -1 ) {
+        DP_YF::DPa = DP_YF::DPa*0.0;
+        return DP_YF::DPa;
+    }    
+    else {
 		opserr << "DP_YF: Invalid Input. " << endln;
 		exit (1);
 	}
 }
 
-int 
-DP_YF::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int DP_YF::sendSelf(int commitTag, Channel &theChannel)
 {
-  static ID iData(6);
-  iData(0) = a_which;
-  iData(1) = index_a;
-  iData(2) = k_which;
-  iData(3) = index_k;
-  iData(4) = alpha_which;
-  iData(5) = index_alpha;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(4);
+    idData.Zero();
 
-  if (theChannel.sendID(dbTag, commitTag, iData) < 0) {
-    opserr << "DP_YF::sendSelf() - failed to send data\n";
-    return -1;
-  }
+    idData(0) = M_which;    
+    idData(1) = index_M;    
+    idData(2) = alpha_which;
+    idData(3) = index_alpha;
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "DP_YF::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  return 0;
+    return 0;
 }
-int 
-DP_YF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+
+//Guanzhou added for parallel
+int DP_YF::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  static ID iData(6);
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(6);
+    idData.Zero();
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "DP_YF::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "DP_YF::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  a_which = iData(0);
-  index_a = iData(1);
-  k_which = iData(2);
-  index_k = iData(3);
-  alpha_which = iData(4);
-  index_alpha = iData(5);
-
-  return 0;
+    M_which       = idData(0);
+    index_M       = idData(1);
+    alpha_which     = idData(2);
+    index_alpha     = idData(3);
+    
+    return 0;
 }
+
 #endif
 

@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,22 +36,46 @@
 
 #include <straint.h>
 #include <stresst.h>
+#include <BJtensor.h>
+
 #include "MaterialParameter.h"
 #include "ElasticState.h"
-#include <MovableObject.h>
+#include "PlasticFlow.h"
+#include <FEM_ObjectBroker.h>
+#include <Channel.h>
 
 class ScalarEvolution : public MovableObject
 {
   public:
     
-    ScalarEvolution(int classTag);
+    ScalarEvolution(int clsTag) : MovableObject(clsTag) {};//Guanzhou changed for parallel
+
     virtual ~ScalarEvolution() {};
 
     virtual ScalarEvolution *newObj() = 0;
 
-    virtual double H(const straintensor& plastic_flow, const stresstensor& Stre, 
+    virtual double H(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                     const straintensor& Stra, const MaterialParameter& material_parameter);                     
+
+    virtual const tensor& DH_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
                      const straintensor& Stra, const MaterialParameter& material_parameter);
-                     
+
+    virtual double DH_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                     const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    virtual const tensor& DH_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                     const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    virtual const tensor& DH_Dkin2(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                     const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    //Guanzhou added for parallel, pure virtual, subclasses must override
+    virtual int sendSelf(int commitTag, Channel &theChannel) = 0;  
+    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker) = 0;    
+
+  protected:
+    
+    static tensor SE_tensorR2;
 };
 
 

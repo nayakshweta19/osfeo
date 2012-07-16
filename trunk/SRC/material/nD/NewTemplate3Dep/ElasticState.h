@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie udpated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -37,37 +37,45 @@
 #include <BJtensor.h>
 #include <stresst.h>
 #include <straint.h>
-#include "MaterialParameter.h"
 #include <MovableObject.h>
+#include <FEM_ObjectBroker.h>
+#include <Channel.h>
+#include "MaterialParameter.h"
 
 class ElasticState : public MovableObject
 {  
   public:
     
-  ElasticState(const stresstensor &initialStress, const straintensor &initialStrain, int classTag);
-  ElasticState(const stresstensor &initialStress, int classTag);
-  ElasticState(int classTag);
+    ElasticState(int clsTag, const stresstensor &initialStress, const straintensor &initialStrain);
+    ElasticState(int clsTag, const stresstensor &initialStress);
     
-  virtual ~ElasticState() {};
-  virtual ElasticState* newObj() = 0;
+	ElasticState(int clsTag);
+    
+    virtual ~ElasticState() {};
+    virtual ElasticState* newObj() = 0;
+
+    virtual const stresstensor& getStress() const;
+    virtual const straintensor& getStrain() const;
+    
+    virtual const BJtensor &getElasticStiffness (const MaterialParameter &MatPar_in) const = 0;
+    
+    virtual int setStress(const stresstensor &Stre_in);
+    virtual int setStrain(const straintensor &Stra_in);
   
-  virtual stresstensor getStress() const;
-  virtual straintensor getStrain() const;
-  
-  virtual const BJtensor &getElasticStiffness (const MaterialParameter &MatPar_in) const = 0;
-  
-  virtual int setStress(const stresstensor &Stre_in);
-  virtual int setStrain(const straintensor &Stra_in);
-  
+    //Guanzhou added for parallel, pure virtual, subclasses must override
+    virtual int sendSelf(int commitTag, Channel &theChannel) = 0;  
+    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker) = 0;    
+
   protected:                 
     
-  stresstensor Stress;
-  straintensor Strain; 
-  
-  static BJtensor ElasticStiffness;
-  static const stresstensor zerostress;
-  static const straintensor zerostrain;
-  
+    stresstensor Stress;
+    straintensor Strain; 
+    
+    static BJtensor ElasticCompliance;
+
+    static const stresstensor zerostress;
+    static const straintensor zerostrain;
+
 };
 
 

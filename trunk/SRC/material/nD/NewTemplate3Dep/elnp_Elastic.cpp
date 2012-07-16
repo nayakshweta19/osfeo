@@ -26,14 +26,14 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 
 // This is based on "e = e_ref - log(p/p_ref)"
 // So K = (1+e)*p/kappa (Wood, 1990, Soil Behavior and Critical State Soil Mechanics)
-// Parameters:
+// Constants:
 // 1: kappa: unliading slope in e-log(p) relation curve
 // 2: v:     poissoin's ratio
 // 3: Kc:    cut-off bulk modulus, when K<Kc, let K = Kc
@@ -43,10 +43,8 @@
 #define elnp_Elastic_CPP
 
 #include "elnp_Elastic.h"
-#include <Channel.h>
-#include <ID.h>
 
-//BJtensor elnp_Elastic::StiffnessH(4, def_dim_4, 0.0);
+BJtensor elnp_Elastic::ElasticStiffness(4, def_dim_4, 0.0);
 
 elnp_Elastic::elnp_Elastic(int kappa_in, 
                            int v_in,
@@ -54,11 +52,20 @@ elnp_Elastic::elnp_Elastic(int kappa_in,
                            int e0_in,
                            const stresstensor& initialStress,
                            const straintensor& initialStrain)
-  : ElasticState(initialStress, initialStrain, ELASTICSTATE_TAGS_elnp_Elastic),
+: ElasticState(ES_TAG_elnpElastic, initialStress, initialStrain),
   kappa_index(kappa_in),
   v_index(v_in),
   K_c_index(K_c_in),
   e0_index(e0_in)
+{
+
+}
+
+
+// Nima Tafazzoli added for new Material Models
+elnp_Elastic::elnp_Elastic(const stresstensor& initialStress, 
+                                     const straintensor& initialStrain)
+: ElasticState(ES_TAG_elnpElastic, initialStress, initialStrain)
 {
 
 }
@@ -108,115 +115,115 @@ const BJtensor& elnp_Elastic::getElasticStiffness(const MaterialParameter &Mater
     //if (G < (1.0e-3) *K)  G = 1.0e-3 *K;
        
     // Building elasticity tensor
-    ElasticState::ElasticStiffness = I_ijkl *(K - 2.0*G/3.0) + I4s *(2.0*G);
+    elnp_Elastic::ElasticStiffness = I_ijkl *(K - 2.0*G/3.0) + I4s *(2.0*G);
 
-    return ElasticState::ElasticStiffness;
+    return elnp_Elastic::ElasticStiffness;
 }
 
 // Get kappa
 double elnp_Elastic::getkappa(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( kappa_index > MaterialParameter_in.getNum_Material_Parameter() || kappa_index < 2) { 
+    if ( kappa_index > MaterialParameter_in.getNum_Material_Constant() || kappa_index < 2) { 
         opserr << "elnp_Elastic: Invalid Input. " << endln;
         exit (1);
     }
     else
-        return MaterialParameter_in.getMaterial_Parameter(kappa_index - 1); 
+        return MaterialParameter_in.getMaterial_Constant(kappa_index - 1); 
 }
 
 // Get v
 double elnp_Elastic::getv(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( v_index > MaterialParameter_in.getNum_Material_Parameter() || v_index < 2) { 
+    if ( v_index > MaterialParameter_in.getNum_Material_Constant() || v_index < 2) { 
         opserr << "elnp_Elastic: Invalid Input. " << endln;
         exit (1);
     }
     else
-      return MaterialParameter_in.getMaterial_Parameter(v_index - 1); 
+      return MaterialParameter_in.getMaterial_Constant(v_index - 1); 
 }
 
 // Get K_c
 double elnp_Elastic::getK_c(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( K_c_index > MaterialParameter_in.getNum_Material_Parameter() || K_c_index < 2) { 
+    if ( K_c_index > MaterialParameter_in.getNum_Material_Constant() || K_c_index < 2) { 
         opserr << "elnp_Elastic: Invalid Input. " << endln;
         exit (1);
     }
     else
-        return MaterialParameter_in.getMaterial_Parameter(K_c_index - 1); 
+        return MaterialParameter_in.getMaterial_Constant(K_c_index - 1); 
 }
 
 // Get e0
 double elnp_Elastic::gete0(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( e0_index > MaterialParameter_in.getNum_Material_Parameter() || e0_index < 2) { 
+    if ( e0_index > MaterialParameter_in.getNum_Material_Constant() || e0_index < 2) { 
         opserr << "elnp_Elastic: Invalid Input. " << endln;
         exit (1);
     }
     else
-        return MaterialParameter_in.getMaterial_Parameter(e0_index - 1); 
+        return MaterialParameter_in.getMaterial_Constant(e0_index - 1); 
 }
 
-int 
-elnp_Elastic::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int elnp_Elastic::sendSelf(int commitTag, Channel &theChannel)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "elnp_Elastic::sendSelf() - does not send to database due to dbTags\n";
-    return -1;
-  }
-  
-  static ID iData(4);
-  iData(0) = kappa_index;
-  iData(1) = v_index;
-  iData(2) = K_c_index;
-  iData(3) = e0_index;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(4);
+    idData.Zero();
 
-  theChannel.sendID(dbTag, commitTag, iData);
+    idData(0) = kappa_index;
+    idData(1) = v_index;    
+    idData(2) = K_c_index;  
+    idData(3) = e0_index;   
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "elnp_Elastic::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  if (Stress.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "elnp_Elastic::sendSelf() - failed to send Stress\n";
-    return -1;
-  }
-  if (Strain.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "elnp_Elastic::sendSelf() - failed to send Strain\n";
-    return -1;
-  }
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "elnp_Elastic::sendSelf() -  failed to send nDarray Stress\n";
+    	return -1;
+    }
+   
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "elnp_Elastic::sendSelf() -  failed to send nDarray Strain\n";
+    	return -1;
+    }
 
-  return 0;
+    return 0;
 }
-int 
-elnp_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+
+//Guanzhou added for parallel
+int elnp_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "elnp_Elastic::recvSelf() - does not recv from database due to dbTags\n";
-    return -1;
-  }
+    int dataTag = this->getDbTag();
+    
+    static ID idData(4);
+    idData.Zero();
 
-  static ID iData(4);
-  int dbTag = this->getDbTag();
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "elnp_Elastic::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "elnp_Elastic::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    kappa_index   = idData(0);
+    v_index      = idData(1);
+    K_c_index  = idData(2);
+    e0_index   = idData(3);
+     
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "elnp_Elastic::recvSelf() -  failed to recv nDarray Stress\n";
+    	return -1;
+    }
 
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "elnp_Elastic::recvSelf() -  failed to recv nDarray Strain\n";
+    	return -1;
+    }
 
-  kappa_index = iData(0);
-  v_index = iData(1);
-  K_c_index = iData(2);
-  e0_index = iData(3);
-
-  if (Stress.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "elnp_Elastic::recvSelf() - failed to recv Stress\n";
-    return -1;
-  }
-  if (Strain.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "elnp_Elastic::recvSelf() - failed to recv Strain\n";
-    return -1;
-  }
-
-  return 0;
+    return 0;
 }
 
 #endif

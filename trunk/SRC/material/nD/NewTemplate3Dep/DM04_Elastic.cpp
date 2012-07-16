@@ -24,16 +24,17 @@
 // LANGUAGE:          C++
 // TARGET OS:         
 // DESIGNER:          Zhao Cheng, Boris Jeremic
-// PROGRAMMER:        Zhao Cheng, 
+// PROGRAMMER:        Zhao Cheng 
+// Note:              Helpful discuss with Mahdi Taiebat and Professor Y.F. Dafalias
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel, Dec. 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
 
 // This is based on G = G0*Pat*[(2.97-e)^2/(1+e)]*(p/Pat)^0.5
-// Richart et al 1970, Li & Dafalias 2000, Dafalias & Mazari 2004
-// Parameters:
+// Richard et al 1970, Li & Dafalias 2000, Dafalias & Mazari 2004
+// Constants:
 // 1: G0:    reference shear mudulus factor (no unit);
 // 2: v:     Poisson's ratio;
 // 3: Pat:   Atmospheric pressure;
@@ -44,10 +45,8 @@
 #define DM04_Elastic_CPP
 
 #include "DM04_Elastic.h"
-#include <Channel.h>
-#include <ID.h>
 
-//BJtensor DM04_Elastic::StiffnessH(4, def_dim_4, 0.0);
+BJtensor DM04_Elastic::ElasticStiffness(4, def_dim_4, 0.0);
 
 DM04_Elastic::DM04_Elastic(int G0_in, 
                            int v_in,
@@ -56,7 +55,7 @@ DM04_Elastic::DM04_Elastic(int G0_in,
                            int e0_in, 
                            const stresstensor& initialStress, 
                            const straintensor& initialStrain)
-  : ElasticState(initialStress, initialStrain, ELASTICSTATE_TAGS_DM04_Elastic),
+: ElasticState(ES_TAG_DM04, initialStress, initialStrain),
   G0_index(G0_in),
   v_index(v_in),
   Pat_index(Pat_in),
@@ -98,7 +97,7 @@ const BJtensor& DM04_Elastic::getElasticStiffness(const MaterialParameter &Mater
     double e0 = gete0(MaterialParameter_in);
     
     double epsilon_v = this->getStrain().Iinvariant1();
-    double e = e0 + (1 + e0) *epsilon_v;
+    double e = e0 + (1.0 + e0) *epsilon_v;
     double ef = (2.97-e)*(2.97-e)/(1.0+e);
     double p_cal = this->getStress().p_hydrostatic();
     if (p_cal < 0.0)
@@ -111,38 +110,38 @@ const BJtensor& DM04_Elastic::getElasticStiffness(const MaterialParameter &Mater
     double K = G * (2.0*(1.0+v)/(3.0*(1.0-2.0*v)));
        
     // Building elasticity tensor
-    ElasticState::ElasticStiffness = I_ijkl *(K - 2.0*G/3.0) + I4s *(2.0*G);
+    DM04_Elastic::ElasticStiffness = I_ijkl *(K - 2.0*G/3.0) + I4s *(2.0*G);
 
-    return ElasticState::ElasticStiffness;
+    return DM04_Elastic::ElasticStiffness;
 }
 
 ////////////////////////////////////////////////////////////////
-stresstensor DM04_Elastic::getStress() const 
+const stresstensor& DM04_Elastic::getStress() const 
 {  
-    return Stress;
+    return ElasticState::Stress;
 }
 
 // Get G0
 double DM04_Elastic::getG0(const MaterialParameter &MaterialParameter_in) const
 {
-	if ( G0_index > MaterialParameter_in.getNum_Material_Parameter() || G0_index < 2) { 
+	if ( G0_index > MaterialParameter_in.getNum_Material_Constant() || G0_index < 2) { 
 		opserr << "DM04_Elastic: Invalid Input. " << endln;
 		exit (1);
 	}
 	else
-		return MaterialParameter_in.getMaterial_Parameter(G0_index - 1); 
+		return MaterialParameter_in.getMaterial_Constant(G0_index - 1); 
 }
 
 // Get v
 double DM04_Elastic::getv(const MaterialParameter &MaterialParameter_in) const
 {
 	double v = 0.0;
-	if ( v_index > MaterialParameter_in.getNum_Material_Parameter() || v_index < 2) { 
+	if ( v_index > MaterialParameter_in.getNum_Material_Constant() || v_index < 2) { 
 		opserr << "DM04_Elastic: Invalid Input. " << endln;
 		exit (1);
 	}
 	else {
-		v = MaterialParameter_in.getMaterial_Parameter(v_index - 1);
+		v = MaterialParameter_in.getMaterial_Constant(v_index - 1);
 		if (v >= 0.5 || v <= -1.0) {
 			opserr << "Warning!! DM04_Elastic: Invalid possoin's ratio. " << endln;
 			exit (1);
@@ -154,100 +153,98 @@ double DM04_Elastic::getv(const MaterialParameter &MaterialParameter_in) const
 // Get Pat
 double DM04_Elastic::getPat(const MaterialParameter &MaterialParameter_in) const
 {
-	if ( Pat_index > MaterialParameter_in.getNum_Material_Parameter() || Pat_index < 1) { 
+	if ( Pat_index > MaterialParameter_in.getNum_Material_Constant() || Pat_index < 1) { 
 		opserr << "DM04_Elastic: Invalid Input. " << endln;
 		exit (1);
 	}
 	else
-		return MaterialParameter_in.getMaterial_Parameter(Pat_index - 1); 
+		return MaterialParameter_in.getMaterial_Constant(Pat_index - 1); 
 }
 
 // Get k_cut
 double DM04_Elastic::getk_c(const MaterialParameter &MaterialParameter_in) const
 {
-	if ( k_c_index > MaterialParameter_in.getNum_Material_Parameter() || k_c_index < 1) { 
+	if ( k_c_index > MaterialParameter_in.getNum_Material_Constant() || k_c_index < 1) { 
 		opserr << "DM04_Elastic: Invalid Input. " << endln;
 		exit (1);
 	}
 	else
-		return MaterialParameter_in.getMaterial_Parameter(k_c_index - 1); 
+		return MaterialParameter_in.getMaterial_Constant(k_c_index - 1); 
 }
 
 // Get e0
 double DM04_Elastic::gete0(const MaterialParameter &MaterialParameter_in) const
 {
-	if ( e0_index > MaterialParameter_in.getNum_Material_Parameter() || e0_index < 2) { 
+	if ( e0_index > MaterialParameter_in.getNum_Material_Constant() || e0_index < 2) { 
 		opserr << "DM04_Elastic: Invalid Input. " << endln;
 		exit (1);
 	}
 	else
-		return MaterialParameter_in.getMaterial_Parameter(e0_index - 1); 
+		return MaterialParameter_in.getMaterial_Constant(e0_index - 1); 
 }
 
-
-int 
-DM04_Elastic::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int DM04_Elastic::sendSelf(int commitTag, Channel &theChannel)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "DM04_Elastic::sendSelf() - does not send to database due to dbTags\n";
-    return -1;
-  }
-  
-  static ID iData(5);
-  iData(0) = G0_index;
-  iData(1) = v_index;
-  iData(2) = Pat_index;
-  iData(3) = k_c_index;
-  iData(4) = e0_index;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(5);
+    idData.Zero();
 
-  theChannel.sendID(dbTag, commitTag, iData);
+    idData(0) = G0_index; 
+    idData(1) = v_index;  
+    idData(2) = Pat_index;
+    idData(3) = k_c_index;
+    idData(4) =	e0_index; 
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "DM04_Elastic::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-  if (Stress.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "elnp_Elastic::sendSelf() - failed to send Stress\n";
-    return -1;
-  }
-  if (Strain.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "DM04y_Elastic::sendSelf() - failed to send Strain\n";
-    return -1;
-  }
-
-  return 0;
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "DM04_Elastic::sendSelf() -  failed to send nDarray Stress\n";
+    	return -1;
+    }
+   
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "DM04_Elastic::sendSelf() -  failed to send nDarray Strain\n";
+    	return -1;
+    }
+    
+    return 0;
 }
-int 
-DM04_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+
+//Guanzhou added for parallel
+int DM04_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "DM04_Elastic::recvSelf() - does not recv from database due to dbTags\n";
-    return -1;
-  }
+    int dataTag = this->getDbTag();
+    
+    static ID idData(5);
+    idData.Zero();
 
-  static ID iData(5);
-  int dbTag = this->getDbTag();
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "DM04_Elastic::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "DM04_Elastic::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    G0_index    = idData(0);
+    v_index     = idData(1);
+    Pat_index = idData(2);
+    k_c_index = idData(3);
+    e0_index = idData(4);
+     
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "DM04_Elastic::recvSelf() -  failed to recv nDarray Stress\n";
+    	return -1;
+    }
 
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "DM04_Elastic::recvSelf() -  failed to recv nDarray Strain\n";
+    	return -1;
+    }
 
-  G0_index = iData(0);
-  v_index = iData(1);
-  Pat_index = iData(2);
-  k_c_index = iData(3);
-  e0_index = iData(4);
-
-  if (Stress.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "DM04_Elastic::recvSelf() - failed to recv Stress\n";
-    return -1;
-  }
-  if (Strain.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "DM04_Elastic::recvSelf() - failed to recv Strain\n";
-    return -1;
-  }
-
-  return 0;
-
+    return 0;
 }
 
 #endif

@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -34,24 +34,35 @@
 #ifndef Linear_Eeq_H
 #define Linear_Eeq_H 
 
-#define SCALAR_EVOLUTION_TAGS_Linear_Eeq 1
-
 #include "ScalarEvolution.h"
+#define SE_TAG_Linear_Eeq 121003
 
 class Linear_Eeq : public ScalarEvolution
 {
   public:
   
-    Linear_Eeq(int LinearFactor_index_in =0);
+    Linear_Eeq() : ScalarEvolution(SE_TAG_Linear_Eeq) {}; //Guanzhou added for parallel processing
+
+    Linear_Eeq(int LinearFactor_index_in);
     
     ScalarEvolution* newObj();
 
-    double H(const straintensor& plastic_flow, const stresstensor& Stre, 
+    double H(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
              const straintensor& Stra, const MaterialParameter& material_parameter);
 
+    const tensor& DH_Ds(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                   const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    double DH_Diso(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                   const straintensor& Stra, const MaterialParameter& material_parameter);
+
+    const tensor& DH_Dkin(const PlasticFlow& plastic_flow, const stresstensor& Stre, 
+                   const straintensor& Stra, const MaterialParameter& material_parameter);
+    
+	//Guanzhou added for parallel
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-       
+     
   private:
   
     double getLinearFactor(const MaterialParameter& material_parameter) const;  

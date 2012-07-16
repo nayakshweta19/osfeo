@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,16 +36,23 @@
 
 #include "Isotropic_Elastic.h"
 
-#include <ID.h>
-#include <Channel.h>
+BJtensor Isotropic_Elastic::ElasticStiffness(4, def_dim_4, 0.0);
 
 Isotropic_Elastic::Isotropic_Elastic(int E_in,
                                int v_in,
                                const stresstensor& initialStress, 
                                const straintensor& initialStrain)
-  : ElasticState(initialStress, initialStrain, ELASTICSTATE_TAGS_Isotropic_Elastic),
+: ElasticState(ES_TAG_IsotropicElastic, initialStress, initialStrain),
   E_index(E_in),
   v_index(v_in)
+{
+
+}
+
+// Nima Tafazzoli added for new Material Models
+Isotropic_Elastic::Isotropic_Elastic(const stresstensor& initialStress, 
+                                     const straintensor& initialStrain)
+: ElasticState(ES_TAG_IsotropicElastic, initialStress, initialStrain)
 {
 
 }
@@ -82,93 +89,91 @@ const BJtensor& Isotropic_Elastic::getElasticStiffness(const MaterialParameter &
     }
         
     // Building elasticity tensor
-    ElasticState::ElasticStiffness = I_ijkl*( E*v / ( (1.0+v)*(1.0 - 2.0*v) ) ) + I4s*( E / (1.0 + v) );
+    Isotropic_Elastic::ElasticStiffness = I_ijkl*( E*v / ( (1.0+v)*(1.0 - 2.0*v) ) ) + I4s*( E / (1.0 + v) );
 
-    return ElasticState::ElasticStiffness;
+    return Isotropic_Elastic::ElasticStiffness;
 }
 
 // Get Young's modulus
 double Isotropic_Elastic::getE(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( E_index > MaterialParameter_in.getNum_Material_Parameter() || E_index < 1) {
+    if ( E_index > MaterialParameter_in.getNum_Material_Constant() || E_index < 1) {
       opserr << "Isotropic_Elastic: Invalid Input. " << endln;
       exit (1);
     }
     else    
-      return MaterialParameter_in.getMaterial_Parameter(E_index - 1);
+      return MaterialParameter_in.getMaterial_Constant(E_index - 1);
 }
 
 
 // Get Poisson's ratio
 double Isotropic_Elastic::getv(const MaterialParameter &MaterialParameter_in) const
 {
-    if ( v_index > MaterialParameter_in.getNum_Material_Parameter() || v_index  < 1) { 
+    if ( v_index > MaterialParameter_in.getNum_Material_Constant() || v_index  < 1) { 
       opserr << "Isotropic_Elastic: Invalid Input. " << endln;
       exit (1);
     }
     else
-      return MaterialParameter_in.getMaterial_Parameter(v_index - 1);  
+      return MaterialParameter_in.getMaterial_Constant(v_index - 1);  
 }
 
-int 
-Isotropic_Elastic::sendSelf(int commitTag, Channel &theChannel)
+//Guanzhou added for parallel
+int Isotropic_Elastic::sendSelf(int commitTag, Channel &theChannel)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "Isotropic_Elastic::sendSelf() - does not send to database due to dbTags\n";
-    return -1;
-  }
-  
-  static ID iData(2);
-  iData(0) = E_index;
-  iData(1) = v_index;
-  int dbTag = this->getDbTag();
+    int dataTag = this->getDbTag();
+    
+    static ID idData(2);
+    idData.Zero();
 
-  theChannel.sendID(dbTag, commitTag, iData);
+    idData(0) = E_index;
+    idData(1) = v_index;  
+    
+    if (theChannel.sendID(dataTag, commitTag, idData) < 0) {
+   	opserr << "Isotropic_Elastic::sendSelf -- failed to send ID\n";
+   	return -1;
+    }
 
-
-  if (Stress.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "Isotropic_Elastic::sendSelf() - failed to send Stress\n";
-    return -1;
-  }
-  if (Strain.sendSelf(0, commitTag, theChannel) < 0) {
-    opserr << "Isotropic_Elastic::sendSelf() - failed to send Strain\n";
-    return -1;
-  }
-
-  return 0;
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "Isotropic_Elastic::sendSelf() -  failed to send nDarray Stress\n";
+    	return -1;
+    }
+   
+    if (theChannel.sendnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "Isotropic_Elastic::sendSelf() -  failed to send nDarray Strain\n";
+    	return -1;
+    }
+    
+    return 0;
 }
 
-int 
-Isotropic_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+//Guanzhou added for parallel
+int Isotropic_Elastic::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-  if (theChannel.isDatastore() == 0) {
-    opserr << "Isotropic_Elastic::recvSelf() - does not recv from database due to dbTags\n";
-    return -1;
-  }
+    int dataTag = this->getDbTag();
+    
+    static ID idData(2);
+    idData.Zero();
 
-  static ID iData(2);
-  int dbTag = this->getDbTag();
+    if (theChannel.recvID(dataTag, commitTag, idData) < 0) {
+    	opserr << "Isotropic_Elastic::recvSelf -- failed to recv ID\n";
+	return -1;
+    }
 
-  if (theChannel.recvID(dbTag, commitTag, iData) < 0) {
-    opserr << "Isotropic_Elastic::recvSelf() - failed to recv data\n";
-    return -1;
-  }
+    E_index     = idData(0);
+    v_index     = idData(1);
+     
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Stress) < 0) {
+    	opserr << "Isotropic_Elastic::recvSelf() -  failed to recv nDarray Stress\n";
+    	return -1;
+    }
 
+    if (theChannel.recvnDarray(dataTag, commitTag, this->Strain) < 0) {
+    	opserr << "Isotropic_Elastic::recvSelf() -  failed to recv nDarray Strain\n";
+    	return -1;
+    }
 
-  E_index = iData(0);
-  v_index = iData(1);
-
-  if (Stress.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "Isotropic_Elastic::recvSelf() - failed to recv Stress\n";
-    return -1;
-  }
-  if (Strain.recvSelf(0, commitTag, theChannel) < 0) {
-    opserr << "Isotropic_Elastic::recvSelf() - failed to recv Strain\n";
-    return -1;
-  }
-
-  return 0;
-
+    return 0;
 }
+
 #endif
 

@@ -26,7 +26,7 @@
 // DESIGNER:          Zhao Cheng, Boris Jeremic
 // PROGRAMMER:        Zhao Cheng, 
 // DATE:              Fall 2005
-// UPDATE HISTORY:    
+// UPDATE HISTORY:    Guanzhou Jie updated for parallel Dec 2006
 //
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -36,11 +36,8 @@
 
 #include "YieldFunction.h"
 
-YieldFunction::YieldFunction(int classTag)
-  :MovableObject(classTag)
-{
+stresstensor YieldFunction::stressYF;
 
-}
 double YieldFunction::InScalarDerivative(const stresstensor& Stre, 
                                          const MaterialParameter &MaterialParameter_in, 
                                          int which) const
@@ -51,10 +48,11 @@ double YieldFunction::InScalarDerivative(const stresstensor& Stre,
 const stresstensor& YieldFunction::InTensorDerivative(const stresstensor& Stre, 
                                                       const MaterialParameter &MaterialParameter_in, 
                                                       int which) const
-{
-    // Just for compiling
-    static stresstensor ZStre;
-    return ZStre;
+{   
+    tensor Z2(2, def_dim_2, 0.0);
+    stressYF.Initialize(Z2);
+
+    return stressYF;
 }
 
 //int YieldFunction::getTensionOrCompressionType() const
