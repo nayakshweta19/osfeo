@@ -333,12 +333,12 @@ BeamFiberMaterial2d::getStress()
   //const Vector &threeDstress = theMaterial->getStress();
   
   //swap matrix indices to sort out-of-plane components 
-  for (i=0; i<6; i++) {
-  
-    ii = this->indexMap(i);
-    threeDstressCopy(ii) = threeDstress(i);
-  
-  }
+  //for (i=0; i<6; i++) {
+  //
+  //  ii = this->indexMap(i);
+  //  threeDstressCopy(ii) = threeDstress(i);
+  //
+  //}
   
   for (i=0; i<2; i++) 
     this->stress(i)     = threeDstressCopy(i);
