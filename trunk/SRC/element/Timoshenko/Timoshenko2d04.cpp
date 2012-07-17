@@ -333,19 +333,20 @@ Timoshenko2d04::update(void)
       break;
         }
       }
+	  opserr << "\t\tSection("<<i<<") strain Vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-	  opserr << "\t\t\t\t\t Vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
 	  Rslt = theSections[i]->getStressResultant();
+
 	  if (e(1) != 0 && e(2) != 0 && Rslt(1) != 0 && Rslt(2) != 0) {
 	    EI = Rslt(1)/e(1);
 		GA = Rslt(2)/e(2);
-		opserr << "\t\t\t\t\t Omega["<< i <<"]="<< "M/phi*gamma/V/L^2=" << Rslt(1) << "/"<< e(1) << "*" << e(2) << "/" << Rslt(2) << "=" << EI/GA/L/L << endln;
+		opserr << "\t\t Omega["<< i <<"]="<< "M/phi*gamma/V/L^2=" << Rslt(1) << "/"<< e(1) << "*" << e(2) << "/" << Rslt(2) << "=" << EI/GA/L/L << endln;
 	  } else {
 		const Matrix &ks = theSections[i]->getSectionTangent();
         EI = ks(1,1);
 		GA = ks(2,2);
-		opserr << "\t\t\t\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
+		opserr << "\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
 	  }
 	  temp += EI/GA/shearCF/L/L * wts[i]; //(1.-wts[i])/(numSections-1)
 	}

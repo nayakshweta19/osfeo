@@ -253,7 +253,7 @@ int TimoshenkoSection2d::setTrialSectionDeformation (const Vector &deforms)
       
     eps(0) = e(0) - y * e(1);
     eps(1) = e(2);
-    
+    opserr << "\t\t\tfiber("<<i<<") Strain (Epsilon, Gamma): "<< eps(0) << ", " <<eps(1) <<endln;
     res += theMaterials[i]->setTrialStrain(eps);
   }
 
@@ -405,7 +405,7 @@ TimoshenkoSection2d::getStressResultant(void)
     y = matData[i*3] - yBar;
     z = matData[i*3+1] - zBar;
     w = matData[i*3+2];
-    
+    opserr << "\t\t\tGet fiber("<<i<<")'s stress Vector (N, Mz, Vy) " <<endln;
     const Vector &sig = theMaterials[i]->getStress();
     
     sig0 = sig(0)*w;

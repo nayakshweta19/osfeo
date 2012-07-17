@@ -400,7 +400,7 @@ void J2Plasticity :: Print( OPS_Stream &s, int flag )
 //plasticity integration routine
 void J2Plasticity :: plastic_integrator( )
 {
-  opserr << "xi_n" <<  xi_n << endln;
+  opserr << "\t\t\t\txi_n : " <<  xi_n << endln;
 
   //for (int i=0; i<3; i++) 
   //  for (int j=0; j<3; j++) 
@@ -587,7 +587,7 @@ void J2Plasticity :: plastic_integrator( )
 
     } // end for jj
   } // end for ii
-  opserr << "xi_n" <<  xi_n << endln;
+  opserr << "\t\t\t\txi_nplus1: " <<  xi_nplus1 << endln;
   return ;
 } 
 
