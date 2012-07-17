@@ -73,7 +73,9 @@ class MPI_Channel : public Channel
     
     int sendID(int dbTag, int commitTag, const ID &theID, ChannelAddress *theAddress =0);
     int recvID(int dbTag, int commitTag, ID &theID, ChannelAddress *theAddress =0);    
-    
+    //Guanzhou added
+    int sendnDarray(int dbTag, int commitTag, const nDarray &theNDarray, ChannelAddress *theAddress =0);
+    int recvnDarray(int dbTag, int commitTag, nDarray &theNDarray, ChannelAddress *theAddress = 0);
     
   protected:
 	
