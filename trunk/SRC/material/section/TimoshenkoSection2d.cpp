@@ -405,7 +405,7 @@ TimoshenkoSection2d::getStressResultant(void)
     y = matData[i*3] - yBar;
     z = matData[i*3+1] - zBar;
     w = matData[i*3+2];
-    opserr << "\t\t\tGet fiber("<<i<<")'s stress Vector (N, Mz, Vy) " <<endln;
+    
     const Vector &sig = theMaterials[i]->getStress();
     
     sig0 = sig(0)*w;
@@ -414,7 +414,7 @@ TimoshenkoSection2d::getStressResultant(void)
     sData[0] += sig0;
     sData[1] -= y*sig0;
     sData[2] += sig1;
-
+opserr << "\t\t\tGet fiber("<<i<<")'s stress Vector (N, Mz, Vy)=("<<sig0<<","<<-y*sig0<<","<<sig1<<")" <<endln;
   }
 
   return *s;
