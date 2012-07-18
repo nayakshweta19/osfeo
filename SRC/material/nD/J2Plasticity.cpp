@@ -400,12 +400,6 @@ void J2Plasticity :: Print( OPS_Stream &s, int flag )
 //plasticity integration routine
 void J2Plasticity :: plastic_integrator( )
 {
-  opserr << "\t\t\t\txi_n : " <<  xi_n << endln;
-
-  //for (int i=0; i<3; i++) 
-  //  for (int j=0; j<3; j++) 
-  //    data(cnt++) = epsilon_p_n(i,j);
-
   const double tolerance = (1.0e-8)*sigma_0 ;
 
   const double dt = ops_Dt ; //time step
@@ -587,7 +581,8 @@ void J2Plasticity :: plastic_integrator( )
 
     } // end for jj
   } // end for ii
-  opserr << "\t\t\t\txi_nplus1: " <<  xi_nplus1 << endln;
+  if(xi_n!=xi_nplus1) opserr <<"\t\t\t\tXi_n= "<<  xi_n << ", Xi_n+1="<<xi_nplus1 << endln;
+  else  opserr <<"\t\t\t\tXi_n= "<<  xi_n<< endln;
   return ;
 } 
 

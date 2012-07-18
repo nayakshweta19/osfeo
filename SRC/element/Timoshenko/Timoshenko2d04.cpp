@@ -301,7 +301,7 @@ Timoshenko2d04::update(void)
   Vector e(workArea, order);
 
   do {
-	if (Omega != temp) Omega = temp; //
+	//if (Omega != temp) Omega = temp; 
 	opserr << "\tTrial Omega: "<< Omega << endln;
 	temp =0.0;
     // Loop over the integration points
@@ -333,11 +333,11 @@ Timoshenko2d04::update(void)
       break;
         }
       }
-	  opserr << "\t\tSection("<<i<<") strain Vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
+	  opserr << "\t\tSection("<<i<<") strain vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
 	  Rslt = theSections[i]->getStressResultant();
-
+	  opserr << "\t\tSection("<<i<<") stress vector e="<<Rslt(0)<<" "<<Rslt(1)<<" "<<Rslt(2)<< endln; 
 	  if (e(1) != 0 && e(2) != 0 && Rslt(1) != 0 && Rslt(2) != 0) {
 	    EI = Rslt(1)/e(1);
 		GA = Rslt(2)/e(2);
@@ -353,6 +353,7 @@ Timoshenko2d04::update(void)
 
 	error = abs(temp - Omega);
 	opserr << "\tmean Omega=" << temp << endln;
+	Omega = temp; 
   } while (error > tol);
 
   opserr << "Final Omega: "<< Omega << endln;
