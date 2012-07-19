@@ -298,64 +298,79 @@ Timoshenko3d04::update(void)
 
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
-
+  int order = theSections[0]->getOrder();     // Section 0 for all
+  const ID &code = theSections[0]->getType(); // Section 0 for all
   double x;
-  double OmegaZ, muZ, zh, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //,
-  double OmegaY, muY, yh, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //, 
-  // Loop over the integration points
-  for (int i = 0; i< numSections; i++) {
-    x      = L * pts[i];
-    int order = theSections[i]->getOrder();
-    const ID &code = theSections[i]->getType();
-	//const Matrix &ks = theSections[i]->getSectionTangent();
-	//zh = theSections[i]->getZh();
-	OmegaZ = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L;
-	muZ    = 1./(1.+12.*OmegaZ);
-	//phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
-	phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
-	//phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
-	phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
-	phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
-	phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
-	phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
-	phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
+  double OmegaZ, muZ, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //, zh,
+  double OmegaY, muY, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //,yh, 
+  double EIz,EIy, GAz,GAy, tempZ,tempY,errZ=1.,errY=1.,tol=1.e-4;
+  Vector e(workArea, order);
 
-	//yh = theSections[i]->getYh();
-	OmegaY = theSections[i]->getEIy()/theSections[i]->getGAz()/(5./6.)/L/L;
-	muY    = 1./(1.+12.*OmegaY);
-	//phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
-	phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
-	//phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
-	phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
-	phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
-	phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
-	phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
-	phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
+  do{
+	tempZ=0.;tempY=0.;
+    // Loop over the integration points
+    for (int i = 0; i< numSections; i++) {
+      x      = L * pts[i];
 
-    Vector e(workArea, order);
-	//P, Mz, My, Vy, Vz, T
-    for (int j = 0; j < order; j++) {
-      switch(code(j)) {
+	  OmegaZ = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L;
+	  muZ    = 1./(1.+12.*OmegaZ);
+	  //phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
+	  phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
+	  //phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
+	  phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
+	  phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
+	  phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
+	  phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
+	  phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
+
+  	  OmegaY = theSections[i]->getEIy()/theSections[i]->getGAz()/(5./6.)/L/L;
+  	  muY    = 1./(1.+12.*OmegaY);
+  	  //phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
+  	  phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
+  	  //phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
+  	  phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
+  	  phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
+  	  phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
+  	  phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
+  	  phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
+
+  	  //P, Mz, My, Vy, Vz, T
+      for (int j = 0; j < order; j++) {
+    switch(code(j)) {
       case SECTION_RESPONSE_P:     // axial strain
-	e(j) = oneOverL*v(0); break;
+  	e(j) = oneOverL*v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-	e(j) = phi3pZ* v(1) + phi4pZ* v(2); break;
-	  case SECTION_RESPONSE_MY:    // curvature
-	e(j) = phi3pY* v(3) + phi4pY* v(4); break;
-	  case SECTION_RESPONSE_VY:    // shear strain
-	e(j) = (phi1pY - phi3Y) * v(1) + (phi2pY-phi4Y) * v(2); break;
+  	e(j) = phi3pZ* v(1) + phi4pZ* v(2); break;
+  	  case SECTION_RESPONSE_MY:    // curvature
+  	e(j) = phi3pY* v(3) + phi4pY* v(4); break;
+  	  case SECTION_RESPONSE_VY:    // shear strain
+  	e(j) = (phi1pY - phi3Y) * v(1) + (phi2pY-phi4Y) * v(2); break;
       case SECTION_RESPONSE_VZ:    // shear strain
-	e(j) = (phi1pZ - phi3Z) * v(3) + (phi2pZ-phi4Z) * v(4); break;
-	  case SECTION_RESPONSE_T:     // Torsion
-	e(j) = oneOverL*v(5); break;
-	  default:
-	break;
+  	e(j) = (phi1pZ - phi3Z) * v(3) + (phi2pZ-phi4Z) * v(4); break;
+  	  case SECTION_RESPONSE_T:     // Torsion
+  	e(j) = oneOverL*v(5); break;
+  	  default:
+  	break;
+    }
       }
-	}
+  
+      const Matrix &ks = theSections[i]->getSectionTangent();
+	  EIz = ks(1,1);
+	  EIy = ks(2,2);
+	  GAy = ks(3,3);
+	  GAz = ks(4,4);
+	  tempZ += EIz/GAy/L/L/numSections;
+	  tempY += EIy/GAz/L/L/numSections;
 
-    // Set the section deformations
-	err += theSections[i]->setTrialSectionDeformation(e);
-  }
+	  // Set the section deformations
+  	  err += theSections[i]->setTrialSectionDeformation(e);
+    }
+	errZ = abs(tempZ - OmegaZ);
+	errY = abs(tempY - OmegaY);
+	OmegaZ = tempZ;
+	OmegaY = tempY;
+
+  }while(errZ > tol || errY > tol);
 
   if (err != 0) {
     opserr << "Timoshenko3d04::update() - failed setTrialSectionDeformations(e)\n";

@@ -297,7 +297,7 @@ Timoshenko2d04::update(void)
 
   double mu, x, N1,N2,N3,N4, error = 1.0, temp=0., tol = 1.e-4;
   double EI, GA;
-  Vector Rslt(3);
+  //Vector Rslt(3);
   Vector e(workArea, order);
 
   do {
