@@ -117,6 +117,7 @@ extern void *OPS_NewShell02(void);
 extern void *OPS_NewShellNL(void);
 extern void *OPS_Quad4FiberOverlay(void);
 extern void *OPS_Brick8FiberOverlay(void);
+extern void *OPS_TripleFrictionPendulum(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
@@ -779,6 +780,16 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
   opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
   return TCL_ERROR;
 	}
+
+  } else if (strcmp(argv[1],"TripleFrictionPendulum") == 0) {
+    
+    void *theEle = OPS_TripleFrictionPendulum();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
   }
 
   else if ((strcmp(argv[1],"MultiFP2d") == 0) || (strcmp(argv[1],"MultiFPB2d") == 0)){

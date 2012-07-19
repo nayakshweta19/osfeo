@@ -581,8 +581,8 @@ void J2Plasticity :: plastic_integrator( )
 
     } // end for jj
   } // end for ii
-  if(xi_n!=xi_nplus1) opserr <<"\t\t\t\tXi_n= "<<  xi_n << ", Xi_n+1="<<xi_nplus1 << endln;
-  else  opserr <<"\t\t\t\tXi_n= "<<  xi_n<< endln;
+  //if(xi_n!=xi_nplus1) opserr <<"\t\t\t\tXi_n= "<<  xi_n << ", Xi_n+1="<<xi_nplus1 << endln;
+  //else  opserr <<"\t\t\t\tXi_n= "<<  xi_n<< endln;
   return ;
 } 
 

@@ -301,8 +301,7 @@ Timoshenko2d04::update(void)
   Vector e(workArea, order);
 
   do {
-	//if (Omega != temp) Omega = temp; 
-	opserr << "\tTrial Omega: "<< Omega << endln;
+	//opserr << "\tTrial Omega: "<< Omega << endln;
 	temp =0.0;
     // Loop over the integration points
     for (int i = 0; i<numSections; i++) {
@@ -333,30 +332,30 @@ Timoshenko2d04::update(void)
       break;
         }
       }
-	  opserr << "\t\tSection("<<i<<") strain vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
+      //opserr << "\t\tSection("<<i<<") strain vector e=" << e(0) <<" " << e(1) << " " << e(2) << endln; 
       // Set the section deformations
       err += theSections[i]->setTrialSectionDeformation(e);
-	  Rslt = theSections[i]->getStressResultant();
-	  opserr << "\t\tSection("<<i<<") stress vector e="<<Rslt(0)<<" "<<Rslt(1)<<" "<<Rslt(2)<< endln; 
-	  if (e(1) != 0 && e(2) != 0 && Rslt(1) != 0 && Rslt(2) != 0) {
-	    EI = Rslt(1)/e(1);
-		GA = Rslt(2)/e(2);
-		opserr << "\t\t Omega["<< i <<"]="<< "M/phi*gamma/V/L^2=" << Rslt(1) << "/"<< e(1) << "*" << e(2) << "/" << Rslt(2) << "=" << EI/GA/L/L << endln;
-	  } else {
+	  //Rslt = theSections[i]->getStressResultant();
+	  //opserr << "\t\tSection("<<i<<") stress vector e="<<Rslt(0)<<" "<<Rslt(1)<<" "<<Rslt(2)<< endln; 
+	  //if (e(1) != 0 && e(2) != 0 && Rslt(1) != 0 && Rslt(2) != 0) {
+	  //  EI = Rslt(1)/e(1);
+	  //  GA = Rslt(2)/e(2);
+	  //  opserr << "\t\t Omega["<< i <<"]="<< "M/phi*gamma/V/L^2=" << Rslt(1) << "/"<< e(1) << "*" << e(2) << "/" << Rslt(2) << "=" << EI/GA/L/L << endln;
+	  //} else {
 		const Matrix &ks = theSections[i]->getSectionTangent();
         EI = ks(1,1);
 		GA = ks(2,2);
-		opserr << "\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
-	  }
-	  temp += EI/GA/shearCF/L/L * wts[i]; //(1.-wts[i])/(numSections-1)
+		//opserr << "\t\t Omega["<< i <<"]="<< "EI/GA/L^2=" << EI << "/"<< GA << "=" << EI/GA/L/L << endln;
+	  //}
+	  temp += EI/GA/shearCF/L/L /numSections; //(1.-wts[i])/(numSections-1)wts[i]
 	}
 
 	error = abs(temp - Omega);
-	opserr << "\tmean Omega=" << temp << endln;
+	//opserr << "\tmean Omega=" << temp << endln;
 	Omega = temp; 
   } while (error > tol);
 
-  opserr << "Final Omega: "<< Omega << endln;
+  //opserr << "Final Omega: "<< Omega << endln;
 
   if (err != 0) {
     opserr << "Timoshenko2d04::update() - failed setTrialSectionDeformations(e)\n";

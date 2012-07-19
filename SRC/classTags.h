@@ -577,6 +577,7 @@
 #define ELE_TAG_TPB1D 17
 #define ELE_TAG_TFP_Bearing 20
 #define ELE_TAG_TFP_Bearing2d 21
+#define ELE_TAG_TripleFrictionPendulum 777
 
 #define FRN_TAG_CoulombFriction     1
 #define FRN_TAG_VDependentFriction  2
