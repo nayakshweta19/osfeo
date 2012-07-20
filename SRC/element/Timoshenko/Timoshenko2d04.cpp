@@ -319,7 +319,7 @@ Timoshenko2d04::update(void)
       N1 = mu*(6.*x-4.*L*(1.+3.*Omega))/L/L;
 	  N2 = 2.*mu*(3.*x+L*(6.*Omega-1.))/L/L;
 	  N3 = 6.*mu*Omega; //*2.*(1-x/L)
-	  N4 = 6.*mu*Omega;   //*2.*(x/L)
+	  //N4 = 6.*mu*Omega;   //*2.*(x/L)
       for (int j = 0; j < order; j++) {
         switch(code(j)) {
         case SECTION_RESPONSE_P:     // axial strain
@@ -327,7 +327,7 @@ Timoshenko2d04::update(void)
         case SECTION_RESPONSE_MZ:    // curvature
       e(j) = N1 * v(1) + N2* v(2); break;
         case SECTION_RESPONSE_VY:    // shear strain
-      e(j) = N3 * v(1) + N4 * v(2); break;
+      e(j) = N3 * (v(1) + v(2)); break;
         default:
       break;
         }

@@ -354,7 +354,7 @@ Timoshenko3d04::update(void)
     }
       }
   
-      const Matrix &ks = theSections[i]->getSectionTangent();
+      const Matrix &ks = theSections[i]->getSectionTangent(); //P;MZ;MY;VY;VZ;T
 	  EIz = ks(1,1);
 	  EIy = ks(2,2);
 	  GAy = ks(3,3);
@@ -367,10 +367,10 @@ Timoshenko3d04::update(void)
     }
 	errZ = abs(tempZ - OmegaZ);
 	errY = abs(tempY - OmegaY);
-	OmegaZ = tempZ;
-	OmegaY = tempY;
+	if (errZ > tol) OmegaZ = tempZ;
+	if (errY > tol) OmegaY = tempY;
 
-  }while(errZ > tol || errY > tol);
+  } while (errZ > tol || errY > tol);
 
   if (err != 0) {
     opserr << "Timoshenko3d04::update() - failed setTrialSectionDeformations(e)\n";
