@@ -39,6 +39,8 @@
 Vector BeamFiberMaterial2d::stress(2);
 Matrix BeamFiberMaterial2d::tangent(2,2);
 
+#define MAXITER 200
+
 BeamFiberMaterial2d::BeamFiberMaterial2d(void)
 : NDMaterial(0, ND_TAG_BeamFiberMaterial2d),
 Tstrain22(0.0), Tstrain33(0.0), Tgamma23(0.0), Tgamma31(0.0),
@@ -175,7 +177,7 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
   static Matrix threeDtangentCopy(6,6);
   static Matrix dd22(4,4);
 
-  int i, j, ii, jj;
+  int i, j, ii, jj, numIter=0;
 
   do {
     //set three dimensional strain
@@ -238,6 +240,8 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
     this->Tstrain33 -= strainIncrement(2);
     this->Tgamma23  -= strainIncrement(3);
 
+	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial2d::setTrialStrain()-numIter > "<<MAXITER <<endln; break;}
+
   } while (norm > tolerance);
 
   return 0;
@@ -264,8 +268,7 @@ BeamFiberMaterial2d::getStress()
   static Matrix threeDtangentCopy(6,6);
   static Matrix dd22(4,4);
 
-  int i, j;
-  int ii, jj;
+  int i, j, ii, jj, numIter=0;
 
   do {
 	  //set three dimensional strain
@@ -328,6 +331,8 @@ BeamFiberMaterial2d::getStress()
 	this->Tstrain33 -= strainIncrement(2);
 	this->Tgamma23  -= strainIncrement(3);
 
+	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial2d::getStress()-numIter >  "<<MAXITER<< endln; break;}
+
   } while (norm > tolerance);
   
   //const Vector &threeDstress = theMaterial->getStress();
@@ -359,7 +364,7 @@ BeamFiberMaterial2d::getTangent()
   const Matrix &threeDtangent = theMaterial->getTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
+  int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
     ii = this->indexMap(i);
@@ -414,7 +419,7 @@ BeamFiberMaterial2d::getInitialTangent()
   const Matrix &threeDtangent = theMaterial->getInitialTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
+  int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
     ii = this->indexMap(i);

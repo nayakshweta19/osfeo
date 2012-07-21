@@ -32,6 +32,8 @@ double Timoshenko2d04::workArea[100];
 Matrix *Timoshenko2d04::bd = 0;
 Matrix *Timoshenko2d04::nd = 0;
 
+#define MAXITER 200
+
 Timoshenko2d04::Timoshenko2d04(int tag, 
 					 int nd1, 
 					 int nd2,	
@@ -299,7 +301,7 @@ Timoshenko2d04::update(void)
   double EI, GA;
   //Vector Rslt(3);
   Vector e(workArea, order);
-
+  int iterNum=0;
   do {
 	//opserr << "\tTrial Omega: "<< Omega << endln;
 	temp =0.0;
@@ -352,7 +354,7 @@ Timoshenko2d04::update(void)
 
 	error = abs(temp - Omega);
 	//opserr << "\tmean Omega=" << temp << endln;
-	Omega = temp; 
+	Omega = temp; iterNum ++; if (iterNum > MAXITER) {opserr<<"Timoshenko2d04::update()-iterNum > "<<MAXITER<< endln; break;}
   } while (error > tol);
 
   //opserr << "Final Omega: "<< Omega << endln;
