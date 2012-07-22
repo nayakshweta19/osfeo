@@ -297,7 +297,7 @@ Timoshenko2d04::update(void)
   int order = theSections[0]->getOrder();     // Section 0 for all
   const ID &code = theSections[0]->getType(); // Section 0 for all
 
-  double mu, x, N1,N2,N3,N4, error = 1.0, temp=0., tol = 1.e-4;
+  double mu, x, N1, N2, N3, error = 1.0, temp=0., tol = 1.e-4; //N4,
   double EI, GA;
   //Vector Rslt(3);
   Vector e(workArea, order);
