@@ -349,7 +349,7 @@ PlaneStressFiberMaterial::getTangent()
   const Matrix &twoDtangent = theMaterial->getTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
+  int i, j, ii, jj;
   for (i=0; i<3; i++) {
     ii = this->indexMap(i);
     for (j=0; j<3; j++) {
@@ -362,10 +362,10 @@ PlaneStressFiberMaterial::getTangent()
     for (j=0; j<2; j++) 
       dd11(i,j) = twoDtangentCopy(i,j);
 
-  for (int i = 0; i < 2; i++)
+  for (i = 0; i < 2; i++)
     dd12(i,0) = twoDtangentCopy(i,2);
 
-  for (int j = 0; j < 2; j++)
+  for (j = 0; j < 2; j++)
     dd21(0,j) = twoDtangentCopy(2,j);
 
   dd22(0,0)   = twoDtangentCopy(2,2);
@@ -393,7 +393,7 @@ PlaneStressFiberMaterial::getInitialTangent()
   const Matrix &twoDtangent = theMaterial->getInitialTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j , ii, jj;
+  int i, j, ii, jj;
   for (i=0; i<3; i++) {
     ii = this->indexMap(i);
     for (j=0; j<3; j++) {
@@ -406,10 +406,10 @@ PlaneStressFiberMaterial::getInitialTangent()
     for (j=0; j<2; j++) 
       dd11(i,j) = twoDtangentCopy(i,j);
 
-  for (int i = 0; i < 2; i++)
+  for (i = 0; i < 2; i++)
     dd12(i,0) = twoDtangentCopy(i,2);
 
-  for (int j = 0; j < 2; j++)
+  for (j = 0; j < 2; j++)
     dd21(0,j) = twoDtangentCopy(2,j);
 
   dd22(0,0)   = twoDtangentCopy(2,2);

@@ -71,7 +71,7 @@ OPS_NewNonlinearBSMaterial()
 
   if ( numRemainingArgs == 27) {
 	double dData[26];
-	int numData = 26;
+	numData = 26;
 	if (OPS_GetDouble(&numData, dData) != 0) {
 	  opserr << "WARNING invalid data NonlinearBS tag: " << tag << endln;
 	  return 0;
@@ -88,7 +88,7 @@ OPS_NewNonlinearBSMaterial()
   if (numRemainingArgs == 31) {
 	
 	double dData[30];
-	int numData = 30;
+	numData = 30;
 	if (OPS_GetDouble(&numData, dData) != 0) {
 	  opserr << "WARNING invalid data NonlinearBS tag: " << tag << endln;
 	  return 0;
@@ -1929,7 +1929,6 @@ NonlinearBS::Tens_UnloadingP (double epsc, double epsc2, double epscP, double si
 		double sigtmin = friction-0.000001*ec0*depsc;
 		double etmin = -0.000001*ec0;
 		
-		double epn = ept + dept;
 		double offset = - epsc0 - epn + slip * epn;
 		double ratLocal = -( 0.00001 + offset ) / epsc0;
 		double sigtcr = - ( fc * ratLocal * ( 2.0 - ratLocal )) - friction + fc;
@@ -1940,7 +1939,6 @@ NonlinearBS::Tens_UnloadingP (double epsc, double epsc2, double epscP, double si
 			
 			double Ec0 = 2.0*fc/epsc0;
 			double eSlip0 = (1-slip)*epn; // slip strain
-			double offset = - epsc0 - epn + slip * epn;
 			
 			if ( eSlip0 >= epsc ) {
 				double eFF = -M*eSlip0;
@@ -2017,7 +2015,6 @@ NonlinearBS::Tens_UnloadingN (double epsc, double epsc2, double epscP, double si
 		double eSlip0 = (1-slip)*epn; // slip strain
 		double eFF = -M*eSlip0;
 		double sigFF;
-		double Edummy;
 		this->Compr_Envlp(eFF, epsc2, sigFF, Edummy);
 		double Sige0 = sigFF/Yint;
 		double AA, BB, CC;
@@ -2085,8 +2082,6 @@ NonlinearBS::Compr_Reloading (double epsc, double epsc2, double epscP, double si
 	}
 	
 	if(epn<rot1p){
-		double epn = ept + dept;
-		double sicn;
 		this->Tens_Envlp(dept, epscP, Alpha, sicn, Ect);
 		double eZEROsig = epn - sicn/ec0;
 		double DeltaEps = (ecmin - epscP);

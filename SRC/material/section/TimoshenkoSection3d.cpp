@@ -705,7 +705,7 @@ TimoshenkoSection3d::recvSelf(int commitTag, Channel &theChannel,
     int i;
     for (i=0; i<numFibers; i++) {
       int classTag = materialData(2*i);
-      int dbTag = materialData(2*i+1);
+      dbTag = materialData(2*i+1);
 
       // if material pointed to is blank or not of correct type, 
       // release old and create a new one

@@ -456,7 +456,7 @@ void MultiaxialCyclicPlasticity :: elastic_integrator( )
   static Matrix dev_stress(3,3) ; //deviatoric stress
 
   // add
-  double pressure;                // 1/3 trace(stress) 
+  double pressure = 0.0;          // 1/3 trace(stress) 
 
   double trace = 0.0 ; //trace of strain
 
@@ -827,7 +827,7 @@ void MultiaxialCyclicPlasticity::plastic_integrator()
   double Hn1=0;
   double ftrial;
   double temp;
-  double normde;
+  double normde = 0.0;
   double fn;
   int zeroloadflag;
   int showdebugInfo;

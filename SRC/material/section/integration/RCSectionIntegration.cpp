@@ -129,12 +129,12 @@ RCSectionIntegration::getFiberLocations(int nFibers, double *yi, double *zi)
 
   if (Nfs > 2) {
     double spacing = (d-2*cover)/(Nfs-1);
-    for (int i = 1; i <= Nfs-2; i++)
+    for (i = 1; i <= Nfs-2; i++)
       yi[loc++] = (-0.5*d+cover) + spacing*i;
   }
 
   if (zi != 0) {
-    for (int i = 0; i < nFibers; i++)
+    for (i = 0; i < nFibers; i++)
       zi[i] = 0.0;
   }
 
@@ -292,7 +292,7 @@ RCSectionIntegration::getLocationsDeriv(int nFibers, double *dyidh, double *dzid
     
     if (Nfs > 2) {
       double dspacingdh = (dddh-2*dcoverdh)/(Nfs-1);
-      for (int i = 1; i <= Nfs-2; i++)
+      for (i = 1; i <= Nfs-2; i++)
 	dyidh[loc++] = (-0.5*dddh+dcoverdh) + dspacingdh*i;
     }
   }

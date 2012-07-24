@@ -180,7 +180,8 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
   lastStress(3),Tstress(3),
   strain_vec(3),strainC_vec(3),strainSlip_vec(3),strainC0_vec(3),strainS0_vec(3),
   strainCp_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3),
+  citaE(0.0), citaS(0.0)
 {
     steelStatus = 0;
     dirStatus = 0;
@@ -288,7 +289,8 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
 MCFTRCPlaneStress02::MCFTRCPlaneStress02()
  :NDMaterial(0, ND_TAG_MCFTRCPlaneStress02),lastStress(3),Tstress(3),strain_vec(3),
   strainC_vec(3),strainSlip_vec(3),strainC0_vec(3),strainS0_vec(3),strainCp_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3),
+  citaE(0.0), citaS(0.0)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -790,7 +792,7 @@ MCFTRCPlaneStress02::determineTrialStress(Vector strain)
   Tstrain(2) = 0.5*strain(2);
   
   double temp;
-  double epsC1, epsC2, citaS, temp_citaS, citaE, temp_citaE; // principal strain direction
+  double epsC1, epsC2, temp_citaS, temp_citaE; // principal strain direction
   
   // Get epsC1,epsC2 and citaS based on Tstrain, eq.i-10
 

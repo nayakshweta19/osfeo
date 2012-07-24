@@ -2875,7 +2875,6 @@ EPState Template3Dep::BackwardEulerEPState( const straintensor &strain_increment
       //double new_S = 0;
 
       	stresstensor dT;
-      	stresstensor T;
       	stresstensor new_T;
 
     //if ( delta_lambda < 0) delta_lambda = 0;
@@ -3027,24 +3026,24 @@ EPState Template3Dep::BackwardEulerEPState( const straintensor &strain_increment
            //Criterion.kappa_set( Return_stress, q_ast) ;
   
            // Generating Consistent Stiffness Tensor Eep
-           tensor I2("I", 2, def_dim_2);
-           tensor I_ijkl = I2("ij")*I2("kl");
+           //tensor I2("I", 2, def_dim_2);
+           //tensor I_ijkl = I2("ij")*I2("kl");
            I_ijkl.null_indices();
-           tensor I_ikjl = I_ijkl.transpose0110();
+           //tensor I_ikjl = I_ijkl.transpose0110();
   
   
            dQods = getPS()->dQods( &EP_PredictorEPS ); // this is m_ij
-           tensor temp2 = E("ijkl")*dQods("kl");
+           temp2 = E("ijkl")*dQods("kl");
            temp2.null_indices();
            dFods = getYS()->dFods( &EP_PredictorEPS ); // this is n_ij
            d2Qoverds2 = getPS()->d2Qods2( &EP_PredictorEPS );
   
-           tensor T = I_ikjl + E("ijkl")*d2Qoverds2("klmn")*Delta_lambda;
+           T = I_ikjl + E("ijkl")*d2Qoverds2("klmn")*Delta_lambda;
        //tensor tt = E("ijkl")*d2Qoverds2("klmn")*Delta_lambda;
      //tt.printshort("temp tt");
      //T = I_ikjl + tt;
            T.null_indices();
-           tensor Tinv = T.inverse();
+           Tinv = T.inverse();
   
            tensor R = Tinv("ijmn")*E("ijkl");
            R.null_indices();
@@ -3127,10 +3126,10 @@ EPState Template3Dep::BackwardEulerEPState( const straintensor &strain_increment
   
   
      // tensor temp3lower = dFods("ot")*R("otpq")*dQods("pq");  // Bug found, Z Cheng, Jan 2004
-     tensor temp3lower = dFods("ot")*R("otpq")*H("pq");
+     temp3lower = dFods("ot")*R("otpq")*H("pq");
          temp3lower.null_indices();
   
-         double lower = temp3lower.trace();
+         lower = temp3lower.trace();
   
          lower = lower - hardMod_;  // h
      //opserr << " 2nd hardMod_ " <<  hardMod_ << "\n";

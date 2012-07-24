@@ -45,7 +45,7 @@ Timoshenko3d04::Timoshenko3d04(int tag,
 					 double r)
     :Element (tag, ELE_TAG_Timoshenko3d04), 
     numSections(numSec), theSections(0), crdTransf(0), beamInt(0),
-    connectedExternalNodes(2), 
+    connectedExternalNodes(2), OmegaZ(0.0), OmegaY(0.0),
 	Q(12), q(6), rho(r), parameterID(0)
 {
   // Allocate arrays of pointers to SectionForceDeformations
@@ -115,7 +115,7 @@ Timoshenko3d04::Timoshenko3d04(int tag,
 Timoshenko3d04::Timoshenko3d04()
 	:Element (0, ELE_TAG_Timoshenko3d04),
 	numSections(0), theSections(0), crdTransf(0), beamInt(0),
-	connectedExternalNodes(2),
+	connectedExternalNodes(2), OmegaZ(0.0), OmegaY(0.0),
 	Q(12), q(6), rho(0.0), parameterID(0)
 {
   q0[0] = 0.0;
@@ -301,8 +301,8 @@ Timoshenko3d04::update(void)
   int order = theSections[0]->getOrder();     // Section 0 for all
   const ID &code = theSections[0]->getType(); // Section 0 for all
   double x;
-  double OmegaZ, muZ, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //, zh,
-  double OmegaY, muY, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //,yh, 
+  double muZ, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //, zh,
+  double muY, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //,yh, 
   double EIz,EIy, GAz,GAy, tempZ,tempY,errZ=1.,errY=1.,tol=1.e-4;
   Vector e(workArea, order);
 
@@ -845,7 +845,7 @@ Timoshenko3d04::recvSelf(int commitTag, Channel &theChannel,
 
     // delete the old
     if (numSections != 0) {
-      for (int i=0; i<numSections; i++)
+      for (i=0; i<numSections; i++)
 	delete theSections[i];
       delete [] theSections;
     }
@@ -1216,7 +1216,7 @@ Timoshenko3d04::getNd(int sec, const Vector &v, double L)
   //const Matrix &ks = theSections[sec]->getSectionTangent();
 
   //double zh = theSections[sec]->getZh();
-  double OmegaZ = theSections[sec]->getEIz()/theSections[sec]->getGAy()/(5./6.)/L/L;
+  //double OmegaZ = theSections[sec]->getEIz()/theSections[sec]->getGAy()/(5./6.)/L/L;
   double muZ    = 1./(1.+12.*OmegaZ);
   double phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
   //double phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
@@ -1228,7 +1228,7 @@ Timoshenko3d04::getNd(int sec, const Vector &v, double L)
   //double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
   //double yh = theSections[sec]->getYh();
-  double OmegaY = theSections[sec]->getEIy()/theSections[sec]->getGAy()/(5./6.)/L/L;
+  //double OmegaY = theSections[sec]->getEIy()/theSections[sec]->getGAy()/(5./6.)/L/L;
   double muY    = 1./(1.+12.*OmegaY);
   double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
   //double phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
@@ -1266,7 +1266,7 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
   //const Matrix &ks = theSections[sec]->getSectionTangent();
 
   //double zh = theSections[sec]->getZh();
-  double OmegaZ = theSections[sec]->getEIy()/theSections[sec]->getGAz()/(5./6.)/L/L;
+  //double OmegaZ = theSections[sec]->getEIy()/theSections[sec]->getGAz()/(5./6.)/L/L;
   double muZ    = 1./(1.+12.*OmegaZ);
   double phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
   double phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
@@ -1278,7 +1278,7 @@ Timoshenko3d04::getBd(int sec, const Vector &v, double L)
   double phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
 
   //double yh = theSections[sec]->getYh();
-  double OmegaY = theSections[sec]->getEIz()/theSections[sec]->getGAy()/(5./6.)/L/L;
+  //double OmegaY = theSections[sec]->getEIz()/theSections[sec]->getGAy()/(5./6.)/L/L;
   double muY    = 1./(1.+12.*OmegaY);
   double phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
   double phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;

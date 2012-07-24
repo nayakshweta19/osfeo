@@ -312,7 +312,7 @@ PlateFiberMaterial::getTangent()
     dd12(i,0) = threeDtangentCopy(i,5);
     dd21(0,i) = threeDtangentCopy(5,i);
     
-    for (int j=0; j<5; j++) 
+    for (j=0; j<5; j++) 
       dd11(i,j) = threeDtangentCopy(i,j);
     
   }//end for i

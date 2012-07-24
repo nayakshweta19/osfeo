@@ -175,7 +175,8 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
   epsC_vec(3), epsCe_vec(3), epsCp_vec(3), epsSlip_vec(3),
   CepsC_vec(3), CepsCe_vec(3), CepsCp_vec(3), CepsSlip_vec(3), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
-  CepsC12cm_vec(2), CepsCcm_vec(3), CepsC12tm_vec(2), CepsCtm_vec(3)
+  CepsC12cm_vec(2), CepsCcm_vec(3), CepsC12tm_vec(2), CepsCtm_vec(3),
+  citaE(0.0), citaS(0.0)
 {
     CepsC_vec.Zero();
 	CepsCe_vec.Zero();
@@ -272,7 +273,8 @@ MCFTRCPlaneStress::MCFTRCPlaneStress()
   lastStress(3), Tstress(3), stress_vec(3), stress0_vec(3),  strain_vec(3),
   secant_matrix(3,3),tangent_matrix(3,3), CepsC12p(2), epsC12p(2), 
   epsC12cm_vec(2), epsCcm_vec(3), epsC12tm_vec(2), epsCtm_vec(3),
-  epsC_vec(3), epsCe_vec(3), epsCp_vec(3), epsSlip_vec(3)
+  epsC_vec(3), epsCe_vec(3), epsCp_vec(3), epsSlip_vec(3),
+  citaE(0.0), citaS(0.0)
 {
   CepsC_vec.Zero();
   CepsCe_vec.Zero();
@@ -757,7 +759,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   Tstrain(1) = strain(1);
   Tstrain(2) = 0.5*strain(2);
 
-  double cita, citaS, citaE, temp_cita, citan1, citan2, citaLag, dCitaE, dCitaS, citaIC; // principal strain direction
+  double cita, temp_cita, citan1, citan2, citaLag, dCitaE, dCitaS, citaIC; // principal strain direction
   double epsSx, epsSy, epsts;
   double eC1p=0.0, eC2p=0.0, eC1m=0.0, eC2m=0.0, eT1m=0.0, eT2m=0.0, eSlip1=0.0, eSlip2=0.0;
   double fC1a, fC1b, fC1c, fC2a, fC2b, fC2c, fSx, fSy; //

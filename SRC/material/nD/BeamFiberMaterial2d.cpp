@@ -384,16 +384,16 @@ BeamFiberMaterial2d::getTangent()
     for (j=0; j<2; j++) 
       dd11(i,j) = threeDtangentCopy(i,  j );
 
-  for (int i = 0; i < 2; i++)
-	for (int j = 0; j < 4; j++)
+  for (i = 0; i < 2; i++)
+	for (j = 0; j < 4; j++)
       dd12(i,j) = threeDtangentCopy(i,  j+2);
 
-  for (int i = 0; i < 4; i++)
-	for (int j = 0; j < 2; j++)
+  for (i = 0; i < 4; i++)
+	for (j = 0; j < 2; j++)
       dd21(i,j) = threeDtangentCopy(i+2,j );
 
-  for (int i = 0; i < 4; i++)
-	for (int j = 0; j < 4; j++)
+  for (i = 0; i < 4; i++)
+	for (j = 0; j < 4; j++)
       dd22(i,j) = threeDtangentCopy(i+2,j+2);
 
   //int Solve(const Vector &V, Vector &res) const;
@@ -438,16 +438,16 @@ BeamFiberMaterial2d::getInitialTangent()
     for (j=0; j<2; j++) 
       dd11(i,j) = threeDtangentCopy(i,  j );
 
-  for (int i = 0; i < 2; i++)
-	for (int j = 0; j < 4; j++)
+  for (i = 0; i < 2; i++)
+	for (j = 0; j < 4; j++)
       dd12(i,j) = threeDtangentCopy(i,  j+2);
 
-  for (int i = 0; i < 4; i++)
-	for (int j = 0; j < 2; j++)
+  for (i = 0; i < 4; i++)
+	for (j = 0; j < 2; j++)
       dd21(i,j) = threeDtangentCopy(i+2,j );
 
-  for (int i = 0; i < 4; i++)
-	for (int j = 0; j < 4; j++)
+  for (i = 0; i < 4; i++)
+	for (j = 0; j < 4; j++)
       dd22(i,j) = threeDtangentCopy(i+2,j+2);
 
   //int Solve(const Vector &V, Vector &res) const;

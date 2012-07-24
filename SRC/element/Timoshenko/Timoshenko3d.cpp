@@ -864,7 +864,7 @@ Timoshenko3d::recvSelf(int commitTag, Channel &theChannel,
 
     // delete the old
     if (numSections != 0) {
-      for (int i=0; i<numSections; i++)
+      for (i=0; i<numSections; i++)
 	delete theSections[i];
       delete [] theSections;
     }

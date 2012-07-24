@@ -113,6 +113,7 @@ class Timoshenko3d04 : public Element
     double p0[5];   // Reactions in basic system (no torsion)
 
     double rho;	    // Mass density per unit length
+	double OmegaZ, OmegaY;   // shear contribution factor
 
 	static Matrix *bd;
 	static Matrix *nd;

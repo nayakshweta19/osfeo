@@ -181,7 +181,7 @@ RAFourSteelRCPlaneStress::RAFourSteelRCPlaneStress (int      tag,
 						    double   E,
 						    double   EPSC0) :
   NDMaterial(tag, ND_TAG_RAFourSteelRCPlaneStress), rho(RHO), 
-  angle1(ANGLE1), angle2(ANGLE2), angle3(ANGLE3), angle4(ANGLE4), 
+  angle1(ANGLE1), angle2(ANGLE2), angle3(ANGLE3), angle4(ANGLE4), citaR(0.0),
   rou1(ROU1), rou2(ROU2), rou3(ROU3), rou4(ROU4),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3)
 {
@@ -965,7 +965,6 @@ int RAFourSteelRCPlaneStress::determineTrialStress(void)
 	Tstrain[2] = 0.5*strain_vec(2);
 
     // Get citaR based on Tstrain
-	double citaR;
 	double temp_citaR;
 	double eps = 1e-12;
 
