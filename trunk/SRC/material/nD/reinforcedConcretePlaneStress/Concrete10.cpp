@@ -791,8 +791,7 @@ Concrete10::Tens_UnloadingP (double epsc, double epsc2, double epscP, double sig
 	  double epstmp = epsc - ept;
 	  double sigtmin = friction-0.000001*ec0*depsc;
 	  double etmin = -0.000001*ec0;
-	  
-	  double epn = ept + dept;
+
 	  double offset = - epsc0 - epn + slip * epn;
 	  double ratLocal = -( 0.00001 + offset ) / epsc0;
 	  double sigtcr = - ( fc * ratLocal * ( 2.0 - ratLocal )) - friction + fc;
@@ -803,7 +802,6 @@ Concrete10::Tens_UnloadingP (double epsc, double epsc2, double epscP, double sig
 	    
 	    double Ec0 = 2.0*fc/epsc0;
 	    double eSlip0 = (1-slip)*epn; // slip strain
-	    double offset = - epsc0 - epn + slip * epn;
 	    
 	    if ( eSlip0 >= epsc ) {
 	      double eFF = -M*eSlip0;
@@ -879,7 +877,6 @@ Concrete10::Tens_UnloadingN (double epsc, double epsc2, double epscP, double sig
 	  double eSlip0 = (1-slip)*epn; // slip strain
 	  double eFF = -M*eSlip0;
 	  double sigFF;
-	  double Edummy;
 	  this->Compr_Envlp(eFF, epsc2, sigFF, Edummy);
 	  double Sige0 = sigFF/Yint;
 	  double AA, BB, CC;
@@ -947,8 +944,6 @@ Concrete10::Compr_Reloading (double epsc, double epsc2, double epscP, double sig
 	}
 	
 	if(epn<rot1p){
-	  //double epn = ept + dept;
-	  double sicn;
 	  this->Tens_Envlp(dept, epscP, Alpha, sicn, Ect);
 	  double eZEROsig = epn - sicn/ec0;
 	  double DeltaEps = (ecmin - epscP);

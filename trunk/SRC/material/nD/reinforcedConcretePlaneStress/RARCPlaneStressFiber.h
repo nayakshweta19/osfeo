@@ -77,6 +77,7 @@ class RARCPlaneStressFiber : public NDMaterial
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
 
+	double   citaR;     // angel of 
     double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
     double   rou1;      // steel ratio of the first steel layer

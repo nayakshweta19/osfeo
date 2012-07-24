@@ -108,7 +108,7 @@ Timoshenko3d01::Timoshenko3d01(int tag,
     opserr << "Timoshenko3d01::Timoshenko3d01() -- failed to allocate static section arrays";
     exit(-1);
   }
-  for (int i=0; i<maxNumSections; i++ ){
+  for (i=0; i<maxNumSections; i++ ){
     ndT[i] = Matrix(6,6);
     bdT[i] = Matrix(6,6);
   }
@@ -827,7 +827,7 @@ Timoshenko3d01::recvSelf(int commitTag, Channel &theChannel,
 
     // delete the old
     if (numSections != 0) {
-      for (int i=0; i<numSections; i++)
+      for (i=0; i<numSections; i++)
 	delete theSections[i];
       delete [] theSections;
     }

@@ -549,17 +549,24 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
     secTag = iData[4];
     transfTag = iData[5];
 
-    // Get the section
-    SectionForceDeformation *theSection = OPS_GetSectionForceDeformation(secTag);
-    if (theSection == 0) {
-      opserr << "WARNING section with tag " << secTag << "not found for element " << eleTag << endln;
-      return 0;
-    }
-    
     SectionForceDeformation **sections = new SectionForceDeformation *[nIP];
-    for (int i = 0; i < nIP; i++)
-      sections[i] = theSection;
+	if (!sections) {
+	  opserr << "WARNING TclTimoshenkoBeamCommand - Insufficient memory to create sections\n";
+	  return TCL_ERROR;
+	}
 
+    for (int i = 0; i < nIP; i++) {
+      // Get the section
+      SectionForceDeformation *theSection = OPS_GetSectionForceDeformation(secTag);
+      if (theSection == 0) {
+	    opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
+	    opserr << secTag << endln;
+	    delete [] sections;
+	    return TCL_ERROR;
+      }
+    
+      sections[i] = theSection;
+	}
     // Get the coordinate transformation
     CrdTransf *theTransf = OPS_GetCrdTransfPtr(transfTag);
     if (theTransf == 0) {
@@ -579,7 +586,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
       }
     
       if ( strcmp(sData,"-mass") == 0 ) {
-        int numData = 1;
+        numData = 1;
         if (OPS_GetDoubleInput(&numData, dData) != 0) {
           opserr << "WARNING invalid input, want: -mass $massDens \n";
           return 0;
@@ -603,7 +610,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
         } else if (strcmp(sData2,"Trapezoidal") == 0) {
           beamIntegr = new TrapezoidalBeamIntegration();
         } else if (strcmp(sData2,"RegularizedLobatto") == 0 || strcmp(sData2,"RegLobatto") == 0) {
-          int numData = 4;
+          numData = 4;
           if (OPS_GetDoubleInput(&numData, dData) != 0) {
             opserr << "WARNING invalid input, want: -integration RegularizedLobatto $lpI $lpJ $zetaI $zetaJ \n";
             return 0;
@@ -620,7 +627,7 @@ TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp,
         }
     
       } else if ( strcmp(sData, "-shearCF") == 0 ) {
-		int numData = 1;
+		numData = 1;
 		if ( OPS_GetDoubleInput(&numData, dData) != 0 ) {
 		  opserr << "WARNING invalid input, want: -shearCF $shearCorrectFactor";
 		  return 0;
@@ -755,7 +762,7 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
       }
     
       if ( strcmp(sData,"-mass") == 0 ) {
-        int numData = 1;
+        numData = 1;
         if (OPS_GetDoubleInput(&numData, dData) != 0) {
           opserr << "WARNING invalid input, want: -mass $massDens \n";
           return 0;
@@ -779,7 +786,7 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
         } else if (strcmp(sData2,"Trapezoidal") == 0) {
           beamIntegr = new TrapezoidalBeamIntegration();
         } else if (strcmp(sData2,"RegularizedLobatto") == 0 || strcmp(sData2,"RegLobatto") == 0) {
-          int numData = 4;
+          numData = 4;
           if (OPS_GetDoubleInput(&numData, dData) != 0) {
             opserr << "WARNING invalid input, want: -integration RegularizedLobatto $lpI $lpJ $zetaI $zetaJ \n";
             return 0;
@@ -796,7 +803,7 @@ TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp,
         }
     
       } else if ( strcmp(sData, "-shearCF") == 0 ) {
-		int numData = 1;
+		numData = 1;
 		if ( OPS_GetDoubleInput(&numData, dData) != 0 ) {
 		  opserr << "WARNING invalid input, want: -shearCF $shearCorrectFactor";
 		  return 0;
@@ -1076,15 +1083,6 @@ TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp,
 
 	if (!sections) {
 	  opserr << "WARNING TclTimoshenkoBeamCommand - Insufficient memory to create sections\n";
-	  return TCL_ERROR;
-	}
-
-	SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
-
-	if (theSection == 0) {
-	  opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
-	  opserr << secTag << endln;
-	  delete [] sections;
 	  return TCL_ERROR;
 	}
 

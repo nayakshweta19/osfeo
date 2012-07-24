@@ -154,7 +154,7 @@ RARCPlaneStressFiber::RARCPlaneStressFiber (int      tag,
 							       double   E,
 							       double   EPSC0) :
   NDMaterial(tag, ND_TAG_RARCPlaneStressFiber), 
-  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
+  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2), citaR(0.0),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3),
   fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
@@ -263,7 +263,7 @@ RARCPlaneStressFiber::RARCPlaneStressFiber (int      tag,
 }
 
 RARCPlaneStressFiber::RARCPlaneStressFiber()
- :NDMaterial(0, ND_TAG_RARCPlaneStressFiber), strain_vec(3),
+ :NDMaterial(0, ND_TAG_RARCPlaneStressFiber), strain_vec(3), citaR(0.0),
   stress_vec(3),tangent_matrix(3,3), fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   theMaterial = 0;
@@ -838,7 +838,6 @@ RARCPlaneStressFiber::determineTrialStress(void)
   Tstrain[2] = 0.5*strain_vec(2);
   
   // Get citaR based on Tstrain
-  double citaR;
   double temp_citaR;
   double eps = 1e-12;
   

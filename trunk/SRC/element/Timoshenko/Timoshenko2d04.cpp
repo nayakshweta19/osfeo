@@ -32,7 +32,7 @@ double Timoshenko2d04::workArea[100];
 Matrix *Timoshenko2d04::bd = 0;
 Matrix *Timoshenko2d04::nd = 0;
 
-#define MAXITER 200
+#define MAXITER 40
 
 Timoshenko2d04::Timoshenko2d04(int tag, 
 					 int nd1, 
@@ -298,7 +298,7 @@ Timoshenko2d04::update(void)
   const ID &code = theSections[0]->getType(); // Section 0 for all
 
   double mu, x, N1, N2, N3, error = 1.0, temp=0., tol = 1.e-4; //N4,
-  double EI, GA;
+  double EI, GA, Omega1, Omega2;
   //Vector Rslt(3);
   Vector e(workArea, order);
   int iterNum=0;
@@ -354,9 +354,85 @@ Timoshenko2d04::update(void)
 
 	error = abs(temp - Omega);
 	//opserr << "\tmean Omega=" << temp << endln;
-	Omega = temp; iterNum ++; if (iterNum > MAXITER) {opserr<<"Timoshenko2d04::update()-iterNum > "<<MAXITER<< endln; break;}
+	Omega1 = Omega;
+	Omega = temp;
+	Omega2 = temp;
+
+	iterNum ++; 
+
+	if (iterNum > MAXITER) {
+	  opserr<<"Timoshenko2d04::update()-iterNum > "<<MAXITER<< endln;
+	  break;
+	}
+
   } while (error > tol);
 
+  // If Omega iterative doesnot converge, bsearch
+  double temp1 = 0.0, temp2 = 0.0;
+  if (iterNum > MAXITER) {
+    if (Omega1 > Omega2) temp = Omega2; Omega2=Omega1; Omega1 = temp;
+	while (Omega2-Omega1 > tol) {
+	  temp1 = 0.; temp2 = 0.;
+	  // for Omega1
+	  for (int i = 0; i<numSections; i++) {
+        mu    = 1./(1.+12.*Omega1);
+        x     = L * pts[i];
+        N1 = mu*(6.*x-4.*L*(1.+3.*Omega1))/L/L;
+        N2 = 2.*mu*(3.*x+L*(6.*Omega1-1.))/L/L;
+        N3 = 6.*mu*Omega1;
+        for (int j = 0; j < order; j++) {
+          switch(code(j)) {
+          case SECTION_RESPONSE_P:     // axial strain
+        e(j) = oneOverL*v(0); break;
+          case SECTION_RESPONSE_MZ:    // curvature
+        e(j) = N1 * v(1) + N2* v(2); break;
+          case SECTION_RESPONSE_VY:    // shear strain
+        e(j) = N3 * (v(1) + v(2)); break;
+          default:
+        break;
+          }
+        }
+        err += theSections[i]->setTrialSectionDeformation(e);
+        const Matrix &ks = theSections[i]->getSectionTangent();
+        EI = ks(1,1);
+        GA = ks(2,2);
+  	    temp1 += EI/GA/shearCF/L/L /numSections; //(1.-wts[i])/(numSections-1)wts[i]
+      }
+	  // for x
+	  double midOmega = (Omega1+Omega2)/2;
+	  for (int i = 0; i<numSections; i++) {
+        mu    = 1./(1.+12.*midOmega);
+        x     = L * pts[i];
+        N1 = mu*(6.*x-4.*L*(1.+3.*midOmega))/L/L;
+        N2 = 2.*mu*(3.*x+L*(6.*midOmega-1.))/L/L;
+        N3 = 6.*mu*midOmega;
+        for (int j = 0; j < order; j++) {
+          switch(code(j)) {
+          case SECTION_RESPONSE_P:     // axial strain
+        e(j) = oneOverL*v(0); break;
+          case SECTION_RESPONSE_MZ:    // curvature
+        e(j) = N1 * v(1) + N2* v(2); break;
+          case SECTION_RESPONSE_VY:    // shear strain
+        e(j) = N3 * (v(1) + v(2)); break;
+          default:
+        break;
+          }
+        }
+        err += theSections[i]->setTrialSectionDeformation(e);
+        const Matrix &ks = theSections[i]->getSectionTangent();
+        EI = ks(1,1);
+        GA = ks(2,2);
+  	    temp2 += EI/GA/shearCF/L/L /numSections; //(1.-wts[i])/(numSections-1)wts[i]
+      }
+      if((temp1-Omega)*(temp2-Omega)<0) {
+		Omega2= midOmega;
+	    Omega = temp2;
+	  } else {
+		Omega1= midOmega;
+		Omega = temp1;
+	  }
+    }
+  }
   //opserr << "Final Omega: "<< Omega << endln;
 
   if (err != 0) {
@@ -802,7 +878,7 @@ Timoshenko2d04::recvSelf(int commitTag, Channel &theChannel,
 
     // delete the old
     if (numSections != 0) {
-      for (int i=0; i<numSections; i++)
+      for (i=0; i<numSections; i++)
 	delete theSections[i];
       delete [] theSections;
     }

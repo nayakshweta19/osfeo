@@ -1478,7 +1478,7 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     }
 
     //
-    // try loading new dynamic library containg a c+= class
+    // try loading new dynamic library containg a c++ class
     //
     
     void *libHandle;

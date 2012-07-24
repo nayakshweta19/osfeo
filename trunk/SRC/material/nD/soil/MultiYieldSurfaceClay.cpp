@@ -587,7 +587,7 @@ const Vector & MultiYieldSurfaceClay::getStress (void)
   int numOfSurfaces = numOfSurfacesx[matN];
   int ndm = ndmx[matN];
 
-  int i;
+  int i,j;
   if (loadStage == 1 && e2p == 0) elast2Plast();
 
   if (loadStage!=1) {  //linear elastic
@@ -633,8 +633,8 @@ const Vector & MultiYieldSurfaceClay::getStress (void)
 	static Matrix unitTensor(6,6);
 	static Matrix tempTangent(6,6);
 	unitTensor.Zero();
-	for(int i=0;i<3;i++){
-		for(int j=0;j<3;j++){
+	for(i=0;i<3;i++){
+		for(j=0;j<3;j++){
 			unitTensor(i,j)=1.0;
 		}
 	}

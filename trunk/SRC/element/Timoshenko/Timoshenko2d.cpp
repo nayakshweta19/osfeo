@@ -767,7 +767,7 @@ Timoshenko2d::recvSelf(int commitTag, Channel &theChannel,
 {
   // receive the integer data containing tag, numSections and coord transformation info
  
-	int dbTag = this->getDbTag();
+  int dbTag = this->getDbTag();
   int i;
   
   static ID idData(7); // one bigger than needed so no clash with section ID
@@ -829,7 +829,7 @@ Timoshenko2d::recvSelf(int commitTag, Channel &theChannel,
 
     // delete the old
     if (numSections != 0) {
-      for (int i=0; i<numSections; i++)
+      for (i=0; i<numSections; i++)
 	delete theSections[i];
       delete [] theSections;
     }

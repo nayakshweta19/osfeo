@@ -84,7 +84,8 @@ class RAFourSteelRCPlaneStress : public NDMaterial
     double   rho; 
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses;
-    
+
+    double   citaR;     // angel
     double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
     double   angle3;    // angel of the third steel layer to x coordinate 

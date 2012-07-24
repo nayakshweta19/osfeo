@@ -1870,14 +1870,14 @@ int NewTemplate3Dep::Implicit(const straintensor& strain_incr, int NumStep_in)
            if (Num_internal_tensor >= 1)
              {
                err += Vector2TensorSysR2(D19, Da, 6+Num_internal_scalar);
-               stresstensor T = ptr_material_parameter->getInternal_Tensor(0);
+               T = ptr_material_parameter->getInternal_Tensor(0);
                err += ptr_material_parameter->setInternal_Tensor(0, T + Da );
              }
 
            if (Num_internal_tensor == 2)
              {
                err += Vector2TensorSysR2(D19, Da2, 12+Num_internal_scalar);
-               stresstensor T2 = ptr_material_parameter->getInternal_Tensor(1);
+               T2 = ptr_material_parameter->getInternal_Tensor(1);
                err += ptr_material_parameter->setInternal_Tensor(1, T2 + Da2 );
              }
 

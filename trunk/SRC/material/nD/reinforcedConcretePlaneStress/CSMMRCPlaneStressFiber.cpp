@@ -183,7 +183,7 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
   NDMaterial(tag, ND_TAG_CSMMRCPlaneStressFiber), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), lastStress(3), Tstress(3), 
-  strain_vec(3), stress_vec(3),tangent_matrix(3,3),
+  strain_vec(3), stress_vec(3),tangent_matrix(3,3),citaR(0.0),
   fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
     steelStatus = 0;
@@ -292,7 +292,7 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
 
 CSMMRCPlaneStressFiber::CSMMRCPlaneStressFiber()
  :NDMaterial(0, ND_TAG_CSMMRCPlaneStressFiber), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3),
+  stress_vec(3),tangent_matrix(3,3),citaR(0.0),
   fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   theMaterial = 0;
@@ -878,7 +878,6 @@ CSMMRCPlaneStressFiber::determineTrialStress(void)
   Tstrain(2) = 0.5*strain_vec(2);
   
   // Get citaR based on Tstrain
-  double citaR; // principal strain direction
   double ratio;
   //double eps = 1e-12;
   double AA = (Tstrain(0)-Tstrain(1))/2.;

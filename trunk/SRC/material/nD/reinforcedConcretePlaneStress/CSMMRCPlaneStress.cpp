@@ -179,7 +179,7 @@ CSMMRCPlaneStress ::CSMMRCPlaneStress (int      tag,
 								   double   E,
 								   double   EPSC0) :
   NDMaterial(tag, ND_TAG_CSMMRCPlaneStress), 
-  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
+  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),citaR(0.0),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), lastStress(3), Tstress(3), 
   strain_vec(3), stress_vec(3),tangent_matrix(3,3)
 {
@@ -288,7 +288,7 @@ CSMMRCPlaneStress ::CSMMRCPlaneStress (int      tag,
 
 CSMMRCPlaneStress::CSMMRCPlaneStress()
  :NDMaterial(0, ND_TAG_CSMMRCPlaneStress), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3),citaR(0.)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -793,7 +793,6 @@ CSMMRCPlaneStress::determineTrialStress(void)
   Tstrain(2) = 0.5*strain_vec(2);
   
   // Get citaR based on Tstrain
-  double citaR; // principal strain direction
   double ratio;
   //double eps = 1e-12;
   double AA = (Tstrain(0)-Tstrain(1))/2.;

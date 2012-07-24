@@ -153,7 +153,7 @@ ReinforcedConcretePlaneStress ::ReinforcedConcretePlaneStress (int      tag,
 							       double   E,
 							       double   EPSC0) :
   NDMaterial(tag, ND_TAG_ReinforcedConcretePlaneStress), 
-  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
+  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2), citaR(0.0),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3)
 {
   steelStatus = 0;
@@ -263,7 +263,7 @@ ReinforcedConcretePlaneStress ::ReinforcedConcretePlaneStress (int      tag,
 
 ReinforcedConcretePlaneStress::ReinforcedConcretePlaneStress()
  :NDMaterial(0, ND_TAG_ReinforcedConcretePlaneStress), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+  stress_vec(3),tangent_matrix(3,3), citaR(0.0)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -838,7 +838,6 @@ int ReinforcedConcretePlaneStress::determineTrialStress(void)
   Tstrain[2] = 0.5*strain_vec(2);
   
   // Get citaR based on Tstrain
-  double citaR;
   double temp_citaR;
   double eps = 1e-12;
   

@@ -217,7 +217,7 @@ TimoshenkoSection2d::addFiber(Fiber &newFiber)
   for (i = 0; i < numFibers; i++) {
     yLoc = matData[3*i];
 	zLoc = matData[3*i+1];
-	Area = matData[3*i+1];
+	Area = matData[3*i+2];
     A  += Area;
     Qz += yLoc*Area;
 	Qy += zLoc*Area;
@@ -644,7 +644,7 @@ TimoshenkoSection2d::recvSelf(int commitTag, Channel &theChannel,
     int i;
     for (i=0; i<numFibers; i++) {
       int classTag = materialData(2*i);
-      int dbTag = materialData(2*i+1);
+      dbTag = materialData(2*i+1);
 
       // if material pointed to is blank or not of corrcet type, 
       // release old and create a new one

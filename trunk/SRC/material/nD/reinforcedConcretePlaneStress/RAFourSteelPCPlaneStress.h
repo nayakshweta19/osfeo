@@ -88,6 +88,8 @@ class RAFourSteelPCPlaneStress : public NDMaterial
   UniaxialMaterial **theMaterial; // pointer of the materials 
   Response **theResponses;
 
+  double citaR;     // angel
+
   double   angle1;    // angel of the first steel layer to x coordinate 
   double   angle2;    // angel of the second steel layer to x coordinate
   double   angle3;    // angel of the third steel layer to x coordinate 
@@ -103,7 +105,7 @@ class RAFourSteelPCPlaneStress : public NDMaterial
   
   double   fpc;       // compressive strength of the concrete
   double   fy1;       // yield stress of the bare tendons
-  double	 fy2;		// yield stress of the bare steel bars
+  double   fy2;	      // yield stress of the bare steel bars
   double   E0;        // young's modulus of the steel
   double   epsc0;     // compressive strain of the concrete
   

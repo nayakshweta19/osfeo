@@ -4808,7 +4808,6 @@ buildSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
       else if (NDM == 3)     
       {
 
-	 static Vector fiberPosition(2);
 	 k = 0;
 	 for (i = numSectionRepresFibers; i < numFibers; i++)
 	 {    
@@ -5069,7 +5068,6 @@ buildSectionInt(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
       else if (NDM == 3)     
       {
 
-	 static Vector fiberPosition(2);
 	 k = 0;
 	 for (i = numSectionRepresFibers; i < numFibers; i++)
 	 {    
@@ -5303,7 +5301,6 @@ buildRASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder
 		}
 		else if (NDM == 3)
 		{
-			static Vector fiberPosition(2);
 			k = 0;
 
 			for (i = numSectionRepresFibers; i < numFibers; i++)
@@ -5535,7 +5532,6 @@ buildFASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder
 			}
 		else if (NDM == 3)
 			{
-			static Vector fiberPosition(2);
 			k = 0;
 
 			for (i = numSectionRepresFibers; i < numFibers; i++)
@@ -5737,7 +5733,6 @@ buildCSMMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 			}
 		}
 		else if (NDM == 3) {
-			static Vector fiberPosition(2);
 			k = 0;
 
 			for (i = numSectionRepresFibers; i < numFibers; i++) {
@@ -5965,7 +5960,6 @@ buildMCFTFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
 		else if (NDM == 3)
 		{
-			static Vector fiberPosition(2);
 			k = 0;
 
 			for (i = numSectionRepresFibers; i < numFibers; i++)
@@ -6185,8 +6179,6 @@ buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
 		else if (NDM == 3)
 		{
-			static Vector fiberPosition(2);
-			
 			k = 0;
 			
 			for (i = numSectionRepresFibers; i < numFibers; i++)
