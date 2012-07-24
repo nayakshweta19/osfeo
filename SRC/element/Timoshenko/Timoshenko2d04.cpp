@@ -57,15 +57,20 @@ Timoshenko2d04::Timoshenko2d04(int tag,
 
   for (int i = 0; i< numSections; i++){
     // Get copies of the material model for each integration point
-    SectionForceDeformation *theSection = s[i]->getCopy();
-    switch (s[i]->getClassTag()) {
-	case SEC_TAG_TimoshenkoSection2d:
-		theSections[i] = (TimoshenkoSection2d *)theSection;
-		break;
-	default:
-		opserr << "Timoshenko2d04::Timoshenko2d04() --default secTag at sec " << i+1 << endln;
-		theSections[i] = theSection;
-		break;
+    //SectionForceDeformation *theSection = s[i]->getCopy();
+    //switch (s[i]->getClassTag()) {
+	//case SEC_TAG_TimoshenkoSection2d:
+		theSections[i] =  s[i]->getCopy(); //(TimoshenkoSection2d *)theSection;
+	//	break;
+	//default:
+	//	opserr << "Timoshenko2d04::Timoshenko2d04() --default secTag at sec " << i+1 << endln;
+	//	theSections[i] = theSection;
+	//	break;
+    //}
+	// Check allocation
+    if (theSections[i] == 0 ) { //|| s[i]->getClassTag() != SEC_TAG_TimoshenkoSection2d
+      opserr << "Timoshenko2d04::Timoshenko2d04() --failed to get a copy of section model " << endln;
+      exit(-1);
     }
   }
 

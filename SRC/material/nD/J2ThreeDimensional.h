@@ -125,6 +125,11 @@ class J2ThreeDimensional : public J2Plasticity {
   int setTrialStrainIncr(const Tensor &v, const Tensor &r) ;
   const Tensor& getTangentTensor( ) ;
 
+  //swap history variables
+  int commitState( ) ; 
+  int revertToLastCommit( ) ;
+  int revertToStart( ) ;
+
 //jeremic@ucdavis.edu 22jan2001  const Tensor& getStressTensor( ) ;
 //jeremic@ucdavis.edu 22jan2001  const Tensor& getStrainTensor( ) ;  
 

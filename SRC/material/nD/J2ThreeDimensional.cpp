@@ -274,6 +274,36 @@ const Matrix& J2ThreeDimensional :: getInitialTangent( )
   return tangent_matrix ;
 } 
 
+int 
+J2ThreeDimensional::commitState( ) 
+{
+  epsilon_p_n = epsilon_p_nplus1 ;
+  xi_n        = xi_nplus1 ;
+
+  return 0;
+}
+
+int 
+J2ThreeDimensional::revertToLastCommit( ) 
+{
+  return 0;
+}
+
+
+int 
+J2ThreeDimensional::revertToStart( ) {
+
+  // added: C.McGann, U.Washington for InitialStateAnalysis
+  if (ops_InitialStateAnalysis) {
+	// do nothing, keep state variables from last step
+  } else {
+	// normal call for revertToStart (not initialStateAnalysis)
+    this->zero( ) ;
+  }
+
+  return 0;
+}
+
 //this is mike's problem
 int J2ThreeDimensional :: setTrialStrain(const Tensor &v) 
 {

@@ -88,13 +88,13 @@ class J2Plasticity : public NDMaterial {
   virtual NDMaterial* getCopy (const char *type);
 
   //swap history variables
-  virtual int commitState( ) ; 
+  virtual int commitState( ) {return 0;}; 
 
   //revert to last saved state
-  virtual int revertToLastCommit( ) ;
+  virtual int revertToLastCommit( ) {return 0;}; 
 
   //revert to start
-  virtual int revertToStart( ) ;
+  virtual int revertToStart( ) {return 0;}; 
 
   //sending and receiving
   virtual int sendSelf(int commitTag, Channel &theChannel) ;  

@@ -690,8 +690,10 @@ void
 TimoshenkoSection2d::Print(OPS_Stream &s, int flag)
 {
   s << "\nTimoshenkoSection2d, tag: " << this->getTag() << endln;
-  s << "\tFiber Material, tag: " << theMaterials[0]->getTag() << endln;
-  theMaterials[0]->Print(s, flag);
+  for (int i=0;i<numFibers; i++) {
+    s << "\tFiber Material, tag: " << theMaterials[i]->getTag() << endln;
+    theMaterials[0]->Print(s, flag);
+  }
 }
 
 Response*
@@ -895,7 +897,6 @@ TimoshenkoSection2d::setResponse(const char **argv, int argc, OPS_Stream &output
   output.endTag();
   return theResponse;
 }
-
 
 int 
 TimoshenkoSection2d::getResponse(int responseID, Information &sectInfo)
