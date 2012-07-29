@@ -472,6 +472,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/elastomericBearing/ElastomericBearing3d.o \
 	$(FE)/element/elastomericBearing/TclElastomericBearingCommand.o \
 	$(FE)/element/frictionBearing/MultiFP2d.o \
+	$(FE)/element/frictionBearing/TripleFrictionPendulum.o \
 	$(FE)/element/frictionBearing/TFP_Bearing.o \
 	$(FE)/element/frictionBearing/TFP_Bearing2d.o \
 	$(FE)/element/frictionBearing/TPB1D.o \
@@ -494,8 +495,9 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/UWelements/SSPquad.o \
 	$(FE)/element/UWelements/SSPquadUP.o \
 	$(FE)/element/UWelements/SSPbrick.o \
-	$(FE)/element/UWelements/SSPbrickUP.o
-
+	$(FE)/element/UWelements/SSPbrickUP.o \
+	$(FE)/element/UWelements/Quad4FiberOverlay.o \
+	$(FE)/element/UWelements/Brick8FiberOverlay.o
 
 MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/UniaxialMaterial.o \

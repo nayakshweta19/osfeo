@@ -421,18 +421,18 @@ void J2Plasticity :: plastic_integrator( )
 
   double gamma = 0.0 ; //consistency parameter
 
-  double resid = 1.0 ; 
+  double resid = 1.0 ;
   double tang  = 0.0 ;
   
   double theta = 0.0 ; 
   double theta_inv = 0.0 ;
 
-  double c1 = 0.0 ; 
+  double c1 = 0.0 ;
   double c2 = 0.0 ;
   double c3 = 0.0 ;
 
   int i,j,k,l;
-  int ii, jj ; 
+  int ii, jj ;
 
   int iteration_counter ;
   const int max_iterations = 25 ;
@@ -450,7 +450,7 @@ void J2Plasticity :: plastic_integrator( )
   //   dev_stress = (2.0*shear) * ( dev_strain - epsilon_p_n ) ;
   dev_stress = dev_strain;
   dev_stress -= epsilon_p_n;
-  dev_stress *= 2.0 * shear;
+  dev_stress *= (2.0 * shear);
 
   //compute norm of deviatoric stress
 
@@ -496,13 +496,13 @@ void J2Plasticity :: plastic_integrator( )
 
         gamma -= ( resid / tang ) ;
 
-	iteration_counter++ ;
+		iteration_counter++ ;
 
-	if ( iteration_counter > max_iterations ) {
-	    opserr << "More than " << max_iterations ;
-	    opserr << " iterations in constituive subroutine J2-plasticity \n" ;
-	    break ;
-	} //end if 
+		if ( iteration_counter > max_iterations ) {
+	    	opserr << "More than " << max_iterations ;
+	    	opserr << " iterations in constituive subroutine J2-plasticity \n" ;
+	    	break ;
+		} //end if 
 	
      } //end while resid
 
@@ -534,7 +534,7 @@ void J2Plasticity :: plastic_integrator( )
     epsilon_p_nplus1 = epsilon_p_n ;
 
     xi_nplus1 = xi_n ;
-
+	
     //no extra tangent terms to compute 
     
     gamma = 0.0 ; 
@@ -712,7 +712,6 @@ J2Plasticity::getOrder (void) const
     exit(-1);
     return 0;
 }
-
 
 //int 
 //J2Plasticity::commitState( ) 
