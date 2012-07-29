@@ -854,8 +854,8 @@ MultiaxialCyclicPlasticity::plastic_integrator()
     kappa=infinity;
     Psi=2*shear;
     plasticflag=0;
-    X[1]=2*shear;
-    X[2]=infinity;
+    X[1]=2*shear;  // 2.*mu
+    X[2]=infinity; // Chi ??
     debugInfo(1)=1;
     goto LABEL10;
   }

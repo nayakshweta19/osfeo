@@ -18,9 +18,9 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: $
-// $Date: $
-// $URL: $
+// $Revision: 4944 $
+// $Date: 2012-07-28 05:10:12 +0800 (周六, 28 7月 2012) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/material/uniaxial/ElasticMultiLinear.h $
 
 #ifndef ElasticMultiLinear_h
 #define ElasticMultiLinear_h
