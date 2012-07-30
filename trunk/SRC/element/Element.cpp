@@ -321,8 +321,8 @@ Element::getRayleighDampingForces(void)
   int loc = 0;
   for (int i=0; i<numNodes; i++) {
     const Vector &vel = theNodes[i]->getTrialVel();
-    for (int i=0; i<vel.Size(); i++) {
-      (*theVector2)(loc++) = vel[i];
+    for (int j=0; j<vel.Size(); j++) {
+      (*theVector2)(loc++) = vel[j];
     }
   }
 

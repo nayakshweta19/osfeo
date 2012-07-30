@@ -1134,9 +1134,9 @@ TclModelBuilder_addForceBeamColumn(ClientData clientData, Tcl_Interp *interp,
     }
 
     // Sort locations before calling constructor
-    for (int i = 0; i < numSections; i++) {
+    for (i = 0; i < numSections; i++) {
       int key = i;
-      for (int j = i+1; j < numSections; j++) {
+      for (j = i+1; j < numSections; j++) {
 	if (pts(j) < pts(key)) {
 	  key = j;
 	}
