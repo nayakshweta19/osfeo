@@ -14,10 +14,6 @@
 #include <TimoshenkoBeam2d.h>
 #include <Node.h>
 #include <FiberSection2d.h>
-#include <RASTMFiberSection2d.h>
-#include <FASTMFiberSection2d.h>
-#include <CSMMFiberSection2d.h>
-#include <MCFTFiberSection2d.h>
 #include <TimoshenkoSection2d.h>
 #include <CrdTransf.h>
 #include <TimoshenkoLinearCrdTransf2d.h>
@@ -64,18 +60,6 @@ TimoshenkoBeam2d::TimoshenkoBeam2d(int tag,
     // Get copies of the material model for each integration point
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
-    case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = (RASTMFiberSection2d *)theSection;
-    	break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = (FASTMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = (CSMMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = (MCFTFiberSection2d *)theSection;
-		break;
 	case SEC_TAG_TimoshenkoSection2d:
 		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
@@ -970,7 +954,7 @@ opserr << "TimoshenkoBeam2d::recvSelf() - out of memory creating sections array 
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
-      theSections[i] = new RASTMFiberSection2d();
+      theSections[i] = new TimoshenkoSection2d();
       if (theSections[i] == 0) {
 	opserr << "TimoshenkoBeam2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
@@ -998,7 +982,7 @@ opserr << "TimoshenkoBeam2d::recvSelf() - out of memory creating sections array 
       if (theSections[i]->getClassTag() !=  sectClassTag) {
 	// delete the old section[i] and create a new one
 	delete theSections[i];
-	theSections[i] = new RASTMFiberSection2d();
+	theSections[i] = new TimoshenkoSection2d();
 	if (theSections[i] == 0) {
 	opserr << "TimoshenkoBeam2d::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;

@@ -53,10 +53,10 @@
 #include <RCFTSTLFiberSection3D.h>
 
 //////////////////////////////////////////////////////////////////////////
-#include <RASTMFiberSection2d.h>
-#include <FASTMFiberSection2d.h>
-#include <CSMMFiberSection2d.h>
-#include <MCFTFiberSection2d.h>
+//#include <RASTMFiberSection2d.h>
+//#include <FASTMFiberSection2d.h>
+//#include <CSMMFiberSection2d.h>
+//#include <MCFTFiberSection2d.h>
 #include <TimoshenkoSection2d.h>
 #include <TimoshenkoSection3d.h>
 #include <WSection2d.h>
@@ -126,7 +126,7 @@ int
 TclCommand_addFiberIntSection (ClientData clientData, Tcl_Interp *interp, int argc,
 			       TCL_Char **argv, TclModelBuilder *theBuilder);
 
-//////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////
 int
 TclCommand_addRASTMFiberSection2d (ClientData clientData, Tcl_Interp *interp, int argc,
 			       TCL_Char **argv, TclModelBuilder *theBuilder);
@@ -138,11 +138,11 @@ TclCommand_addCSMMFiberSection2d (ClientData clientData, Tcl_Interp *interp, int
 	TCL_Char **argv, TclModelBuilder *theBuilder);
 int
 TclCommand_addMCFTFiberSection2d (ClientData clientData, Tcl_Interp *interp, int argc,
-	TCL_Char **argv, TclModelBuilder *theBuilder);
+	TCL_Char **argv, TclModelBuilder *theBuilder);*/
 int
 TclCommand_addTimoshenkoSection3d (ClientData clientData, Tcl_Interp *interp, int argc,
     TCL_Char **argv, TclModelBuilder *theBuilder);
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 
 int
 TclCommand_addUCFiberSection (ClientData clientData, Tcl_Interp *interp, int argc,
@@ -938,14 +938,14 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
 	    return TclCommand_addFiberIntSection (clientData, interp, argc, argv,
 						theTclBuilder);
 	//////////////////////////////////////////////////////////////////////////
-    else if (strcmp(argv[1],"RASTMFiber2d") == 0)
-        return TclCommand_addRASTMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
-    else if (strcmp(argv[1],"FASTMFiber2d") == 0)
-        return TclCommand_addFASTMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
-    else if (strcmp(argv[1],"CSMMFiber2d") == 0)
-        return TclCommand_addCSMMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
-    else if (strcmp(argv[1],"MCFTFiber2d") == 0)
-        return TclCommand_addMCFTFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
+    //else if (strcmp(argv[1],"RASTMFiber2d") == 0)
+    //    return TclCommand_addRASTMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
+    //else if (strcmp(argv[1],"FASTMFiber2d") == 0)
+    //    return TclCommand_addFASTMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
+    //else if (strcmp(argv[1],"CSMMFiber2d") == 0)
+    //    return TclCommand_addCSMMFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
+    //else if (strcmp(argv[1],"MCFTFiber2d") == 0)
+    //    return TclCommand_addMCFTFiberSection2d (clientData, interp, argc, argv, theTclBuilder);
     else if (strcmp(argv[1],"Timoshenko3D") == 0 || strcmp(argv[1],"Timoshenko") == 0) 
         return TclCommand_addTimoshenkoSection3d (clientData, interp, argc, argv, theTclBuilder);
 	//////////////////////////////////////////////////////////////////////////
@@ -1211,7 +1211,7 @@ buildSectionInt(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 		int secTag, bool isTorsion, double GJ, 
 		int NStrip1, double t1, int NStrip2, double t2, int NStrip3, double t3);
 
-//////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////
 int
 buildRASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 	int secTag, bool isTorsion, double GJ, 
@@ -1230,6 +1230,7 @@ int
 buildMCFTFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 	int secTag, bool isTorsion, double GJ, 
 	int NStrip1, double t1, int NStrip2, double t2, int NStrip3, double t3);
+*/
 int
 buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 int secTag, bool isTorsion, double GJ);
@@ -1435,7 +1436,7 @@ TclCommand_addFiberIntSection (ClientData clientData, Tcl_Interp *interp, int ar
     return TCL_OK;
 }
 
-//////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////
 int 
 TclCommand_addRASTMFiberSection2d(ClientData clientData, Tcl_Interp *interp, int argc,
 				TCL_Char **argv, TclModelBuilder *theTclModelBuilder) 
@@ -1799,6 +1800,7 @@ TclCommand_addMCFTFiberSection2d(ClientData clientData, Tcl_Interp *interp, int 
 	//    currentSectionTag = 0;
 	return TCL_OK;
 }
+*/
 
 int 
 TclCommand_addTimoshenkoSection3d(ClientData clientData, Tcl_Interp *interp, int argc,
@@ -5136,7 +5138,7 @@ buildSectionInt(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 
 //////////////////////////////////////////////////////////////////////////
 
-// build the section for TimoshenkoBeam
+/*/ build the section for TimoshenkoBeam
 int
 buildRASTMFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
                          int secTag, bool isTorsion, double GJ, int NStrip1, double t1, int NStrip2, double t2, int NStrip3, double t3)
@@ -6025,7 +6027,7 @@ buildMCFTFiberSection2d(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,
 	}
 	return TCL_OK;
 } 
-
+*/
 // build the section for TimoshenkoBeam
 int
 buildTimoshenkoSection(Tcl_Interp *interp, TclModelBuilder *theTclModelBuilder,

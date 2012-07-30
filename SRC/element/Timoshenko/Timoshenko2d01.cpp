@@ -14,10 +14,6 @@
 #include <Timoshenko2d01.h>
 #include <Node.h>
 #include <FiberSection2d.h>
-#include <RASTMFiberSection2d.h>
-#include <FASTMFiberSection2d.h>
-#include <CSMMFiberSection2d.h>
-#include <MCFTFiberSection2d.h>
 #include <TimoshenkoSection2d.h>
 #include <CrdTransf.h>
 #include <TimoshenkoLinearCrdTransf2d.h>
@@ -64,18 +60,6 @@ Timoshenko2d01::Timoshenko2d01(int tag,
     // Get copies of the material model for each integration point
     SectionForceDeformation *theSection = s[i]->getCopy();
     switch (s[i]->getClassTag()) {
-    case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = (RASTMFiberSection2d *)theSection;
-    	break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = (FASTMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = (CSMMFiberSection2d *)theSection;
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = (MCFTFiberSection2d *)theSection;
-		break;
 	case SEC_TAG_TimoshenkoSection2d:
 		theSections[i] = (TimoshenkoSection2d *)theSection;
 		break;
@@ -961,27 +945,12 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
       int sectClassTag = idSections(loc);
       int sectDbTag = idSections(loc+1);
       loc += 2;
-	  switch (sectClassTag) {
-	  case SEC_TAG_RASTMFiberSection2d:
-		  theSections[i] = new RASTMFiberSection2d();
-		  break;
-	  case SEC_TAG_FASTMFiberSection2d:
-		  theSections[i] = new FASTMFiberSection2d();
-		  break;
-	  case SEC_TAG_CSMMFiberSection2d:
-		  theSections[i] = new CSMMFiberSection2d();
-		  break;
-	  case SEC_TAG_MCFTFiberSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
-		  break;
-	  case SEC_TAG_TimoshenkoSection2d:
-		  theSections[i] = new MCFTFiberSection2d();
-		  break;
-	  default:
+	  //switch (sectClassTag) {
+	  //default:
 		  opserr << "Timoshenko2d01::recvSelf() --default secTag at sec " << i+1 << endln;
 		  theSections[i] = new FiberSection2d();
-		  break;
-	  }
+		  //break;
+	  //}
       if (theSections[i] == 0) {
 	opserr << "Timoshenko2d01::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;
@@ -1009,27 +978,12 @@ Timoshenko2d01::recvSelf(int commitTag, Channel &theChannel,
       if (theSections[i]->getClassTag() !=  sectClassTag) {
 	// delete the old section[i] and create a new one
 	delete theSections[i];
-	switch (sectClassTag) {
-	case SEC_TAG_RASTMFiberSection2d:
-		theSections[i] = new RASTMFiberSection2d();
-		break;
-	case SEC_TAG_FASTMFiberSection2d:
-		theSections[i] = new FASTMFiberSection2d();
-		break;
-	case SEC_TAG_CSMMFiberSection2d:
-		theSections[i] = new CSMMFiberSection2d();
-		break;
-	case SEC_TAG_MCFTFiberSection2d:
-		theSections[i] = new MCFTFiberSection2d();
-		break;
-	case SEC_TAG_TimoshenkoSection2d:
-		theSections[i] = new MCFTFiberSection2d();
-		break;
-	default:
+	//switch (sectClassTag) {
+	//default:
 		opserr << "Timoshenko2d01::recvSelf() --default secTag at sec " << i+1 << endln;
 		theSections[i] = new FiberSection2d();
-		break;
-	}
+		//break;
+	//}
 	if (theSections[i] == 0) {
 	opserr << "Timoshenko2d01::recvSelf() - Broker could not create Section of class type " <<
 	  sectClassTag << endln;

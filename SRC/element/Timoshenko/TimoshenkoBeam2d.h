@@ -22,10 +22,6 @@
 
 class Node;
 class SectionForceDeformation;
-class RASTMFiberSection2d;
-class FASTMFiberSection2d;
-class CSMMFiberSection2d;
-class MCFTFiberSection2d;
 class CrdTransf;
 class TimoshenkoLinearCrdTransf2d;
 class Response;

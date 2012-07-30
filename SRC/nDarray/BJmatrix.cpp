@@ -957,7 +957,7 @@ BJmatrix BJmatrix::lu_decompose(BJmatrix & indx, int & d )
  // The loop over columns of Crout's method:
     for( row=0 ; row<rows() ; row++ )
       {
-        if ( row>0 )        // eqn ±.3. 1 ± except for row=col:
+        if ( row>0 )        // eqn ?3. 1 ?except for row=col:
           {
             for ( col=0 ; col <= row-1 ; col++ )
               {
