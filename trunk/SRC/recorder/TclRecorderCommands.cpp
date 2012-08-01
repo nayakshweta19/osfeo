@@ -61,7 +61,7 @@
  #include <MeshRegion.h>
  //#include <GSA_Recorder.h>
  #include <RemoveRecorder.h>
-
+#include <NodeGiDRecorder.h>     //neallee@tju.edu.cn
  //#include <TclModelBuilder.h>
 
  #include <StandardStream.h>
@@ -71,7 +71,7 @@
  #include <DatabaseStream.h>
  #include <DummyStream.h>
  #include <TCP_Stream.h>
-
+#include <GiDStream.h>      //neallee@tju.edu.cn
  #include <packages.h>
  #include <elementAPI.h>
 
@@ -97,8 +97,7 @@
 
  static ExternalRecorderCommand *theExternalRecorderCommands = NULL;
 
- enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BINARY_STREAM, DATA_STREAM_CSV, TCP_STREAM};
-
+ enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BINARY_STREAM, DATA_STREAM_CSV, TCP_STREAM, GID_STREAM};
 
  #include <EquiSolnAlgo.h>
  #include <TclFeViewer.h>
@@ -130,6 +129,8 @@
 	 opserr << "WARNING need to specify a Recorder type\n";
 	 return TCL_ERROR;
      }
+
+	 OPS_ResetInputNoBuilder(clientData, interp, 2, argc, argv, &theDomain);
 
      //
      // check argv[1] for type of Recorder, parse in rest of arguments
@@ -1695,71 +1696,211 @@
      }
      ************************************************* */
 
-     else {
+	 // for gid output. neallee@tju.edu.cn-------------------------------------------------
+	 else if (strcmp(argv[1],"gid") == 0) {
+       if (argc < 7) {
+	 opserr << "WARNING recorder gid ";
+	 opserr << "-node <list nodes> -dof <doflist> -file <fileName> -dT <dT> reponse";
+	     return TCL_ERROR;
+       }
 
-       // try existing loaded packages
-       ExternalRecorderCommand *recorderCommands = theExternalRecorderCommands;
-       bool found = false;
+       TCL_Char *responseID = 0;
 
-       while (recorderCommands != NULL && found == false) {
-	 if (strcmp(argv[1], recorderCommands->funcName) == 0) {
+       outputMode eMode = GID_STREAM;
 
-	   OPS_ResetInputNoBuilder(clientData, interp, 2, argc, argv, &theDomain);
-	  void *theRes = (*(recorderCommands->funcPtr))();
-	  if (theRes != 0) {
-	    *theRecorder = (Recorder *)theRes;
-	    found = true;
-	  }
-	} else
-	  recorderCommands = recorderCommands->next;
-      }
+       int pos = 2;
 
-      //
-      // if not there try loading package
-      //
-      
-      if (found == false) {
-	
-	void *libHandle;
-	void *(*funcPtr)();
-	int recorderNameLength = strlen(argv[1]);
-	char *tclFuncName = new char[recorderNameLength+5];
-	strcpy(tclFuncName, "OPS_");
-	strcpy(&tclFuncName[4], argv[1]);    
-	
-	int res = getLibraryFunction(argv[1], tclFuncName, &libHandle, (void **)&funcPtr);
-	
-	delete [] tclFuncName;
-	
-	if (res == 0) {
-	  opserr << "commands.cpp - : " << argv[1] << " FOUND & LOADED\n";	
-	  char *recorderName = new char[recorderNameLength+1];
-	  strcpy(recorderName, argv[1]);
-	  ExternalRecorderCommand *theRecorderCommand = new ExternalRecorderCommand;
-	  theRecorderCommand->funcPtr = funcPtr;
-	  theRecorderCommand->funcName = recorderName;	
-	  theRecorderCommand->next = theExternalRecorderCommands;
-	  theExternalRecorderCommands = theRecorderCommand;
-	  
-	  OPS_ResetInputNoBuilder(clientData, interp, 2, argc, argv, &theDomain);
-	  
-	  void *theRes = (*funcPtr)();
-	  if (theRes != 0) {
-	    *theRecorder = (Recorder *)theRes;
-	  }
-	} else {
-	  opserr << "commands.cpp - : " << argv[1] << " NOT FOUND\n";	
-	}
-      }
+       bool echoTimeFlag = false;
+       int flags = 0;
+       double dT = 0.0;
+       int numNodes = 0;
 
-      if (*theRecorder == 0) {
-	opserr << "WARNING No recorder type exists ";
-	opserr << "for recorder of type:" << argv[1];
-	
-	return TCL_ERROR;
-      }    
+       // create ID's to contain the node tags & the dofs
+       ID *theNodes = 0;
+       ID theDofs(0, 6);
+
+       int precision = 6;
+
+       const char *inetAddr = 0;
+       int inetPort;
+
+       while (flags == 0 && pos < argc) {
+
+	 if (strcmp(argv[pos],"-time") == 0) {
+	   echoTimeFlag = true;
+	   pos++;
+	 }
+
+	 else if (strcmp(argv[pos],"-res") == 0) {
+	   fileName = argv[pos+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = GID_STREAM;
+	   pos += 2;
+	 }
+
+	 else if (strcmp(argv[pos],"-xml") == 0) {
+	   // allow user to specify load pattern other than current
+	   fileName = argv[pos+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = XML_STREAM;
+	   pos += 2;
+	 }	    
+
+	 else if ((strcmp(argv[pos],"-binary") == 0)) {
+	   // allow user to specify load pattern other than current
+	   fileName = argv[pos+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = BINARY_STREAM;
+	   pos += 2;
+	 }	    
+
+	 else if (strcmp(argv[pos],"-dT") == 0) {
+	   pos ++;
+	   if (Tcl_GetDouble(interp, argv[pos], &dT) != TCL_OK)	
+	     return TCL_ERROR;		  
+	   pos++;
+	 }
+
+	 else if (strcmp(argv[pos],"-precision") == 0) {
+	   pos ++;
+	   if (Tcl_GetInt(interp, argv[pos], &precision) != TCL_OK)	
+	     return TCL_ERROR;		  
+	   pos++;
+	 }
+
+	 else if ((strcmp(argv[pos],"-node") == 0) || 
+		  (strcmp(argv[pos],"-nodes") == 0)) {
+	   pos++;
+
+	   // read in the node tags or 'all' can be used
+	   if (strcmp(argv[pos],"all") == 0) {
+	     opserr << "recoder Node - error -all option has been removed, use -nodeRange instaed\n";
+	     return TCL_ERROR;		  
+	   } else {
+	     theNodes = new ID(0,16);
+	     int node;
+	     for (int j=pos; j< argc; j++) 
+	       if (Tcl_GetInt(interp, argv[pos], &node) != TCL_OK) {
+		 j = argc;
+		 Tcl_ResetResult(interp);
+	       } else {
+		 (*theNodes)[numNodes] = node;
+		 numNodes++;
+		 pos++;
+	       }
+	   }
+	 } 
+
+	 else if (strcmp(argv[pos],"-nodeRange") == 0) {
+
+	   // ensure no segmentation fault if user messes up
+	   if (argc < pos+3) {
+	     opserr << "WARNING recorder Node .. -nodeRange start? end?  .. - no ele tags specified\n";
+	     return TCL_ERROR;
+	   }
+
+	   //
+	   // read in start and end tags of two elements & add set [start,end]
+	   //
+
+	   int start, end;
+	   if (Tcl_GetInt(interp, argv[pos+1], &start) != TCL_OK) {
+	     opserr << "WARNING recorder Node -nodeRange start? end? - invalid start " << argv[pos+1] << endln;
+	     return TCL_ERROR;
+	   }      
+	   if (Tcl_GetInt(interp, argv[pos+2], &end) != TCL_OK) {
+	     opserr << "WARNING recorder Node -nodeRange start? end? - invalid end " << argv[pos+2] << endln;
+	     return TCL_ERROR;
+	   }      
+	   if (start > end) {
+	     int swap = end;
+	     end = start;
+	     start = swap;
+	   }
+
+	   theNodes = new ID(end-start+1);
+	   for (int i=start; i<=end; i++)
+	     (*theNodes)[numNodes++] = i;	    
+	   pos += 3;
+	 }
+
+	 else if (strcmp(argv[pos],"-region") == 0) {
+	   // allow user to specif elements via a region
+
+	   if (argc < pos+2) {
+	     opserr << "WARNING recorder Node .. -region tag?  .. - no region specified\n";
+	     return TCL_ERROR;
+	   }
+	   int tag;
+	   if (Tcl_GetInt(interp, argv[pos+1], &tag) != TCL_OK) {
+	     opserr << "WARNING recorder Node -region tag? - invalid tag " << argv[pos+1] << endln;
+	     return TCL_ERROR;
+	   }      
+	   MeshRegion *theRegion = theDomain.getRegion(tag);
+	   if (theRegion == 0) {
+	     opserr << "WARNING recorder Node -region " << tag << " - region does not exist" << endln;
+	     return TCL_OK;
+	   }      
+	   const ID &nodeRegion = theRegion->getNodes();
+	   theNodes = new ID(nodeRegion);
+
+	   pos += 2;
+	 } 
+
+	 else if (strcmp(argv[pos],"-dof") == 0) {
+	   pos++;
+	   int numDOF = 0;
+	   int dof;
+	   for (int j=pos; j< argc; j++) 
+	     if (Tcl_GetInt(interp, argv[pos], &dof) != TCL_OK) {
+	       j = argc;
+	       Tcl_ResetResult(interp);
+	     } else {
+	       theDofs[numDOF] = dof-1;  // -1 for c indexing of the dof's
+	       numDOF++;
+	       pos++;
+	     }
+	 }
+
+	 else
+	   flags = 1;
+	 }
+
+       if (pos >= argc) {
+	 opserr << "WARNING: No response type specified for node recorder, will assume you meant -disp\n" << endln;
+       }
+
+       if (responseID == 0 && pos < argc) {
+	 responseID  = argv[pos];
+       }
+
+
+       // construct the DataHandler
+       if (eMode == GID_STREAM && fileName != 0) {
+	 theOutputStream = new GiDStream(fileName);
+     //  } else if (eMode == XML_STREAM && fileName != 0) {
+	 //theOutputStream = new XmlFileStream(fileName);
+     //  } else if (eMode == BINARY_STREAM && fileName != 0) {
+	 //theOutputStream = new BinaryFileStream(fileName);
+       } else {
+	 //theOutputStream = new StandardStream();
+	 opserr << "TclCreateRecorder: error with GidStream(fileName) \n" << endln;
+       }
+
+       theOutputStream->setPrecision(precision);
+
+	 (*theRecorder) = new NodeGiDRecorder(theDofs, 
+					   theNodes, 
+					   responseID, 
+					   theDomain, 
+					   *theOutputStream, 
+					   dT, 
+					   echoTimeFlag);
     }
-    
+
     // check we instantiated a recorder .. if not ran out of memory
     if ((*theRecorder) == 0) {
 	opserr << "WARNING ran out of memory - recorder " << argv[1]<< endln;
