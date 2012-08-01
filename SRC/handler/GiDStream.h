@@ -90,7 +90,6 @@ class GiDStream : public OPS_Stream
 	       FEM_ObjectBroker &theBroker);
 
  private:
-  int mergeXML();
 
   ofstream theFile;
   int fileOpen;

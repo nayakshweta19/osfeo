@@ -266,12 +266,15 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	  theOutputHandler->write("Values\n",8);
 	}
 
+    int cnt;
+
     if (dataFlag != 10) {
 
       for (int i=0; i<numValidNodes; i++) {
 
-	int cnt = i*numDOF + timeOffset; 
-	
+	cnt = 0;//i*numDOF + timeOffset; 
+	response(0) = theNodes[i]->getTag();
+	cnt ++;
 	Node *theNode = theNodes[i];
 	if (dataFlag == 0) {
 	  const Vector &theResponse = theNode->getTrialDisp();
@@ -388,42 +391,16 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	  for (int j=0; j<numDOF; j++) {
 	    response(cnt) = 0.0;
 	  }
-	}
+	}	
+	
+	//this->initStep();
+	// insert the data into the database
+    theOutputHandler->write(response);
       }
-      
-	  //this->initStep();
-	  // insert the data into the database
-      theOutputHandler->write(response);
 	  // End Values
 	  theOutputHandler->write("End Values\n",12);
-    } else { // output all eigenvalues
-
-      Node *theNode = theNodes[0];
-      const Matrix &theEigenvectors = theNode->getEigenvectors();
-      int numValidModes = theEigenvectors.noCols();     
-
-      for (int mode=0; mode<numValidModes; mode++) {
-	
-	for (int i=0; i<numValidNodes; i++) {
-	  int cnt = i*numDOF + timeOffset; 
-	  theNode = theNodes[i];
-	  int column = mode;
-	  
-	  const Matrix &theEigenvectors = theNode->getEigenvectors();
-	  if (theEigenvectors.noCols() > column) {
-	    int noRows = theEigenvectors.noRows();
-	    for (int j=0; j<numDOF; j++) {
-	      int dof = (*theDofs)(j);
-	      if (noRows > dof) {
-		response(cnt) = theEigenvectors(dof,column);
-	      } else 
-		response(cnt) = 0.0;
-	      cnt++;		
-	    }
-	  }
-	}
-	theOutputHandler->write(response);
-      }
+    } else {
+	  opserr << "NodeGiDRecorder::record() --- wrong response type! " << endln;
     }
   }
 
@@ -668,75 +645,75 @@ NodeGiDRecorder::initialize(void)
   if (echoTimeFlag == true)
     timeOffset = 1;
 
-  int numValidResponse = numValidNodes*theDofs->Size() + timeOffset;
+  int numValidResponse = theDofs->Size()+1; //+ timeOffset;numValidNodes*
   response.resize(numValidResponse);
   response.Zero();
 
-  ID orderResponse(numValidResponse);
+  //ID orderResponse(numValidResponse);
 
   //
   // need to create the data description, i.e. what each column of data is
   //
   
-  char outputData[32];
-  char dataType[10];
-
-  if (dataFlag == 0) {
-    strcpy(dataType,"Disp");
-  } else if (dataFlag == 1) {
-    strcpy(dataType,"Vel");
-  } else if (dataFlag == 2) {
-    strcpy(dataType,"Accel");
-  } else if (dataFlag == 3) {
-    strcpy(dataType,"dD");
-  } else if (dataFlag == 4) {
-    strcpy(dataType,"ddD");
-  } else if (dataFlag == 5) {
-    strcpy(dataType,"U");
-  } else if (dataFlag == 6) {
-    strcpy(dataType,"U");
-  } else if (dataFlag == 7) {
-    strcpy(dataType,"R");
-  } else if (dataFlag == 8) {
-    strcpy(dataType,"R");
-  } else if (dataFlag > 10) {
-    sprintf(dataType,"E%d", dataFlag-10);
-  } else
-    strcpy(dataType,"Unknown");
-
-  int numDOF = theDofs->Size();
+  //char outputData[32];
+  //char dataType[10];
+  //
+  //if (dataFlag == 0) {
+  //  strcpy(dataType,"Disp");
+  //} else if (dataFlag == 1) {
+  //  strcpy(dataType,"Vel");
+  //} else if (dataFlag == 2) {
+  //  strcpy(dataType,"Accel");
+  //} else if (dataFlag == 3) {
+  //  strcpy(dataType,"dD");
+  //} else if (dataFlag == 4) {
+  //  strcpy(dataType,"ddD");
+  //} else if (dataFlag == 5) {
+  //  strcpy(dataType,"U");
+  //} else if (dataFlag == 6) {
+  //  strcpy(dataType,"U");
+  //} else if (dataFlag == 7) {
+  //  strcpy(dataType,"R");
+  //} else if (dataFlag == 8) {
+  //  strcpy(dataType,"R");
+  //} else if (dataFlag > 10) {
+  //  sprintf(dataType,"E%d", dataFlag-10);
+  //} else
+  //  strcpy(dataType,"Unknown");
+  //
+  //int numDOF = theDofs->Size();
   
   // write out info to handler if parallel execution
   //  
 
-  ID xmlOrder(numValidNodes);
-
-  if (echoTimeFlag == true)  
-    xmlOrder.resize(numValidNodes+1);
-
-  if (theNodalTags != 0 && addColumnInfo == 1) {
-
-    int numNode = theNodalTags->Size();
-    int count = 0;
-    int nodeCount = 0;
-
-    if (echoTimeFlag == true)  {
-      orderResponse(count++) = 0;
-      xmlOrder(nodeCount++) = 0;
-    }
-    
-    for (int i=0; i<numNode; i++) {
-      int nodeTag = (*theNodalTags)(i);
-      Node *theNode = theDomain->getNode(nodeTag);
-      if (theNode != 0) {
-	xmlOrder(nodeCount++) = i+1;
-	for (int j=0; j<numDOF; j++)
-	  orderResponse(count++) = i+1;
-      }
-    }
-
-    theOutputHandler->setOrder(xmlOrder);
-  }
+  //ID xmlOrder(numValidNodes);
+  //
+  //if (echoTimeFlag == true)  
+  //  xmlOrder.resize(numValidNodes+1);
+  //
+  //if (theNodalTags != 0 && addColumnInfo == 1) {
+  //
+  //  int numNode = theNodalTags->Size();
+  //  int count = 0;
+  //  int nodeCount = 0;
+  //
+  //  if (echoTimeFlag == true)  {
+  //    orderResponse(count++) = 0;
+  //    xmlOrder(nodeCount++) = 0;
+  //  }
+  //  
+  //  for (int i=0; i<numNode; i++) {
+  //    int nodeTag = (*theNodalTags)(i);
+  //    Node *theNode = theDomain->getNode(nodeTag);
+  //    if (theNode != 0) {
+  //xmlOrder(nodeCount++) = i+1;
+  //for (int j=0; j<numDOF; j++)
+  //  orderResponse(count++) = i+1;
+  //    }
+  //  }
+  //
+  //  theOutputHandler->setOrder(xmlOrder);
+  //}
 
   //char nodeCrdData[20];
   //sprintf(nodeCrdData,"coord");
@@ -774,187 +751,12 @@ NodeGiDRecorder::initialize(void)
   //  theOutputHandler->endTag();
   //}
 
-  if (theNodalTags != 0 && addColumnInfo == 1) {
-    theOutputHandler->setOrder(orderResponse);
-  }
-
-  //theOutputHandler->tag("Data");
-  initializationDone = true;
-
-  return 0;
-}
-
-int
-NodeGiDRecorder::initStep(void)
-{
-  if (initializationDone == false) {
-    opserr << "NodeGiDRecorder::initStep() - Initialize has not been called yet!\n";
-    return -1;
-  }
-
-  if (theNodes == 0) 
-    opserr << "NodeGiDRecorder::initStep() - the Nodes not been listed!\n";
-
-  //numValidNodes = 0;
-  //
-  //if (theNodalTags != 0) {
-  //  int numNode = theNodalTags->Size();
-  //  theNodes = new Node *[numNode];
-  //  if (theNodes == 0) {
-  //    opserr << "NodeGiDRecorder::domainChanged - out of memory\n";
-  //    return -1;
-  //  }
-  //
-  //  for (int i=0; i<numNode; i++) {
-  //    int nodeTag = (*theNodalTags)(i);
-  //    Node *theNode = theDomain->getNode(nodeTag);
-  //    if (theNode != 0) {
-	//theNodes[numValidNodes] = theNode;
-	//numValidNodes++;
-  //    }
-  //  }
-  //} else {
-  //
-  //  int numNodes = theDomain->getNumNodes();
-  //  theNodes = new Node *[numNodes];
-  //  opserr << "NodeGiDRecorder::initialize - numNodes: " << numNodes << endln;
-  //  if (theNodes == 0) {
-  //    opserr << "NodeGiDRecorder::domainChanged - out of memory\n";
-  //    return -1;
-  //  }
-  //  NodeIter &theDomainNodes = theDomain->getNodes();
-  //  Node *theNode;
-  //  numValidNodes = 0;
-  //  while (((theNode = theDomainNodes()) != 0) && (numValidNodes < numNodes)) {
-  //    theNodes[numValidNodes] = theNode;
-  //    numValidNodes++;
-  //  }
-  //}
-
-  //
-  // resize the response vector
-  //
-
-  //int timeOffset = 0;
-  //if (echoTimeFlag == true)
-  //  timeOffset = 1;
-
-  //int numValidResponse = numValidNodes*theDofs->Size()+ timeOffset;
-  //response.resize(numValidResponse);
-  //response.Zero();
-
-  //ID orderResponse(numValidResponse);
-
-  //
-  // need to create the data description, i.e. what each column of data is
-  //
-  
-  char outputData[200];
-  char dataType[10];
-
-  if (dataFlag == 0) {
-    strcpy(dataType,"Disp");
-  } else if (dataFlag == 1) {
-    strcpy(dataType,"Vel");
-  } else if (dataFlag == 2) {
-    strcpy(dataType,"Accel");
-  } else if (dataFlag == 3) {
-    strcpy(dataType,"dD");
-  } else if (dataFlag == 4) {
-    strcpy(dataType,"ddD");
-  } else if (dataFlag == 5) {
-    strcpy(dataType,"U");
-  } else if (dataFlag == 6) {
-    strcpy(dataType,"U");
-  } else if (dataFlag == 7) {
-    strcpy(dataType,"R");
-  } else if (dataFlag == 8) {
-    strcpy(dataType,"R");
-  } else if (dataFlag > 10) {
-    sprintf(dataType,"E%d", dataFlag-10);
-  } else
-    strcpy(dataType,"Unknown");
-
-  int numDOF = theDofs->Size();
-  if (numDOF == 2) {
-//	strcpy(outputData, "\nResult \" Nodal ");
-//	strcat(outputData, dataType);
-//	strcat(outputData, "\" Analysis\" \n");
-//	theOutputHandler->tag(outputData);
-//	strcpy(outputData, "ComponentNames \"X-");
-//	strcat(outputData, dataType);
-//	strcat(outputData, "\"  \"Y-");
-//	strcat(outputData, dataType);
-//	strcat(outputData, "\"\n");
-//	theOutputHandler->tag(outputData);
-
-  } else if (numDOF == 3) {
-    //theOutputHandler->tag("\nResult "+dataType);
-  }
-  // write out info to handler if parallel execution
-  //  
-
-  ID xmlOrder(numValidNodes);
-
-  if (echoTimeFlag == true)  
-    xmlOrder.resize(numValidNodes+1);
-
-  if (theNodalTags != 0 && addColumnInfo == 1) {
-
-    int numNode = theNodalTags->Size();
-    int count = 0;
-    int nodeCount = 0;
-
-    if (echoTimeFlag == true)  {
-      //orderResponse(count++) = 0;
-      xmlOrder(nodeCount++) = 0;
-    }
-    
-    for (int i=0; i<numNode; i++) {
-      int nodeTag = (*theNodalTags)(i);
-      Node *theNode = theDomain->getNode(nodeTag);
-      if (theNode != 0) {
-	xmlOrder(nodeCount++) = i+1;
-	//for (int j=0; j<numDOF; j++)
-	  //orderResponse(count++) = i+1;
-      }
-    }
-
-    theOutputHandler->setOrder(xmlOrder);
-  }
-
-  //char nodeCrdData[20];
-  //sprintf(nodeCrdData,"coord");
-
-  //for (int i=0; i<numValidNodes; i++) {
-  //  int nodeTag = theNodes[i]->getTag();
-  //  const Vector &nodeCrd = theNodes[i]->getCrds();
-  //  int numCoord = nodeCrd.Size();
-  //
-  //  theOutputHandler->tag("NodeOutput");
-  //  theOutputHandler->attr("nodeTag", nodeTag);
-  //
-  //  for (int j=0; j<3; j++) {
-  //    sprintf(nodeCrdData,"coord%d",j+1);
-  //    if (j < numCoord)
-	//theOutputHandler->attr(nodeCrdData, nodeCrd(j));      
-  //    else
-	//theOutputHandler->attr(nodeCrdData, 0.0);      
-  //  }
-  //
-  //  for (int k=0; k<theDofs->Size(); k++) {
-  //    sprintf(outputData, "%s%d", dataType, k+1);
-  //    theOutputHandler->tag("ResponseType",outputData);
-  //  }
-  //
-  //  theOutputHandler->endTag();
-  //}
-
   //if (theNodalTags != 0 && addColumnInfo == 1) {
   //  theOutputHandler->setOrder(orderResponse);
   //}
-  theOutputHandler->tag("Values");
 
+  //theOutputHandler->tag("Data");
+  initializationDone = true;
 
   return 0;
 }

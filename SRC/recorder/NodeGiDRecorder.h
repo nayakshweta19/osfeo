@@ -71,7 +71,6 @@ class NodeGiDRecorder: public Recorder
 
   private:	
     int initialize(void);
-	int initStep(void);
 
     ID *theDofs;
     ID *theNodalTags;

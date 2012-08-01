@@ -204,13 +204,11 @@ GiDStream::open(void)
 
   if (sendSelfCount >= 0) {
 
-    theFile << "GiD Post Results File 1.0 \n\n";
+    theFile << "GiD Post Results File 1.0" <<endln;
 	//numIndent++;
 
   } 
-
-
-  //  theFile << setiosflags(ios::fixed);
+  theFile << setiosflags(ios::fixed);
 
   return 0;
 }
@@ -423,32 +421,31 @@ GiDStream::endTag()
 {
   //  if (sendSelfCount == 0) {
     if (numTag != 0) {
-      if (attributeMode == true) {
-	theFile << " \n";
-	delete [] tags[numTag-1];
-	numTag--;
-      } else {
-	//this->indent();
-	//theFile << "End "<< tags[numTag-1]; //
-	delete [] tags[numTag-1];
-	numTag--;
-      }    
-      
-      attributeMode = false;
-      //numIndent--;
-
-      if (sendSelfCount != 0)
-	(*xmlColumns)[numXMLTags] += 1;
-
-      if (numIndent == -1) 
-	numXMLTags++;
+    //  if (attributeMode == true) {
+	//theFile << " \n";
+	//delete [] tags[numTag-1];
+	//numTag--;
+    //  } else {
+	////this->indent();
+	////theFile << "End "<< tags[numTag-1]; //
+	//delete [] tags[numTag-1];
+	//numTag--;
+    //  }    
+    //  
+    //  attributeMode = false;
+    //  //numIndent--;
+	//
+    //  if (sendSelfCount != 0)
+	//(*xmlColumns)[numXMLTags] += 1;
+	//
+    //  if (numIndent == -1) 
+	//numXMLTags++;
 
       return 0;
     }
-    
-    /*  } else {
+    else {
   
-    if (numTag != 0) {
+    /*if (numTag != 0) {
       if (attributeMode == true) {
 	int nextXmlStringLength = xmlStringLength +  4;
 	char *nextXmlString = new char [nextXmlStringLength];
@@ -498,14 +495,11 @@ GiDStream::endTag()
 	  delete [] xmlString;
 	  xmlString = 0;
 	  xmlStringLength = 0;
-	}
+	} */
 
-      
       return 0;
     }
-    }
-    */
-
+   
     return -1;
 }
 
@@ -710,8 +704,6 @@ GiDStream::write(Vector &data)
   return 0;
 }
 
-
-
 OPS_Stream& 
 GiDStream::write(const char *s,int n)
 {
@@ -724,7 +716,7 @@ GiDStream::write(const char *s,int n)
   }
 
   if (fileOpen != 0)
-    theFile.write(s, n);
+    theFile << s ;
 
   return *this;
 }
@@ -741,7 +733,7 @@ GiDStream::write(const unsigned char*s,int n)
   }
 
   if (fileOpen != 0)
-    theFile.write((const char *) s, n);
+    theFile << s;
 
   return *this;
 }
@@ -757,7 +749,7 @@ GiDStream::write(const signed char*s,int n)
   }
 
   if (fileOpen != 0)
-    theFile.write((const char *) s, n);
+    theFile << s;
 
   return *this;
 }
@@ -774,7 +766,7 @@ GiDStream::write(const void *s, int n)
   }
 
   if (fileOpen != 0)
-    theFile.write((const char *) s, n);
+    theFile << s;
 
   return *this;
 }
@@ -1170,7 +1162,6 @@ GiDStream::indent(void)
       theFile << indentString;
 }
 
-
 int
 GiDStream::setOrder(const ID &orderData)
 {
@@ -1184,7 +1175,7 @@ GiDStream::setOrder(const ID &orderData)
     xmlColumns = new ID(orderData.Size());
     xmlOrderProcessed = 1;
   } else if (xmlOrderProcessed == 1) {
-    this->mergeXML();
+    //this->mergeXML();
     xmlOrderProcessed = 2;
   } 
 
@@ -1300,159 +1291,6 @@ GiDStream::setOrder(const ID &orderData)
       }
       count++;
     }
-  }
-
-  if (theChannels != 0) {
-    static ID lastMsg(1);
-    if (sendSelfCount > 0) {
-      for (int i=0; i<sendSelfCount; i++) 
-	theChannels[i]->sendID(0, 0, lastMsg);
-    } else
-	theChannels[0]->recvID(0, 0, lastMsg);
-  }
-
-  return 0;
-}
-
-
-int
-GiDStream::mergeXML() 
-{
-  int fileNameLength = strlen(fileName);
-
-  theFile.close();
-  fileOpen = 0;
-  
-  if (sendSelfCount < 0) {
-
-    int numColumns = numXMLTags;
-
-    if (numColumns < 0)
-      return 0;
-
-    ifstream theFile0;
-    theFile0.open(fileName, ios::in);
-
-    string s;
-    string s2;
-
-    for (int j=0; j<numColumns; j++) {
-      char *data = 0;
-      int sizeData = 1;  // for terminating character
-      
-      int numLines = (*xmlColumns)(j);
-      for (int k=0; k<=numLines; k++) {
-	getline(theFile0, s);  
-	const char *s1 =  s.c_str();
-	int sizeNewData = strlen(s1)+1; // for newline
-	char *nextData = new char[sizeData + sizeNewData];
-	if (data != 0) {
-	  strncpy(nextData, data, sizeData);
-	  delete [] data;
-	}
-
-	strncpy(&nextData[sizeData-1], s1, sizeNewData);
-	sizeData = sizeData + sizeNewData;
-	data = nextData;
-	data[sizeData-2] = '\n';
-	data[sizeData-1] = '\0';
-      }
-      static ID dataSize(1);
-      dataSize(0) = sizeData;
-      theChannels[0]->sendID(0, 0, dataSize);
-      
-      Message dataMsg(data, sizeData);
-      theChannels[0]->sendMsg(0, 0, dataMsg);
-      if (data != 0)
-	delete [] data;
-    }
-  } else  if (sendSelfCount > 0) {      
-
-      ifstream theFile0;
-
-      theFile0.open(fileName, ios::in);
-
-      int fileNameLength = strlen(fileName);
-      sprintf(&fileName[fileNameLength-2],"");
-      
-      theFile.open(fileName, ios::out);
-      fileOpen = 1;
-
-      string s;
-    
-      for (int i=0; i<4; i++) {
-	getline(theFile0, s);  // print out the first 4 lines
-	theFile << s.c_str();
-	theFile << "\n";
-      }      
-
-      int count = 0;
-      ID currentLoc(sendSelfCount+1);
-      currentLoc.Zero();
-      int maxCount = mapping->noCols()+1;
-
-      int p0Count = 0;
-
-      while (count <= maxCount) {
-
-	bool printedData = false;
-	  
-	// if P0 owns it, read from file & print it
-	char *data = 0;
-	int sizeData = 1;
-	
-	for (int i=0; i<sendSelfCount+1; i++) {
-
-	  if (theColumns[i] != 0) {
-	  
-	    ID &theColumnsI = *theColumns[i];
-
-	    if (theColumnsI[currentLoc[i]] == count) {
-
-	      currentLoc[i] = currentLoc[i]+1;
-
-	      if (i == 0) {
-
-		printedData = true;
-
-		int numLines = (*xmlColumns)(p0Count);
-
-		p0Count++;
-
-		for (int k=0; k<=numLines; k++) {
-		  getline(theFile0, s);  
-		  const char *s1 =  s.c_str();
-		  theFile << s1;
-		  theFile << "\n";
-		}		  
-	      } else {
-		static ID dataSize(1);
-		
-		theChannels[i-1]->recvID(0, 0, dataSize);
-
-		int iDataSize = dataSize(0);
-		
-		if (iDataSize > sizeData) {
-		  sizeData = iDataSize;
-		  if (data != 0)
-		    delete [] data;
-		  data = new char[sizeData];
-		}
-		
-		Message dataMsg(data, iDataSize);
-		theChannels[i-1]->recvMsg(0, 0, dataMsg);		  
-	      }
-
-	      if (printedData == false && data != 0) {
-		printedData = true;
-		theFile.write(data, sizeData);
-	      }
-	    }
-	  }
-	}
-	
-	count++;;
-      }
   }
 
   if (theChannels != 0) {
