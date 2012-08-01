@@ -1583,7 +1583,6 @@
 	 if (Tcl_GetInt(interp, argv[6], &height) != TCL_OK)	
 	     return TCL_ERROR;	      
 
-	 TCL_Char *fileName = 0;
 	 bool displayRecord = false;
 	 int loc = 7;
 	 while (loc < argc) {
@@ -1697,7 +1696,7 @@
      ************************************************* */
 
 	 // for gid output. neallee@tju.edu.cn-------------------------------------------------
-	 else if (strcmp(argv[1],"gid") == 0) {
+	 else if ((strcmp(argv[1],"gid") == 0) || (strcmp(argv[1],"GiD") == 0)) {
        if (argc < 7) {
 	 opserr << "WARNING recorder gid ";
 	 opserr << "-node <list nodes> -dof <doflist> -file <fileName> -dT <dT> reponse";
@@ -1706,7 +1705,7 @@
 
        TCL_Char *responseID = 0;
 
-       outputMode eMode = GID_STREAM;
+       outputMode eMode = DATA_STREAM;
 
        int pos = 2;
 
@@ -1729,6 +1728,14 @@
 	 if (strcmp(argv[pos],"-time") == 0) {
 	   echoTimeFlag = true;
 	   pos++;
+	 }
+
+	 else if (strcmp(argv[pos],"-file") == 0) {
+	   fileName = argv[pos+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = DATA_STREAM;
+	   pos += 2;
 	 }
 
 	 else if (strcmp(argv[pos],"-res") == 0) {
@@ -1881,12 +1888,14 @@
        // construct the DataHandler
        if (eMode == GID_STREAM && fileName != 0) {
 	 theOutputStream = new GiDStream(fileName);
-     //  } else if (eMode == XML_STREAM && fileName != 0) {
-	 //theOutputStream = new XmlFileStream(fileName);
-     //  } else if (eMode == BINARY_STREAM && fileName != 0) {
-	 //theOutputStream = new BinaryFileStream(fileName);
+	   } else if (eMode == DATA_STREAM && fileName != 0) {
+	 theOutputStream = new DataFileStream(fileName);
+       } else if (eMode == XML_STREAM && fileName != 0) {
+	 theOutputStream = new XmlFileStream(fileName);
+       } else if (eMode == BINARY_STREAM && fileName != 0) {
+	 theOutputStream = new BinaryFileStream(fileName);
        } else {
-	 //theOutputStream = new StandardStream();
+	 theOutputStream = new StandardStream();
 	 opserr << "TclCreateRecorder: error with GidStream(fileName) \n" << endln;
        }
 
@@ -1907,7 +1916,7 @@
 	return TCL_ERROR;
     } 
 
-    // operation successfull
+    // operation successfully
     return TCL_OK;
 }
 

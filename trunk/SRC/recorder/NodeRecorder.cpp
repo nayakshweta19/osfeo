@@ -439,7 +439,7 @@ NodeRecorder::record(int commitTag, double timeStamp)
 	  theNode = theNodes[i];
 	  int column = mode;
 	  
-	  const Matrix &theEigenvectors = theNode->getEigenvectors();
+	  //const Matrix &theEigenvectors = theNode->getEigenvectors();
 	  if (theEigenvectors.noCols() > column) {
 	    int noRows = theEigenvectors.noRows();
 	    for (int j=0; j<numDOF; j++) {

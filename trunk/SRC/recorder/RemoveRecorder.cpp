@@ -678,8 +678,8 @@ RemoveRecorder::elimNode(int theNodeTag, double timeStamp)
     //		int cnt=0;
     while ((theLoad = theLoads()) != 0) {
       
-      int theNode = theLoad->getNodeTag();
-      if (theNode == theNodeTag) {
+      int NodeTag = theLoad->getNodeTag();
+      if (NodeTag == theNodeTag) {
 	//				theLoadTags[cnt] = theLoad->getTag();
 	//				cnt++;
 #ifdef MMTDEBUG

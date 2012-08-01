@@ -589,7 +589,7 @@ ElementRecorder::initialize(void)
 	  // Why is this created locally and not used? -- MHS
 	  Response **theNextResponses = new Response *[numEle*2];
 	  if (theNextResponses != 0) {
-	    for (int i=0; i<numEle; i++)
+	    for (i=0; i<numEle; i++)
 	      theNextResponses[i] = theResponses[i];
 	    for (int j=numEle; j<2*numEle; j++)
 	      theNextResponses[j] = 0;
