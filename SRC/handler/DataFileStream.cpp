@@ -756,7 +756,7 @@ DataFileStream::setOrder(const ID &orderData)
 	return -1;
       }
 
-      int numColumns = numColumnID(0);
+      numColumns = numColumnID(0);
 
       (*sizeColumns)(i+1) = numColumns;
       if (numColumns != 0) {

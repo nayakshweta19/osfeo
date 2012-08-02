@@ -764,7 +764,7 @@ BinaryFileStream::setOrder(const ID &orderData)
 	return -1;
       }
 
-      int numColumns = numColumnID(0);
+      numColumns = numColumnID(0);
       opserr << "BinaryFileStream::setOrder(const ID &orderData) - NumColumns: " << numColumns << endln;
 
       (*sizeColumns)(i+1) = numColumns;

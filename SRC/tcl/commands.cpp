@@ -9080,6 +9080,8 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 		return TCL_ERROR;
 	}
 	openMode mode = OVERWRITE;
+	outputFile.precision(0);
+
 	if (argc >= 3)
 	{
 		if (strcmp(argv[i],"-append") == 0) 
@@ -9148,7 +9150,8 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 			const Vector &crds = theNode->getCrds();
 			//outputFile << tag << "\t\t" << crds(0) << "\t" << crds(1) << "\t" << crds(2) << endln;
 			int l_tmp = crds.Size();
-			outputFile << tag << "\t\t";
+			outputFile.write(tag);
+			outputFile << "\t\t";
 			for (int ii = 0; ii<l_tmp; ii++) {
 				outputFile << crds(ii) << "\t";
 			};
@@ -9177,7 +9180,8 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 					for (int i = 0; i < nNode; i++) {
 						tagNodes(i)=NodePtrs[i]->getTag();
 					}
-					outputFile << tag << "\t\t";
+					outputFile.write(tag);
+					outputFile << "\t\t";
 					for (int i = 0; i < nNode; i++) {
 						outputFile << tagNodes(i) << "\t";
 					}

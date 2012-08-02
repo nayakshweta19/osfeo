@@ -1696,7 +1696,8 @@
      ************************************************* */
 
 	 // for gid output. neallee@tju.edu.cn-------------------------------------------------
-	 else if ((strcmp(argv[1],"gid") == 0) || (strcmp(argv[1],"GiD") == 0)) {
+	 else if ((strcmp(argv[1],"gid") == 0) || (strcmp(argv[1],"GiD") == 0) ||
+		      (strcmp(argv[1],"Gid") == 0) || (strcmp(argv[1],"GID") == 0)) {
        if (argc < 7) {
 	 opserr << "WARNING recorder gid ";
 	 opserr << "-node <list nodes> -dof <doflist> -file <fileName> -dT <dT> reponse";
@@ -1784,8 +1785,14 @@
 
 	   // read in the node tags or 'all' can be used
 	   if (strcmp(argv[pos],"all") == 0) {
-	     opserr << "recoder Node - error -all option has been removed, use -nodeRange instaed\n";
-	     return TCL_ERROR;		  
+	     NodeIter &theNodesIter = theDomain.getNodes();
+		 Node *theNode;
+		 theNodes = new ID(0,16);
+		 while ((theNode = theNodesIter()) != 0) {
+		   (*theNodes)[numNodes] = theNode->getTag();
+		   numNodes++;
+		 }
+		 pos++;
 	   } else {
 	     theNodes = new ID(0,16);
 	     int node;
@@ -1899,7 +1906,7 @@
 	 opserr << "TclCreateRecorder: error with GidStream(fileName) \n" << endln;
        }
 
-       theOutputStream->setPrecision(precision);
+       //theOutputStream->setPrecision(precision);
 
 	 (*theRecorder) = new NodeGiDRecorder(theDofs, 
 					   theNodes, 
@@ -1912,8 +1919,8 @@
 
     // check we instantiated a recorder .. if not ran out of memory
     if ((*theRecorder) == 0) {
-	opserr << "WARNING ran out of memory - recorder " << argv[1]<< endln;
-	return TCL_ERROR;
+	  opserr << "WARNING ran out of memory - recorder " << argv[1]<< endln;
+	  return TCL_ERROR;
     } 
 
     // operation successfully
