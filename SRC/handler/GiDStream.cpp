@@ -701,6 +701,7 @@ GiDStream::write(Vector &data)
       theFile << data[startLoc++] << " ";
   }
   theFile << "\n";
+  theFile.flush();
   return 0;
 }
 
@@ -711,6 +712,7 @@ GiDStream::write(int data)
     this->open();
 
   theFile << data << "\t";
+  theFile.flush();
   return 0;
 }
 

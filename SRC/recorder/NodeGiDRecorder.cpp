@@ -644,7 +644,7 @@ NodeGiDRecorder::initialize(void)
   if (echoTimeFlag == true)
     timeOffset = 1;
 
-  int numValidResponse = theDofs->Size()+1; //+ timeOffset;numValidNodes*
+  int numValidResponse = theDofs->Size(); //+ timeOffset;numValidNodes*
   response.resize(numValidResponse);
   response.Zero();
 
