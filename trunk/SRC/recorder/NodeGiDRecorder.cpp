@@ -245,25 +245,27 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
     } else
       strcpy(dataType,"Unknown");
 
+	stepN ++;
+
 	if (numDOF == 2) {
 	  // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
-	  sprintf(outputData,"Result \" Nodal %s\" ,\" Analysis\" %12.5f Vector OnNodes\n",dataType,timeStamp);
+	  sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
 	  theOutputHandler->write(outputData,strlen(outputData));
 	  // ComponentNames "X-Disp"  "Y-Disp"
-	  sprintf(outputData, "ComponentNames \"X-%s\"  \"Y-%s\"\n",dataType,dataType);
+	  sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"\n",dataType,dataType);
 	  theOutputHandler->write(outputData,strlen(outputData));
 	  // Values
-	  theOutputHandler->write("Values\n",8);
+	  theOutputHandler->write(" Values\n",8);
 
 	} else if (numDOF == 3) {
       // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
-      sprintf(outputData,"Result \" Nodal %s\" ,\" Analysis\" %12.5f Vector OnNodes\n",dataType,timeStamp);
+      sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
       theOutputHandler->write(outputData,strlen(outputData));
       //ComponentNames "X-Disp"  "Y-Disp"
-      sprintf(outputData, "ComponentNames \"X-%s\"  \"Y-%s\"  \"Z-%s\"\n",dataType,dataType,dataType);
+      sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"  \"Z-%s\"\n",dataType,dataType,dataType);
       theOutputHandler->write(outputData,strlen(outputData));
 	  // Values
-	  theOutputHandler->write("Values\n",8);
+	  theOutputHandler->write(" Values\n",8);
 	}
 
     int cnt;
@@ -273,8 +275,9 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
       for (int i=0; i<numValidNodes; i++) {
 
 	cnt = 0;//i*numDOF + timeOffset; 
-	response(0) = theNodes[i]->getTag();
-	cnt ++;
+	//response(0) = i+1; //theNodes[i]->getTag();
+	//cnt ++;
+	theOutputHandler->write(theNodes[i]->getTag());
 	Node *theNode = theNodes[i];
 	if (dataFlag == 0) {
 	  const Vector &theResponse = theNode->getTrialDisp();
@@ -284,18 +287,18 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	  response(cnt) = theResponse(dof);
 	    }
 	    else {
-	  response(cnt) = 0.0;
+	  //response(cnt) = 0.0;
 	    }
 	    cnt++;
 	  }
-	}else if (dataFlag == 1) {
+	} else if (dataFlag == 1) {
 	  const Vector &theResponse = theNode->getTrialVel();
 	  for (int j=0; j<numDOF; j++) {
 	    int dof = (*theDofs)(j);
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	      response(cnt) = 0.0;    
+	  //    response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -306,7 +309,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	      response(cnt) = 0.0;    
+	  //    response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -317,7 +320,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	      response(cnt) = 0.0;    
+	  //    response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -328,7 +331,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	      response(cnt) = 0.0;    
+	  //    response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -339,11 +342,10 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	      response(cnt) = 0.0;
+	  //    response(cnt) = 0.0;
 	    
 	    cnt++;
-	  }
-	  
+	  } 
 	} else if (dataFlag == 6) {
 	  const Vector &theResponse = theNode->getUnbalancedLoadIncInertia();
 	  for (int j=0; j<numDOF; j++) {
@@ -351,12 +353,10 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	      response(cnt) = 0.0;
+	  //    response(cnt) = 0.0;
 	    
 	    cnt++;
 	  }
-	  
-	  
 	} else if (dataFlag == 7 || dataFlag == 8 || dataFlag == 9) {
 	  const Vector &theResponse = theNode->getReaction();
 	  for (int j=0; j<numDOF; j++) {
@@ -364,10 +364,9 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	      response(cnt) = 0.0;
+	  //    response(cnt) = 0.0;
 	    cnt++;
 	  }
-	  
 	} else if (10 <= dataFlag  && dataFlag < 1000) {
 	  int mode = dataFlag - 10;
 	  int column = mode - 1;
@@ -380,7 +379,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	      if (noRows > dof) {
 		response(cnt) = theEigenvectors(dof,column);
 	      } else 
-		response(cnt) = 0.0;
+	//	response(cnt) = 0.0;
 	      cnt++;		
 	    }
 	  }
@@ -389,7 +388,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	else {
 	  // unknown response
 	  for (int j=0; j<numDOF; j++) {
-	    response(cnt) = 0.0;
+	//	response(cnt) = 0.0;
 	  }
 	}	
 	
@@ -398,7 +397,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
     theOutputHandler->write(response);
       }
 	  // End Values
-	  theOutputHandler->write("End Values\n",12);
+	  theOutputHandler->write("End Values\n\n",14);
     } else {
 	  opserr << "NodeGiDRecorder::record() --- wrong response type! " << endln;
     }
@@ -757,6 +756,8 @@ NodeGiDRecorder::initialize(void)
 
   //theOutputHandler->tag("Data");
   initializationDone = true;
+
+  stepN =0;
 
   return 0;
 }

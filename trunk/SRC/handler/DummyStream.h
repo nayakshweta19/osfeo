@@ -44,7 +44,7 @@ class DummyStream : public OPS_Stream
   int attr(const char *name, double value) {return 0;};
   int attr(const char *name, const char *value) {return 0;};
   int write(Vector &data) {return 0;};
-
+  int write(int data) {return 0;};
 
   OPS_Stream& write(const char *s, int n) {return *this;};
   OPS_Stream& write(const unsigned char *s, int n) {return *this;};

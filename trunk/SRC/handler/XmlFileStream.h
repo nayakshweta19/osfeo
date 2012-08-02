@@ -58,6 +58,7 @@ class XmlFileStream : public OPS_Stream
   int attr(const char *name, double value);
   int attr(const char *name, const char *value);
   int write(Vector &data);
+  int write(int data) {return 0;};
 
   // regular stuff
   OPS_Stream& write(const char *s, int n);

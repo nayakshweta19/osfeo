@@ -295,7 +295,15 @@ FileStream::write(Vector &data)
   return 0;
 }
 
+int 
+FileStream::write(int data)
+{
+  if (fileOpen == 0)
+	this->open();
 
+  theFile << data << "\t";
+  return 0;
+}
 
 OPS_Stream& 
 FileStream::write(const char *s,int n)

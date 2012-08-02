@@ -52,6 +52,7 @@ class OPS_Stream:  public MovableObject
   virtual int attr(const char *name, double value) =0;
   virtual int attr(const char *name, const char *value) =0;
   virtual int write(Vector &data) =0; 
+  virtual int write(int data) =0;
 
   // regular stuff
   virtual OPS_Stream& write(const char *s, int n);

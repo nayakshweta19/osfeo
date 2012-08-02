@@ -1232,7 +1232,7 @@ XmlFileStream::setOrder(const ID &orderData)
 	return -1;
       }
 
-      int numColumns = numColumnID(0);
+      numColumns = numColumnID(0);
 
       (*sizeColumns)(i+1) = numColumns;
       if (numColumns != 0) {
@@ -1373,7 +1373,7 @@ XmlFileStream::mergeXML()
 
       theFile0.open(fileName, ios::in);
 
-      int fileNameLength = strlen(fileName);
+      //int fileNameLength = strlen(fileName);
       sprintf(&fileName[fileNameLength-2],"");
       
       theFile.open(fileName, ios::out);

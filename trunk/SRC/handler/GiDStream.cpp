@@ -204,7 +204,7 @@ GiDStream::open(void)
 
   if (sendSelfCount >= 0) {
 
-    theFile << "GiD Post Results File 1.0" <<endln;
+    theFile << "GiD Post Results File 1.0" <<endln <<endln;
 	//numIndent++;
 
   } 
@@ -703,6 +703,17 @@ GiDStream::write(Vector &data)
   theFile << "\n";
   return 0;
 }
+
+int 
+GiDStream::write(int data)
+{
+  if (fileOpen == 0)
+    this->open();
+
+  theFile << data << "\t";
+  return 0;
+}
+
 
 OPS_Stream& 
 GiDStream::write(const char *s,int n)
@@ -1222,7 +1233,7 @@ GiDStream::setOrder(const ID &orderData)
 	return -1;
       }
 
-      int numColumns = numColumnID(0);
+      numColumns = numColumnID(0);
 
       (*sizeColumns)(i+1) = numColumns;
       if (numColumns != 0) {

@@ -82,6 +82,7 @@ class NodeGiDRecorder: public Recorder
 
     bool echoTimeFlag;   // flag indicating whether time to be included in o/p
     int dataFlag;        // flag indicating what it is to be stored in recorder
+	int stepN;
 
     double deltaT;
     double nextTimeStampToRecord;
