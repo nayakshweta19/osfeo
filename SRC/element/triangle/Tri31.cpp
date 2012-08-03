@@ -95,7 +95,7 @@ OPS_Tri31(void)
   }
   
   if (OPS_GetStringCopy(&theType) != 0) {
-    opserr << "WARNING invalid type, want: ""PlaneStress"" or ""PlaneStrain""  element SSPquad " << iData[0] << endln;
+    opserr << "WARNING invalid type, want: ""PlaneStress"" or ""PlaneStrain""  element Tri31 " << iData[0] << endln;
     return 0;
   }
   

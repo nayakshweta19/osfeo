@@ -822,7 +822,9 @@
 #define RECORDER_TAGS_DamageRecorder		12
 #define RECORDER_TAGS_PatternRecorder		13
 #define RECORDER_TAGS_TclFeViewer		14
-
+#define RECORDER_TAGS_RemoveRecorder	16
+#define RECORDER_TAGS_NodeGiDRecorder	21
+#define RECORDER_TAGS_ElementGiDRecorder	22
 
 #define OPS_STREAM_TAGS_FileStream		1
 #define OPS_STREAM_TAGS_StandardStream		2

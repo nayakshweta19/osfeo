@@ -24,8 +24,6 @@
                                                                         
 #ifndef RemoveRecorder_h
 #define RemoveRecorder_h
-#define RECORDER_TAGS_RemoveRecorder 15
-
 
 // Written: M Talaat, 06/07
 // Created: 06/07
