@@ -48,6 +48,7 @@ class GiDStream : public OPS_Stream
   int setFloatField(floatField);
   int precision(int precision) {return 0;};
   int width(int width) {return 0;};
+  int getEleGPs();
   const char *getFileName(void) {return fileName;}
 
   // xml stuff
@@ -124,6 +125,8 @@ class GiDStream : public OPS_Stream
 
   int numXMLTags;
   ID *xmlColumns;
+
+  int GPs;
 };
 
 #endif

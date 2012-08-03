@@ -43,6 +43,7 @@ class OPS_Stream:  public MovableObject
   virtual int setFloatField(floatField) {return 0;}
   virtual int precision(int precision) {return 0;}
   virtual int width(int width) {return 0;}
+  virtual int getEleGPs() {return 0;}
 
   // xml stuff
   virtual int tag(const char *) =0;
