@@ -21,6 +21,7 @@
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
 #include <ElementResponse.h>
+#include <CompositeResponse.h>
 #include <ElementalLoad.h>
 #include <BeamIntegration.h>
 #include <math.h>
@@ -1026,14 +1027,40 @@ Timoshenko2d04::setResponse(const char **argv, int argc, OPS_Stream &s)
     
     // section response -
     else if (strcmp(argv[0],"section") == 0 || strcmp(argv[0],"-section") == 0) {
-      if (argc <= 2)
-	return 0;
-      
+
+      Response *theResponse = 0;
+
       int sectionNum = atoi(argv[1]);
       if (sectionNum > 0 && sectionNum <= numSections)
 	return theSections[sectionNum-1]->setResponse(&argv[2], argc-2, s);
-      else
-	return 0;
+      else if (sectionNum == 0) { // argv[1] was not an int, we want all sections, 
+	CompositeResponse *theCResponse = new CompositeResponse();
+	int numResponse = 0;
+	double xi[maxNumSections];
+	double L = crdTransf->getInitialLength();
+	beamInt->getSectionLocations(numSections, L, xi);
+
+	for (int i=0; i<numSections; i++) {
+
+	  s.tag("GaussPointOutput");
+	  s.attr("number",i+1);
+	  s.attr("eta",xi[i]*L);
+
+	  Response *theSectionResponse = theSections[i]->setResponse(&argv[1], argc-1, s);
+
+	  if (theSectionResponse != 0) {
+	    numResponse = theCResponse->addResponse(theSectionResponse);
+	  }
+
+	  s.endTag();
+	}
+
+	if (numResponse == 0) // no valid responses found
+	  delete theCResponse;
+	else
+	  theResponse = theCResponse;
+
+	  }
     }
     
     else

@@ -211,7 +211,7 @@ RemoveRecorder::RemoveRecorder(int nodeID,
 
   if (slaveEleTags[0] != 0) {
     for (int k= 0; k<slaveTags.Size(); k++) {
-      Element *theEle = theDomainPtr.getElement(slaveTags[k]);
+      theEle = theDomainPtr.getElement(slaveTags[k]);
       if ( theEle == NULL ) {
 	opserr << "WARNING RemoveRecorder::RemoveRecorder() - no element with tag: "
 	       << slaveTags[k] << " exists in Domain\n";

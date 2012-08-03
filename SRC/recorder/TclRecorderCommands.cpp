@@ -1925,7 +1925,10 @@
        int flags = 0;
        int eleData = 0;
        outputMode eMode = GID_STREAM; 
-       ID *eleIDs = 0;
+       //ID *eleIDs = 0;
+	   int eleTag;
+	   ID eleIDs;
+	   eleIDs = ID(1);
        int precision = 6;
        const char *inetAddr = 0;
        int inetPort;
@@ -1946,23 +1949,23 @@
 	   // read in a list of ele until end of command or other flag
 	   //
 	   loc++;
-	   int eleTag;
-	   eleIDs = new ID(0, 32);
 	   while (loc < argc && Tcl_GetInt(interp, argv[loc], &eleTag) == TCL_OK) {
-	     (*eleIDs)[numEle] = eleTag;
-	     numEle++;
+	     eleIDs[numEle++] = eleTag;
 	     loc++;
 	   }
 	   Tcl_ResetResult(interp);
 
 	   if (loc == argc) {
 	     opserr << "ERROR: No response type specified for element recorder. " << endln;
-	     delete eleIDs;
+	     //delete eleIDs;
 	     return TCL_ERROR;
 	   }
 
 	   if (strcmp(argv[loc],"all") == 0) {
-	     eleIDs = 0;
+	     ElementIter &theEleIter = theDomain.getElements();
+	     Element *theEle;
+	     while ((theEle = theEleIter()) != 0)
+	       eleIDs[numEle++] = theEle->getTag();
 	     loc++;
 	   }
 
@@ -1995,13 +1998,8 @@
 	     start = swap;
 	   }
 
-	   eleIDs = new ID(end-start);	  
-	   if (eleIDs == 0) {
-	     opserr << "WARNING recorder Element -eleRange start? end? - out of memory\n";
-	     return TCL_ERROR;
-	   }
 	   for (int i=start; i<=end; i++)
-	     (*eleIDs)[numEle++] = i;	    
+	     eleIDs[numEle++] = i;	    
 
 	   loc += 3;
 	 } 
@@ -2025,14 +2023,8 @@
 	   }      
 	   const ID &eleRegion = theRegion->getElements();
 
-	   eleIDs = new ID(eleRegion.Size());	  
-	   if (eleIDs == 0) {
-	     opserr << "WARNING recorder Element -eleRange start? end? - out of memory\n";
-	     return TCL_ERROR;
-	   }
-
 	   for (int i=0; i<eleRegion.Size(); i++)
-	     (*eleIDs)[numEle++] = eleRegion(i);
+	     eleIDs[numEle++] = eleRegion(i);
 
 	   loc += 2;
 	 } 
@@ -2178,9 +2170,6 @@
 					      theDomain, 
 					      *theOutputStream,
 					      dT);
-
-       if (eleIDs != 0)
-	 delete eleIDs;
 
        delete [] data;
      }

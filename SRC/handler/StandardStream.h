@@ -51,6 +51,7 @@ class StandardStream : public OPS_Stream
   int attr(const char *name, const char *value);
   int write(Vector &data);
   int write(int data) {return 0;};
+  int write(double data) {return 0;};
 
   OPS_Stream& write(const char *s, int n);
   OPS_Stream& write(const unsigned char *s, int n);

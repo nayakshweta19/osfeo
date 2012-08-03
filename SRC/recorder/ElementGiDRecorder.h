@@ -52,7 +52,7 @@ class ElementGiDRecorder: public Recorder
 {
   public:
     ElementGiDRecorder();
-    ElementGiDRecorder(const ID *eleID, 
+    ElementGiDRecorder(ID &eleIDs, 
 		    const char **argv, 
 		    int argc,
 		    bool echoTime, 
@@ -96,7 +96,7 @@ class ElementGiDRecorder: public Recorder
 	bool hasQuad9;
 	bool hasBrick;
 
-    Vector *data;
+    //Vector *data;
     bool initializationDone;
     char **responseArgs;
     int numArgs;

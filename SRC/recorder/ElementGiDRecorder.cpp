@@ -25,7 +25,7 @@
 // Written:
 // Created:
 //
-// Description: This file contains the class implementatation of ElementGiDRecorder.
+// Description: This file contains the class implementations of ElementGiDRecorder.
 //
 // What: "@(#) ElementGiDRecorder.C, revA"
 
@@ -48,14 +48,14 @@ ElementGiDRecorder::ElementGiDRecorder()
 :Recorder(RECORDER_TAGS_ElementGiDRecorder),
  numEle(0), eleID(0), theResponses(0), 
  theDomain(0), theOutputHandler(0),
- echoTimeFlag(true), deltaT(0), nextTimeStampToRecord(0.0), data(0), 
+ echoTimeFlag(true), deltaT(0), nextTimeStampToRecord(0.0),
  initializationDone(false), responseArgs(0), numArgs(0), addColumnInfo(0),
  hasLinear(false), hasTri3(false), hasQuad4(false), hasQuad8(false), hasQuad9(false), hasBrick(false)
 {
 
 }
 
-ElementGiDRecorder::ElementGiDRecorder(const ID *ele,
+ElementGiDRecorder::ElementGiDRecorder(ID &eleIDs,
 				 const char **argv, 
 				 int argc,
 				 bool echoTime, 
@@ -65,14 +65,14 @@ ElementGiDRecorder::ElementGiDRecorder(const ID *ele,
 :Recorder(RECORDER_TAGS_ElementGiDRecorder),
  numEle(0), eleID(0), theResponses(0), 
  theDomain(&theDom), theOutputHandler(&theOutputHandler),
- echoTimeFlag(echoTime), deltaT(dT), nextTimeStampToRecord(0.0), data(0),
+ echoTimeFlag(echoTime), deltaT(dT), nextTimeStampToRecord(0.0),
  initializationDone(false), responseArgs(0), numArgs(0), addColumnInfo(0),
  hasLinear(false), hasTri3(false), hasQuad4(false), hasQuad8(false), hasQuad9(false), hasBrick(false)
 {
 
-  if (ele != 0) {
-    numEle = ele->Size();
-    eleID = new ID(*ele);
+  if (eleIDs != 0) {
+    numEle = eleIDs.Size();
+    eleID = new ID(eleIDs);
     if (eleID == 0 || eleID->Size() != numEle)
       opserr << "ElementGiDRecorder::ElementGiDRecorder() - out of memory\n";
   } 
@@ -120,8 +120,8 @@ ElementGiDRecorder::~ElementGiDRecorder()
     delete [] theResponses;
   }
 
-  if (data != 0)
-    delete data;
+  //if (data != 0)
+  //  delete data;
   
   // 
   // invoke destructor on response args
@@ -171,29 +171,34 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
         // Values
         theOutputHandler->write(" Values\n",8);
 	    
-        //
         // for each element if responses exist, put them in response vector
-        //
         for (int i=0; i< numEle; i++) {
+		  sprintf(outputData, "%i\t", (*eleID)(i));
+		  theOutputHandler->write(outputData,20);
           if (theResponses[i] != 0) {
 	    // ask the element for the response
-	    int res;
-	    if (( res = theResponses[i]->getResponse()) < 0)
+	    int res, dateLength;
+		loc = 0;
+	    if (( res = theResponses[i]->getResponse()) < 0) {
 	      result += res;
-	    else {
+		  dateLength = 0;
+		}else {
 	      Information &eleInfo = theResponses[i]->getInformation();
 	      const Vector &eleData = eleInfo.getData();
-	      for (int j=0; j<eleData.Size(); j++)
-	        (*data)(loc++) = eleData(j);
+		  // for each integration points
+		  int nIP = theOutputHandler->getEleGPs();
+		  for (int k=0; k<nIP; k++) {
+		dateLength = eleData.Size()/nIP;
+	    for (int j=0; j<dateLength; j++) {
+	      double temp = eleData(k*dateLength+j);
+		  theOutputHandler->write(temp);
+		}
+		// send the response vector to the output handler for o/p
+		//theOutputHandler->write(*data);
+		theOutputHandler->write("\n",2);
+		  }
 	    }
           } 
-
-
-		  //
-		  // send the response vector to the output handler for o/p
-		  //
-
-		  theOutputHandler->write(*data);
 
         }
 		// End Values
@@ -254,8 +259,8 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
 int
 ElementGiDRecorder::restart(void)
 {
-  if (data != 0)
-    data->Zero();
+  //if (data != 0)
+  //  data->Zero();
   return 0;
 }
 
@@ -537,8 +542,8 @@ ElementGiDRecorder::initialize(void)
   //
 
   int i =0;
-  ID xmlOrder(0,64);
-  ID responseOrder(0,64);
+  //ID xmlOrder(0,64);
+  //ID responseOrder(0,64);
 
   if (eleID != 0) {
 
@@ -546,14 +551,14 @@ ElementGiDRecorder::initialize(void)
     // if we have an eleID we know Response size so allocate Response holder & loop over & ask each element
     //
 
-    int eleCount = 0;
-    int responseCount = 0;
+    //int eleCount = 0;
+    //int responseCount = 0;
 
     if (echoTimeFlag == true && addColumnInfo == 1) {
     //  xmlOrder[0] = 0;
-      responseOrder[0] = 0;
-      eleCount = 1;
-      responseCount =1;
+    //  responseOrder[0] = 0;
+    //  eleCount = 1;
+    //  responseCount =1;
     }
 
     // loop over ele & set Responses
@@ -561,7 +566,7 @@ ElementGiDRecorder::initialize(void)
       Element *theEle = theDomain->getElement((*eleID)(i));
       if (theEle != 0) {
 	//xmlOrder[eleCount] = i+1;
-	eleCount++;
+	//eleCount++;
 
 	// Cycle over Elements to understand what type of elements are there
 	int tag = theEle->getTag();
@@ -624,11 +629,11 @@ ElementGiDRecorder::initialize(void)
 	  Information &eleInfo = theResponses[i]->getInformation();
 	  const Vector &eleData = eleInfo.getData();
 	  int dataSize = eleData.Size();
-	  numDbColumns += dataSize;
-	  if (addColumnInfo == 1) {
-	    for (int j=0; j<dataSize; j++)
-	      responseOrder[responseCount++] = i+1;
-	  }
+	  numDbColumns = (numDbColumns > dataSize ? numDbColumns:dataSize); //neallee need revised
+	  //if (addColumnInfo == 1) {
+	  //for (int j=0; j<dataSize; j++)
+	  //  responseOrder[responseCount++] = i+1;
+	  //}
 	}
       }
     }
@@ -686,7 +691,9 @@ ElementGiDRecorder::initialize(void)
 	// from the response type determine no of cols for each
 	Information &eleInfo = theResponses[numResponse]->getInformation();
 	const Vector &eleData = eleInfo.getData();
-	numDbColumns += eleData.Size();
+	
+	int temp = eleData.Size();
+	numDbColumns = (numDbColumns > temp ? numDbColumns:temp); //neallee need revised
 
 	numResponse++;
 
@@ -718,12 +725,12 @@ ElementGiDRecorder::initialize(void)
   }
 
   // create the vector to hold the data
-  data = new Vector(numDbColumns);
+  //data = new Vector(numDbColumns);
 
-  if (data == 0) {
-    opserr << "ElementGiDRecorder::initialize() - out of memory\n";
-    return -1;
-  }
+  //if (data == 0) {
+  //  opserr << "ElementGiDRecorder::initialize() - out of memory\n";
+  //  return -1;
+  //}
   
   theOutputHandler->write("GiD Post Results File 1.0\n\n",40);
 
