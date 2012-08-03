@@ -718,6 +718,16 @@ GiDStream::write(int data)
   return 0;
 }
 
+int 
+GiDStream::write(double data)
+{
+  if (fileOpen == 0)
+    this->open();
+
+  theFile << data << "\t";
+  theFile.flush();
+  return 0;
+}
 
 OPS_Stream& 
 GiDStream::write(const char *s,int n)

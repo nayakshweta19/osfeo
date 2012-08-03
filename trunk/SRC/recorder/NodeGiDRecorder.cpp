@@ -284,9 +284,9 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	  response(cnt) = theResponse(dof);
 	    }
-	    else {
-	  //response(cnt) = 0.0;
-	    }
+	    else
+	  response(cnt) = 0.0;
+	    
 	    cnt++;
 	  }
 	} else if (dataFlag == 1) {
@@ -296,7 +296,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	  //    response(cnt) = 0.0;    
+	      response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -307,7 +307,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	  //    response(cnt) = 0.0;    
+	      response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -318,7 +318,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	  //    response(cnt) = 0.0;    
+	      response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -329,7 +329,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);    
 	    } else 
-	  //    response(cnt) = 0.0;    
+	      response(cnt) = 0.0;    
 	    
 	    cnt++;
 	  }
@@ -340,7 +340,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	  //    response(cnt) = 0.0;
+	      response(cnt) = 0.0;
 	    
 	    cnt++;
 	  } 
@@ -351,7 +351,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	  //    response(cnt) = 0.0;
+	      response(cnt) = 0.0;
 	    
 	    cnt++;
 	  }
@@ -362,7 +362,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	    if (theResponse.Size() > dof) {
 	      response(cnt) = theResponse(dof);
 	    } else 
-	  //    response(cnt) = 0.0;
+	      response(cnt) = 0.0;
 	    cnt++;
 	  }
 	} else if (10 <= dataFlag  && dataFlag < 1000) {
@@ -377,7 +377,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	      if (noRows > dof) {
 		response(cnt) = theEigenvectors(dof,column);
 	      } else 
-	//	response(cnt) = 0.0;
+		response(cnt) = 0.0;
 	      cnt++;		
 	    }
 	  }
@@ -386,11 +386,10 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	else {
 	  // unknown response
 	  for (int j=0; j<numDOF; j++) {
-	//	response(cnt) = 0.0;
+		response(cnt) = 0.0;
 	  }
 	}	
 	
-	//this->initStep();
 	// insert the data into the database
     theOutputHandler->write(response);
       }

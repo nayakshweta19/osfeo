@@ -60,6 +60,7 @@ class GiDStream : public OPS_Stream
   int attr(const char *name, const char *value);
   int write(Vector &data);
   int write(int data);
+  int write(double data);
 
   // regular stuff
   OPS_Stream& write(const char *s, int n);
