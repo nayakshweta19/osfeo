@@ -204,7 +204,6 @@ GiDStream::open(void)
 
   if (sendSelfCount >= 0) {
 
-    theFile << "GiD Post Results File 1.0" <<endln <<endln;
 	//numIndent++;
 
   } 
@@ -272,58 +271,58 @@ GiDStream::tag(const char *tagName)
   //
 
   // if tags array not large enough, expand
-  if (numTag == sizeTags) {
-    int nextSize = 2*sizeTags;
-    
-    if (nextSize == 0) nextSize = 32;
-    char **nextTags = new char *[nextSize];
-    if (nextTags != 0) {
-      for (int i=0; i<sizeTags; i++)
-	nextTags[i] = tags[i];
-      for (int j=sizeTags+1; j<nextSize; j++)
-	nextTags[j] = 0;
-      sizeTags = nextSize;
-    } else {
-      sizeTags = 0;
-      delete [] tags;
-      tags = 0;
-      return -1;
-    }
-    
-    if (tags != 0)
-	delete [] tags;
-    
-    tags = nextTags;
-  } 
+  //if (numTag == sizeTags) {
+  //  int nextSize = 2*sizeTags;
+  //  
+  //  if (nextSize == 0) nextSize = 32;
+  //  char **nextTags = new char *[nextSize];
+  //  if (nextTags != 0) {
+  //    for (int i=0; i<sizeTags; i++)
+	//nextTags[i] = tags[i];
+  //    for (int j=sizeTags+1; j<nextSize; j++)
+	//nextTags[j] = 0;
+  //    sizeTags = nextSize;
+  //  } else {
+  //    sizeTags = 0;
+  //    delete [] tags;
+  //    tags = 0;
+  //    return -1;
+  //  }
+  //  
+  //  if (tags != 0)
+	//delete [] tags;
+  //  
+  //  tags = nextTags;
+  //} 
 
 
   // copy string and assign to end of array
-  char *newTag = new char[strlen(tagName) +1];
-  strcpy(newTag, tagName);
+  //char *newTag = new char[strlen(tagName) +1];
+  //strcpy(newTag, tagName);
 
 
 
-  if (sendSelfCount != 0 && numTag != 0) {
-    if (attributeMode == true) 
-      (*xmlColumns)(numXMLTags) += 2;
-    else
-      (*xmlColumns)(numXMLTags) += 1;
-  }
+  //if (sendSelfCount != 0 && numTag != 0) {
+  //  if (attributeMode == true) 
+  //    (*xmlColumns)(numXMLTags) += 2;
+  //  else
+  //    (*xmlColumns)(numXMLTags) += 1;
+  //}
   
-  tags[numTag++] = newTag;
+  //tags[numTag++] = newTag;
 
   //  if (sendSelfCount == 0 || (strstr(tagName,"Data") != 0)) {
-    if (attributeMode == true) {
-      theFile << " ";
-    }
+  //  if (attributeMode == true) {
+  //    theFile << " ";
+  //  }
     
     // output the xml for it to the file
     
     //numIndent++;
     //this->indent();
-    theFile << " " << tagName;
+    //theFile << " " << tagName;
     
-    attributeMode = true;
+    //attributeMode = true;
 
     /*  } else {
     numIndent++;
@@ -364,20 +363,20 @@ GiDStream::tag(const char *tagName, const char *value)
     this->open();
 
   //  if (sendSelfCount == 0) {
-    if (attributeMode == true) {
-      theFile << " \n";
-    }
+  //if (attributeMode == true) {
+  //  theFile << " \n";
+  //}
     
     // output the xml for it to the file
     //numIndent++;
     //this->indent();
-    theFile << "  " << tagName << " " << value << " " << tagName << " " << endln;
+  //  theFile << "  " << tagName << " " << value << " " << tagName << " " << endln;
     //numIndent--;
 
-  if (sendSelfCount != 0 && numTag != 0)
-    (*xmlColumns)(numXMLTags) += 1;
+  //if (sendSelfCount != 0 && numTag != 0)
+  //  (*xmlColumns)(numXMLTags) += 1;
     
-    attributeMode = false;
+  //  attributeMode = false;
     /*  } else {
 
     numIndent++;
@@ -511,7 +510,7 @@ GiDStream::attr(const char *name, int value)
   
   //  if (sendSelfCount == 0 ) {
 
-      theFile << " " << name << "=\"" << value << "\"";
+  //    theFile << " " << name << "=\"" << value << "\"";
 
       /*  } else {
 
@@ -549,7 +548,7 @@ GiDStream::attr(const char *name, double value)
 
   //  if (sendSelfCount == 0) {
 
-    theFile << " " << name << "=\"" << value << "\"";
+  //  theFile << " " << name << "=\"" << value << "\"";
 
     /*  } else {
 
@@ -586,7 +585,7 @@ GiDStream::attr(const char *name, const char *value)
 
   //  if (sendSelfCount == 0) {
 
-    theFile << " " << name << "=\"" << value << "\"";
+    //theFile << " " << name << "=\"" << value << "\"";
 
     /*  } else {
 

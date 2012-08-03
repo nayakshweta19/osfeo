@@ -61,7 +61,8 @@
  #include <MeshRegion.h>
  //#include <GSA_Recorder.h>
  #include <RemoveRecorder.h>
-#include <NodeGiDRecorder.h>     //neallee@tju.edu.cn
+#include <NodeGiDRecorder.h>      //neallee@tju.edu.cn
+#include <ElementGiDRecorder.h>   //neallee@tju.edu.cn
  //#include <TclModelBuilder.h>
 
  #include <StandardStream.h>
@@ -1696,17 +1697,15 @@
      ************************************************* */
 
 	 // for gid output. neallee@tju.edu.cn-------------------------------------------------
-	 else if ((strcmp(argv[1],"gid") == 0) || (strcmp(argv[1],"GiD") == 0) ||
-		      (strcmp(argv[1],"Gid") == 0) || (strcmp(argv[1],"GID") == 0)) {
+	 else if (stricmp(argv[1],"gidnode") == 0) {
        if (argc < 7) {
-	 opserr << "WARNING recorder gid ";
+	 opserr << "WARNING recorder gidnode ";
 	 opserr << "-node <list nodes> -dof <doflist> -file <fileName> -dT <dT> reponse";
-	     return TCL_ERROR;
+	 return TCL_ERROR;
        }
 
        TCL_Char *responseID = 0;
-
-       outputMode eMode = DATA_STREAM;
+       outputMode eMode = GID_STREAM;
 
        int pos = 2;
 
@@ -1779,8 +1778,7 @@
 	   pos++;
 	 }
 
-	 else if ((strcmp(argv[pos],"-node") == 0) || 
-		  (strcmp(argv[pos],"-nodes") == 0)) {
+	 else if ((strcmp(argv[pos],"-node") == 0) || (strcmp(argv[pos],"-nodes") == 0)) {
 	   pos++;
 
 	   // read in the node tags or 'all' can be used
@@ -1917,6 +1915,276 @@
 					   echoTimeFlag);
     }
 
+	 else if ((stricmp(argv[1],"gidelement") == 0) || (stricmp(argv[1],"gidele") == 0)) {
+
+       int numEle = 0;
+       int endEleIDs = 2;
+       double dT = 0.0;
+       bool echoTime = false;
+       int loc = endEleIDs;
+       int flags = 0;
+       int eleData = 0;
+       outputMode eMode = GID_STREAM; 
+       ID *eleIDs = 0;
+       int precision = 6;
+       const char *inetAddr = 0;
+       int inetPort;
+
+       while (flags == 0 && loc < argc) {
+
+	 if ((strcmp(argv[loc],"-ele") == 0) ||
+	     (strcmp(argv[loc],"-eles") == 0) ||
+	     (strcmp(argv[loc],"-element") == 0)) {
+
+	   // ensure no segmentation fault if user messes up
+	   if (argc < loc+2) {
+	     opserr << "WARNING recorder Element .. -ele tag1? .. - no ele tags specified\n";
+	     return TCL_ERROR;
+	   }
+
+	   //
+	   // read in a list of ele until end of command or other flag
+	   //
+	   loc++;
+	   int eleTag;
+	   eleIDs = new ID(0, 32);
+	   while (loc < argc && Tcl_GetInt(interp, argv[loc], &eleTag) == TCL_OK) {
+	     (*eleIDs)[numEle] = eleTag;
+	     numEle++;
+	     loc++;
+	   }
+	   Tcl_ResetResult(interp);
+
+	   if (loc == argc) {
+	     opserr << "ERROR: No response type specified for element recorder. " << endln;
+	     delete eleIDs;
+	     return TCL_ERROR;
+	   }
+
+	   if (strcmp(argv[loc],"all") == 0) {
+	     eleIDs = 0;
+	     loc++;
+	   }
+
+	 } 
+	 
+	 else if (strcmp(argv[loc],"-eleRange") == 0) {
+
+	   // ensure no segmentation fault if user messes up
+	   if (argc < loc+3) {
+	     opserr << "WARNING recorder Element .. -eleRange start? end?  .. - no ele tags specified\n";
+	     return TCL_ERROR;
+	   }
+
+	   //
+	   // read in start and end tags of two elements & add set [start,end]
+	   //
+
+	   int start, end;
+	   if (Tcl_GetInt(interp, argv[loc+1], &start) != TCL_OK) {
+	     opserr << "WARNING recorder Element -eleRange start? end? - invalid start " << argv[loc+1] << endln;
+	     return TCL_ERROR;
+	   }      
+	   if (Tcl_GetInt(interp, argv[loc+2], &end) != TCL_OK) {
+	     opserr << "WARNING recorder Element -eleRange start? end? - invalid end " << argv[loc+2] << endln;
+	     return TCL_ERROR;
+	   }      
+	   if (start > end) {
+	     int swap = end;
+	     end = start;
+	     start = swap;
+	   }
+
+	   eleIDs = new ID(end-start);	  
+	   if (eleIDs == 0) {
+	     opserr << "WARNING recorder Element -eleRange start? end? - out of memory\n";
+	     return TCL_ERROR;
+	   }
+	   for (int i=start; i<=end; i++)
+	     (*eleIDs)[numEle++] = i;	    
+
+	   loc += 3;
+	 } 
+
+	 else if (strcmp(argv[loc],"-region") == 0) {
+	   // allow user to specif elements via a region
+
+	   if (argc < loc+2) {
+	     opserr << "WARNING recorder Element .. -region tag?  .. - no region specified\n";
+	     return TCL_ERROR;
+	   }
+	   int tag;
+	   if (Tcl_GetInt(interp, argv[loc+1], &tag) != TCL_OK) {
+	     opserr << "WARNING recorder Element -region tag? - invalid tag " << argv[loc+1] << endln;
+	     return TCL_ERROR;
+	   }      
+	   MeshRegion *theRegion = theDomain.getRegion(tag);
+	   if (theRegion == 0) {
+	     opserr << "WARNING recorder Element -region " << tag << " - region does not exist" << endln;
+	     return TCL_OK;
+	   }      
+	   const ID &eleRegion = theRegion->getElements();
+
+	   eleIDs = new ID(eleRegion.Size());	  
+	   if (eleIDs == 0) {
+	     opserr << "WARNING recorder Element -eleRange start? end? - out of memory\n";
+	     return TCL_ERROR;
+	   }
+
+	   for (int i=0; i<eleRegion.Size(); i++)
+	     (*eleIDs)[numEle++] = eleRegion(i);
+
+	   loc += 2;
+	 } 
+
+	 else if ((strcmp(argv[loc],"-time") == 0) || (strcmp(argv[loc],"-load") == 0)) { 
+	   // allow user to specify const load
+	   echoTime = true;
+	   loc++;
+	 } 
+
+	 else if (strcmp(argv[loc],"-dT") == 0) {
+	   // allow user to specify time step size for recording
+	   loc++;
+	   if (Tcl_GetDouble(interp, argv[loc], &dT) != TCL_OK)	
+	     return TCL_ERROR;	
+	   loc++;
+	 } 
+
+	 else if (strcmp(argv[loc],"-precision") == 0) {
+	   loc ++;
+	   if (Tcl_GetInt(interp, argv[loc], &precision) != TCL_OK)	
+	     return TCL_ERROR;		  
+	   loc++;
+	 }
+
+	 else if (strcmp(argv[loc],"-file") == 0) {
+	   fileName = argv[loc+1];
+	   eMode = DATA_STREAM;
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName,pwd);
+	   loc += 2;
+	 }
+	 
+	 else if (strcmp(argv[loc],"-res") == 0) {
+	   fileName = argv[loc+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = GID_STREAM;
+	   loc += 2;
+	 }
+
+	 else if (strcmp(argv[loc],"-xml") == 0) {
+	   fileName = argv[loc+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = XML_STREAM;
+	   loc+=2;
+	 }
+
+	 else if ((strcmp(argv[loc],"-fileCSV") == 0) || (strcmp(argv[loc],"-csv") == 0)) {
+	   fileName = argv[loc+1];
+	   eMode = DATA_STREAM_CSV;
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName,pwd);
+	   loc += 2;
+	 }
+
+	 else if (strcmp(argv[loc],"-database") == 0) {
+	   theRecorderDatabase = theDatabase;
+	   if (theRecorderDatabase != 0) {
+	     tableName = argv[loc+1];
+	     eMode = DATABASE_STREAM;
+	   } else {
+	     opserr << "WARNING recorder Node .. -database " << fileName << "  - NO CURRENT DATABASE, results to File instead\n";
+	     fileName = argv[loc+1];
+	   }
+
+	   loc += 2;
+	 }
+
+	 else if ((strcmp(argv[loc],"-nees") == 0) || (strcmp(argv[loc],"-xml") == 0)) {
+	   // allow user to specify load pattern other than current
+	   fileName = argv[loc+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = XML_STREAM;
+	   loc += 2;
+	 }	    
+
+	 else if ((strcmp(argv[loc],"-TCP") == 0) || (strcmp(argv[loc],"-tcp") == 0)) {
+	   inetAddr = argv[loc+1];
+	   if (Tcl_GetInt(interp, argv[loc+2], &inetPort) != TCL_OK) {
+	     ;
+	   }
+	   eMode = TCP_STREAM;
+	   loc += 3;
+	 }	    
+
+	 else if ((strcmp(argv[loc],"-binary") == 0)) {
+	   // allow user to specify load pattern other than current
+	   fileName = argv[loc+1];
+	   const char *pwd = getInterpPWD(interp);
+	   simulationInfo.addOutputFile(fileName, pwd);
+	   eMode = BINARY_STREAM;
+	   loc += 2;
+	 }	    
+
+	 else {
+	   // first unknown string then is assumed to start 
+	   // element response request starts
+	   eleData = loc;
+	   flags = 1;
+	 }
+       }
+
+       if (eleData >= argc) {
+	 opserr << "ERROR: No response type specified for element recorder. " << endln;
+	 return TCL_ERROR;
+       }
+
+       const char **data = new const char *[argc-eleData];
+
+       int i,j;
+       for (i=eleData, j=0; i<argc; i++, j++)
+	 data[j] = argv[i];
+
+       // construct the DataHandler
+	   if (eMode == GID_STREAM && fileName != 0) {
+	 theOutputStream = new GiDStream(fileName);
+	   } else if (eMode == DATA_STREAM && fileName != 0) {
+	 theOutputStream = new DataFileStream(fileName);
+       } else if (eMode == DATA_STREAM_CSV && fileName != 0) {
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1);
+       } else if (eMode == XML_STREAM && fileName != 0) {
+	 theOutputStream = new XmlFileStream(fileName);
+       } else if (eMode == DATABASE_STREAM && tableName != 0) {
+	 theOutputStream = new DatabaseStream(theDatabase, tableName);
+       } else if (eMode == BINARY_STREAM && fileName != 0) {
+	 theOutputStream = new BinaryFileStream(fileName);
+       } else if (eMode == TCP_STREAM && inetAddr != 0) {
+	 theOutputStream = new TCP_Stream(inetPort, inetAddr);
+       } else {
+	 theOutputStream = new StandardStream();
+	 opserr << "TclCreateRecorder: error with GidStream(fileName) \n" << endln;
+       }
+
+       theOutputStream->setPrecision(precision);
+
+	   (*theRecorder) = new ElementGiDRecorder(eleIDs, 
+					      data, 
+					      argc-eleData, 
+					      echoTime, 
+					      theDomain, 
+					      *theOutputStream,
+					      dT);
+
+       if (eleIDs != 0)
+	 delete eleIDs;
+
+       delete [] data;
+     }
+
     // check we instantiated a recorder .. if not ran out of memory
     if ((*theRecorder) == 0) {
 	  opserr << "WARNING ran out of memory - recorder " << argv[1]<< endln;
@@ -1926,7 +2194,6 @@
     // operation successfully
     return TCL_OK;
 }
-
 
 int 
 TclAddRecorder(ClientData clientData, Tcl_Interp *interp, int argc, 

@@ -18,79 +18,91 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 1.17 $
-// $Date: 2010/04/23 22:47:42 $
-// $Source: /usr/local/cvs/OpenSees/SRC/recorder/NodeGiDRecorder.h,v $
+// $Revision: 1.14 $
+// $Date: 2009/04/14 21:14:22 $
+// $Source: /usr/local/cvs/OpenSees/SRC/recorder/ElementGiDRecorder.h,v $
                                                                         
-#ifndef NodeGiDRecorder_h
-#define NodeGiDRecorder_h
+                                                                        
+#ifndef ElementGiDRecorder_h
+#define ElementGiDRecorder_h
+
 
 // Written:
 // Created:
 // Revision:
 //
-// Description: This file contains the class definition for 
-// NodeGiDRecorder. A NodeGiDRecorder is used to store the specified nodal dof responses
-// for the specified nodes in a file.
+// Description: This file contains the class definition for ElementGiDRecorder.
+// A ElementGiDRecorder is used to obtain a response from an element during 
+// the analysis.
 //
-// What: "@(#) NodeGiDRecorder.h, revA"
-
+// What: "@(#) ElementGiDRecorder.h, revA"
 
 #include <Recorder.h>
+#include <Information.h>
 #include <ID.h>
-#include <Vector.h>
 
 class Domain;
+class Vector;
+class Matrix;
+class Element;
+class Response;
 class FE_Datastore;
-class Node;
-class String;
 
-class NodeGiDRecorder: public Recorder
+class ElementGiDRecorder: public Recorder
 {
   public:
-    NodeGiDRecorder();
-    NodeGiDRecorder(const ID &theDof, 
-		 const ID *theNodes, 
-		 const char *dataToStore,
-		 Domain &theDomain,
-		 OPS_Stream &theOutputHandler,
-		 double deltaT = 0.0,
-		 bool echoTimeFlag = true); 
-    
-    ~NodeGiDRecorder();
+    ElementGiDRecorder();
+    ElementGiDRecorder(const ID *eleID, 
+		    const char **argv, 
+		    int argc,
+		    bool echoTime, 
+		    Domain &theDomain, 
+		    OPS_Stream &theOutputHandler,
+		    double deltaT = 0.0);
+
+    ~ElementGiDRecorder();
 
     int record(int commitTag, double timeStamp);
+    int restart(void);    
 
-    int domainChanged(void);    
     int setDomain(Domain &theDomain);
     int sendSelf(int commitTag, Channel &theChannel);  
     int recvSelf(int commitTag, Channel &theChannel, 
 		 FEM_ObjectBroker &theBroker);
-
+    
   protected:
 
+    
   private:	
     int initialize(void);
 
-    ID *theDofs;
-    ID *theNodalTags;
-    Node **theNodes;
-    Vector response;
+    int numEle;
+    ID *eleID;
+
+    Response **theResponses;
 
     Domain *theDomain;
     OPS_Stream *theOutputHandler;
 
-    bool echoTimeFlag;   // flag indicating whether time to be included in o/p
-    int dataFlag;        // flag indicating what it is to be stored in recorder
-	int stepN;
+    bool echoTimeFlag;             // flag indicating if pseudo time also printed
 
     double deltaT;
     double nextTimeStampToRecord;
+	int stepN;
+	bool hasLinear;
+	bool hasTri3;
+	bool hasQuad4;
+	bool hasQuad8;
+	bool hasQuad9;
+	bool hasBrick;
 
+    Vector *data;
     bool initializationDone;
-    int numValidNodes;
+    char **responseArgs;
+    int numArgs;
 
     int addColumnInfo;
 };
+
 
 #endif

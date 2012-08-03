@@ -22,7 +22,7 @@
 // $Date: 2010-06-01 23:42:22 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/NodeGiDRecorder.cpp,v $
                                                                         
-// Written: fmk 
+// Written:
 //
 // Description: This file contains the class definition for NodeGiDRecorder.
 // A NodeGiDRecorder is used to record the specified dof responses 
@@ -43,8 +43,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-
-#define RECORDER_TAGS_NodeGiDRecorder 21
 
 NodeGiDRecorder::NodeGiDRecorder()
 :Recorder(RECORDER_TAGS_NodeGiDRecorder),
@@ -588,8 +586,8 @@ int
 NodeGiDRecorder::initialize(void)
 {
   if (theDofs == 0 || theDomain == 0) {
-    opserr << "NodeGiDRecorder::initialize() - either nodes, dofs or domain has not been set\n";
-    return -1;
+    opserr << "Warning! NodeGiDRecorder::initialize() - either nodes, dofs or domain has not been set\n";
+    return 0;
   }
 
   //
@@ -755,6 +753,7 @@ NodeGiDRecorder::initialize(void)
   //}
 
   //theOutputHandler->tag("Data");
+  theOutputHandler->write("GiD Post Results File 1.0\n\n",40);
   initializationDone = true;
 
   stepN =0;
