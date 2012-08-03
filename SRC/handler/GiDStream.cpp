@@ -43,7 +43,7 @@ using std::getline;
 
 GiDStream::GiDStream(int indent)
   :OPS_Stream(OPS_STREAM_TAGS_GiDStream), 
-   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1),
+   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1), GPs(0),
    attributeMode(false), numTag(0), sizeTags(0), tags(0), sendSelfCount(0), theChannels(0), numDataRows(0),
    mapping(0), maxCount(0), sizeColumns(0), theColumns(0), theData(0), theRemoteData(0), 
    xmlOrderProcessed(0), xmlString(0), xmlStringLength(0), numXMLTags(0), xmlColumns(0)
@@ -56,7 +56,7 @@ GiDStream::GiDStream(int indent)
 
 GiDStream::GiDStream(const char *name, openMode mode, int indent)
   :OPS_Stream(OPS_STREAM_TAGS_GiDStream), 
-   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1),
+   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1), GPs(0),
    attributeMode(false), numTag(0), sizeTags(0), tags(0), sendSelfCount(0), theChannels(0), numDataRows(0),
    mapping(0), maxCount(0), sizeColumns(0), theColumns(0), theData(0), theRemoteData(0), 
    xmlOrderProcessed(0), xmlString(0), xmlStringLength(0), numXMLTags(0), xmlColumns(0)
@@ -504,10 +504,13 @@ GiDStream::endTag()
 
 int 
 GiDStream::attr(const char *name, int value)
-
-{  if (fileOpen == 0)
+{  
+  if (fileOpen == 0)
     this->open();
   
+  if (strcmp(name,"number") == 0 ) 
+	  GPs = (GPs > value? GPs:value);
+
   //  if (sendSelfCount == 0 ) {
 
   //    theFile << " " << name << "=\"" << value << "\"";
@@ -1315,4 +1318,10 @@ GiDStream::setOrder(const ID &orderData)
   }
 
   return 0;
+}
+
+int 
+GiDStream::getEleGPs()
+{
+  return GPs;
 }

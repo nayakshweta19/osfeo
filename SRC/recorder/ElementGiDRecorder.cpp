@@ -162,7 +162,7 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
 	// **** Linear Elements - 2 Nodes
     if (hasLinear == 1) {
       if (stricmp(responseArgs[numArgs-1], "force") == 0 && numArgs >1 ) { // force on section
-	    // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
+	    // Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
         sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
         theOutputHandler->write(outputData,80);
 	    theOutputHandler->write("\tMatrix OnGaussPoints \"Linear_GuassPoint_Set\"\n",80);
@@ -550,7 +550,7 @@ ElementGiDRecorder::initialize(void)
     int responseCount = 0;
 
     if (echoTimeFlag == true && addColumnInfo == 1) {
-      xmlOrder[0] = 0;
+    //  xmlOrder[0] = 0;
       responseOrder[0] = 0;
       eleCount = 1;
       responseCount =1;
@@ -560,7 +560,7 @@ ElementGiDRecorder::initialize(void)
     for (i=0; i<numEle; i++) {
       Element *theEle = theDomain->getElement((*eleID)(i));
       if (theEle != 0) {
-	xmlOrder[eleCount] = i+1;
+	//xmlOrder[eleCount] = i+1;
 	eleCount++;
 
 	// Cycle over Elements to understand what type of elements are there
@@ -732,7 +732,7 @@ ElementGiDRecorder::initialize(void)
   	// Print HEADER
   	theOutputHandler->write("GaussPoints \"Linear_GuassPoint_Set\" ElemType Linear\n", 56); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(4); //numSection
+	theOutputHandler->write(theOutputHandler->getEleGPs()); //numSection
 	theOutputHandler->write("\nNodes included\n",18); // for Lobbato Integeration assumption
 	theOutputHandler->write("Natural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
