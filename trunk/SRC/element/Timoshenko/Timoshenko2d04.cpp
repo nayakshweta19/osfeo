@@ -1042,7 +1042,7 @@ Timoshenko2d04::setResponse(const char **argv, int argc, OPS_Stream &s)
 
 	for (int i=0; i<numSections; i++) {
 
-	  s.tag("GaussPointOutput");
+	  s.tag("GaussPoint");
 	  s.attr("number",i+1);
 	  s.attr("eta",xi[i]*L);
 

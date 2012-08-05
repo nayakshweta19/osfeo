@@ -43,6 +43,8 @@
 #include <Message.h>
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
+#include <packages.h>
+#include <elementAPI.h>
 
 ElementGiDRecorder::ElementGiDRecorder()
 :Recorder(RECORDER_TAGS_ElementGiDRecorder),
@@ -157,7 +159,8 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
     int loc = 0;
     //if (echoTimeFlag == true) 
     //  (*data)(loc++) = timeStamp;
-    
+    int ndf = OPS_GetNDF(); 
+	int ndm = OPS_GetNDM();
 	char outputData[100];
 	// **** Linear Elements - 2 Nodes
     if (hasLinear == 1) {
@@ -168,90 +171,281 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
 	    theOutputHandler->write("\tMatrix OnGaussPoints \"Linear_GuassPoint_Set\"\n",80);
         // ComponentNames 
         theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"  \"My\"  \"Vz\"  \"T\"\n",80);
-        // Values
-        theOutputHandler->write(" Values\n",8);
-	    
-        // for each element if responses exist, put them in response vector
-        for (int i=0; i< numEle; i++) {
-		  sprintf(outputData, "%i\t", (*eleID)(i));
-		  theOutputHandler->write(outputData,20);
-          if (theResponses[i] != 0) {
-	    // ask the element for the response
-	    int res, dateLength;
-		loc = 0;
-	    if (( res = theResponses[i]->getResponse()) < 0) {
-	      result += res;
-		  dateLength = 0;
-		}else {
-	      Information &eleInfo = theResponses[i]->getInformation();
-	      const Vector &eleData = eleInfo.getData();
-		  // for each integration points
-		  int nIP = theOutputHandler->getEleGPs();
-		  for (int k=0; k<nIP; k++) {
-		dateLength = eleData.Size()/nIP;
-	    for (int j=0; j<dateLength; j++) {
-	      double temp = eleData(k*dateLength+j);
-		  theOutputHandler->write(temp);
-		}
-		// send the response vector to the output handler for o/p
-		//theOutputHandler->write(*data);
-		theOutputHandler->write("\n",2);
-		  }
-	    }
-          } 
-
-        }
-		// End Values
-		theOutputHandler->write("End Values\n\n",14);
 	  }
-	  else if (stricmp(responseArgs[numArgs-1], "force") == 0 ) { // force on element node
+	  else if (stricmp(responseArgs[numArgs-1], "force") == 0 && numArgs == 1) { // force on element node
+		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+		sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+		theOutputHandler->write(outputData,80);
+		theOutputHandler->write("\Vector OnNodes \n",80);
+		// ComponentNames 
+		if (ndm == 2) {
+		  theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"\n",80);
+		} else if (ndm == 3) {
+		  theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"  \"My\"  \"Vz\"  \"T\"\n",80);
+		}
+
 	  }
 	  else if (stricmp(responseArgs[numArgs-1], "deformation") == 0 ) { // deformation on section
+		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+        sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+        theOutputHandler->write(outputData,80);
+	    theOutputHandler->write("\tMatrix OnGaussPoints \"Linear_GuassPoint_Set\"\n",80);
+        // ComponentNames 
+        theOutputHandler->write(" ComponentNames \"kappaZ\"  \"eps\"  \"gammaY\"  \"kappaY\"  \"gammaZ\"  \"theta\"\n",80);
 	  }
 
+	  // Values
+	  theOutputHandler->write(" Values\n",8);
+	    
+      // for each element if responses exist, put them in response vector
+      for (int i=0; i< numEle; i++) {
+	    sprintf(outputData, "%i\t", (*eleID)(i));
+	    theOutputHandler->write(outputData,20);
+        if (theResponses[i] != 0) {
+	  // ask the element for the response
+	  int res, dateLength;
+	  loc = 0;
+	  theOutputHandler->setPrecision(12);
+	  if (( res = theResponses[i]->getResponse()) < 0) {
+	    result += res;
+	    dateLength = 0;
+	  }else {
+	    Information &eleInfo = theResponses[i]->getInformation();
+	    const Vector &eleData = eleInfo.getData();
+	    // for each integration points
+	    int nIP = theOutputHandler->getEleGPs();
+	    for (int k=0; k<nIP; k++) {
+	  dateLength = eleData.Size()/nIP;
+	  for (int j=0; j<dateLength; j++) {
+	    double temp = eleData(k*dateLength+j);
+	    theOutputHandler->write(temp);
+	  }
+	  // send the response vector to the output handler for o/p
+	  //theOutputHandler->write(*data);
+	  theOutputHandler->write("\n",2);
+	    }
+	  }
+        }
+      }
+	  // End Values
+	  theOutputHandler->write("End Values\n\n",14);
     }
     // **** Quadrilateral Elements - 4 Nodes
     if (hasQuad4 == 1) {
-		// Print HEADER
-		theOutputHandler->write("GaussPoints \"Quadrilateral_4_GuassPoint_Set\" ElemType Quadrilateral\n", 70); //defined for all meshtype
-		theOutputHandler->write("Number Of Gauss Points: ", 25);
-		theOutputHandler->write(4); //numGaussIntPoint
-		theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
-		theOutputHandler->write("End GaussPoints\n\n", 20);
+	  // Print HEADER
+	  if (stricmp(responseArgs[0], "material") == 0  ) { // integration of material point
+        opserr << "4 Points quad element integrPoint record has not been implemented,yet." << endln;
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "stresses") == 0 ) { // stress on one gauss point
+		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+        sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+        theOutputHandler->write(outputData,80);
+	    theOutputHandler->write("\tVector OnGaussPoints \"Quadrilateral_4_GuassPoint_Set\"\n",80);
+        // ComponentNames 
+        theOutputHandler->write(" ComponentNames \"Sxx\"  \"Syy\"  \"Sxy\"\n",80);
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "force") == 0) {
+		opserr << "4 Points quad element force record has not been implemented,yet." << endln;
+	  }
+	  // Values
+	  theOutputHandler->write(" Values\n",8);
+	    
+      // for each element if responses exist, put them in response vector
+      for (int i=0; i< numEle; i++) {
+	    sprintf(outputData, "%i\t", (*eleID)(i));
+	    theOutputHandler->write(outputData,20);
+        if (theResponses[i] != 0) {
+	  // ask the element for the response
+	  int res, dateLength;
+	  loc = 0;
+	  theOutputHandler->setPrecision(12);
+	  if (( res = theResponses[i]->getResponse()) < 0) {
+	    result += res;
+	    dateLength = 0;
+	  }else {
+	    Information &eleInfo = theResponses[i]->getInformation();
+	    const Vector &eleData = eleInfo.getData();
+	    // for each integration points
+		dateLength = theOutputHandler->getEleGPs();
+	    int nIP = eleData.Size()/dateLength;
+	    for (int k=0; k<nIP; k++) {
+	  for (int j=0; j<dateLength; j++) {
+	    double temp = eleData(k*dateLength+j);
+	    theOutputHandler->write(temp);
+	  }
+	  // send the response vector to the output handler for o/p
+	  //theOutputHandler->write(*data);
+	  theOutputHandler->write("\n",2);
+	    }
+	  }
+        }
+      }
+	  // End Values
+	  theOutputHandler->write("End Values\n\n",14);
     }
     // **** Triangular Elements - 3 Nodes
     if (hasTri3 == 1) {
-		// Print HEADER
-		theOutputHandler->write("GaussPoints \"Triangle_GuassPoint_Set\" ElemType Triangle\n", 60); //defined for all meshtype
-		theOutputHandler->write("Number Of Gauss Points: ", 25);
-		theOutputHandler->write(1); //numGaussIntPoint
-		theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
-		theOutputHandler->write("End GaussPoints\n\n", 20);
+      // Print HEADER
+	  if (stricmp(responseArgs[0], "material") == 0  ) { // integration of material point
+	    opserr << "3 Points element integrPoint record has not been implemented,yet." << endln;
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "stresses") == 0 ) { // stress on one gauss point
+		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+        sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+        theOutputHandler->write(outputData,80);
+	    theOutputHandler->write("\tVector OnGaussPoints \"Triangle_GuassPoint_Set\"\n",80);
+        // ComponentNames 
+        theOutputHandler->write(" ComponentNames \"Sxx\"  \"Syy\"  \"Sxy\"\n",80);
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "force") == 0) {
+		opserr << "3 Points element force record has not been implemented,yet." << endln;
+	  }
+	  // Values
+	  theOutputHandler->write(" Values\n",8);
+	    
+      // for each element if responses exist, put them in response vector
+      for (int i=0; i< numEle; i++) {
+	    sprintf(outputData, "%i\t", (*eleID)(i));
+	    theOutputHandler->write(outputData,20);
+        if (theResponses[i] != 0) {
+	  // ask the element for the response
+	  int res, dateLength;
+	  loc = 0;
+	  theOutputHandler->setPrecision(12);
+	  if (( res = theResponses[i]->getResponse()) < 0) {
+	    result += res;
+	    dateLength = 0;
+	  }else {
+	    Information &eleInfo = theResponses[i]->getInformation();
+	    const Vector &eleData = eleInfo.getData();
+	    // for each integration points
+		dateLength = theOutputHandler->getEleGPs();
+		int nIP = eleData.Size()/dateLength;
+	    for (int k=0; k<nIP; k++) {
+	  for (int j=0; j<dateLength; j++) {
+	    double temp = eleData(k*dateLength+j);
+	    theOutputHandler->write(temp);
+	  }
+	  // send the response vector to the output handler for o/p
+	  //theOutputHandler->write(*data);
+	  theOutputHandler->write("\n",2);
+	    }
+	  }
+        }
+      }
+	  // End Values
+	  theOutputHandler->write("End Values\n\n",14);
     }
     // **** Quadrilateral Elements - 9 Nodes
     if (hasQuad9 == 1) {
-		// Print HEADER
-		theOutputHandler->write("GaussPoints \"Quadrilateral_9_GuassPoint_Set\" ElemType Quadrilateral\n", 72); //defined for all meshtype
-		theOutputHandler->write("Number Of Gauss Points: ", 25);
-		theOutputHandler->write(9); //numSection
-		theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
-		theOutputHandler->write("End GaussPoints\n\n", 20);
+	  // Print HEADER
+	  if (stricmp(responseArgs[0], "material") == 0  ) { // integration of material point
+		opserr << "9 Points quad element integrPoint record has not been implemented,yet." << endln;
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "stresses") == 0 ) { // stress on one gauss point
+		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+        sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+        theOutputHandler->write(outputData,80);
+	    theOutputHandler->write("\tMatrix OnGaussPoints \"Quadrilateral_9_GuassPoint_Set\"\n",90);
+        // ComponentNames 
+        theOutputHandler->write(" ComponentNames \"p11\"  \"p22\"  \"p12\"  \"m11\"  \"m22\"  \"m12\"  \"q1\"  \"q2\"\n",80);
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "force") == 0) {
+		opserr << "9 Points quad element force record has not been implemented,yet." << endln;
+	  }
+	  // Values
+	  theOutputHandler->write(" Values\n",8);
+	    
+      // for each element if responses exist, put them in response vector
+      for (int i=0; i< numEle; i++) {
+	    sprintf(outputData, "%i\t", (*eleID)(i));
+	    theOutputHandler->write(outputData,20);
+        if (theResponses[i] != 0) {
+	  // ask the element for the response
+	  int res, dateLength;
+	  loc = 0;
+	  theOutputHandler->setPrecision(12);
+	  if (( res = theResponses[i]->getResponse()) < 0) {
+	    result += res;
+	    dateLength = 0;
+	  }else {
+	    Information &eleInfo = theResponses[i]->getInformation();
+	    const Vector &eleData = eleInfo.getData();
+	    // for each integration points
+		dateLength = theOutputHandler->getEleGPs();
+		int nIP = eleData.Size()/dateLength;
+	    for (int k=0; k<nIP; k++) {
+	  for (int j=0; j<dateLength; j++) {
+	    double temp = eleData(k*dateLength+j);
+	    theOutputHandler->write(temp);
+	  }
+	  // send the response vector to the output handler for o/p
+	  //theOutputHandler->write(*data);
+	  theOutputHandler->write("\n",2);
+	    }
+	  }
+        }
+      }
+	  // End Values
+	  theOutputHandler->write("End Values\n\n",14);
     }
     // **** Hexahedra Elements - 8 Nodes
     if (hasBrick == 1) {
-		// Print HEADER
-		theOutputHandler->write("GaussPoints \"Hexahedra_GuassPoint_Set\" ElemType Hexahedra\n", 62); //defined for all meshtype
-		theOutputHandler->write("Number Of Gauss Points: ", 25);
-		theOutputHandler->write(8); //numSection
-		theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
-		theOutputHandler->write("End GaussPoints\n\n", 20);
+	  // Print HEADER
+	  if (stricmp(responseArgs[0], "material") == 0  ) { // integration of material point
+        opserr << "8 Points brick element integrPoint record has not been implemented,yet." << endln;
+      }
+	  else if (stricmp(responseArgs[numArgs-1], "stresses") == 0 ) { // stress on one gauss point
+	  	// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+	  	sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
+	  	theOutputHandler->write(outputData,80);
+	  	theOutputHandler->write("\tMatrix OnGaussPoints \"Hexahedra_GuassPoint_Set\"\n",90);
+	  	// ComponentNames 
+	  	theOutputHandler->write(" ComponentNames \"S11\"  \"S22\"  \"S33\"  \"S12\"  \"S23\"  \"S31\"\n",80);
+		
+	  }
+	  else if (stricmp(responseArgs[numArgs-1], "force") == 0) {
+	  	opserr << "8 Points brick element force record has not been implemented,yet." << endln;
+	  }
+
+	  // Values
+	  theOutputHandler->write(" Values\n",8);
+	  
+      // for each element if responses exist, put them in response vector
+      for (int i=0; i< numEle; i++) {
+	    sprintf(outputData, "%i\t", (*eleID)(i));
+	    theOutputHandler->write(outputData,20);
+        if (theResponses[i] != 0) {
+	  // ask the element for the response
+	  int res, dateLength;
+	  loc = 0;
+	  theOutputHandler->setPrecision(12);
+	  if (( res = theResponses[i]->getResponse()) < 0) {
+	    result += res;
+	    dateLength = 0;
+	  }else {
+	    Information &eleInfo = theResponses[i]->getInformation();
+	    const Vector &eleData = eleInfo.getData();
+	    // for each integration points
+		dateLength = theOutputHandler->getEleGPs();
+		int nIP = eleData.Size()/dateLength;
+	    for (int k=0; k<nIP; k++) {
+	  for (int j=0; j<dateLength; j++) {
+	    double temp = eleData(k*dateLength+j);
+	    theOutputHandler->write(temp);
+	  }
+	  // send the response vector to the output handler for o/p
+	  //theOutputHandler->write(*data);
+	  theOutputHandler->write("\n",2);
+	    }
+	  }
+        }
+      }
+	  // End Values
+	  theOutputHandler->write("End Values\n\n",14);
     }
-  
-
-
-
   }
-  
+
   // successfully completion - return 0
   return result;
 }
@@ -733,13 +927,13 @@ ElementGiDRecorder::initialize(void)
   //}
   
   theOutputHandler->write("GiD Post Results File 1.0\n\n",40);
-
+  int nIP = numDbColumns/theOutputHandler->getEleGPs();
   // **** Linear Elements - 2 Nodes
   if (hasLinear == 1) {
   	// Print HEADER
   	theOutputHandler->write("GaussPoints \"Linear_GuassPoint_Set\" ElemType Linear\n", 56); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(theOutputHandler->getEleGPs()); //numSection
+	theOutputHandler->write(nIP); //nIP
 	theOutputHandler->write("\nNodes included\n",18); // for Lobbato Integeration assumption
 	theOutputHandler->write("Natural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
@@ -749,7 +943,7 @@ ElementGiDRecorder::initialize(void)
   	// Print HEADER
   	theOutputHandler->write("GaussPoints \"Quadrilateral_4_GuassPoint_Set\" ElemType Quadrilateral\n", 70); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(4); //numGaussIntPoint
+	theOutputHandler->write(nIP); //nIP for quad = 4, for SSPquad = 1
 	theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
   }
@@ -758,7 +952,7 @@ ElementGiDRecorder::initialize(void)
   	// Print HEADER
   	theOutputHandler->write("GaussPoints \"Triangle_GuassPoint_Set\" ElemType Triangle\n", 60); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(1); //numGaussIntPoint
+	theOutputHandler->write(1); //nIP tri31 nIP = 1
 	theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
   }
@@ -767,7 +961,7 @@ ElementGiDRecorder::initialize(void)
   	// Print HEADER
   	theOutputHandler->write("GaussPoints \"Quadrilateral_9_GuassPoint_Set\" ElemType Quadrilateral\n", 72); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(9); //numSection
+	theOutputHandler->write(9); //nIP
 	theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
   }
@@ -776,7 +970,7 @@ ElementGiDRecorder::initialize(void)
   	// Print HEADER
 	theOutputHandler->write("GaussPoints \"Hexahedra_GuassPoint_Set\" ElemType Hexahedra\n", 62); //defined for all meshtype
 	theOutputHandler->write("Number Of Gauss Points: ", 25);
-	theOutputHandler->write(8); //numSection
+	theOutputHandler->write(nIP); //nIP, for brick = 8
 	theOutputHandler->write("\nNatural Coordinates: internal\n", 34);
 	theOutputHandler->write("End GaussPoints\n\n", 20);
   }
