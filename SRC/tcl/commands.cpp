@@ -9304,7 +9304,7 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 	// **** Quadrilateral Elements - 9 Nodes
 	if (hasQuad9 == 1) {
 		// Print HEADER
-		outputFile << "MESH \"9NMESH\" dimension 3 ElemType Linear Nnode 9" << endln;
+		outputFile << "MESH \"9NMESH\" dimension 3 ElemType Quadrilateral Nnode 9" << endln;
 		outputFile << "#color 0 255 0" << endln << endln;
     
 		// Print node coordinates

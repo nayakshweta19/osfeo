@@ -61,7 +61,7 @@ OPS_Tri31(void)
 {
   if (num_Tri31 == 0) {
     num_Tri31++;
-    OPS_Error("Tri31 - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n",1);
+    //OPS_Error("Tri31 - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n",1);
   }
   
   // Pointer to an element that will be returned

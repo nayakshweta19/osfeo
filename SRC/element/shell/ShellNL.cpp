@@ -49,7 +49,7 @@ void *
 OPS_NewShellNL(void)
 {
   if (numShellNL == 0) {
-    opserr << "Using ShellNL - Developed by: Leopoldo Tesser and Diego A. Talledo\n";
+    //opserr << "Using ShellNL - Developed by: Leopoldo Tesser and Diego A. Talledo\n";
     numShellNL++;
   }
 
@@ -460,7 +460,7 @@ ShellNL::setResponse(const char **argv, int argc, OPS_Stream &output)
       output.endTag(); // NdMaterialOutput
     }
     
-    theResponse =  new ElementResponse(this, 2, Vector(84));
+    theResponse =  new ElementResponse(this, 2, Vector(72));
 
   } else if (strcmp(argv[0],"strains") ==0) {
 
@@ -487,7 +487,7 @@ ShellNL::setResponse(const char **argv, int argc, OPS_Stream &output)
       output.endTag(); // NdMaterialOutput
     }
     
-    theResponse =  new ElementResponse(this, 3, Vector(84));
+    theResponse =  new ElementResponse(this, 3, Vector(72));
   }
 
   output.endTag();
@@ -499,8 +499,8 @@ ShellNL::getResponse(int responseID, Information &eleInfo)
 {
   int i;
   int cnt = 0;
-  static Vector stresses(84);
-  static Vector strains(84);
+  static Vector stresses(72);
+  static Vector strains(72);
 
   switch (responseID) {
   case 1: // global forces

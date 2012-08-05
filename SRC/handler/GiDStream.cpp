@@ -266,6 +266,8 @@ GiDStream::tag(const char *tagName)
   if (fileOpen == 0)
     this->open();
 
+  if (strcmp(tagName,"GaussPoint") == 0 ) 
+	  GPs = 0;
   //
   // copy tagName to end of list of tags
   //
@@ -354,14 +356,13 @@ GiDStream::tag(const char *tagName)
     */
   return 0;
 }
-
-
 int 
 GiDStream::tag(const char *tagName, const char *value)
 {
   if (fileOpen == 0)
     this->open();
 
+  GPs ++ ;
   //  if (sendSelfCount == 0) {
   //if (attributeMode == true) {
   //  theFile << " \n";
@@ -507,9 +508,6 @@ GiDStream::attr(const char *name, int value)
 {  
   if (fileOpen == 0)
     this->open();
-  
-  if (strcmp(name,"number") == 0 ) 
-	  GPs = (GPs > value? GPs:value);
 
   //  if (sendSelfCount == 0 ) {
 
@@ -542,7 +540,6 @@ GiDStream::attr(const char *name, int value)
       */  
   return 0;
 }
-
 int 
 GiDStream::attr(const char *name, double value)
 {
@@ -579,7 +576,6 @@ GiDStream::attr(const char *name, double value)
     */
   return 0;
 }
-
 int 
 GiDStream::attr(const char *name, const char *value)
 {
@@ -625,13 +621,13 @@ GiDStream::write(Vector &data)
   //
 
   if (sendSelfCount == 0) {
-    numDataRows++;
+  //  numDataRows++;
     
-    if (attributeMode == true) {
-      theFile << " \n";
-      attributeMode = false;
+  //  if (attributeMode == true) {
+  //    theFile << " \n";
+  //    attributeMode = false;
   //    numIndent++;
-    }
+  //  }
     
   //  this->indent();
     (*this) << data;  
@@ -666,11 +662,11 @@ GiDStream::write(Vector &data)
 
   // recv data
 
-  numDataRows++;
+  //numDataRows++;
   
   if (attributeMode == true) {
-    theFile << " \n";
-    attributeMode = false;
+  //  theFile << " \n";
+  //  attributeMode = false;
   //  numIndent++;
   }
   
@@ -706,7 +702,6 @@ GiDStream::write(Vector &data)
   theFile.flush();
   return 0;
 }
-
 int 
 GiDStream::write(int data)
 {
@@ -717,7 +712,6 @@ GiDStream::write(int data)
   theFile.flush();
   return 0;
 }
-
 int 
 GiDStream::write(double data)
 {
@@ -728,6 +722,7 @@ GiDStream::write(double data)
   theFile.flush();
   return 0;
 }
+
 
 OPS_Stream& 
 GiDStream::write(const char *s,int n)
@@ -745,7 +740,6 @@ GiDStream::write(const char *s,int n)
 
   return *this;
 }
-
 OPS_Stream& 
 GiDStream::write(const unsigned char*s,int n)
 {
@@ -778,7 +772,6 @@ GiDStream::write(const signed char*s,int n)
 
   return *this;
 }
-
 OPS_Stream& 
 GiDStream::write(const void *s, int n)
 {
@@ -795,7 +788,6 @@ GiDStream::write(const void *s, int n)
 
   return *this;
 }
-
 OPS_Stream& 
 GiDStream::write(const double *s, int n)
 {
@@ -1084,7 +1076,6 @@ GiDStream::operator<<(float n)
   return *this;
 }
 
-
 int 
 GiDStream::sendSelf(int commitTag, Channel &theChannel)
 {
@@ -1333,5 +1324,7 @@ GiDStream::setOrder(const ID &orderData)
 int 
 GiDStream::getEleGPs()
 {
+  if (GPs == 0) GPs = 1;
+  
   return GPs;
 }

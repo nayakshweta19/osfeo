@@ -191,8 +191,8 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
   
   if (deltaT == 0.0 || timeStamp >= nextTimeStampToRecord) {
 
-    if (deltaT != 0.0) 
-      nextTimeStampToRecord = timeStamp + deltaT;
+    //if (deltaT != 0.0) 
+    //  nextTimeStampToRecord = timeStamp + deltaT;
 
     //
     // if need nodal reactions get the domain to calculate them
@@ -209,7 +209,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
     // add time information if requested
     //
 
-    int timeOffset = 0;
+    //int timeOffset = 0;
     //if (echoTimeFlag == true) {
     //  timeOffset = 1;
     //  response(0) = timeStamp;
@@ -248,22 +248,22 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	if (numDOF == 2) {
 	  // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
 	  sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
-	  theOutputHandler->write(outputData,strlen(outputData));
+	  theOutputHandler->write(outputData,100);
 	  // ComponentNames "X-Disp"  "Y-Disp"
 	  sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"\n",dataType,dataType);
-	  theOutputHandler->write(outputData,strlen(outputData));
+	  theOutputHandler->write(outputData,100);
 	  // Values
-	  theOutputHandler->write(" Values\n",8);
+	  theOutputHandler->write(" Values\n",16);
 
 	} else if (numDOF == 3) {
       // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
       sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
-      theOutputHandler->write(outputData,strlen(outputData));
+      theOutputHandler->write(outputData,100);
       //ComponentNames "X-Disp"  "Y-Disp"
       sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"  \"Z-%s\"\n",dataType,dataType,dataType);
-      theOutputHandler->write(outputData,strlen(outputData));
+      theOutputHandler->write(outputData,100);
 	  // Values
-	  theOutputHandler->write(" Values\n",8);
+	  theOutputHandler->write(" Values\n",16);
 	}
 
     int cnt;
@@ -391,6 +391,7 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 	}	
 	
 	// insert the data into the database
+	//theOutputHandler->write("\t",10);
     theOutputHandler->write(response);
       }
 	  // End Values
@@ -637,9 +638,9 @@ NodeGiDRecorder::initialize(void)
   // resize the response vector
   //
 
-  int timeOffset = 0;
-  if (echoTimeFlag == true)
-    timeOffset = 1;
+  //int timeOffset = 0;
+  //if (echoTimeFlag == true)
+  //  timeOffset = 1;
 
   int numValidResponse = theDofs->Size(); //+ timeOffset;numValidNodes*
   response.resize(numValidResponse);
@@ -752,7 +753,7 @@ NodeGiDRecorder::initialize(void)
   //}
 
   //theOutputHandler->tag("Data");
-  theOutputHandler->write("GiD Post Results File 1.0\n\n",40);
+  theOutputHandler->write("GiD Post Results File 1.0\n\n",48);
   initializationDone = true;
 
   stepN =0;
