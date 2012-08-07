@@ -678,7 +678,7 @@ OPS_NewZeroLengthInterface2D(void) {
 
   if (numZeroLengthInterface2D == 0) {
     numZeroLengthInterface2D++;
-    opserr << "ZeroLengthContactNTS2d - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n";
+    //opserr << "ZeroLengthContactNTS2d - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n";
   }
 
   Element *theEle = 0;

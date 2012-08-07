@@ -55,7 +55,7 @@ OPS_NewZeroLengthContactNTS2D(void) {
 
   if (numZeroLengthContactNTS2D == 0) {
     numZeroLengthContactNTS2D++;
-    opserr << "ZeroLengthContactNTS2d - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n";
+    //opserr << "ZeroLengthContactNTS2d - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n";
   }
 
   Element *theEle = 0;
