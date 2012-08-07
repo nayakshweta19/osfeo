@@ -61,7 +61,7 @@ OPS_BeamContact3D(void)
 {
   if (num_BeamContact3D == 0) {
     num_BeamContact3D++;
-    OPS_Error("BeamContact3D element - Written: K.Petek, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    //OPS_Error("BeamContact3D element - Written: K.Petek, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   }
 
   // Pointer to a uniaxial material that will be returned

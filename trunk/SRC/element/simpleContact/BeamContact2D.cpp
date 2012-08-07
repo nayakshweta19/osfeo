@@ -53,7 +53,7 @@ OPS_BeamContact2D(void)
 {
   if (num_BeamContact2D == 0) {
     num_BeamContact2D++;
-    OPS_Error("BeamContact2D element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    //OPS_Error("BeamContact2D element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   }
 
   // Pointer to an element that will be returned
