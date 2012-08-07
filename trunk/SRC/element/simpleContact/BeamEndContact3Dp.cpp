@@ -336,7 +336,7 @@ BeamEndContact3Dp::ExpMap(Vector th)
     theta_vec = th;
     theta = theta_vec.Norm();
     sk_theta = GetSkew(theta_vec);
-    int i, j;
+    //int i, j;
     for (int i = 0; i<3; i++) {
 		for (int j = 0; j<3; j++) {
 			theta_theta(i,j) = theta_vec(i)*theta_vec(j);
