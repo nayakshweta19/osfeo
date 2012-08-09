@@ -18,17 +18,15 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 1.1 $
-// $Date: 2009-04-17 23:02:41 $
-// $Source: /usr/local/cvs/OpenSees/SRC/element/frictionBearing/frictionModel/FrictionResponse.h,v $
+// $Revision: 4952 $
+// $Date: 2012-08-08 22:56:05 -0700 (Wed, 08 Aug 2012) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/frictionModel/FrictionResponse.h $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 02/06
 // Revision: A
 //
 // Description: This file contains the FrictionResponse class interface
-//
-// What: "@(#) FrictionResponse.h, revA"
 
 #ifndef FrictionResponse_h
 #define FrictionResponse_h
@@ -53,7 +51,7 @@ public:
     FrictionResponse(FrictionModel *frn, int id, const Matrix &val);
     ~FrictionResponse();
     
-    int getResponse(void);
+    int getResponse();
     
 private:
     FrictionModel *theFriction;

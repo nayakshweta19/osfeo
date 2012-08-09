@@ -20,67 +20,58 @@
 
 // $Revision: 4952 $
 // $Date: 2012-08-08 22:56:05 -0700 (Wed, 08 Aug 2012) $
-// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/frictionModel/FrictionResponse.cpp $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/frictionModel/Coulomb.h $
+
+#ifndef Coulomb_h
+#define Coulomb_h
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 02/06
 // Revision: A
 //
-// Description: This file contains the FrictionResponse class implementation
+// Description: This file contains the class definition for the Coulomb
+// friction model. In the Coulomb model the friction force is given by
+// mu*N, where mu is a constant coefficient of friction and N is a positive
+// normal force perpendicular to the sliding surface. If N is negative
+// the friction force is zero.
 
-#include <FrictionResponse.h>
 #include <FrictionModel.h>
 
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id)
-    : Response(), theFriction(frn), responseID(id)
+class Coulomb : public FrictionModel
 {
+public:
+    // constructor
+    Coulomb();
+    Coulomb(int tag, double mu);
+    
+    // destructor
+    ~Coulomb();
+    
+    const char *getClassType() const {return "Coulomb";};
+    
+    // public methods to set and obtain response
+    int setTrial(double normalForce, double velocity = 0.0);
+    double getFrictionForce();
+    double getFrictionCoeff();
+    double getDFFrcDNFrc();
+    double getDFFrcDVel();
+    
+    int commitState();
+    int revertToLastCommit();
+    int revertToStart();
+    
+    FrictionModel *getCopy();
+    
+    int sendSelf(int commitTag, Channel &theChannel);
+    int recvSelf(int commitTag, Channel &theChannel, 
+        FEM_ObjectBroker &theBroker);
+    
+    void Print(OPS_Stream &s, int flag = 0);
+    
+protected:
 
-}
+private:
+    double mu;  // coefficient of friction (COF)
+};
 
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id, int val)
-    : Response(val), theFriction(frn), responseID(id)
-{
-
-}
-
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id, double val)
-    : Response(val), theFriction(frn), responseID(id)
-{
-
-}
-
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id, const ID &val)
-    : Response(val), theFriction(frn), responseID(id)
-{
-
-}
-
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id, const Vector &val)
-    : Response(val), theFriction(frn), responseID(id)
-{
-
-}
-
-
-FrictionResponse::FrictionResponse(FrictionModel *frn, int id, const Matrix &val)
-    : Response(val), theFriction(frn), responseID(id)
-{
-
-}
-
-
-FrictionResponse::~FrictionResponse()
-{
-
-}
-
-
-int FrictionResponse::getResponse()
-{
-    return theFriction->getResponse(responseID, myInfo);
-}
+#endif
