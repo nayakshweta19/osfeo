@@ -154,9 +154,10 @@
 #include <BiaxialFiber3d.h>
 
 // friction models
-#include <CoulombFriction.h>
-#include <VDependentFriction.h>
-#include <VPDependentFriction.h>
+#include <Coulomb.h>
+#include <VelDependent.h>
+#include <VelPressureDep.h>
+#include <VelDepMultiLinear.h>
 
 // element header files
 #include <Element.h>
@@ -1118,14 +1119,17 @@ FrictionModel *
 FEM_ObjectBrokerAllClasses::getNewFrictionModel(int classTag)
 {
     switch(classTag) {
-	case FRN_TAG_CoulombFriction:  
-	     return new CoulombFriction();
+	case FRN_TAG_Coulomb:  
+	     return new Coulomb();
 
-	case FRN_TAG_VDependentFriction:  
-	     return new VDependentFriction();
+	case FRN_TAG_VelDependent:  
+	     return new VelDependent();
 	     
-	case FRN_TAG_VPDependentFriction:  
-	     return new VPDependentFriction();
+	case FRN_TAG_VelPressureDep:  
+	     return new VelPressureDep();
+
+	case FRN_TAG_VelDepMultiLinear:  
+		 return new VelDepMultiLinear();
 
 	default:
 	  opserr << "FEM_ObjectBrokerAllClasses::getNewFrictionModel - ";
