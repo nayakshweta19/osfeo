@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2010/02/04 19:16:19 $
+// $Date: 2010-02-04 19:16:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/ElementalLoad.h,v $
                                                                         
                                                                         
@@ -46,6 +46,7 @@ class ElementalLoad : public Load
 
     virtual void setDomain(Domain *theDomain);
     virtual void applyLoad(double loadfactor);
+    virtual void applyLoad(const Vector &loadfactors);
     virtual const Vector &getData(int &type, double loadFactor) = 0;
     virtual const Vector &getSensitivityData(int gradIndex);
 

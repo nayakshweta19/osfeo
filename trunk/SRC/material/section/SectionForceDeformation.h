@@ -76,7 +76,8 @@ class SectionForceDeformation : public Material
   SectionForceDeformation ();
   virtual ~SectionForceDeformation ();
   
-  virtual int setTrialSectionDeformation (const Vector&) = 0;
+  //virtual int setTrialSectionDeformation (const Vector&) = 0;
+  virtual int setTrialSectionDeformation (const Vector&) ; //the default valuoe 0 is removeed byJZ ,UoE 
   virtual const Vector &getSectionDeformation (void) = 0;
   
   virtual const Vector &getStressResultant (void) = 0;
@@ -123,6 +124,11 @@ class SectionForceDeformation : public Material
 				int gradIndex, int numGrads);
   // AddingSensitivity:END ///////////////////////////////////////////
   
+  //--- Adding Thermal Materials:[BEGIN]   by UoE OpenSees Group ----//  
+  virtual int setTrialSectionDeformation(const Vector&, const Vector &); //JZ
+  virtual const Vector &getTemperatureStress(const Vector &tData);//27 is for 'FireLoadPattern'
+  //--- Adding Thermal Functions:[END]   by UoE OpenSees Group ----//
+
  protected:
   Matrix *fDefault;	// Default flexibility matrix
   Vector *sDefault;

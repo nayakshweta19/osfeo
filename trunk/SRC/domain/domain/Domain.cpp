@@ -366,7 +366,7 @@ bool
 Domain::addElement(Element *element)
 {
   int eleTag = element->getTag();
-
+  
   ops_TheActiveElement = element;
 
   // check all the elements nodes exist in the domain
@@ -1751,7 +1751,7 @@ Domain::update(void)
   Element *theEle;
 
   while ((theEle = theEles()) != 0) {
-	ops_TheActiveElement = theEle;
+    ops_TheActiveElement = theEle;
     ok += theEle->update();
   }
 

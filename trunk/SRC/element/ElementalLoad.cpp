@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2008/08/26 16:52:10 $
+// $Date: 2008-08-26 16:52:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/ElementalLoad.cpp,v $
                                                                         
                                                                         
@@ -77,6 +77,13 @@ ElementalLoad::applyLoad(double loadFactor)
 {
   if (theElement != 0)
     theElement->addLoad(this, loadFactor);
+}
+
+void 
+ElementalLoad::applyLoad(const Vector &loadFactors) 
+{
+  if (theElement != 0)
+    theElement->addLoad(this, loadFactors);
 }
 
 const Vector&

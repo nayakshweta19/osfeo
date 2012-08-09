@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.19 $
-// $Date: 2009/08/25 22:32:08 $
+// $Date: 2009-08-25 22:32:08 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Element.h,v $
                                                                         
                                                                         
@@ -80,6 +80,8 @@ class Element : public DomainComponent
     // methods for applying loads
     virtual void zeroLoad(void);	
     virtual int addLoad(ElementalLoad *theLoad, double loadFactor);
+    virtual int addLoad(ElementalLoad *theLoad, const Vector &loadFactors);
+
     virtual int addInertiaLoadToUnbalance(const Vector &accel);
     virtual int setRayleighDampingFactors(double alphaM, double betaK, double betaK0, double betaKc);
 
