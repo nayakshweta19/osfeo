@@ -78,12 +78,44 @@ UniaxialMaterial::~UniaxialMaterial()
 }
 
 int
+UniaxialMaterial::setTrialStrain(double strain, double temperature, double strainRate)
+{
+  int res = this->setTrialStrain(strain, strainRate);
+
+  return res;
+}
+
+int
 UniaxialMaterial::setTrial(double strain, double &stress, double &tangent, double strainRate)
 {
   int res = this->setTrialStrain(strain, strainRate);
   if (res == 0) {
     stress = this->getStress();
     tangent = this->getTangent();
+  } else {
+    opserr << "UniaxialMaterial::setTrial() - material failed in setTrialStrain()\n"; 
+  }
+
+  return res;
+}
+
+
+int
+UniaxialMaterial::setTrial(double strain, double temperature, double &stress, double &tangent, double &thermalElongation, double strainRate)
+{
+  int res = this->setTrialStrain(strain, temperature, strainRate);
+
+  if (res == 0) {
+    static const char thermal[] = "ThermalElongation";
+    const char *thermalPointer = thermal;
+
+
+    Information info;
+    stress = this->getStress();
+    tangent = this->getTangent();
+    this->getVariable(thermalPointer, info);
+    thermalElongation = info.theDouble;
+
   } else {
     opserr << "UniaxialMaterial::setTrial() - material failed in setTrialStrain()\n"; 
   }

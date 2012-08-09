@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.23 $
-// $Date: 2009/10/02 21:48:23 $
+// $Date: 2009-10-02 21:48:23 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/forceBeamColumn/TclForceBeamColumnCommand.cpp,v $
                                                                         
 // Written: MHS
@@ -38,8 +38,10 @@
 #include <ForceBeamColumn3d.h>
 #include <DispBeamColumn2d.h>
 #include <DispBeamColumn3d.h>
+#include <DispBeamColumn2dThermal.h>
 #include <CrdTransf.h>
 
+ 
 #include <DispBeamColumn2dWithSensitivity.h>
 #include <DispBeamColumn3dWithSensitivity.h>
 
@@ -342,6 +344,8 @@ TclModelBuilder_addForceBeamColumn(ClientData clientData, Tcl_Interp *interp,
 	theElement = new ElasticForceBeamColumn2d(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf2d);
       else if (strcmp(argv[1],"dispBeamColumn") == 0)
 	theElement = new DispBeamColumn2d(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf2d, mass);
+      else if (strcmp(argv[1],"dispBeamColumnThermal") == 0)
+	theElement = new DispBeamColumn2dThermal(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf2d, mass);
       else if (strcmp(argv[1],"dispBeamColumnWithSensitivity") == 0)
 	theElement = new DispBeamColumn2dWithSensitivity(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf2d, mass);
       else								            //tag     ndI    ndJ   nPts  secID    transf
@@ -1134,9 +1138,9 @@ TclModelBuilder_addForceBeamColumn(ClientData clientData, Tcl_Interp *interp,
     }
 
     // Sort locations before calling constructor
-    for (i = 0; i < numSections; i++) {
+    for (int i = 0; i < numSections; i++) {
       int key = i;
-      for (j = i+1; j < numSections; j++) {
+      for (int j = i+1; j < numSections; j++) {
 	if (pts(j) < pts(key)) {
 	  key = j;
 	}

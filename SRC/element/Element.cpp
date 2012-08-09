@@ -321,8 +321,8 @@ Element::getRayleighDampingForces(void)
   int loc = 0;
   for (int i=0; i<numNodes; i++) {
     const Vector &vel = theNodes[i]->getTrialVel();
-    for (int j=0; j<vel.Size(); j++) {
-      (*theVector2)(loc++) = vel[j];
+    for (int i=0; i<vel.Size(); i++) {
+      (*theVector2)(loc++) = vel[i];
     }
   }
 
@@ -345,6 +345,11 @@ Element::getRayleighDampingForces(void)
 
 int 
 Element::addLoad(ElementalLoad *theLoad, double loadFactor) {
+  return 0;
+}
+
+int 
+Element::addLoad(ElementalLoad *theLoad, const Vector &loadFactors) {
   return 0;
 }
 

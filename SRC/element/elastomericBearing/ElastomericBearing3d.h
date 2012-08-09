@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 4945 $
-// $Date: 2012-07-28 07:05:47 +0800 (周六, 28 7月 2012) $
+// $Date: 2012-07-28 07:05:47 +0800 (星期六, 28 七月 2012) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearing3d.h $
 
 #ifndef ElastomericBearing3d_h
