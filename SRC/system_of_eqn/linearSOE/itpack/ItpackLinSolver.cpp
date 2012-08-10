@@ -92,7 +92,7 @@ ItpackLinSolver::setSize(void)
   int ncg = 4*maxIter;
   
   // Order of the black subsystem
-  int nb = theSOE->nnz; // I think this is the most it could be
+  int nb = theSOE->size-1; // I think this is what it should be
 
   switch(method) {
   case ItpackJCG:
@@ -173,45 +173,45 @@ ItpackLinSolver::recvSelf(int commitTag, Channel &theChannel,
 }
 
 #ifdef _WIN32
-#define dfault_ DFAULT 
-#define vfill_ VFILL  
-#define jcg_ JCG    
-#define jsi_ JSI    
-#define sor_ SOR    
-#define ssorcg_ SSORCG 
-#define ssorsi_ SSORSI 
-#define rscg_ RSCG   
-#define rssi_ RSSI   
+#define DFAULT dfault_
+#define VFILL  vfill_
+#define JCG    jcg_
+#define JSI    jsi_
+#define SOR    sor_
+#define SSORCG ssorcg_
+#define SSORSI ssorsi_
+#define RSCG   rscg_
+#define RSSI   rssi_
 
-extern "C" int dfault_(int *IPARM, double *RPARM);
+extern "C" int _stdcall DFAULT(int *IPARM, double *RPARM);
 
-extern "C" int vfill_(int *N, double *U, double *VAL);
+extern "C" int _stdcall VFILL(int *N, double *U, double *VAL);
 
-extern "C" int jcg_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall JCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int jsi_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall JSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int sor_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall SOR(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int ssorcg_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall SSORCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			       double *U, int *IWKSP, int *NW, double *WKSP,
 			       int *IPARM, double *RPARM, int *IER);
 
-extern "C" int ssorsi_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall SSORSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			       double *U, int *IWKSP, int *NW, double *WKSP,
 			       int *IPARM, double *RPARM, int *IER);
 
-extern "C" int rscg_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall RSCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			     double *U, int *IWKSP, int *NW, double *WKSP,
 			     int *IPARM, double *RPARM, int *IER);
 
-extern "C" int rssi_(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int _stdcall RSSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			     double *U, int *IWKSP, int *NW, double *WKSP,
 			     int *IPARM, double *RPARM, int *IER);
 
@@ -312,6 +312,9 @@ ItpackLinSolver::solve(void)
 
   int ier = 0;
 
+  // Order of the black subsystem
+  int nb = theSOE->size-1; // I think this is what it should be
+
   // Fill the x vector with zeros as initial guess to solution of Ax=b
   //double val = 0.0;
   //vfill_(&n, xPtr, &val);
@@ -338,10 +341,12 @@ ItpackLinSolver::solve(void)
 	    iwksp, &nwksp, wksp, iparm, rparm, &ier);
     break;
   case ItpackRSCG:
+    iparm[8] = nb;
     rscg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
     break;
   case ItpackRSSI: case ItpackRS:
+    iparm[8] = nb;
     rssi_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
     break;
