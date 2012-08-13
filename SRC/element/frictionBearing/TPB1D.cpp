@@ -73,7 +73,7 @@ OPS_TPB1D()
 {
   // print out a message about who wrote this element & any copyright info wanted
   if (numMyTPB1D == 0) {
-    opserr << "TPB1D2D element - Written by Troy/Fenz UC Berkeley Copyright 2011 - Use at your Own Peril\n";
+    //opserr << "TPB1D2D element - Written by Troy/Fenz UC Berkeley Copyright 2011 - Use at your Own Peril\n";
     numMyTPB1D++;
   }
 
@@ -622,7 +622,7 @@ TPB1D::setResponse(const char **argv, int argc, OPS_Stream &output)
     output.attr("node1",connectedExternalNodes[0]);
     output.attr("node2",connectedExternalNodes[1]);
 
-    char outputData[10];
+    //char outputData[10];
 
     if ((strcmp(argv[0],"force") == 0) || (strcmp(argv[0],"forces") == 0) 
         || (strcmp(argv[0],"globalForces") == 0) || (strcmp(argv[0],"globalforces") == 0)) {

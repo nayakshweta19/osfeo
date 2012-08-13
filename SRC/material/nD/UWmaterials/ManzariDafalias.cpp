@@ -48,7 +48,7 @@ OPS_NewManzariDafaliasMaterial(void)
 {
   if (numManzariDafaliasMaterials == 0) {
     numManzariDafaliasMaterials++;
-    opserr << "ManzariDafalias nDmaterial - Written: P.Arduino, C.McGann, U.Washington\n";
+    //opserr << "ManzariDafalias nDmaterial - Written: P.Arduino, C.McGann, U.Washington\n";
   }
 
   NDMaterial *theMaterial = 0;

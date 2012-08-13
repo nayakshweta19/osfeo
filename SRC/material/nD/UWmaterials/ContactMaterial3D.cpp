@@ -55,7 +55,7 @@ OPS_NewContactMaterial3DMaterial(void)
 {
   if (numContactMaterial3DMaterials == 0) {
     numContactMaterial3DMaterials++;
-    opserr << "ContactMaterial3D nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
+    //opserr << "ContactMaterial3D nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
   }
 
   // Pointer to a uniaxial material that will be returned

@@ -52,7 +52,7 @@ OPS_NewContactMaterial2DMaterial(void)
 {
   if (numContactMaterial2DMaterials == 0) {
     numContactMaterial2DMaterials++;
-    opserr << "ContactMaterial2D nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
+    //opserr << "ContactMaterial2D nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
   }
 
   // Pointer to a nDmaterial that will be returned
