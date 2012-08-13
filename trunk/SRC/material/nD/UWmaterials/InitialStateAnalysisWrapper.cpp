@@ -46,7 +46,7 @@ OPS_NewInitialStateAnalysisWrapperMaterial(void)
 {
 	if (numInitialStateAnalysisWrapperMaterials == 0) {
 		numInitialStateAnalysisWrapperMaterials++;
-		opserr << "InitialStateAnalysisWrapper nDmaterial - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n";
+		//opserr << "InitialStateAnalysisWrapper nDmaterial - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n";
   	}
 
   	NDMaterial *theMaterial = 0;

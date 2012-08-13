@@ -51,7 +51,7 @@ OPS_TripleFrictionPendulum()
 {
   if (numTripleFrictionPendulum == 0) {
     numTripleFrictionPendulum++;
-    opserr << "TripleFrictionPendulum element v1.0.1 - Written by Nhan@unr\n";
+    //opserr << "TripleFrictionPendulum element v1.0.1 - Written by Nhan@unr\n";
   }
 
   // get the id and end nodes 

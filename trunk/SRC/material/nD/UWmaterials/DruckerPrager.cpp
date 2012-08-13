@@ -69,7 +69,7 @@ OPS_NewDruckerPragerMaterial(void)
 {
   if (numDruckerPragerMaterials == 0) {
     numDruckerPragerMaterials++;
-    opserr << "DruckerPrager nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
+    //opserr << "DruckerPrager nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
   }
 
   // Pointer to a uniaxial material that will be returned

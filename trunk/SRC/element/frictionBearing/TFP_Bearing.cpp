@@ -55,7 +55,7 @@ OPS_TFP_Bearing()
 {
   // print out a message about who wrote this element & any copyright info wanted
   if (numMyBearing == 0) {
-    opserr << "TFP_Bearing element - Written by Tracy Becker, UC Berkeley Copyright 2011\n";
+    //opserr << "TFP_Bearing element - Written by Tracy Becker, UC Berkeley Copyright 2011\n";
     numMyBearing++;
   }
 
