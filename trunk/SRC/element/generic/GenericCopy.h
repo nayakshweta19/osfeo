@@ -18,14 +18,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 1.4 $
-// $Date: 2008/09/23 23:11:51 $
-// $Source: /usr/local/cvs/OpenSees/SRC/element/generic/GenericCopy.h,v $
+// $Revision: 4967 $
+// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericCopy.h $
 
 #ifndef GenericCopy_h
 #define GenericCopy_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 11/06
 // Revision: A
 //
@@ -52,23 +52,23 @@ public:
     // method to get class type
     const char *getClassType() const {return "GenericCopy";};
     
-    // public methods to obtain information about dof & connectivity    
+    // public methods to obtain information about dof & connectivity
     int getNumExternalNodes() const;
     const ID &getExternalNodes();
     Node **getNodePtrs();
     int getNumDOF();
     void setDomain(Domain *theDomain);
     
-    // public methods to set the state of the element    
+    // public methods to set the state of the element
     int commitState();
-    int revertToLastCommit();        
+    int revertToLastCommit();
     int revertToStart();
     int update();
     
-    // public methods to obtain stiffness, mass, damping and residual information    
+    // public methods to obtain stiffness, mass, damping and residual information
     const Matrix &getTangentStiff();
     const Matrix &getInitialStiff();
-    //const Matrix &getDamp();
+    const Matrix &getDamp();
     const Matrix &getMass();
     
     void zeroLoad();
@@ -81,8 +81,8 @@ public:
     // public methods for element output
     int sendSelf(int commitTag, Channel &sChannel);
     int recvSelf(int commitTag, Channel &rChannel, FEM_ObjectBroker &theBroker);
-    int displaySelf(Renderer &theViewer, int displayMode, float fact);    
-    void Print(OPS_Stream &s, int flag = 0);    
+    int displaySelf(Renderer &theViewer, int displayMode, float fact);
+    void Print(OPS_Stream &s, int flag = 0);
     
     // public methods for element recorder
     Response *setResponse(const char **argv, int argc, OPS_Stream &s);

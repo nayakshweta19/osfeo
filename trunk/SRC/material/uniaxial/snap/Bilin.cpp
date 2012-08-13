@@ -37,7 +37,7 @@ OPS_NewBilinMaterial()
 {
   if (numBilinMaterials == 0) {
     numBilinMaterials++;
-    opserr << "Modified Ibarra-Krawinkler Model with Bilinear Hysteretic Response\n";
+    //opserr << "Modified Ibarra-Krawinkler Model with Bilinear Hysteretic Response\n";
   }
 
   // Pointer to a uniaxial material that will be returned

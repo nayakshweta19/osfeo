@@ -18,14 +18,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 1.3 $
-// $Date: 2009/06/02 21:10:45 $
-// $Source: /usr/local/cvs/OpenSees/SRC/element/adapter/Adapter.h,v $
+// $Revision: 4967 $
+// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/adapter/Adapter.h $
 
 #ifndef Adapter_h
 #define Adapter_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/07
 // Revision: A
 //
@@ -64,7 +64,7 @@ public:
     // constructors
     Adapter(int tag, ID nodes, ID *dof,
         const Matrix &stif, int ipPort,
-        const Matrix *mass = 0);
+        int addRayleigh = 0, const Matrix *mass = 0);
     Adapter();
     
     // destructor
@@ -89,9 +89,10 @@ public:
     // public methods to obtain stiffness, mass, damping and residual information
     const Matrix &getTangentStiff();
     const Matrix &getInitialStiff();
+    const Matrix &getDamp();
     const Matrix &getMass();
     
-    void zeroLoad(void);
+    void zeroLoad();
     int addLoad(ElementalLoad *theLoad, double loadFactor);
     int addInertiaLoadToUnbalance(const Vector &accel);
     
@@ -109,7 +110,7 @@ public:
     int getResponse(int responseID, Information &eleInformation);
     
 protected:
-    
+
 private:
     // private attributes - a copy for each object of the class
     ID connectedExternalNodes;      // contains the tags of the end nodes
@@ -120,10 +121,11 @@ private:
     int numDOF;             // number of degrees of freedom
     int numBasicDOF;        // number of DOF in basic system
     
-    Matrix kb;      // stiffness matrix in basic system
-    int ipPort;     // ipPort
-    Matrix *mb;     // mass matrix in basic system
-    double tPast;   // past time
+    Matrix kb;          // stiffness matrix in basic system
+    int ipPort;         // ipPort
+    int addRayleigh;    // flag to add Rayleigh damping
+    Matrix *mb;         // mass matrix in basic system
+    double tPast;       // past time
     
     static Matrix theMatrix;    // objects matrix (a class wide Matrix)
     static Vector theVector;    // objects vector (a class wide Vector)
