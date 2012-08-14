@@ -53,7 +53,7 @@ OPS_SSPbrick(void)
 {
 	if (num_SSPbrick == 0) {
     	num_SSPbrick++;
-    	OPS_Error("SSPbrick element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    	//OPS_Error("SSPbrick element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   	}
 
   	// Pointer to an element that will be returned
@@ -816,7 +816,7 @@ SSPbrick::setParameter(const char **argv, int argc, Parameter &param)
 	}
 
   	// a material parameter
-  	else if (strstr(argv[0],"material") != 0) {
+  	if (strstr(argv[0],"material") != 0) {
 
     	if (argc < 3) {
       		return -1;
