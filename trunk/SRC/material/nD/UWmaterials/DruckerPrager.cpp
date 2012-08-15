@@ -69,7 +69,7 @@ OPS_NewDruckerPragerMaterial(void)
 {
   if (numDruckerPragerMaterials == 0) {
     numDruckerPragerMaterials++;
-    //opserr << "DruckerPrager nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
+    opserr << "DruckerPrager nDmaterial - Written: K.Petek, P.Mackenzie-Helnwein, P.Arduino, U.Washington\n";
   }
 
   // Pointer to a uniaxial material that will be returned
@@ -93,9 +93,9 @@ OPS_NewDruckerPragerMaterial(void)
   if (numArgs == 12) {
       numData = 11;
   } else if (numArgs == 13) {
-      numData = 13;
+      numData = 12;
   } else {
-	  numData = 14;
+	  numData = 13;
   }
 
   if (OPS_GetDouble(&numData, dData) != 0) {
@@ -806,6 +806,30 @@ DruckerPrager::updateParameter(int responseID, Information &info)
     // materialState called
 	if (responseID == 5) {
 		mElastFlag = info.theDouble;
+	}
+	// frictionalStrength called
+	if (responseID == 7) {
+		mrho = info.theDouble;
+		// update tension cutoff
+		if (mrho == 0.0) { 
+			mTo = 1e10;
+		} else { 
+		    mTo = root23*msigma_y/mrho; 
+	    }
+	}
+	// nonassociativeTerm called
+	if (responseID == 8) {
+		mrho_bar = info.theDouble;
+	}
+	// cohesiveIntercept called
+	if (responseID == 9) {
+		msigma_y = info.theDouble;
+		// update tension cutoff
+		if (mrho == 0.0) { 
+			mTo = 1e10;
+		} else { 
+		    mTo = root23*msigma_y/mrho; 
+	    }
 	}
 	// shearModulus called
 	if (responseID == 10) {
