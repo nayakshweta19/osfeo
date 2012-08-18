@@ -430,6 +430,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/feap/TclFeapElementCommand.o \
 	$(FE)/element/beamWithHinges/TclBeamWithHingesBuilder.o \
 	$(FE)/element/dispBeamColumn/DispBeamColumn2d.o \
+	$(FE)/element/dispBeamColumn/DispBeamColumn2dThermal.o \
 	$(FE)/element/dispBeamColumn/DispBeamColumn3d.o \
 	$(FE)/element/dispBeamColumn/DispBeamColumn2dWithSensitivity.o \
 	$(FE)/element/dispBeamColumn/DispBeamColumn3dWithSensitivity.o \
@@ -482,12 +483,13 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/frictionBearing/SingleFPSimple2d.o \
 	$(FE)/element/frictionBearing/SingleFPSimple3d.o \
 	$(FE)/element/frictionBearing/TclSingleFPCommand.o \
-	$(FE)/element/frictionBearing/frictionModel/CoulombFriction.o \
+	$(FE)/element/frictionBearing/frictionModel/Coulomb.o \
 	$(FE)/element/frictionBearing/frictionModel/FrictionModel.o \
 	$(FE)/element/frictionBearing/frictionModel/FrictionResponse.o \
 	$(FE)/element/frictionBearing/frictionModel/TclModelBuilderFrictionModelCommand.o \
-	$(FE)/element/frictionBearing/frictionModel/VDependentFriction.o \
-	$(FE)/element/frictionBearing/frictionModel/VPDependentFriction.o \
+	$(FE)/element/frictionBearing/frictionModel/VelPressureDep.o \
+	$(FE)/element/frictionBearing/frictionModel/VelDependent.o \
+	$(FE)/element/frictionBearing/frictionModel/VelDepMultiLinear.o \
 	$(FE)/element/twoNodeLink/TwoNodeLink.o \
 	$(FE)/element/pyMacro/PY_Macro2D.o \
 	$(FE)/element/twoNodeLink/TclTwoNodeLinkCommand.o \
@@ -525,6 +527,11 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Steel02.o \
 	$(FE)/material/uniaxial/Steel03.o \
 	$(FE)/material/uniaxial/SteelMP.o \
+	$(FE)/material/uniaxial/Steel01Thermal.o \
+	$(FE)/material/uniaxial/Steel02Thermal.o \
+	$(FE)/material/uniaxial/Concrete02Thermal.o \
+	$(FE)/material/uniaxial/ModIMKPinching.o \
+	$(FE)/material/uniaxial/ModIMKPeakOriented.o \
 	$(FE)/material/uniaxial/SmoothPSConcrete.o \
 	$(FE)/material/uniaxial/Concrete01WithSITC.o \
 	$(FE)/material/uniaxial/ECC01.o \
@@ -672,6 +679,7 @@ SECTION_LIBS = $(FE)/material/section/SectionForceDeformation.o \
 	$(FE)/material/section/ElasticShearSection3d.o \
 	$(FE)/material/section/ElasticTubeSection3d.o \
 	$(FE)/material/section/FiberSection2d.o \
+	$(FE)/material/section/FiberSection2dThermal.o \
 	$(FE)/material/section/FiberSection3d.o \
 	$(FE)/material/section/FiberSectionGJ.o \
 	$(FE)/material/section/SectionAggregator.o \
@@ -804,12 +812,14 @@ DOMAIN_LIBS =  $(FE)/domain/component/DomainComponent.o \
 	$(FE)/domain/load/Beam2dUniformLoad.o \
 	$(FE)/domain/load/Beam2dPointLoad.o \
 	$(FE)/domain/load/Beam2dTempLoad.o \
+	$(FE)/domain/load/Beam2dThermalAction.o \
 	$(FE)/domain/load/Beam3dUniformLoad.o \
 	$(FE)/domain/load/Beam3dPointLoad.o \
 	$(FE)/domain/load/BrickSelfWeight.o \
 	$(FE)/domain/load/SurfaceLoader.o \
 	$(FE)/domain/load/SelfWeight.o \
 	$(FE)/domain/pattern/LoadPattern.o \
+	$(FE)/domain/pattern/FireLoadPattern.o \
 	$(FE)/domain/pattern/EarthquakePattern.o \
 	$(FE)/domain/pattern/MultiSupportPattern.o \
 	$(FE)/domain/pattern/UniformExcitation.o \

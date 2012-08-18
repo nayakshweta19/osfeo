@@ -158,10 +158,13 @@
 #define MAT_TAG_SMA                             54
 #define MAT_TAG_SelfCentering                   55
 #define MAT_TAG_HookGap 			61
+#define MAT_TAG_FRPConfinedConcrete             62
 
-#define MAT_TAG_Steel01Thermal		        62
-#define MAT_TAG_Steel02Thermal			63
-#define MAT_TAG_Concrete02Thermal		64
+#define MAT_TAG_Steel01Thermal		        63
+#define MAT_TAG_Steel02Thermal			64
+#define MAT_TAG_Concrete02Thermal		65
+#define MAT_TAG_ModIMKPinching                  66
+#define MAT_TAG_ModIMKPeakOriented              67
 
 #define MAT_TAG_WrapperUniaxialMaterial      101
 #define MAT_TAG_UniaxialJ2Plasticity         102
