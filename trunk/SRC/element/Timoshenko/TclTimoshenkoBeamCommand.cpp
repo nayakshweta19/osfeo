@@ -1238,7 +1238,6 @@ TclModelBuilder_addTimoshenko3d(ClientData clientData, Tcl_Interp *interp,
 	}
 
 	for (int j=0; j<nIP; j++) {
-	  SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
 	  
 	  if (theSection == 0) {
 	    opserr << "WARNING TclTimoshenkoBeamCommand - no Section found with tag ";
