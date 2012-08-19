@@ -58,7 +58,7 @@ ID BiaxialFiber3d::code(3);
 // constructor:
 BiaxialFiber3d::BiaxialFiber3d()
                :Fiber(0, FIBER_TAG_Biaxial3d),
-                theMaterial(0), area(0.0)
+                theMaterial(0), area(0.0), R(0.0)
 {
   if (code(0) != SECTION_RESPONSE_P) {
     code(0) = SECTION_RESPONSE_P;
@@ -68,17 +68,13 @@ BiaxialFiber3d::BiaxialFiber3d()
 
    as[0] = 0.0;
    as[1] = 0.0;
-
-   R[0] = 0.0;
-   R[1] = 0.0;
-   R[2] = 0.0;
 }
 
 BiaxialFiber3d::BiaxialFiber3d(int tag, 
                 NDMaterial &theMat,
-                double Area, const Vector &position, const Vector &vecxzPlane)
+                double Area, const Vector &position, double perpTheta)
                :Fiber(tag, FIBER_TAG_Biaxial3d),
-                theMaterial(0), area(Area)
+                theMaterial(0), area(Area), R(perpTheta)
 {
 	theMaterial = theMat.getCopy("BeamFiber2d");  // get a copy of the MaterialModel
 
@@ -96,9 +92,6 @@ BiaxialFiber3d::BiaxialFiber3d(int tag,
 	as[0] = -position(0);
 	as[1] =  position(1);
 
-	R[0] = vecxzPlane(0);
-    R[1] = vecxzPlane(1);
-    R[2] = vecxzPlane(2);
 }
 
 // destructor:
@@ -179,17 +172,14 @@ BiaxialFiber3d::getCopy (void)
 {
    // make a copy of the fiber 
    static Vector position(2);
-   static Vector vecxzPlane(3);
 
    position(0) = -as[0];
    position(1) =  as[1];
-   vecxzPlane(0) = R[0];
-   vecxzPlane(1) = R[1];
-   vecxzPlane(2) = R[2];
+   double perpTheta = R;
 
    BiaxialFiber3d *theCopy = new BiaxialFiber3d (this->getTag(), 
                                                    *theMaterial, area, 
-                                                   position, vecxzPlane);
+                                                   position, perpTheta);
    return theCopy;
 }  
 
@@ -251,10 +241,11 @@ BiaxialFiber3d::sendSelf(int commitTag, Channel &theChannel)
     // store area and position data in a vector and send it
     //
     
-    static Vector dData(3);
+    static Vector dData(4);
     dData(0) = area;
     dData(1) = as[0];
     dData(2) = as[1];
+	dData(3) = R;
     if (theChannel.sendVector(dbTag, commitTag, dData) < 0)  {
       opserr << "BiaxialFiber3d::sendSelf() -  failed to send Vector data\n";
       return -2;
@@ -291,7 +282,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     // get area and position datafrom a vector
     //
     
-    static Vector dData(3);
+    static Vector dData(4);
     if (theChannel.recvVector(dbTag, commitTag, dData) < 0)  {
       opserr << "BiaxialFiber3d::recvSelf() -  failed to recv Vector data\n";
 	return -2;
@@ -299,6 +290,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     area = dData(0);
     as[0] = dData(1);
     as[1] = dData(2);
+	R = dData(3);
 
     //
     // now we do the material stuff
@@ -308,21 +300,21 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     
     // if we have a material, check it is of correct type
     if (theMaterial != 0) {
-	if (matClassTag != theMaterial->getClassTag()) {
+	  if (matClassTag != theMaterial->getClassTag()) {
 	    delete theMaterial;
 	    theMaterial = 0;
-	} 
+	  } 
     }
 
     // if no material we need to get one,
     // NOTE: not an else if in case deleted in if above
     if (theMaterial == 0) {
-	theMaterial = theBroker.getNewNDMaterial(matClassTag);
-	if (theMaterial == 0) {
-	  opserr << "BiaxialFiber3d::recvSelf() - " << 
-	    "failed to get a UniaxialMaterial of type "<< matClassTag << endln;
-	    return -3;
-	}
+	  theMaterial = theBroker.getNewNDMaterial(matClassTag);
+	  if (theMaterial == 0) {
+	    opserr << "BiaxialFiber3d::recvSelf() - " << 
+	      "failed to get a UniaxialMaterial of type "<< matClassTag << endln;
+	      return -3;
+	  }
     }
 
     // set the materials dbTag and invoke recvSelf on the material
@@ -331,7 +323,7 @@ BiaxialFiber3d::recvSelf(int commitTag, Channel &theChannel,
     // now invoke recvSelf on the material
     if (theMaterial->recvSelf(commitTag, theChannel, theBroker) < 0) {
       opserr << "BiaxialFiber3d::recvSelf() -  the material failed in recvSelf()\n";
-	return -4;
+	  return -4;
     }    	
 
     return 0;

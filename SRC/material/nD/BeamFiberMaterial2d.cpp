@@ -94,7 +94,9 @@ BeamFiberMaterial2d::getCopy(const char *type)
 {
 	if (strcmp(type, "BeamFiber2d") == 0)
 		return this->getCopy();
-	else
+	else if (strcmp(type, "BeamFiber") == 0)
+		return this->getCopy();
+	else 
 		return 0;
 }
 

@@ -61,7 +61,7 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
       exit(-1);
     }
 
-    matData = new double [numFibers*3];
+    matData = new double [numFibers*4];
 
     if (matData == 0) {
       opserr << "TimoshenkoSection3d::TimoshenkoSection3d -- failed to allocate double array for material data\n";
@@ -75,10 +75,12 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
 	NDMaterial *theMat;
     for (int i = 0; i < numFibers; i++) {
 
-      double yLoc, zLoc, Area;
+      double yLoc, zLoc, Area, perpTheta;
 	  fibers[i]->getFiberLocation(yLoc, zLoc);
 	  Area = fibers[i]->getArea();
 	  theMat = fibers[i]->getNDMaterial();
+	  perpTheta = fibers[i]->getPerpTheta();
+
 	  if (theMat == 0) {
 		  opserr << "TimoshenkoSection3d::TimoshenkoSection3d -- failed to get fiber information" << endln;
 	  }
@@ -87,9 +89,10 @@ TimoshenkoSection3d::TimoshenkoSection3d(int tag, int num, Fiber **fibers, doubl
       Qy += zLoc*Area;
       a  += Area;
 
-      matData[i*3]   = -yLoc;
-      matData[i*3+1] = zLoc;
-      matData[i*3+2] = Area;
+      matData[i*4]   = -yLoc;
+      matData[i*4+1] = zLoc;
+      matData[i*4+2] = Area;
+	  matData[i*4+3] = perpTheta;
 
       theMaterials[i] = theMat->getCopy("BeamFiber");
 
@@ -185,15 +188,16 @@ TimoshenkoSection3d::setTrialSectionDeformation (const Vector &deforms)
   // Material strain vector
   static Vector eps(3);
 
-  double y, z; //, A
+  double y, z, A, perpTheta; //
 
   double root56 = sqrt(5.0/6.0);
 
   for (int i = 0; i < numFibers; i++) {
 
-    y = matData[i*3] - yBar;
-    z = matData[i*3+1] - zBar;
-    //A = matData[i*3+2];
+    y = matData[i*4] - yBar;
+    z = matData[i*4+1] - zBar;
+    A = matData[i*4+2];
+	perpTheta = matData[i*4+3];
 
     // determine material strain and set it
 
@@ -220,8 +224,8 @@ TimoshenkoSection3d::getZh(void)
   double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
   double yLoc, zLoc;
   for (int i = 0; i < numFibers; i++) {
-	yLoc=matData[i*3];
- 	zLoc=matData[i*3+1];
+	yLoc=matData[i*4];
+ 	zLoc=matData[i*4+1];
 
 	if (yLoc < yHmin ) yHmin=yLoc;
 	if (zLoc < zHmin ) zHmin=zLoc;
@@ -241,8 +245,8 @@ TimoshenkoSection3d::getYh(void)
   double yHmin=0, zHmin=0, yHmax=0, zHmax=0;
   double yLoc, zLoc;
   for (int i = 0; i < numFibers; i++) {
-	yLoc=matData[i*3];
- 	zLoc=matData[i*3+1];
+	yLoc=matData[i*4];
+ 	zLoc=matData[i*4+1];
 
 	if (yLoc < yHmin ) yHmin=yLoc;
 	if (zLoc < zHmin ) zHmin=zLoc;
@@ -262,9 +266,9 @@ TimoshenkoSection3d::getEIz(void)
   double EIz = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-    y = matData[i*3] - yBar;
-    z = matData[i*3+1] - zBar;
-	A = matData[i*3+2];
+    y = matData[i*4] - yBar;
+    z = matData[i*4+1] - zBar;
+	A = matData[i*4+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
@@ -280,9 +284,9 @@ TimoshenkoSection3d::getEIy(void)
   double EIy = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-    y = matData[i*3] - yBar;
-    z = matData[i*3+1] - zBar;
-	A = matData[i*3+2];
+    y = matData[i*4] - yBar;
+    z = matData[i*4+1] - zBar;
+	A = matData[i*4+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
@@ -298,9 +302,9 @@ TimoshenkoSection3d::getGAy(void)
   double GAy = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-	//y =matData[i*3] - yBar;
- 	//z =matData[i*3+1] - zBar;
-	A =matData[i*3+2];
+	//y =matData[i*4] - yBar;
+ 	//z =matData[i*4+1] - zBar;
+	A =matData[i*4+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
@@ -316,9 +320,9 @@ TimoshenkoSection3d::getGAz(void)
   double GAz = 0.;
   double y, z, A;
   for (int i = 0; i < numFibers; i++) {
-	//y =matData[i*3] - yBar;
- 	//z =matData[i*3+1] - zBar;
-	A =matData[i*3+2];
+	//y =matData[i*4] - yBar;
+ 	//z =matData[i*4+1] - zBar;
+	A =matData[i*4+2];
 
 	const Matrix &Dt = theMaterials[i]->getTangent();
 
@@ -340,7 +344,7 @@ TimoshenkoSection3d::getSectionTangent(void)
   for (int i=0; i<36; i++)
 	kData[i] = 0.0;
  
-  double y, z, w;
+  double y, z, w; //perpTheta
   double y2, z2, yz;
   
   double d00, d01, d02;
@@ -354,9 +358,9 @@ TimoshenkoSection3d::getSectionTangent(void)
   
   for (int i = 0; i < numFibers; i++) {
     
-    y = matData[i*3] - yBar;
-    z = matData[i*3+1] - zBar;
-    w = matData[i*3+2];
+    y = matData[i*4] - yBar;
+    z = matData[i*4+1] - zBar;
+    w = matData[i*4+2];
 
     y2 = y*y;
     z2 = z*z;
@@ -449,16 +453,16 @@ TimoshenkoSection3d::getStressResultant(void)
   for (int i=0; i<6; i++)
 	sData[i] = 0.0;
   
-  double y, z, w;
+  double y, z, w; //perpTheta
   double sig0, sig1, sig2;
   
   double root56 = sqrt(5./6.);
 
   for (int i = 0; i < numFibers; i++) {
     
-    y = matData[i*3] - yBar;
-    z = matData[i*3+1] - zBar;
-    w = matData[i*3+2];
+    y = matData[i*4] - yBar;
+    z = matData[i*4+1] - zBar;
+    w = matData[i*4+2];
     
     const Vector &sig = theMaterials[i]->getStress();
     
@@ -493,7 +497,7 @@ TimoshenkoSection3d::getCopy(void)
       exit(-1);			    
     }
 
-    theCopy->matData = new double [numFibers*3];
+    theCopy->matData = new double [numFibers*4];
 
     if (theCopy->matData == 0) {
       opserr << "TimoshenkoSection3d::TimoshenkoSection3d -- failed to allocate double array for material data\n";
@@ -501,9 +505,10 @@ TimoshenkoSection3d::getCopy(void)
     }
 	
     for (int i = 0; i < numFibers; i++) {
-      theCopy->matData[i*3] = matData[i*3];
-      theCopy->matData[i*3+1] = matData[i*3+1];
-      theCopy->matData[i*3+2] = matData[i*3+2];
+      theCopy->matData[i*4]   = matData[i*4];
+      theCopy->matData[i*4+1] = matData[i*4+1];
+      theCopy->matData[i*4+2] = matData[i*4+2];
+	  theCopy->matData[i*4+3] = matData[i*4+3];
       theCopy->theMaterials[i] = theMaterials[i]->getCopy();
 
       if (theCopy->theMaterials[i] == 0) {
@@ -617,7 +622,7 @@ TimoshenkoSection3d::sendSelf(int commitTag, Channel &theChannel)
     }    
 
     // send the fiber data, i.e. area and loc
-    Vector fiberData(matData, 3*numFibers);
+    Vector fiberData(matData, 4*numFibers);
     res += theChannel.sendVector(dbTag, commitTag, fiberData);
     if (res < 0) {
      opserr << "TimoshenkoSection2d::sendSelf - failed to send material data\n";
@@ -686,7 +691,7 @@ TimoshenkoSection3d::recvSelf(int commitTag, Channel &theChannel,
 	for (int j=0; j<numFibers; j++)
 	  theMaterials[j] = 0;
 	
-	matData = new double [numFibers*3];
+	matData = new double [numFibers*4];
 
 	if (matData == 0) {
 	  opserr << "TimoshenkoSection2d::recvSelf  -- failed to allocate double array for material data\n";
@@ -695,7 +700,7 @@ TimoshenkoSection3d::recvSelf(int commitTag, Channel &theChannel,
       }
     }
 
-    Vector fiberData(matData, 3*numFibers);
+    Vector fiberData(matData, 4*numFibers);
     res += theChannel.recvVector(dbTag, commitTag, fiberData);
     if (res < 0) {
      opserr << "TimoshenkoSection2d::sendSelf - failed to send material data\n";
@@ -728,13 +733,14 @@ TimoshenkoSection3d::recvSelf(int commitTag, Channel &theChannel,
     double Qz = 0.0;
     double Qy = 0.0;
     double A  = 0.0;
-    double yLoc, zLoc, Area;
+    double yLoc, zLoc, Area, perpTheta;
 
     // Recompute centroid
     for (i = 0; i < numFibers; i++) {
-      yLoc = -matData[3*i];
-      zLoc = matData[3*i+1];
-      Area = matData[3*i+2];
+      yLoc = -matData[4*i];
+      zLoc =  matData[4*i+1];
+      Area =  matData[4*i+2];
+	  perpTheta = matData[4*i+3];
       A  += Area;
       Qz += yLoc*Area;
       Qy += zLoc*Area;
@@ -753,9 +759,9 @@ TimoshenkoSection3d::Print(OPS_Stream &s, int flag)
   if (flag == 2) {
     int loc = 0;
     for (int i = 0; i < numFibers; i++) {
-      s << -matData[loc] << " "  << matData[loc+1] << " "  << matData[loc+2] << " " ;
+      s << -matData[loc] << " "  << matData[loc+1] << " "  << matData[loc+2] << " " << matData[loc+3] << " ";
       s << theMaterials[i]->getStress() << " "  << theMaterials[i]->getStrain() << endln;
-      loc += 3;
+      loc += 4;
     } 
   } else {
     s << "\nTimoshenkoSection3d, tag: " << this->getTag() << endln;
@@ -767,8 +773,8 @@ TimoshenkoSection3d::Print(OPS_Stream &s, int flag)
       int loc = 0;
       for (int i = 0; i < numFibers; i++) {
 	s << "\nLocation (y, z) = (" << -matData[loc] << ", " << matData[loc+1] << ")";
-	s << "\nArea = " << matData[loc+2] << endln;
-	loc+= 3;
+	s << "\nArea = " << matData[loc+2] << "\nperpTheta = " << matData[loc+3] << endln;
+	loc+= 4;
 	theMaterials[i]->Print(s, flag);
       }
     }
@@ -812,8 +818,8 @@ TimoshenkoSection3d::setResponse(const char **argv, int argc,
       // Find first fiber with specified material tag
       for (j = 0; j < numFibers; j++) {
 	if (matTag == theMaterials[j]->getTag()) {
-	  ySearch = -matData[3*j];
-	  zSearch =  matData[3*j+1];
+	  ySearch = -matData[4*j];
+	  zSearch =  matData[4*j+1];
 	  dy = ySearch-yCoord;
 	  dz = zSearch-zCoord;
 	  closestDist = sqrt(dy*dy + dz*dz);
@@ -824,8 +830,8 @@ TimoshenkoSection3d::setResponse(const char **argv, int argc,
       // Search the remaining fibers
       for ( ; j < numFibers; j++) {
 	if (matTag == theMaterials[j]->getTag()) {
-	  ySearch = -matData[3*j];
-	  zSearch =  matData[3*j+1];
+	  ySearch = -matData[4*j];
+	  zSearch =  matData[4*j+1];
 	  dy = ySearch-yCoord;
 	  dz = zSearch-zCoord;
 	  distance = sqrt(dy*dy + dz*dz);
@@ -851,8 +857,8 @@ TimoshenkoSection3d::setResponse(const char **argv, int argc,
       closestDist = sqrt(dy*dy + dz*dz);
       key = 0;
       for (int j = 1; j < numFibers; j++) {
-	ySearch = -matData[3*j];
-	zSearch =  matData[3*j+1];
+	ySearch = -matData[4*j];
+	zSearch =  matData[4*j+1];
 	dy = ySearch-yCoord;
 	dz = zSearch-zCoord;
 	distance = sqrt(dy*dy + dz*dz);
@@ -861,7 +867,7 @@ TimoshenkoSection3d::setResponse(const char **argv, int argc,
 	  key = j;
 	}
       }
-      passarg = 3;
+      passarg = 4;
     }
     
     if (key < numFibers)

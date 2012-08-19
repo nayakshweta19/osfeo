@@ -53,7 +53,7 @@ class BiaxialFiber3d: public Fiber
   public:
     BiaxialFiber3d ();    
     BiaxialFiber3d (int tag, NDMaterial &theMat, double Area, 
-                     const Vector &position, const Vector &vecxzPlane);
+                     const Vector &position, double perpTheta);
  
     ~BiaxialFiber3d();
 
@@ -80,6 +80,7 @@ class BiaxialFiber3d: public Fiber
     UniaxialMaterial *getMaterial(void) {return 0;};
 	NDMaterial *getNDMaterial(void) {return theMaterial;};
     double getArea(void) {return area;};
+	double getPerpTheta(void) { return R;};
 
   protected:
     
@@ -91,7 +92,7 @@ class BiaxialFiber3d: public Fiber
     static Matrix ks;       // static class wide matrix object for returns
     static Vector fs;	    // static class wide vector object for returns					
     static ID code;
-	double R[3];            // Transform for fiber normal to the reference coordinate
+	double R;            // Transform for fiber normal to the reference coordinate
 };
 
 
