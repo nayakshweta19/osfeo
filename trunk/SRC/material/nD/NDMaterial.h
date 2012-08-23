@@ -63,13 +63,17 @@ class NDMaterial : public Material
 
     virtual int setTrialStrain(const Vector &v);
     virtual int setTrialStrain(const Vector &v, const Vector &r);
+	virtual int setTrialStrain(const Vector &v, double theta){return setTrialStrain(v);};     //for BiaxialFiber in 3d define section
     virtual int setTrialStrainIncr(const Vector &v);
     virtual int setTrialStrainIncr(const Vector &v, const Vector &r);
     virtual const Matrix &getTangent(void);
     virtual const Matrix &getInitialTangent(void) {return this->getTangent();};
-
+	virtual const Matrix &getTangent(double theta){return this->getTangent();};                 //for BiaxialFiber in 3d define section
+	virtual const Matrix &getInitialTangent(double theta) {return this->getTangent(theta);};    //for BiaxialFiber in 3d define section
     virtual const Vector &getStress(void);
+	virtual const Vector &getStress(double theta){return getStress();};                         //for BiaxialFiber in 3d define section
     virtual const Vector &getStrain(void);
+	virtual const Vector &getStrain(double theta){return getStrain();};  //for BiaxialFiber in 3d define section
 
     // methods to set and retrieve state using the Tensor class
     virtual int setTrialStrain(const Tensor &v);
