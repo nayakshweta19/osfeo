@@ -74,7 +74,7 @@ BiaxialFiber3d::BiaxialFiber3d(int tag,
                 NDMaterial &theMat,
                 double Area, const Vector &position, double perpTheta)
                :Fiber(tag, FIBER_TAG_Biaxial3d),
-                theMaterial(0), area(Area), R(perpTheta)
+                area(Area), R(perpTheta)
 {
 	theMaterial = theMat.getCopy("BeamFiber2d");  // get a copy of the MaterialModel
 

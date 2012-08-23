@@ -48,10 +48,15 @@ class BeamFiberMaterial2d: public NDMaterial {
     virtual ~BeamFiberMaterial2d(void);
 
     int setTrialStrain( const Vector &strainFromElement);
+	int BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement, double theta);
     const Vector& getStrain(void);
+	const Vector& getStrain(double theta);
     const Vector& getStress(void);
+	const Vector& getStress(double theta);
     const Matrix& getTangent(void);
+	const Matrix& getTangent(double theta);
     const Matrix& getInitialTangent(void);
+	const Matrix& getInitialTangent(double theta);
 
     double getRho(void);
 
@@ -82,9 +87,11 @@ class BeamFiberMaterial2d: public NDMaterial {
     NDMaterial *theMaterial;
 
     Vector strain;
-
+	Vector strain3d;
     static Vector stress;
     static Matrix tangent;
+	static Vector stress3d;
+	static Matrix tangent3d;
 
     int indexMap(int i);
 
