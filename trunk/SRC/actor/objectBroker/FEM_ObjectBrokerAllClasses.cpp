@@ -147,6 +147,16 @@
 #include <ShellNL.h>
 // added end
 
+#include <ContactMaterial2D.h>
+#include <ContactMaterial3D.h>
+#include <DruckerPrager.h>
+#include <DruckerPrager3D.h>
+#include <DruckerPragerPlaneStrain.h>
+#include <BoundingCamClay.h>
+#include <BoundingCamClay3D.h>
+#include <BoundingCamClayPlaneStrain.h>
+#include <InitialStateAnalysisWrapper.h>
+
 // Fibers
 #include <UniaxialFiber2d.h>
 #include <UniaxialFiber3d.h>
@@ -186,6 +196,14 @@
 #include <ForceBeamColumn2d.h>
 #include <ForceBeamColumn3d.h>
 #include <Tri31.h>
+
+#include <SSPquad.h>
+#include <SSPquadUP.h>
+#include <SSPbrick.h>
+#include <SSPbrickUP.h>
+#include <BeamContact2Dp.h>
+#include <BeamContact3Dp.h>
+#include <BeamEndContact3Dp.h>
 
 #include <Nine_Four_Node_QuadUP.h>
 #include <BrickUP.h>
@@ -483,11 +501,6 @@ FEM_ObjectBrokerAllClasses::getPtrNewGraphNumberer(int classTag)
 
 
 
-
-
-
-
-
 Element       *
 FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 {
@@ -571,6 +584,27 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 
 	case ELE_TAG_Brick:
 		return new Brick();
+
+    case ELE_TAG_SSPquad:          
+      return new SSPquad();
+
+    case ELE_TAG_SSPquadUP:    
+      return new SSPquadUP;
+
+    case ELE_TAG_SSPbrick:  
+      return new SSPbrick();
+
+    case ELE_TAG_SSPbrickUP:
+      return new SSPbrickUP();
+
+    case ELE_TAG_BeamContact2Dp:
+      return new BeamContact2Dp();
+
+    case ELE_TAG_BeamContact3Dp:
+      return new BeamContact3Dp();
+
+    case ELE_TAG_BeamEndContact3Dp:
+      return new BeamEndContact3Dp();
 
 	case ELE_TAG_ShellMITC4:
 		return new ShellMITC4();
@@ -1056,6 +1090,34 @@ FEM_ObjectBrokerAllClasses::getNewNDMaterial(int classTag)
 
   case ND_TAG_FeapMaterial03:
     return new FeapMaterial03();
+
+  case ND_TAG_ContactMaterial2D:
+    return new ContactMaterial2D();                    
+
+  case ND_TAG_ContactMaterial3D:
+    return new ContactMaterial3D();                    
+
+  case ND_TAG_DruckerPrager:
+    return new DruckerPrager();                
+
+  case ND_TAG_DruckerPrager3D:
+    return new DruckerPrager3D();
+
+  case ND_TAG_DruckerPragerPlaneStrain:
+    return new DruckerPragerPlaneStrain();
+
+  case ND_TAG_BoundingCamClay:
+    return new BoundingCamClay();
+
+  case ND_TAG_BoundingCamClay3D:
+    return new BoundingCamClay3D();
+
+  case ND_TAG_BoundingCamClayPlaneStrain:
+    return new BoundingCamClayPlaneStrain();
+
+  case ND_TAG_InitialStateAnalysisWrapper:
+    return new InitialStateAnalysisWrapper();
+
   //Ln add
   //case ND_TAG_ReinforcedConcretePlaneStress:
   //  return new ReinforcedConcretePlaneStress();
