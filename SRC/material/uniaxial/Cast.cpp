@@ -363,7 +363,7 @@ double  epsmaxr = epsmaxrP;
 
 	// MG: recalculate d1 if the material hasn't yielded in this excursion
 	if (fabs(yieldcheck) > 1){
-	   double epsminr = epsmin;
+	   epsminr = epsmin;
 	} 
 	double d1 = (epsmax - epsminr) / (2.0*(a2 * epsy));
     double shft = 1.0 + a1 * pow(d1, 0.8);
@@ -391,9 +391,9 @@ double  epsmaxr = epsmaxrP;
   double sign = 1;
 
   if ((eps-epsr) < 0){
-	  double sign = -1;
+	  sign = -1;
   }else {
-	  double sign = 1;
+	  sign = 1;
   }
   
   // MG: Checks which quadrant we are in and then consideres post-yield stiffneing when appropriate
