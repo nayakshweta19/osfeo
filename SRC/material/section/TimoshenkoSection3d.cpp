@@ -209,10 +209,11 @@ TimoshenkoSection3d::setTrialSectionDeformation (const Vector &deforms)
 	eps(2) = e(4) + y*e(5);       // root56*e(4) + y*e(5);
 
 	if (strcmp(theMaterials[i]->getType(), "BeamFiber2d") == 0 )
-	  res += theMaterials[i]->setTrialStrain(eps, theta);
-	else
-      res += theMaterials[i]->setTrialStrain(eps);
-
+	  res += theMaterials[i]->setTrialStrain(eps, theta);  // planestress fiber
+	else if (strcmp(theMaterials[i]->getType(), "BeamFiber") == 0 )
+      res += theMaterials[i]->setTrialStrain(eps);         // 3d fiber
+	else 
+	  res += theMaterials[i]->setTrialStrain(eps(0), 0.0); // uniaxial material
   }
 
   return res;
