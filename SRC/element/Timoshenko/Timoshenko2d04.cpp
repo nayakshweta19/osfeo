@@ -1,3 +1,23 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+                                                                        
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko2d04.cpp,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
@@ -9,6 +29,7 @@
 #include <Timoshenko2d04.h>
 #include <Node.h>
 #include <FiberSection2d.h>
+#include <SectionForceDeformation.h>
 #include <TimoshenkoSection2d.h>
 #include <CrdTransf.h>
 #include <Matrix.h>
@@ -24,6 +45,7 @@
 #include <CompositeResponse.h>
 #include <ElementalLoad.h>
 #include <BeamIntegration.h>
+#include <Parameter.h>
 #include <math.h>
 
 Matrix Timoshenko2d04::K(6,6);
@@ -307,6 +329,7 @@ Timoshenko2d04::update(void)
   double EI, GA, Omega1, Omega2;
   //Vector Rslt(3);
   Vector e(workArea, order);
+
   int iterNum=0;
   do {
 	//opserr << "\tTrial Omega: "<< Omega << endln;

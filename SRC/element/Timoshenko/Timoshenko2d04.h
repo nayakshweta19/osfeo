@@ -1,3 +1,23 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+                                                                        
 // $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/Timoshenko2d04.h,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
@@ -25,7 +45,6 @@
 class Node;
 class SectionForceDeformation;
 class CrdTransf;
-class TimoshenkoLinearCrdTransf2d;
 class Response;
 
 class Timoshenko2d04 : public Element
@@ -41,7 +60,9 @@ class Timoshenko2d04 : public Element
 			double rho = 0.0, double shearCF = 1.0);
 
     Timoshenko2d04();
-    virtual ~Timoshenko2d04();
+    ~Timoshenko2d04();
+
+	const char *getClassType(void) const {return "Timoshenko2d";};
 
     int getNumExternalNodes(void) const;
     const ID &getExternalNodes(void);

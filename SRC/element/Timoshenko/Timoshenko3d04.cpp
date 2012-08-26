@@ -1,3 +1,23 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+                                                                        
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Timoshenko/Timoshenko3d04.cpp,v $
 // $Revision: 1.1 $
 // $Date: 2009/01/10 21:22:20 $
@@ -36,6 +56,8 @@ double Timoshenko3d04::workArea[200];
 Matrix *Timoshenko3d04::bd = 0;
 Matrix *Timoshenko3d04::nd = 0;
 
+#define MAXITER 40
+
 Timoshenko3d04::Timoshenko3d04(int tag, 
 					 int nd1, int nd2,
 					 int numSec, 
@@ -68,6 +90,7 @@ Timoshenko3d04::Timoshenko3d04(int tag,
   }
 
   crdTransf = coordTransf.getCopy3d();
+
   if (crdTransf == 0) {
     opserr << "Timoshenko3d04::Timoshenko3d04 - failed to copy coordinate transformation\n";
     exit(-1);
@@ -192,9 +215,9 @@ Timoshenko3d04::setDomain(Domain *theDomain)
 {
 	// Check Domain is not null - invoked when object removed from a domain
     if (theDomain == 0) {
-	theNodes[0] = 0;
-	theNodes[1] = 0;
-	return;
+	  theNodes[0] = 0;
+	  theNodes[1] = 0;
+	  return;
     }
 
     int Nd1 = connectedExternalNodes(0);
@@ -204,16 +227,15 @@ Timoshenko3d04::setDomain(Domain *theDomain)
     theNodes[1] = theDomain->getNode(Nd2);
 
     if (theNodes[0] == 0 || theNodes[1] == 0) {
-
-	return;
+	  return;
     }
 
     int dofNd1 = theNodes[0]->getNumberDOF();
     int dofNd2 = theNodes[1]->getNumberDOF();
     
     if (dofNd1 != 6 || dofNd2 != 6) {
-		//opserr << "FATAL ERROR Timoshenko3d04 (tag: %d), has differing number of DOFs at its nodes",
-		//	this->getTag());
+		opserr << "FATAL ERROR Timoshenko3d04 (tag: %d), has differing number of DOFs at its nodes", 
+			this->getTag();
 		return;
     }
 
@@ -298,55 +320,62 @@ Timoshenko3d04::update(void)
 
   double pts[maxNumSections];
   beamInt->getSectionLocations(numSections, L, pts);
+  double wts[maxNumSections];
+  beamInt->getSectionWeights(numSections, L, wts);
+
   int order = theSections[0]->getOrder();     // Section 0 for all
   const ID &code = theSections[0]->getType(); // Section 0 for all
-  double x;
-  double muZ, phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ; //, zh,
-  double muY, phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY; //,yh, 
-  double EIz,EIy, GAz,GAy, tempZ,tempY,errZ=1.,errY=1.,tol=1.e-4;
+
+  double muZ, N1z, N2z, N3z; //phi3Z, phi4Z, phi1pZ, phi2pZ, phi3pZ, phi4pZ, zh,
+  double muY, N1y, N2y, N3y; //phi3Y, phi4Y, phi1pY, phi2pY, phi3pY, phi4pY,yh, 
+  double x, EIz, EIy, GAz, GAy, tempZ, tempY, errZ = 1., errY = 1., tol = 1.e-4;
   Vector e(workArea, order);
 
+  int iterNum=0;
   do{
 	tempZ=0.;tempY=0.;
     // Loop over the integration points
     for (int i = 0; i< numSections; i++) {
       x      = L * pts[i];
-
-	  OmegaZ = theSections[i]->getEIz()/theSections[i]->getGAy()/(5./6.)/L/L;
 	  muZ    = 1./(1.+12.*OmegaZ);
 	  //phi1Z  =  muZ*x*(L-x)*(L-x+6.*L*OmegaZ)                      /L/L;
-	  phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
+	  //phi1pZ =  muZ*(3.*x*x+L*L*(1+6.*OmegaZ)-4.*L*(x+3.*x*OmegaZ))/L/L;
 	  //phi2Z  = -muZ*x*(L-x)*(x + 6.*L*OmegaZ)                      /L/L;
-	  phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
-	  phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
-	  phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
-	  phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
-	  phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
+	  //phi2pZ =  muZ*(3.*x*x-L*L* 6. *OmegaZ  +2.*L*x*(6.*OmegaZ-1))/L/L;
+	  //phi3Z  =  muZ*(L-x)*(L-3.*x+12*L*OmegaZ)                     /L/L;
+	  //phi3pZ =  muZ*(6.*x - 4.*L * (1+3.*OmegaZ))                  /L/L;
+	  //phi4Z  =  muZ*x*(  3.*x+2*L*(6*OmegaZ-1))                    /L/L;
+	  //phi4pZ =  muZ*2.*(3.*x+L*(6.*OmegaZ-1))                      /L/L;
+	  N1z = muZ*(6.*x-4.*L*(1.+3.*OmegaZ))/L/L;
+	  N2z = 2.*muZ*(3.*x+L*(6.*OmegaZ-1.))/L/L;
+	  N3z = 6.*muZ*OmegaZ; //*2.*(1-x/L)
 
-  	  OmegaY = theSections[i]->getEIy()/theSections[i]->getGAz()/(5./6.)/L/L;
   	  muY    = 1./(1.+12.*OmegaY);
   	  //phi1Y  =  muY*x*(L-x)*(L-x+6.*L*OmegaY)                      /L/L;
-  	  phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
+  	  //phi1pY =  muY*(3.*x*x+L*L*(1+6.*OmegaY)-4.*L*(x+3.*x*OmegaY))/L/L;
   	  //phi2Y  = -muY*x*(L-x)*(x + 6.*L*OmegaY)                      /L/L;
-  	  phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
-  	  phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
-  	  phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
-  	  phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
-  	  phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
+  	  //phi2pY =  muY*(3.*x*x-L*L* 6. *OmegaY  +2.*L*x*(6.*OmegaY-1))/L/L;
+  	  //phi3Y  =  muY*(L-x)*(L-3.*x+12*L*OmegaY)                     /L/L;
+  	  //phi3pY =  muY*(6.*x - 4.*L * (1+3.*OmegaY))                  /L/L;
+  	  //phi4Y  =  muY*x*(  3.*x+2*L*(6*OmegaY-1))                    /L/L;
+  	  //phi4pY =  muY*2.*(3.*x+L*(6.*OmegaY-1))                      /L/L;
+	  N1y = muY*(6.*x-4.*L*(1.+3.*OmegaY))/L/L;
+	  N2y = 2.*muY*(3.*x+L*(6.*OmegaY-1.))/L/L;
+	  N3y = 6.*muY*OmegaY; //*2.*(1-x/L)
 
   	  //P, Mz, My, Vy, Vz, T
       for (int j = 0; j < order; j++) {
     switch(code(j)) {
       case SECTION_RESPONSE_P:     // axial strain
-  	e(j) = oneOverL*v(0); break;
+  	e(j) = oneOverL * v(0); break;
       case SECTION_RESPONSE_MZ:    // curvature
-  	e(j) = phi3pZ* v(1) + phi4pZ* v(2); break;
+  	e(j) = N1z * v(1) + N2z * v(2); break;
   	  case SECTION_RESPONSE_MY:    // curvature
-  	e(j) = phi3pY* v(3) + phi4pY* v(4); break;
+  	e(j) = N1y * v(3) + N2y * v(4); break;
   	  case SECTION_RESPONSE_VY:    // shear strain
-  	e(j) = (phi1pY - phi3Y) * v(1) + (phi2pY-phi4Y) * v(2); break;
+  	e(j) = N3y * (v(1) + v(2)); break;
       case SECTION_RESPONSE_VZ:    // shear strain
-  	e(j) = (phi1pZ - phi3Z) * v(3) + (phi2pZ-phi4Z) * v(4); break;
+  	e(j) = N3z * (v(3) + v(4)); break;
   	  case SECTION_RESPONSE_T:     // Torsion
   	e(j) = oneOverL*v(5); break;
   	  default:
@@ -354,22 +383,30 @@ Timoshenko3d04::update(void)
     }
       }
   
-      const Matrix &ks = theSections[i]->getSectionTangent(); //P;MZ;MY;VY;VZ;T
+      // Set the section deformations
+  	  err += theSections[i]->setTrialSectionDeformation(e);
+	  
+	  const Matrix &ks = theSections[i]->getSectionTangent(); //P;MZ;MY;VY;VZ;T
 	  EIz = ks(1,1);
 	  EIy = ks(2,2);
 	  GAy = ks(3,3);
 	  GAz = ks(4,4);
 	  tempZ += EIz/GAy/L/L/numSections;
 	  tempY += EIy/GAz/L/L/numSections;
-
-	  // Set the section deformations
-  	  err += theSections[i]->setTrialSectionDeformation(e);
     }
+
 	errZ = abs(tempZ - OmegaZ);
 	errY = abs(tempY - OmegaY);
+
 	if (errZ > tol) OmegaZ = tempZ;
 	if (errY > tol) OmegaY = tempY;
 
+	iterNum ++; 
+
+	if (iterNum > MAXITER) {
+	  opserr << "Timoshenko2d04::update()-iterNum > " << MAXITER << endln;
+	  break;
+	}
   } while (errZ > tol || errY > tol);
 
   if (err != 0) {
