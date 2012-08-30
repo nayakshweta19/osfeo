@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.14 $
-// $Date: 2010/02/04 01:17:46 $
+// $Date: 2010-02-04 01:17:46 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/zeroLength/ZeroLength.h,v $
                                                                         
                                                                         
@@ -123,9 +123,12 @@ class ZeroLength : public Element
     int getResponse(int responseID, Information &eleInformation);
 
     int setParameter(const char **argv, int argc, Parameter &param);
-    int updateParameter(int parameterID, Information &info);
-    int activateParameter(int parameterID);
     
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+    const Vector &getResistingForceSensitivity(int gradIndex);
+    int commitSensitivity(int gradIndex, int numGrads);
+// AddingSensitivity:END ///////////////////////////////////////////
+
     void updateDir (const Vector& x, const Vector& y);
 
   protected:

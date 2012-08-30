@@ -221,7 +221,6 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
     
     // Get the copy for the Steel1
     theMaterial[0] = s1->getCopy();
-    // Check allocation    
     if ( theMaterial[0] == 0 ) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed to get a copy for steel1\n";
       exit(-1);
@@ -229,7 +228,6 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
     
     // Get the copy for the Steel2
     theMaterial[1] = s2->getCopy();	
-    // Check allocation    
     if ( theMaterial[1] == 0 ) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed to get a copy for steel2\n";
       exit(-1);
@@ -237,7 +235,6 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
     
     // Get the copy for the Concrete1
     theMaterial[2] = c1->getCopy();	
-    // Check allocation    
     if ( theMaterial[2] == 0 ) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed to get a copy for concrete1\n";
       exit(-1);
@@ -245,14 +242,12 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
     
     // Get the copy for the Concrete2
     theMaterial[3] = c2->getCopy();	
-    // Check allocation    
     if ( theMaterial[3] == 0 ) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed to get a copy for concrete2\n";
       exit(-1);
     }
-    
-    /* FMK */
-    theResponses = new Response *[6];  
+
+    theResponses = new Response *[4];  //6
     
     if ( theResponses == 0) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed allocate responses array\n";
@@ -263,23 +258,22 @@ MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag,
     
     const char **argv = new const char *[1];
 
-    argv[0] = "getCommittedStrain";
+    argv[0] = "getVar";
     theResponses[0] = theMaterial[0]->setResponse(argv, 1, *theDummyStream);
     theResponses[1] = theMaterial[1]->setResponse(argv, 1, *theDummyStream);
-    argv[0] = "setWallVar";
+    argv[0] = "setVar";
     theResponses[2] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);
     theResponses[3] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);
-    argv[0] = "getPD";
-    theResponses[4] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);
-    theResponses[5] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);    
+    //argv[0] = "getPD";
+    //theResponses[4] = theMaterial[2]->setResponse(argv, 1, *theDummyStream);
+    //theResponses[5] = theMaterial[3]->setResponse(argv, 1, *theDummyStream);    
 
     if ((theResponses[0] == 0) || (theResponses[1] == 0) ||
-	(theResponses[2] == 0) || (theResponses[3] == 0) ||
-	(theResponses[4] == 0) || (theResponses[5] == 0)) {
+	(theResponses[2] == 0) || (theResponses[3] == 0) ) {
       opserr << " MCFTRCPlaneStress02::MCFTRCPlaneStress02 - failed to set appropriate materials tag: " << tag << "\n";
       exit(-1);
     }
-    
+
     delete theDummyStream;
 	strain_vec.Zero();
     determineTrialStress(strain_vec);
@@ -310,7 +304,7 @@ MCFTRCPlaneStress02::~MCFTRCPlaneStress02()
     delete [] theMaterial;
   }
   if (theResponses != 0) {
-    for (int j=0; j<6; j++) {
+    for (int j=0; j<4; j++) {
 	  if (theResponses[j] != 0)
 	    delete theResponses[j];
     }
@@ -389,7 +383,7 @@ MCFTRCPlaneStress02::getStress(void)
 }
 
 const Vector& 
-MCFTRCPlaneStress02 :: getStrain()
+MCFTRCPlaneStress02::getStrain()
 {
   return strain_vec;
 }
@@ -518,7 +512,7 @@ NDMaterial* MCFTRCPlaneStress02::getCopy(const char *type)
 
 //added by Ln
 Response*
-MCFTRCPlaneStress02::setResponse (const char **argv, int argc, OPS_Stream &output)
+MCFTRCPlaneStress02::setResponse(const char **argv, int argc, OPS_Stream &output)
 {
 
 #ifdef DEBUG
@@ -543,7 +537,7 @@ MCFTRCPlaneStress02::setResponse (const char **argv, int argc, OPS_Stream &outpu
 }
 
 int
-MCFTRCPlaneStress02::getResponse (int responseID, Information &matInfo)
+MCFTRCPlaneStress02::getResponse(int responseID, Information &matInfo)
 {
 #ifdef DEBUG
 	opserr << "MCFTRCPlaneStress02::getResponse(...)" << endln;
@@ -1076,28 +1070,6 @@ MCFTRCPlaneStress02::determineTrialStress(Vector strain)
   // determine internal vectors
 
   return Tstress;
-}
-
-double
-MCFTRCPlaneStress02::kupferEnvelop(double Tstrain, double sig_p, double eps_p)
-{
-  double sig = 0.0;
-  if (Tstrain > eps_p) {
-    double eta = Tstrain/eps_p;
-    sig = sig_p * (2 * eta - eta * eta);
-    //double Ec0 = 2.0*sig_p/eps_p;
-    //Ttangent = Ec0*(1.0-eta);
-  }
-  else if (Tstrain > 2.0 * epsc0) {
-	double eta = (Tstrain-eps_p)/(2.0*epsc0-eps_p);
-    //Ttangent = (sig_p-fpc)/(eps_p-epscu);
-    sig = sig_p *(1.0-eta*eta);
-  }
-  else {
-    sig = 0.2*fpc;
-    //Ttangent = 0.0;
-  }
-  return sig;
 }
 
 int

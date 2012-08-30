@@ -53,7 +53,7 @@ OPS_SSPbrick(void)
 {
 	if (num_SSPbrick == 0) {
     	num_SSPbrick++;
-    	OPS_Error("SSPbrick element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    	//OPS_Error("SSPbrick element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   	}
 
   	// Pointer to an element that will be returned
@@ -769,7 +769,287 @@ SSPbrick::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBrok
 int
 SSPbrick::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
-	return 0;
+    const Vector &end1Crd = theNodes[0]->getCrds();
+    const Vector &end2Crd = theNodes[1]->getCrds();	
+    const Vector &end3Crd = theNodes[2]->getCrds();	
+    const Vector &end4Crd = theNodes[3]->getCrds();	
+
+    const Vector &end5Crd = theNodes[4]->getCrds();
+    const Vector &end6Crd = theNodes[5]->getCrds();	
+    const Vector &end7Crd = theNodes[6]->getCrds();	
+    const Vector &end8Crd = theNodes[7]->getCrds();	
+
+    static Matrix coords(4,3);
+    static Vector values(4);
+    static Vector P(24) ;
+
+    values(0) = 1 ;
+    values(1) = 1 ;
+    values(2) = 1 ;
+    values(3) = 1 ;
+
+    int error = 0;
+    int i;
+
+
+    if (displayMode >= 0) {
+
+      const Vector &end1Disp = theNodes[0]->getDisp();
+      const Vector &end2Disp = theNodes[1]->getDisp();
+      const Vector &end3Disp = theNodes[2]->getDisp();
+      const Vector &end4Disp = theNodes[3]->getDisp();
+      const Vector &end5Disp = theNodes[4]->getDisp();
+      const Vector &end6Disp = theNodes[5]->getDisp();
+      const Vector &end7Disp = theNodes[6]->getDisp();
+      const Vector &end8Disp = theNodes[7]->getDisp();
+     
+      const Vector &stress1 = theMaterial->getStress();
+      const Vector &stress2 = theMaterial->getStress();
+      const Vector &stress3 = theMaterial->getStress();
+      const Vector &stress4 = theMaterial->getStress();
+      const Vector &stress5 = theMaterial->getStress();
+      const Vector &stress6 = theMaterial->getStress();
+      const Vector &stress7 = theMaterial->getStress();
+      const Vector &stress8 = theMaterial->getStress();
+      
+ 
+      // for each face of the brick we:
+      //   1) determine the coordinates of the displaced point
+      //   2) determine the value to be drawn, the stress at nearest gauss point in displayMode dirn
+      //   3) get the renderer to draw the face
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
+	coords(1,i) = end2Crd(i) + end2Disp(i)*fact;    
+	coords(2,i) = end3Crd(i) + end3Disp(i)*fact;    
+	coords(3,i) = end4Crd(i) + end4Disp(i)*fact;
+      }
+      
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress1(index);
+	values(1) = stress2(index);
+	values(2) = stress3(index);
+	values(3) = stress4(index);
+      }
+      
+      error += theViewer.drawPolygon (coords, values);
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end5Crd(i) + end5Disp(i)*fact;
+	coords(1,i) = end6Crd(i) + end6Disp(i)*fact;
+	coords(2,i) = end7Crd(i) + end7Disp(i)*fact;
+	coords(3,i) = end8Crd(i) + end8Disp(i)*fact;
+      }
+      
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress5(index);
+	values(1) = stress6(index);
+	values(2) = stress7(index);
+	values(3) = stress8(index);
+      }
+      
+      error += theViewer.drawPolygon (coords, values);
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
+	coords(1,i) = end4Crd(i) + end4Disp(i)*fact;
+	coords(2,i) = end8Crd(i) + end8Disp(i)*fact;
+	coords(3,i) = end5Crd(i) + end5Disp(i)*fact;
+      }
+      
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress1(index);
+	values(1) = stress4(index);
+	values(2) = stress8(index);
+	values(3) = stress5(index);
+      }
+      
+      error += theViewer.drawPolygon (coords, values);
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end2Crd(i) + end2Disp(i)*fact;
+	coords(1,i) = end3Crd(i) + end3Disp(i)*fact;
+	coords(2,i) = end7Crd(i) + end7Disp(i)*fact;
+	coords(3,i) = end6Crd(i) + end6Disp(i)*fact;
+      }
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress2(index);
+	values(1) = stress3(index);
+	values(2) = stress7(index);
+	values(3) = stress6(index);
+      }
+      
+      error += theViewer.drawPolygon (coords, values);
+      
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
+	coords(1,i) = end2Crd(i) + end2Disp(i)*fact;
+	coords(2,i) = end6Crd(i) + end6Disp(i)*fact;
+	coords(3,i) = end5Crd(i) + end5Disp(i)*fact;
+      }
+      
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress1(index);
+	values(1) = stress2(index);
+	values(2) = stress6(index);
+	values(3) = stress5(index);
+      }
+      
+      error += theViewer.drawPolygon (coords, values);
+      
+      for (i = 0; i < 3; i++) {
+	coords(0,i) = end4Crd(i) + end4Disp(i)*fact;
+	coords(1,i) = end3Crd(i) + end3Disp(i)*fact;
+	coords(2,i) = end7Crd(i) + end7Disp(i)*fact;
+	coords(3,i) = end8Crd(i) + end8Disp(i)*fact;
+      }
+      
+      if (displayMode < 3 && displayMode > 0) {
+	int index = displayMode - 1;
+	values(0) = stress3(index);
+	values(1) = stress4(index);
+	values(2) = stress7(index);
+	values(3) = stress8(index);
+      }
+
+      error += theViewer.drawPolygon (coords, values);
+
+    } else {
+
+      int mode = displayMode  *  -1;
+
+      const Matrix &eigen1 = theNodes[0]->getEigenvectors();
+      const Matrix &eigen2 = theNodes[1]->getEigenvectors();
+      const Matrix &eigen3 = theNodes[2]->getEigenvectors();
+      const Matrix &eigen4 = theNodes[3]->getEigenvectors();
+      const Matrix &eigen5 = theNodes[4]->getEigenvectors();
+      const Matrix &eigen6 = theNodes[5]->getEigenvectors();
+      const Matrix &eigen7 = theNodes[6]->getEigenvectors();
+      const Matrix &eigen8 = theNodes[7]->getEigenvectors();
+      
+      if (eigen1.noCols() >= mode) {
+
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+	  coords(1,i) = end2Crd(i) + eigen2(i,mode-1)*fact;    
+	  coords(2,i) = end3Crd(i) + eigen3(i,mode-1)*fact;    
+	  coords(3,i) = end4Crd(i) + eigen4(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end5Crd(i) + eigen5(i,mode-1)*fact;
+	  coords(1,i) = end6Crd(i) + eigen6(i,mode-1)*fact;
+	  coords(2,i) = end7Crd(i) + eigen7(i,mode-1)*fact;
+	  coords(3,i) = end8Crd(i) + eigen8(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+	  coords(1,i) = end4Crd(i) + eigen4(i,mode-1)*fact;
+	  coords(2,i) = end8Crd(i) + eigen8(i,mode-1)*fact;
+	  coords(3,i) = end5Crd(i) + eigen5(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end2Crd(i) + eigen2(i,mode-1)*fact;
+	  coords(1,i) = end3Crd(i) + eigen3(i,mode-1)*fact;
+	  coords(2,i) = end7Crd(i) + eigen7(i,mode-1)*fact;
+	  coords(3,i) = end6Crd(i) + eigen6(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+	  coords(1,i) = end2Crd(i) + eigen2(i,mode-1)*fact;
+	  coords(2,i) = end6Crd(i) + eigen6(i,mode-1)*fact;
+	  coords(3,i) = end5Crd(i) + eigen5(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end4Crd(i) + eigen4(i,mode-1)*fact;
+	  coords(1,i) = end3Crd(i) + eigen3(i,mode-1)*fact;
+	  coords(2,i) = end7Crd(i) + eigen7(i,mode-1)*fact;
+	  coords(3,i) = end8Crd(i) + eigen8(i,mode-1)*fact;
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+      } else {
+	values.Zero();
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i); 
+	  coords(1,i) = end2Crd(i); 
+	  coords(2,i) = end3Crd(i); 
+	  coords(3,i) = end4Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end5Crd(i); 
+	  coords(1,i) = end6Crd(i); 
+	  coords(2,i) = end7Crd(i); 
+	  coords(3,i) = end8Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i); 
+	  coords(1,i) = end4Crd(i); 
+	  coords(2,i) = end8Crd(i); 
+	  coords(3,i) = end5Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end2Crd(i); 
+	  coords(1,i) = end3Crd(i); 
+	  coords(2,i) = end7Crd(i); 
+	  coords(3,i) = end6Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end1Crd(i); 
+	  coords(1,i) = end2Crd(i); 
+	  coords(2,i) = end6Crd(i); 
+	  coords(3,i) = end5Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+	
+	for (i = 0; i < 3; i++) {
+	  coords(0,i) = end4Crd(i); 
+	  coords(1,i) = end3Crd(i); 
+	  coords(2,i) = end7Crd(i); 
+	  coords(3,i) = end8Crd(i); 
+	}
+	
+	error += theViewer.drawPolygon (coords, values);
+      }      
+    }
+
+
+    return error;
 }
 
 void
