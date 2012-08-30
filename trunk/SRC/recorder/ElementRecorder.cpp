@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.34 $
-// $Date: 2009/04/30 23:25:33 $
+// $Date: 2009-04-30 23:25:33 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/ElementRecorder.cpp,v $
                                                                         
 // Written: fmk 
@@ -101,10 +101,10 @@ ElementRecorder::ElementRecorder(const ID *ele,
 
 ElementRecorder::~ElementRecorder()
 {
-  theOutputHandler->endTag(); // Data
-
-  if (theOutputHandler != 0)
+  if (theOutputHandler != 0) {
+    theOutputHandler->endTag(); // Data
     delete theOutputHandler;
+  }
 
   //
   // invoke the destructor on the response objects
@@ -125,7 +125,7 @@ ElementRecorder::~ElementRecorder()
   // 
   // invoke destructor on response args
   //
-  
+
   for (int i=0; i<numArgs; i++)
     delete [] responseArgs[i];
   delete [] responseArgs;
@@ -178,7 +178,6 @@ ElementRecorder::record(int commitTag, double timeStamp)
     //
     // send the response vector to the output handler for o/p
     //
-
     theOutputHandler->write(*data);
   }
   
@@ -248,8 +247,9 @@ ElementRecorder::sendSelf(int commitTag, Channel &theChannel)
     return -1;
   }
 
-  static Vector dData(1);
-  dData(1) = deltaT;
+  static Vector dData(2);
+  dData(0) = deltaT;
+  dData(1) = nextTimeStampToRecord;
   if (theChannel.sendVector(0, commitTag, dData) < 0) {
     opserr << "ElementRecorder::sendSelf() - failed to send dData\n";
     return -1;
@@ -357,14 +357,13 @@ ElementRecorder::recvSelf(int commitTag, Channel &theChannel,
 
   numEle = eleSize;
 
-  static Vector dData(1);
+  static Vector dData(2);
   if (theChannel.recvVector(0, commitTag, dData) < 0) {
     opserr << "ElementRecorder::sendSelf() - failed to send dData\n";
     return -1;
   }
-  deltaT = dData(1);
-
-
+  deltaT = dData(0);
+  nextTimeStampToRecord = dData(1);
   //
   // resize & recv the eleID
   //
@@ -589,7 +588,7 @@ ElementRecorder::initialize(void)
 	  // Why is this created locally and not used? -- MHS
 	  Response **theNextResponses = new Response *[numEle*2];
 	  if (theNextResponses != 0) {
-	    for (i=0; i<numEle; i++)
+	    for (int i=0; i<numEle; i++)
 	      theNextResponses[i] = theResponses[i];
 	    for (int j=numEle; j<2*numEle; j++)
 	      theNextResponses[j] = 0;

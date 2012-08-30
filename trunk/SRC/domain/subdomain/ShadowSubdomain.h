@@ -1,3 +1,4 @@
+
 /* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
@@ -19,7 +20,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.15 $
-// $Date: 2010/09/16 00:07:11 $
+// $Date: 2010-09-16 00:07:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/subdomain/ShadowSubdomain.h,v $
                                                                         
                                                                         

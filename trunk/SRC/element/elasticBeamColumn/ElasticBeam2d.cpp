@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.23 $
-// $Date: 2008/09/23 22:50:33 $
+// $Date: 2008-09-23 22:50:33 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/elasticBeamColumn/ElasticBeam2d.cpp,v $
                                                                         
                                                                         
