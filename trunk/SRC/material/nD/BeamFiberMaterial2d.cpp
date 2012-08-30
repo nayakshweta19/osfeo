@@ -262,7 +262,7 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement, double thet
   T(1,1) = cos(theta);
   T(1,2) = sin(theta);
 
-  strain.addMatrixTransposeVector(0.0, T, strainFromElement,1.0);
+  strain.addMatrixVector(0.0, T, strainFromElement,1.0);
 
   //newton loop to solve for out-of-plane strains
 
@@ -461,7 +461,6 @@ BeamFiberMaterial2d::getStress()
 
   return this->stress;
 }
-
 
 const Vector&  
 BeamFiberMaterial2d::getStress(double theta)
@@ -681,8 +680,8 @@ BeamFiberMaterial2d::getTangent(double theta)
   T(1,2) = sin(theta);
 
   tangent3d.addMatrixTripleProduct(0.0, T, tangent, 1.0);
-  if ( tangent3d(1,1) == 0. ) tangent3d(1,1) += 1.0e-8;
-  if ( tangent3d(2,2) == 0. ) tangent3d(2,2) += 1.0e-8;
+  //if ( tangent3d(1,1) == 0. ) tangent3d(1,1) += 1.0e-8;
+  //if ( tangent3d(2,2) == 0. ) tangent3d(2,2) += 1.0e-8;
 
   return this->tangent3d;
 }
