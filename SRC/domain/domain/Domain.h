@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.31 $
-// $Date: 2010/09/16 00:07:11 $
+// $Date: 2010-09-16 00:07:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/domain/Domain.h,v $
                                                                         
 // Written: fmk 
@@ -168,7 +168,7 @@ class Domain
     virtual  void setCommittedTime(double newTime);        
     virtual  void applyLoad(double pseudoTime);
     virtual  void setLoadConstant(void);
-	virtual void  unsetLoadConstant(void);
+    virtual void  unsetLoadConstant(void);
     virtual  int  initialize(void);    
     virtual  int  setRayleighDampingFactors(double alphaM, double betaK, double betaK0, double betaKc);
 

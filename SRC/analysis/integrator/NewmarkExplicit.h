@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2009/05/19 22:10:05 $
+// $Date: 2009-05-19 22:10:05 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/NewmarkExplicit.h,v $
 
 

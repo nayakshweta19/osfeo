@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.13 $
-// $Date: 2009/08/26 20:33:10 $
+// $Date: 2009-08-26 20:33:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/subdomain/Subdomain.h,v $
                                                                         
                                                                         
@@ -133,7 +133,10 @@ class Subdomain: public Element, public Domain
     virtual const Vector &getResistingForce(void);    
     virtual const Vector &getResistingForceIncInertia(void);        
     virtual bool isSubdomain(void);    
-    virtual int setRayleighDampingFactors(double alphaM, double betaK, double betaK0, double betaKc);
+    virtual int setRayleighDampingFactors(double alphaM, 
+					  double betaK, 
+					  double betaK0, 
+					  double betaKc);
 
     virtual  int  updateParameter(int tag, int value);
     virtual  int  updateParameter(int tag, double value);    

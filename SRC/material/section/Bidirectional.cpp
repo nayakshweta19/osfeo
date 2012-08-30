@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2006/12/20 17:21:39 $
+// $Date: 2006-12-20 17:21:39 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/Bidirectional.cpp,v $
 
 #include <Bidirectional.h>           
@@ -108,7 +108,6 @@ Bidirectional::getSectionTangent(void)
 	else {
 		// Consistency parameter
 		double dlam = f_n1/(E+Hkin+Hiso);
-
 		double n_n1[2];
 
 		// Normal vector
