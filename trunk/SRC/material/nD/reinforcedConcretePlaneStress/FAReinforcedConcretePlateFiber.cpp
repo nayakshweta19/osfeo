@@ -736,7 +736,7 @@ int FAReinforcedConcretePlateFiber::determineTrialStress(void)
   
   if ( fabs(Tstrain[0]-Tstrain[1]) < 1e-7 )
   {
-    citaR = 0.25*M_PI;	
+    citaR = 0.25*PI;	
   }
   else // Tstrain[0] != Tstrain[1]
   {
@@ -751,15 +751,15 @@ int FAReinforcedConcretePlateFiber::determineTrialStress(void)
     }
     else if ( (Tstrain[0] > Tstrain[1]) && ( Tstrain[2] < 0) )
     {
-     citaR = M_PI - temp_citaR;
+     citaR = PI - temp_citaR;
     }
     else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] > 0) )
     {
-     citaR = 0.5*M_PI - temp_citaR;
+     citaR = 0.5*PI - temp_citaR;
     }
     else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] < 0) )
     {
-     citaR = 0.5*M_PI + temp_citaR;
+     citaR = 0.5*PI + temp_citaR;
     }
     else
     {
@@ -771,12 +771,12 @@ int FAReinforcedConcretePlateFiber::determineTrialStress(void)
 	 opserr << " Tstrain[4] = " << Tstrain[4] << endln;
     }
   }
-  if ( citaR > 0.5 * M_PI ) {
+  if ( citaR > 0.5 * PI ) {
 	dirStatus = 1;  // assign value for output in the screen
   }
 
-  while (  (citaR - 0.5*M_PI) > DBL_EPSILON ) {
-	  citaR = citaR-0.5*M_PI;
+  while (  (citaR - 0.5*PI) > DBL_EPSILON ) {
+	  citaR = citaR-0.5*PI;
 	  dirStatus = 1;  // assign value for output in the screen
   }
 
@@ -796,10 +796,10 @@ int FAReinforcedConcretePlateFiber::determineTrialStress(void)
   double minError = 100;
   double citaFinal = 100;
   
-  while ( (status == 0) && ( citaOne>0 || citaTwo<0.5*M_PI ) )
+  while ( (status == 0) && ( citaOne>0 || citaTwo<0.5*PI ) )
   {
-    citaOne = citaOne - M_PI/360.0;
-    citaTwo = citaTwo + M_PI/360.0;
+    citaOne = citaOne - PI/360.0;
+    citaTwo = citaTwo + PI/360.0;
     
     if ( citaOne >0 )
     {
@@ -816,7 +816,7 @@ int FAReinforcedConcretePlateFiber::determineTrialStress(void)
       }
     }
     
-    if ( citaTwo < 0.5*M_PI )
+    if ( citaTwo < 0.5*PI )
     {
       error = getAngleError(citaTwo);
       if ( minError > error )
@@ -857,8 +857,8 @@ double FAReinforcedConcretePlateFiber::getAngleError(double inputCita)
 	double error;
 	double error1, error2, error3;
 	error1 = fabs ( inputCita - outputCita);
-	error2 = fabs ( inputCita - outputCita + 0.5*M_PI);
-	error3 = fabs ( -inputCita + outputCita + 0.5*M_PI);
+	error2 = fabs ( inputCita - outputCita + 0.5*PI);
+	error3 = fabs ( -inputCita + outputCita + 0.5*PI);
 
 	if (error1 > error2)
 		error = error2;
@@ -1607,7 +1607,7 @@ double FAReinforcedConcretePlateFiber::getPrincipalStressAngle(double inputAngle
 
     if ( fabs(Tstress[0]-Tstress[1]) < DBL_EPSILON )
 	{
-	   citaOut = 0.25*M_PI;	
+	   citaOut = 0.25*PI;	
 	}
 	else // Tstress[0] != Tstress[1]
 	{
@@ -1622,15 +1622,15 @@ double FAReinforcedConcretePlateFiber::getPrincipalStressAngle(double inputAngle
 	  }
 	  else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] < 0) )
 	  {
-	  	citaOut = M_PI - temp_citaOut;
+	  	citaOut = PI - temp_citaOut;
 	  }
 	  else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] > 0) )
 	  {
-	  	citaOut = 0.5*M_PI - temp_citaOut;
+	  	citaOut = 0.5*PI - temp_citaOut;
 	  }
 	  else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] < 0) )
 	  {
-	  	citaOut = 0.5*M_PI + temp_citaOut;
+	  	citaOut = 0.5*PI + temp_citaOut;
 	  }
 	  else
 	  {
@@ -1641,8 +1641,8 @@ double FAReinforcedConcretePlateFiber::getPrincipalStressAngle(double inputAngle
 	  }
 	}
 
-	while (  (citaOut - 0.5*M_PI) > DBL_EPSILON ) {
-		citaOut = citaOut-0.5*M_PI;		
+	while (  (citaOut - 0.5*PI) > DBL_EPSILON ) {
+		citaOut = citaOut-0.5*PI;		
 	}
 
 	citaStress = citaOut; // assign value for screen output 
