@@ -798,7 +798,7 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
 
   if ( fabs(Tstrain[0]-Tstrain[1]) < 1e-7 )
     {
-      citaR = 0.25*M_PI;	
+      citaR = 0.25*PI;	
     }
   else // Tstrain[0] != Tstrain[1]
     {
@@ -812,15 +812,15 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
 	}
       else if ( (Tstrain[0] > Tstrain[1]) && ( Tstrain[2] < 0) )
 	{
-	  citaR = M_PI - temp_citaR;
+	  citaR = PI - temp_citaR;
 	}
       else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] > 0) )
 	{
-	  citaR = 0.5*M_PI - temp_citaR;
+	  citaR = 0.5*PI - temp_citaR;
 	}
       else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] < 0) )
 	{
-	  citaR = 0.5*M_PI + temp_citaR;
+	  citaR = 0.5*PI + temp_citaR;
 	}
       else
 	{
@@ -832,8 +832,8 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
     }
   
   
-  while (  (citaR - 0.5*M_PI) > 1e-8 ) {
-    citaR = citaR-0.5*M_PI;
+  while (  (citaR - 0.5*PI) > 1e-8 ) {
+    citaR = citaR-0.5*PI;
     dirStatus = 1;
   }
   
@@ -1495,7 +1495,7 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
 
     if ( fabs(Tstress[0]-Tstress[1]) < 1e-7 )
 	{
-	   citaP = 0.25*M_PI;	
+	   citaP = 0.25*PI;	
 	}
 	else // Tstrain[0] != Tstrain[1]
 	{
@@ -1509,15 +1509,15 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
 		}
 		else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] < 0) )
 		{
-			citaP = M_PI - temp_citaP;
+			citaP = PI - temp_citaP;
 		}
 		else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] > 0) )
 		{
-			citaP = 0.5*M_PI - temp_citaP;
+			citaP = 0.5*PI - temp_citaP;
 		}
 		else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] < 0) )
 		{
-			citaP = 0.5*M_PI + temp_citaP;
+			citaP = 0.5*PI + temp_citaP;
 		}
 		else
 		{
@@ -1529,8 +1529,8 @@ int RAReinforcedConcretePlateFiber::determineTrialStress(void)
 	}
 
 
-    while (  citaP > 0.5*M_PI ) {
-		citaP = citaP-0.5*M_PI;		
+    while (  citaP > 0.5*PI ) {
+		citaP = citaP-0.5*PI;		
 	}
 
 	citaStress = citaP; // assign for screen output
