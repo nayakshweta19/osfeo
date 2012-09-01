@@ -190,10 +190,10 @@ MCFTRCPlaneStress ::MCFTRCPlaneStress (int tag,
 	fC1 = 0.0; epsC1 = 0.0;
 	fC2 = 0.0; epsC2 = 0.0;
 
-    lastStress.Zero();  // add at 7.28    
+    lastStress.Zero();
     
-    if ( fpc > 0.0 ) { fpc = -fpc; } // set fpc < 0
-    if ( epsc0 > 0.0 ) { epsc0 = -epsc0; } // set fpc < 0
+    if ( fpc > 0.0 ) { fpc = -fpc; } // set for fpc < 0
+    if ( epsc0 > 0.0 ) { epsc0 = -epsc0; }
     theMaterial = 0;
     
     // Allocate pointers to theSteel1
@@ -768,7 +768,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
   double fcr   = 0.65 * pow(-fpc, 0.33); //0.31*sqrt(-fpc);      ----ftp
   double Ec    = 2.0 * fpc/epsc0;
   double epscr = fcr/Ec;
-  double vcxy, vci, vcimax, s_cita=0.0, w=0.0, delta_S=0.0, gamma_S=0.0;
+  double vci, vcimax, s_cita=0.0, w=0.0, delta_S=0.0, gamma_S=0.0; //vcxy, 
   double betaD1, betaD2;
   double Ecx, Ecy;
 
@@ -777,16 +777,17 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
 
   // Get citaE based on Tstrain, eq. i-9...
   if ( fabs(Tstrain(0)-Tstrain(1)) < SMALL_STRAIN ) {
-	if (fabs(Tstrain(2)) < SMALL_STRAIN) {
-	  citaE = 0;
-	} else {
+	//if (fabs(Tstrain(2)) < SMALL_STRAIN) {
+	//  citaE = 0;
+	//} else {
 	  citaE = 0.25*PI;
-	}
+	//}
   } else {  // Tstrain(0) != Tstrain(1) 
     temp_cita = 0.5 * atan(fabs(2.0e6*Tstrain(2)/(1.0e6*Tstrain(0)-1.0e6*Tstrain(1)))); 
     if ( fabs(Tstrain(2)) < SMALL_STRAIN ) {
-      if (Tstrain(0) > Tstrain(1) ) citaE = 0;
-	  if (Tstrain(1) > Tstrain(0) ) citaE = 0.5*PI;
+      //if (Tstrain(0) > Tstrain(1) ) 
+		citaE = 0;
+	  //if (Tstrain(1) > Tstrain(0) ) citaE = 0.5*PI;
     } else if ( (Tstrain(0) > Tstrain(1)) && ( Tstrain(2) > 0) ) {
       citaE = temp_cita;
     } else if ( (Tstrain(0) > Tstrain(1)) && ( Tstrain(2) < 0) ) {
@@ -908,6 +909,7 @@ MCFTRCPlaneStress::determineTrialStress(Vector strain)
     opserr << "MCFTRCPlaneStress::determineTrialStress(), S1 setTrialStrain() Error" << endln;  // s1
 	return -1;
   }
+
   if (theMaterial[S_TWO]->setTrialStrain(epsSy) != 0) {
     opserr << "MCFTRCPlaneStress::determineTrialStress(), S2 setTrialStrain() Error" << endln;  // s2
 	return -1;
