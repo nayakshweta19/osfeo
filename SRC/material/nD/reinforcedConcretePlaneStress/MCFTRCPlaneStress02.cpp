@@ -155,32 +155,20 @@ OPS_NewMCFTRCPlaneStress02Material()
   return theMaterial;
 }
  
-MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag, 
-								   double RHO,
-								   UniaxialMaterial *s1,
-								   UniaxialMaterial *s2,
-								   UniaxialMaterial *c1,
-								   UniaxialMaterial *c2,
-								   double   ANGLE1,
-								   double   ANGLE2,
-								   double   ROU1,
-								   double   ROU2,
-								   double   DB1,
-								   double   DB2,
-								   double   FPC,
-								   double   FY,
-								   double   E,
-								   double   EPSC0,
-								   double   AGGR,
-								   double   XD,
-								   double   YD):
+MCFTRCPlaneStress02 ::MCFTRCPlaneStress02 (int tag, double RHO,
+								   UniaxialMaterial *s1, UniaxialMaterial *s2,
+								   UniaxialMaterial *c1, UniaxialMaterial *c2,
+								   double   ANGLE1, double   ANGLE2,
+								   double   ROU1, double   ROU2,
+								   double   DB1, double   DB2,
+								   double   FPC, double   FY, double   E,
+								   double   EPSC0, double   AGGR,
+								   double   XD, double   YD):
   NDMaterial(tag, ND_TAG_MCFTRCPlaneStress02), 
   rho(RHO),angle1(ANGLE1),angle2(ANGLE2),rou1(ROU1),rou2(ROU2),db1(DB1),db2(DB2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), aggr(AGGR), xd(XD), yd(YD),
-  lastStress(3),Tstress(3),
-  strain_vec(3),strainC_vec(3),strainSlip_vec(3),strainC0_vec(3),strainS0_vec(3),
-  strainCp_vec(3),
-  stress_vec(3),tangent_matrix(3,3),
+  lastStress(3),Tstress(3), strain_vec(3),strainC_vec(3),strainSlip_vec(3),
+  strainC0_vec(3),strainS0_vec(3), strainCp_vec(3), stress_vec(3),tangent_matrix(3,3),
   citaE(0.0), citaS(0.0)
 {
     steelStatus = 0;
