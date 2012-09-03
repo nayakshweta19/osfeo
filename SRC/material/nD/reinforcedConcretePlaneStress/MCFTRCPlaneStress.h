@@ -60,34 +60,24 @@
 #define C2_SET_V 5
 #define C1_GET_V 6
 #define C2_GET_V 7
-#define C_ONE 2
-#define C_TWO 3
 #define S_ONE 0
 #define S_TWO 1
+#define C_ONE 2
+#define C_TWO 3
 
-class MCFTRCPlaneStress : public NDMaterial
+class MCFTRCPlaneStress:public NDMaterial
 {
   public:
-    MCFTRCPlaneStress ( int      tag, 
-				      double   RHO,
-				      UniaxialMaterial *s1,
-				      UniaxialMaterial *s2,
-				      UniaxialMaterial *c1,
-				      UniaxialMaterial *c2,
-				      double   ANGLE1,
-				      double   ANGLE2,
-				      double   ROU1,
-				      double   ROU2,
-					  double   DB1,
-					  double   DB2,
-				      double   FPC,
-				      double   FYX,
-					  double   FYY,
-				      double   E,
-				      double   EPSC0,
-					  double   AGGR,
-					  double   XD,
-					  double   YD);
+    MCFTRCPlaneStress(int tag, double RHO,
+				      UniaxialMaterial *s1, UniaxialMaterial *s2,
+				      UniaxialMaterial *c1, UniaxialMaterial *c2,
+					  double ANGLE1, double ANGLE2,
+					  double ROU1, double ROU2,
+					  double DB1, double DB2,
+					  double FPC, double FYX,
+					  double FYY, double E,
+					  double EPSC0, double AGGR,
+					  double XD, double YD);
     MCFTRCPlaneStress();
     ~MCFTRCPlaneStress();				  
     
