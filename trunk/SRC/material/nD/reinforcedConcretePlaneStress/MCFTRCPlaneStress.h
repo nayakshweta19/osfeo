@@ -192,7 +192,7 @@ class MCFTRCPlaneStress : public NDMaterial
 
     Vector determineTrialStress(Vector strain);
 	Vector determineMCFTStress(double epsC1, double epsC2);
-	
+	int determineSecantModulus(Vector strain);
 	double calcBetaD(double epsC1, double epsC2);
 	int checkAtCrack();
  

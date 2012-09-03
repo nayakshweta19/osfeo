@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 #ifndef MCFTRCPlaneStress02_h
-#define MCFTRCPlaneStress02_h
+#define MCFTRCPlaneStress_h
 
 // $Revision: 1.2 $
 // $Date: 2011/08/31 23:00:47 $
@@ -48,10 +48,27 @@
 #include <ID.h>
 #include <Tensor.h>
 
-class MCFTRCPlaneStress02 : public NDMaterial
+#define SMALL_STRAIN  1.0e-12
+#define SMALL_STRESS  1.0e-10
+#define SMALL_TANGENT 1.0e-9
+
+#define S1_SET_V 0
+#define S2_SET_V 1
+#define S1_GET_V 2
+#define S2_GET_V 3
+#define C1_SET_V 4
+#define C2_SET_V 5
+#define C1_GET_V 6
+#define C2_GET_V 7
+#define C_ONE 2
+#define C_TWO 3
+#define S_ONE 0
+#define S_TWO 1
+
+class MCFTRCPlaneStress02:public NDMaterial
 {
   public:
-    MCFTRCPlaneStress02 ( int      tag, 
+    MCFTRCPlaneStress02( int      tag, 
 				      double   RHO,
 				      UniaxialMaterial *s1,
 				      UniaxialMaterial *s2,
@@ -64,7 +81,8 @@ class MCFTRCPlaneStress02 : public NDMaterial
 					  double   DB1,
 					  double   DB2,
 				      double   FPC,
-				      double   FY,
+				      double   FYX,
+					  double   FYY,
 				      double   E,
 				      double   EPSC0,
 					  double   AGGR,
@@ -112,74 +130,75 @@ class MCFTRCPlaneStress02 : public NDMaterial
     double   rho; 
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
-	
+
 	double   citaS;     // angle of principle stress
 	double   citaE;     // angle of principle strain
     double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
-    double   rou1;      // steel ratio of the first steel layer
-    double   rou2;      // steel ratio of the second steel layer
+    double   rhox;      // steel ratio of the first steel layer
+    double   rhoy;      // steel ratio of the second steel layer
 	double   db1;       // steel diameter of the first steel layer
 	double   db2;       // steel diameter of the second steel layer
     double   fpc;       // compressive strength of the concrete
-    double   fy;        // yield stress of the bare steel bar
-    double   E0;        // young's modulus of the steel
+    double   fyx;       // yield stress of the bare steel bar x
+	double   fyy;       // yield stress of the bare steel bar y
+    double   Es;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
 	double   aggr;      // aggregate size
 	double   xd;        // x- crack spacing
     double   yd;        // y- crack spacing
+
     Vector   Tstress;  // Trial stresses
     Vector   lastStress;  // Last committed stresses, added for x, k
     
     int      steelStatus;  // check if steel yield, 0 not yield, 1 yield
     int      dirStatus;    // check if principle direction has exceed 90 degree, 1 yes, 0 no
     
-    double   citaStrain;      // principle strain direction
-    double   citaStress;     // principle stress direction
-    double   miu12;        // Hsu/Zhu ratio
-    double   miu21;        // Hsu/Zhu ratio
-    double   G12;          // Shear Modulus
-    
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
-    int TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
-    double TOneNowMaxComStrain;
-    double TOneLastMaxComStrain;
-    
-    int TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
-    double TTwoNowMaxComStrain;
-    double TTwoLastMaxComStrain;
-    
+	Vector strain_vec;
+	Vector epsC_vec;
+	Vector epsCe_vec;
+	Vector epsCp_vec;
+	Vector epsSlip_vec;
+	
+	Vector epsC12p; // this time step eps
+	
+	Vector epsCcm_vec;
+	Vector epsCtm_vec;
+	Vector epsC12cm_vec;
+	Vector epsC12tm_vec;
+	
     // Converged values
-    int COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
-    double COneNowMaxComStrain;
-    double COneLastMaxComStrain;
-    
-    int CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
-    double CTwoNowMaxComStrain;
-    double CTwoLastMaxComStrain;
-    
-    double DDOne; // damage factor for concrete One
-    double DDTwo; // damage factor for concrete Two
-    
-    
-    Vector strain_vec;
-	Vector strainC_vec;
-	Vector strainSlip_vec;
-	Vector strainC0_vec;
-	Vector strainS0_vec;
-	Vector strainCp_vec;
-    Vector stress_vec;
-    Matrix tangent_matrix;
+	Vector CepsC_vec;
+	Vector CepsCe_vec;
+	Vector CepsCp_vec;
+	Vector CepsSlip_vec;
 
+	Vector CepsC12p; // pre time step eps
+
+	Vector CepsCcm_vec;
+	Vector CepsCtm_vec;
+    Vector CepsC12cm_vec;
+	Vector CepsC12tm_vec;
+
+    double fC1, fC2, epsC1, epsC2;
+
+	Vector stress0_vec;
+	Vector stress_vec;
+	Matrix tangent_matrix;
+	Matrix secant_matrix;
 
     Vector determineTrialStress(Vector strain);
-    double getPrincipalStressAngle(double inputAngle);
-    double getAngleError(double inputCita);
+	Vector determineMCFTStress(double epsC1, double epsC2);
+	
+	double calcBetaD(double epsC1, double epsC2);
+	int checkAtCrack();
  
-	//double kupferEnvelop(double Tstrain, double sig_p, double eps_p);
-	int determineTangent(void);
+	int kupferEnvelop(double Tstrain, double sig_p, double eps_p);
+	int determineTangent(Vector Tstrain);
+	double determinefS(double strain, double fy, double E, double Esh);
 };
 
 #endif
