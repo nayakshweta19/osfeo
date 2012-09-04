@@ -2010,7 +2010,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
   Information &C2GetVar = theResponses[C2_GET_V]->getInformation(); // C2 getVar
 
   //for small strain return quickly
-  if (Tstrain.pNorm(-1) <= DBL_EPSILON) {
+  /*if (Tstrain.pNorm(-1) <= DBL_EPSILON) {
 	double v = 0.22;
 	double temp = Ec/(1.0-v*v);
 
@@ -2043,7 +2043,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
 	Tstress.Zero();
 
 	return 0;
-  }
+  } */
 
   // Get average strains in reinforcement, eq. i-19
   //epsSx = 0.5 * (Tstrain(0)+Tstrain(1))+0.5*(Tstrain(0)-Tstrain(1))*cos(2.0*angle1)
@@ -2180,8 +2180,8 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
 	bool fC1converged, fC2converged;
 	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
 
-    if(epsC1 > 0 && epsC2 > 0) {
-  	Par = 1;
+    //if(epsC1 > 0 && epsC2 > 0) {
+  	//Par = 1;
   	  //////////////////////////////////////////////////////////////////////////
       // C1 -- tensile for fc1, epsC1  
       //////////////////////////////////////////////////////////////////////////
@@ -2421,7 +2421,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
   
     } 
     
-    else if (epsC1 < 0 && epsC2 < 0) {
+    /*else if (epsC1 < 0 && epsC2 < 0) {
   	  Par = 2;
   	  //////////////////////////////////////////////////////////////////////////
   	  // C1 Kupfer envelop for concrete
@@ -2550,16 +2550,16 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
           epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
           epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
           
-          /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
-		    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
-		    return -1;
-          }
-          fScrx = theMaterial[S_ONE]->getStress();
-          if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
-		    opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
-		    return -1;
-          }
-  		  fScry = theMaterial[S_TWO]->getStress(); */
+          //if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+		  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
+		  //  return -1;
+		  //}
+		  //fScrx = theMaterial[S_ONE]->getStress();
+		  //if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
+		  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
+		  //  return -1;
+		  //}
+		  //fScry = theMaterial[S_TWO]->getStress();
           fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
           fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
           
@@ -2716,18 +2716,16 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
           epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
           epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
           
-          /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
-            opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
-            return -1;
-          }
-          fScrx = theMaterial[S_ONE]->getStress();
-          
-          
-          if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
-            opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
-            return -1;
-          }
-  	      fScry = theMaterial[S_TWO]->getStress(); */
+          //if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+          //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
+          //  return -1;
+          //}
+          //fScrx = theMaterial[S_ONE]->getStress();
+          //if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
+          //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
+          //  return -1;
+          //}
+  	      //fScry = theMaterial[S_TWO]->getStress();
           fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
           fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
           
@@ -2771,7 +2769,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
         //fC2 = (fC2 > 0 ? fC2 : 0);
         //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
   	  }
-    }
+    } */
 
 	//eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
 	//	 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
