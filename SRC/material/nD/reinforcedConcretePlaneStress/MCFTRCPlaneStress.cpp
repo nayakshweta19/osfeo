@@ -2180,273 +2180,271 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
 	bool fC1converged, fC2converged;
 	double error, fScrx, fScry, epsScrx, epsScry, epsIncr;
 
-    //if(epsC1 > 0 && epsC2 > 0) {
-  	//Par = 1;
-  	  //////////////////////////////////////////////////////////////////////////
-      // C1 -- tensile for fc1, epsC1  
-      //////////////////////////////////////////////////////////////////////////
-      //  case 1: eq.i-33,34
-      epsts = 2.0 * 7.5e-3 / fcr / 750.; //eq. i-33
-      temp  = (epsC1 - epscr) / (epsts - epscr);
-      
-      if      (temp <= 0.0) fC1a = 0.0;
-      else if (temp >  1.0) fC1a = fcr;
-      else                  fC1a = fcr * (1 - temp);  //eq. i-34
-      
-      //  case 2: eq. i-35, 36
-      temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
-      fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
-      temp = max(fC1a,fC1b); // eq.i-38 /fC1
-      
-      // eq.i-5   // for positive value
-      fC1c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
-           + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
-      double fC1max = min(temp, fC1c);
-      
-      theData(0) = eC1m;
-      theData(1) = eT1m;
-	    //theData(2) = epsC1;
-      theData(5) = CepsC12p(0);
-      theData(6) = 1.0; //betaD
-  	  theData(7) = 1.0; // K
-  
-      ret = 0;
-      ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
-      ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
-      ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
-      if (ret != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
-        return ret;
-      }
-      temp = theMaterial[C_ONE]->getStress();
-      fC1 = min(fC1max, temp);
-  
-  	  //////////////////////////////////////////////////////////////////////////
-  	  if(epsC1 > epscr) { //checkAtCrack(); 
-        // Calculate local stress at cracks
-        status         = 0; // status to check if iteration satisfied eq.i-7
-        fC1converged   = false;
-        epsScrx        = epsS1;
-        epsScry        = epsS2;
-        epsIncr        = 0.0;
-        
-        while ( fC1converged == false && status == 0 ) {
-          if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
-        opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
-        opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
-        opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
-        status = 1;
-          }
-          // eq.i-20
-          epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
-          epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
-          
-          /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
-        return -1;
-          }
-          fScrx = theMaterial[S_ONE]->getStress();
-          if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
-        return -1;
-          }
-          fScry = theMaterial[S_TWO]->getStress(); */
-          fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
-          fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
-        
-          // eq.i-7
-          temp = rhox * (fScrx - fS1) * pow(cos(citan1), 2.0) 
-               + rhoy * (fScry - fS2) * pow(cos(citan2), 2.0);
-          error = fC1 - temp;
-          
-          if (fabs(error) <= tolerance) {
-            fC1converged = true;
-          } else {
-            // temp is function of citan1 citan2 and fSx and fSy,
-            // the iterative parameter should include citan1/citan2 angle chosen. 
-            // like: if (citan1 > PI/2 && citan2 > PI/2)...
-            temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
-                 + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
-            epsIncr += error/temp;
-          }
-        }
-        // eq. i-8
-        vci = rhox * (fScrx - fS1) * cos(citan1) * sin(citan1)
-            + rhoy * (fScry - fS2) * cos(citan2) * sin(citan2);
-        //vci = (vci < 0 ? 0 : vci);
-        
-        // Crack slips determine
-        //while ( citaS > 0.5*PI ) {
-        //	citaS -= 0.5*PI;
-        //}
-        
-        // crack spacing // w   
-        s_cita = 1.0/(sin(citaS)/xd+cos(citaS)/yd); // eq.i-21,22
-        w      = epsC1 * s_cita;
-        
-        // optional 1
-        vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
-        
-        // if vci > vcimax , decrease fC1
-        if (fabs(vci) > vcimax) {
-        	fC1 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
-        }
-        //fC1 = (fC1 > 0 ? fC1 : 0);
-        //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
-  	  }
-  
-      //////////////////////////////////////////////////////////////////////////
-  	  // C2 -- tensile for fc2, epsC2    
-  	  //////////////////////////////////////////////////////////////////////////
-      //epsts = 2.0 * 7.5e-3 / fcr / 750.; //eq. i-33
-      temp  = (epsC2 - epscr) / (epsts - epscr);
-      
-      if      (temp <= 0.0) fC2a = 0.0;
-      else if (temp >  1.0) fC2a = fcr;
-      else                  fC2a = fcr * (1 - temp);  //eq. i-34
-      
-      //  case 2: eq. i-35, 36
-      temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
-      fC2b = fcr/(1+sqrt(2.2/temp*epsC2));
-  	  temp = max(fC2a,fC2b); // eq.i-38 /fC1
-  
-  	  // eq.i-5   // for positive value
-  	  fC2c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
-  	       + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
-  	  double fC2max = min(temp, fC2c);
-      
-      theData(0) = eC2m; 
-      theData(1) = eT2m;
-      //theData(2) = epsC2;
-      theData(5) = CepsC12p(1);
-      theData(6) = 1.0; //betaD
-      theData(7) = 1.0; // K
-  
-      ret = 0;
-      ret += C2SetVar.setVector(theData);  // Information for C2 in tension, material [3], response[5]
-      ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar 
-      ret += theMaterial[C_TWO]->setTrialStrain(epsC2);
-      if (ret != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
-        return ret;
-      }
-      temp = theMaterial[C_TWO]->getStress();
-      fC2 = min(fC2max, temp);
-      
-      //////////////////////////////////////////////////////////////////////////
-      if(epsC2 > epscr) { //checkAtCrack(); 
-        // Calculate local stress at cracks
-        status         = 0; // status to check if iteration satisfied eq.i-7
-        fC2converged   = false;
-        epsScrx        = epsS1;
-        epsScry        = epsS2;
-        epsIncr        = 0.0;
-        
-        while ( fC2converged == false && status == 0 ) {
-          if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
-        opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
-        opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
-        opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
-        status = 1;
-          }
-          // eq.i-20
-          epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
-          epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
-          
-          /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
-        return -1;
-          }
-          fScrx = theMaterial[S_ONE]->getStress();
-
-          if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
-        opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
-        return -1;
-          }
-  		  fScry = theMaterial[S_TWO]->getStress(); */
-          fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
-          fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
-          
-          // eq.i-7
-          temp = rhox * (fScrx - fS1) * pow(cos(citan1), 2.0) 
-               + rhoy * (fScry - fS2) * pow(cos(citan2), 2.0);
-          error = fC2 - temp;
-          
-          if (fabs(error) <= tolerance) {
-            fC2converged = true;
-          } else {
-            // temp is function of citan1 citan2 and fSx and fSy,
-            // the iterative parameter should include citan1/citan2 angle chosen. 
-            // like: if (citan1 > PI/2 && citan2 > PI/2)...
-            temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
-                    + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
-            epsIncr += error/temp;
-          }
-        }
-        // eq. i-8
-        vci = rhox * (fScrx - fS1) * cos(citan1) * sin(citan1)
-             + rhoy * (fScry - fS2) * cos(citan2) * sin(citan2);
-        //vci = (vci < 0 ? 0 : vci);
-        
-        // Crack slips determine
-        //while ( citaS > 0.5*PI ) {
-        //	citaS -= 0.5*PI;
-        //}
-        
-        // crack spacing // w   
-        s_cita = 1.0/(sin(citaS)/xd+cos(citaS)/yd); // eq.i-21,22
-        w      = epsC2 * s_cita;
-        
-        // optional 1
-        vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
-        
-        // if vci > vcimax , decrease fC2
-        if (fabs(vci) > vcimax) {
-          fC2 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
-        }
-        //fC2 = (fC2 > 0 ? fC2 : 0);
-        //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
-  	  }
-  
-  	  //////////////////////////////////////////////////////////////////////////
-  	  // get C1, C2 's epsilon_p
-  	  //////////////////////////////////////////////////////////////////////////
-  	  theResponses[C1_GET_V]->getResponse();  // C1 getVar
-  	  theResponses[C2_GET_V]->getResponse();  // C2 getVar
-  	  
-  	  epsC12p(0) = (*C1GetVar.theVector)(5); // ecp1 
-      epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
-      if (epsC12p(0) > 0) epsC12p(0) = 0.0;
-      if (epsC12p(1) > 0) epsC12p(1) = 0.0;
-  
-    } 
+  //if(epsC1 > 0 && epsC2 > 0) {
+  //Par = 1;
+    //////////////////////////////////////////////////////////////////////////
+    // C1 -- tensile for fc1, epsC1  
+    //////////////////////////////////////////////////////////////////////////
+    //  case 1: eq.i-33,34
+    epsts = 2.0 * 7.5e-3 / fcr / 750.; //eq. i-33
+    temp  = (epsC1 - epscr) / (epsts - epscr);
     
+    if      (temp <= 0.0) fC1a = 0.0;
+    else if (temp >  1.0) fC1a = fcr;
+    else                  fC1a = fcr * (1 - temp);  //eq. i-34
+    
+    //  case 2: eq. i-35, 36
+    temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
+    fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
+    temp = max(fC1a,fC1b); // eq.i-38 /fC1
+    
+    // eq.i-5   // for positive value
+    fC1c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
+         + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
+    double fC1max = min(temp, fC1c);
+    
+    theData(0) = eC1m;
+    theData(1) = eT1m;
+      //theData(2) = epsC1;
+    theData(5) = CepsC12p(0);
+    theData(6) = 1.0; //betaD
+    theData(7) = 1.0; // K
+  
+    ret = 0;
+    ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
+    ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
+    ret += theMaterial[C_ONE]->setTrialStrain(epsC1);
+    if (ret != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(), C1 setTrialStrain() Error" << endln;  // C1
+      return ret;
+    }
+    temp = theMaterial[C_ONE]->getStress();
+    fC1 = min(fC1max, temp);
+  
+    //////////////////////////////////////////////////////////////////////////
+    if(epsC1 > epscr) { //checkAtCrack(); 
+      // Calculate local stress at cracks
+      status         = 0; // status to check if iteration satisfied eq.i-7
+      fC1converged   = false;
+      epsScrx        = epsS1;
+      epsScry        = epsS2;
+      epsIncr        = 0.0;
+      
+      while ( fC1converged == false && status == 0 ) {
+        if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
+      opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
+      opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
+      opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
+      status = 1;
+        }
+        // eq.i-20
+        epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
+        epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
+        
+        /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
+      return -1;
+        }
+        fScrx = theMaterial[S_ONE]->getStress();
+        if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
+      return -1;
+        }
+        fScry = theMaterial[S_TWO]->getStress(); */
+        fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+        fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
+      
+        // eq.i-7
+        temp = rhox * (fScrx - fS1) * pow(cos(citan1), 2.0) 
+             + rhoy * (fScry - fS2) * pow(cos(citan2), 2.0);
+        error = fC1 - temp;
+        
+        if (fabs(error) <= tolerance) {
+          fC1converged = true;
+        } else {
+          // temp is function of citan1 citan2 and fSx and fSy,
+          // the iterative parameter should include citan1/citan2 angle chosen. 
+          // like: if (citan1 > PI/2 && citan2 > PI/2)...
+          temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+               + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
+          epsIncr += error/temp;
+        }
+      }
+      // eq. i-8
+      vci = rhox * (fScrx - fS1) * cos(citan1) * sin(citan1)
+          + rhoy * (fScry - fS2) * cos(citan2) * sin(citan2);
+      //vci = (vci < 0 ? 0 : vci);
+      
+      // Crack slips determine
+      //while ( citaS > 0.5*PI ) {
+      //	citaS -= 0.5*PI;
+      //}
+      
+      // crack spacing // w   
+      s_cita = 1.0/(sin(citaS)/xd+cos(citaS)/yd); // eq.i-21,22
+      w      = epsC1 * s_cita;
+      
+      // optional 1
+      vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
+      
+      // if vci > vcimax , decrease fC1
+      if (fabs(vci) > vcimax) {
+      	fC1 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
+      }
+      //fC1 = (fC1 > 0 ? fC1 : 0);
+      //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
+    }
+  
+    //////////////////////////////////////////////////////////////////////////
+    // C2 -- tensile for fc2, epsC2    
+    //////////////////////////////////////////////////////////////////////////
+    //epsts = 2.0 * 7.5e-3 / fcr / 750.; //eq. i-33
+    temp  = (epsC2 - epscr) / (epsts - epscr);
+    
+    if      (temp <= 0.0) fC2a = 0.0;
+    else if (temp >  1.0) fC2a = fcr;
+    else                  fC2a = fcr * (1 - temp);  //eq. i-34
+    
+    //  case 2: eq. i-35, 36
+    temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
+    fC2b = fcr/(1+sqrt(2.2/temp*epsC2));
+    temp = max(fC2a,fC2b); // eq.i-38 /fC1
+  
+    // eq.i-5   // for positive value
+    fC2c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
+         + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
+    double fC2max = min(temp, fC2c);
+    
+    theData(0) = eC2m; 
+    theData(1) = eT2m;
+    //theData(2) = epsC2;
+    theData(5) = CepsC12p(1);
+    theData(6) = 1.0; //betaD
+    theData(7) = 1.0; // K
+  
+    ret = 0;
+    ret += C2SetVar.setVector(theData);  // Information for C2 in tension, material [3], response[5]
+    ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar 
+    ret += theMaterial[C_TWO]->setTrialStrain(epsC2);
+    if (ret != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(), C2 setTrialStrain() Error" << endln;  // C2
+      return ret;
+    }
+    temp = theMaterial[C_TWO]->getStress();
+    fC2 = min(fC2max, temp);
+    
+    //////////////////////////////////////////////////////////////////////////
+    if(epsC2 > epscr) { //checkAtCrack(); 
+      // Calculate local stress at cracks
+      status         = 0; // status to check if iteration satisfied eq.i-7
+      fC2converged   = false;
+      epsScrx        = epsS1;
+      epsScry        = epsS2;
+      epsIncr        = 0.0;
+      
+      while ( fC2converged == false && status == 0 ) {
+        if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
+      opserr << "MCFTRCPlaneStress::determineTrialStress(vector) -- large strain at cracks" << endln;
+      opserr << "TrialStrainVector: " << Tstrain(0) << "\t"<< Tstrain(1) << "\t"<< Tstrain(2) << endln;
+      opserr << "fC1converged false for strain: epsScrx = " << epsScrx << "; epsScry = " << epsScry << endln; 
+      status = 1;
+        }
+        // eq.i-20
+        epsScrx = epsS1 + epsIncr * pow(cos(citan1), 2.0);
+        epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
+        
+        /*if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
+      return -1;
+        }
+        fScrx = theMaterial[S_ONE]->getStress();
+  
+        if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
+      opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
+      return -1;
+        }
+  	  fScry = theMaterial[S_TWO]->getStress(); */
+        fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
+        fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
+        
+        // eq.i-7
+        temp = rhox * (fScrx - fS1) * pow(cos(citan1), 2.0) 
+             + rhoy * (fScry - fS2) * pow(cos(citan2), 2.0);
+        error = fC2 - temp;
+        
+        if (fabs(error) <= tolerance) {
+          fC2converged = true;
+        } else {
+          // temp is function of citan1 citan2 and fSx and fSy,
+          // the iterative parameter should include citan1/citan2 angle chosen. 
+          // like: if (citan1 > PI/2 && citan2 > PI/2)...
+          temp = rhox * theMaterial[S_ONE]->getSecant() * pow(cos(citan1), 2.0)
+                  + rhoy * theMaterial[S_TWO]->getSecant() * pow(cos(citan2), 2.0);
+          epsIncr += error/temp;
+        }
+      }
+      // eq. i-8
+      vci = rhox * (fScrx - fS1) * cos(citan1) * sin(citan1)
+           + rhoy * (fScry - fS2) * cos(citan2) * sin(citan2);
+      //vci = (vci < 0 ? 0 : vci);
+      
+      // Crack slips determine
+      //while ( citaS > 0.5*PI ) {
+      //	citaS -= 0.5*PI;
+      //}
+      
+      // crack spacing // w   
+      s_cita = 1.0/(sin(citaS)/xd+cos(citaS)/yd); // eq.i-21,22
+      w      = epsC2 * s_cita;
+      
+      // optional 1
+      vcimax = sqrt(-fpc)/(0.31+24*w/(aggr+16)); // shear parameter
+      
+      // if vci > vcimax , decrease fC2
+      if (fabs(vci) > vcimax) {
+        fC2 -= (fabs(vci) - vcimax)*(tan(citaS)+1./tan(citaS));  // MCFT(1986) eq. 13
+      }
+      //fC2 = (fC2 > 0 ? fC2 : 0);
+      //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
+    }
+  
+    //////////////////////////////////////////////////////////////////////////
+    // get C1, C2 's epsilon_p
+    //////////////////////////////////////////////////////////////////////////
+    theResponses[C1_GET_V]->getResponse();  // C1 getVar
+    theResponses[C2_GET_V]->getResponse();  // C2 getVar
+    
+    epsC12p(0) = (*C1GetVar.theVector)(5); // ecp1 
+    epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
+    if (epsC12p(0) > 0) epsC12p(0) = 0.0;
+    if (epsC12p(1) > 0) epsC12p(1) = 0.0;
+  
     /*else if (epsC1 < 0 && epsC2 < 0) {
-  	  Par = 2;
-  	  //////////////////////////////////////////////////////////////////////////
-  	  // C1 Kupfer envelop for concrete
-  	  //////////////////////////////////////////////////////////////////////////
-  	  opserr << "epsC1 and epsC2 negative, both!" << endln;
-  	  double sig1 = 0.0, sig2 = 0.0, sig_p1, sig_p2, eps_p1, eps_p2;
-  	  double norm = 1.0, K1, K2;
-  	  while (norm > SMALL_STRESS) {
-  	    K1 = 1 + 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
-  	    K2 = 1 + 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
-  	    sig_p1 = K1 * fpc;
-  	    eps_p1 = K1 * epsc0;
-  	    sig_p2 = K2 * fpc;
-  	    eps_p2 = K2 * epsc0;
-  	  
-  	    //////////////////////////////////////////////////////////////////////////
-  	    // C1
-  	    //////////////////////////////////////////////////////////////////////////
-  	    theData(0) = eC1m;
+      Par = 2;
+      //////////////////////////////////////////////////////////////////////////
+      // C1 Kupfer envelop for concrete
+      //////////////////////////////////////////////////////////////////////////
+      opserr << "epsC1 and epsC2 negative, both!" << endln;
+      double sig1 = 0.0, sig2 = 0.0, sig_p1, sig_p2, eps_p1, eps_p2;
+      double norm = 1.0, K1, K2;
+      while (norm > SMALL_STRESS) {
+        K1 = 1 + 0.92 * (sig2/fpc)-0.76*pow(sig2/fpc,2.0);
+        K2 = 1 + 0.92 * (sig1/fpc)-0.76*pow(sig1/fpc,2.0);
+        sig_p1 = K1 * fpc;
+        eps_p1 = K1 * epsc0;
+        sig_p2 = K2 * fpc;
+        eps_p2 = K2 * epsc0;
+      
+        //////////////////////////////////////////////////////////////////////////
+        // C1
+        //////////////////////////////////////////////////////////////////////////
+        theData(0) = eC1m;
         theData(1) = eT1m;
         //theData(2) = epsC1;
         theData(5) = CepsC12p(0);
         theData(6) = 1.0; //betaD
         theData(7) = K1;
-	  
+      
         ret = 0;
         ret += C1SetVar.setVector(theData);  // Information for C tension, material [2], response[4]
         ret += theResponses[C1_SET_V]->getResponse(); // C1 setVar 
@@ -2456,17 +2454,17 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
           return ret;
         }
         fC1 = theMaterial[C_ONE]->getStress();
-  	  
-  	    //////////////////////////////////////////////////////////////////////////
-  	    // C2
-  	    //////////////////////////////////////////////////////////////////////////
-  	    theData(0) = eC2m;
+      
+        //////////////////////////////////////////////////////////////////////////
+        // C2
+        //////////////////////////////////////////////////////////////////////////
+        theData(0) = eC2m;
         theData(1) = eT2m;
         //theData(2) = epsC2;
         theData(5) = CepsC12p(1);
         theData(6) = 1.0;
         theData(7) = K2;
-  	  
+      
         ret = 0;
         ret += C2SetVar.setVector(theData);  // Information for C compression, material [3], response[5]
         ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar
@@ -2477,21 +2475,21 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
         }
         fC2 = theMaterial[C_TWO]->getStress(); // w==5 ??
         
-  	    //////////////////////////////////////////////////////////////////////////
-  	    norm = sqrt(pow(fC1-sig1,2.0)+pow(fC2-sig2,2.0));
-  	    sig1 = fC1;
-  	    sig2 = fC2;
-  	  }
-  	    
-  	  theResponses[C1_GET_V]->getResponse(); // C1 getVar
-  	  epsC12p(0) = (*C1GetVar.theVector)(5); // ecp1
-  	  theResponses[C2_GET_V]->getResponse(); // C2 getVar
-  	  epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
-  	  opserr << "K1 = " << K1 << "\tK2 = " << K2 << endln;
+        //////////////////////////////////////////////////////////////////////////
+        norm = sqrt(pow(fC1-sig1,2.0)+pow(fC2-sig2,2.0));
+        sig1 = fC1;
+        sig2 = fC2;
+      }
+        
+      theResponses[C1_GET_V]->getResponse(); // C1 getVar
+      epsC12p(0) = (*C1GetVar.theVector)(5); // ecp1
+      theResponses[C2_GET_V]->getResponse(); // C2 getVar
+      epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
+      opserr << "K1 = " << K1 << "\tK2 = " << K2 << endln;
     } 
-  
+    
     if (epsC1 > 0 && epsC2 < 0) {
-  	  Par = 3;
+      Par = 3;
       //////////////////////////////////////////////////////////////////////////
       // C1 -- tensile for fc1, epsC1  
       //////////////////////////////////////////////////////////////////////////
@@ -2508,11 +2506,11 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
       temp = max(fC1a, fC1b);
       
-  	  // eq.i-5   // for positive value
-  	  fC1c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
-  	       + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
-  	  double fC1max = min(temp, fC1c);
-  	  
+      // eq.i-5   // for positive value
+      fC1c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
+           + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
+      double fC1max = min(temp, fC1c);
+      
       theData(0) = eC1m;
       theData(1) = eT1m;
       //theData(2) = epsC1;
@@ -2529,10 +2527,10 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       }
       temp = theMaterial[C_ONE]->getStress();
       fC1 = min(fC1max, temp);
-  
-  	  //////////////////////////////////////////////////////////////////////////
-  	  if(epsC1 > epscr) { //checkAtCrack(); 
-  	  // Calculate local stress at cracks
+    
+      //////////////////////////////////////////////////////////////////////////
+      if(epsC1 > epscr) { //checkAtCrack(); 
+      // Calculate local stress at cracks
         status         = 0; // status to check if iteration satisfied eq.i-7
         fC1converged   = false;
         epsScrx        = epsS1;
@@ -2551,15 +2549,15 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
           epsScry = epsS2 + epsIncr * pow(cos(citan2), 2.0);
           
           //if( theMaterial[S_ONE]->setTrialStrain(epsScrx) != 0) {
-		  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
-		  //  return -1;
-		  //}
-		  //fScrx = theMaterial[S_ONE]->getStress();
-		  //if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
-		  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
-		  //  return -1;
-		  //}
-		  //fScry = theMaterial[S_TWO]->getStress();
+    	  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScrx" << endln;
+    	  //  return -1;
+    	  //}
+    	  //fScrx = theMaterial[S_ONE]->getStress();
+    	  //if( theMaterial[S_TWO]->setTrialStrain(epsScry) != 0) {
+    	  //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
+    	  //  return -1;
+    	  //}
+    	  //fScry = theMaterial[S_TWO]->getStress();
           fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
           fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
           
@@ -2602,8 +2600,8 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
         }
         //fC1 = (fC1 > 0 ? fC1 : 0);
         //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
-  	  }
-
+      }
+    
       //////////////////////////////////////////////////////////////////////////
       // fC2
       //////////////////////////////////////////////////////////////////////////
@@ -2628,12 +2626,12 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       
       theResponses[C2_GET_V]->getResponse(); // C2 getVar
       epsC12p(1) = (*C2GetVar.theVector)(5); // ecp2 
-  
+    
     } 
     
     else if (epsC1 < 0 && epsC2 > 0 ) {
-  	Par = 4;
-  	  //////////////////////////////////////////////////////////////////////////
+    Par = 4;
+      //////////////////////////////////////////////////////////////////////////
       // C1 -- compression 
       //////////////////////////////////////////////////////////////////////////
       
@@ -2672,12 +2670,12 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       //  case 2: eq. i-35, 36
       temp = 4.0*(rhox/db1*fabs(cos(citan1))+rhoy/db2*fabs(cos(citan2)));
       fC2b = fcr/(1+sqrt(2.2/temp*epsC2));
-  	  temp = max(fC2a,fC2b); // eq.i-38 /fC1
-  
-  	  // eq.i-5   // for positive value
-  	  fC2c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
-  	       + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
-  	  double fC2max = min(temp, fC2c);
+      temp = max(fC2a,fC2b); // eq.i-38 /fC1
+    
+      // eq.i-5   // for positive value
+      fC2c = fabs(rhox* (fyx - fS1) * pow(cos(citan1), 2.0)
+           + rhoy* (fyy - fS2) * pow(cos(citan2), 2.0) );
+      double fC2max = min(temp, fC2c);
       
       theData(0) = eC2m;
       theData(1) = eT2m;
@@ -2685,7 +2683,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       theData(5) = CepsC12p(1);
       theData(6) = 1.0; //betaD
       theData(7) = 1.0; //K
-  
+    
       ret = 0;
       ret += C2SetVar.setVector(theData);  // Information for C tension, material [3], response[5]
       ret += theResponses[C2_SET_V]->getResponse(); // C2 setVar 
@@ -2696,14 +2694,14 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
       }
       temp = theMaterial[C_TWO]->getStress();
       fC2 = min(fC2max, temp);
-  
-  	  //////////////////////////////////////////////////////////////////////////
-  	  if(epsC2 > epscr) { //checkAtCrack();    	    // Calculate local stress at cracks
-  	    status         = 0; // status to check if iteration satisfied eq.i-7
-  	    fC2converged   = false;
-  	    epsScrx        = epsS1;
-  	    epsScry        = epsS2;
-  	    epsIncr        = 0.0;
+    
+      //////////////////////////////////////////////////////////////////////////
+      if(epsC2 > epscr) { //checkAtCrack();    	    // Calculate local stress at cracks
+        status         = 0; // status to check if iteration satisfied eq.i-7
+        fC2converged   = false;
+        epsScrx        = epsS1;
+        epsScry        = epsS2;
+        epsIncr        = 0.0;
         
         while ( fC2converged == false && status == 0 ) {
           if(fabs(epsScrx) > 0.5 || fabs(epsScry) > 0.5) { // for very large strain at cracks
@@ -2725,7 +2723,7 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
           //  opserr << "MCFTRCPlaneStress::determineTrialStress(): fail to determine epsScry" << endln;
           //  return -1;
           //}
-  	      //fScry = theMaterial[S_TWO]->getStress();
+          //fScry = theMaterial[S_TWO]->getStress();
           fScrx = determinefS(epsScrx, fyx, Es, 1.02*Es);
           fScry = determinefS(epsScry, fyy, Es, 1.02*Es);
           
@@ -2768,124 +2766,124 @@ MCFTRCPlaneStress::determineSecantModulus(Vector strain)
         }
         //fC2 = (fC2 > 0 ? fC2 : 0);
         //vci = vci * min(fabs(vcimax), fabs(vci)) / fabs(vci);
-  	  }
+      }
     } */
-
-	//eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
-	//	 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
-	//eC2p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
-	//	 - 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
-	tempStrain.addMatrixVector(0.0, T_cita, CepsCp_vec, 1.0);
-	eC1p = tempStrain(0);
-	eC2p = tempStrain(1);
-	halfGammaOneTwo = tempStrain(2); // should be somve value need further check
-
+    
+    //eC1p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
+    //	 + 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
+    //eC2p = 0.5*(epsCp_vec(0)+epsCp_vec(1)) 
+    //	 - 0.5*sqrt(pow(epsCp_vec(0)-epsCp_vec(1), 2.0)+pow(epsCp_vec(2), 2.0));
+    tempStrain.addMatrixVector(0.0, T_cita, CepsCp_vec, 1.0);
+    eC1p = tempStrain(0);
+    eC2p = tempStrain(1);
+    halfGammaOneTwo = tempStrain(2); // should be somve value need further check
+    
     // deltaEspCp(2),  P. Ceresa 2009, Eq. 4
-	//deltaEpsC1p = epsC12p(0) - CepsC12p(0);
-	deltaEpsC1p = epsC12p(0) - eC1p;
-	//deltaEpsC2p = epsC12p(1) - CepsC12p(1);
+    //deltaEpsC1p = epsC12p(0) - CepsC12p(0);
+    deltaEpsC1p = epsC12p(0) - eC1p;
+    //deltaEpsC2p = epsC12p(1) - CepsC12p(1);
     deltaEpsC2p = epsC12p(1) - eC2p;
-
+    
     epsCp_vec(0) = CepsCp_vec(0) + (0.5 * deltaEpsC1p * (1+cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1-cos(2.0*cita)));
     epsCp_vec(1) = CepsCp_vec(1) + (0.5 * deltaEpsC1p * (1-cos(2.0*cita)) + 0.5 * deltaEpsC2p * (1+cos(2.0*cita)));
     epsCp_vec(2) = CepsCp_vec(2) + (deltaEpsC1p - deltaEpsC2p) * sin(2.0*cita);
-
+    
     //need further revision for the initial crack direction, citaIC
     if (rhox > 0.0 && rhoy > 0.0) citaLag = 5./180.*PI;    // eq.i-41~43 
     else                          citaLag = 7.5/180.*PI;
-  	
-	dCitaE = citaE - citaIC;
-	dCitaS = (fabs(dCitaE) > citaLag ? dCitaE-citaLag : dCitaE);
-	citaS  = citaIC + dCitaS;
-
-	if (w <= 0.0) delta_S = 0.0;           //eq. i-40. 12 
-	else          delta_S = vci/(1.8*pow(w,-0.8)+(0.234*pow(w,-0.707)-0.2)*(-fpc*1.25)); // fpc change for fcc = 1.25*fpc
-	
-	double gammaSa;
-	if (s_cita == 0.0 ) {
-	  gammaSa = 0.0;
-	} else {
-	  gammaSa = delta_S/s_cita;
-	}
-	
-	double gammaSb = Tstrain(2)*cos(2.0*citaS) + (Tstrain(1)-Tstrain(0))*sin(2.0*citaS);  // eq. i-18
-	gamma_S = max(gammaSa, gammaSb);
-
-	epsSlip_vec(0) = -0.5*gamma_S*sin(2.0*citaS);   // eq.i-13~15 
-	epsSlip_vec(1) =  0.5*gamma_S*sin(2.0*citaS);
-	epsSlip_vec(2) =  gamma_S*cos(2.0*citaS);
-
-	// eSlip1,2
-	//eSlip1 = 0.5*(epsSlip_vec(0)+epsSlip_vec(1))
-	//       + 0.5*sqrt(pow(epsSlip_vec(0)-epsSlip_vec(1), 2.0)+pow(epsSlip_vec(2), 2.0));
-	//eSlip2 = 0.5*(epsSlip_vec(0)+epsSlip_vec(1))
-	//       - 0.5*sqrt(pow(epsSlip_vec(0)-epsSlip_vec(1), 2.0)+pow(epsSlip_vec(2), 2.0));
-	tempStrain.addMatrixVector(0.0, T_cita, epsSlip_vec, 1.0);
-	eSlip1 = tempStrain(0);
-	eSlip2 = tempStrain(1);
-	halfGammaOneTwo = tempStrain(2); // should be some value need further check
-
+    
+    dCitaE = citaE - citaIC;
+    dCitaS = (fabs(dCitaE) > citaLag ? dCitaE-citaLag : dCitaE);
+    citaS  = citaIC + dCitaS;
+    
+    if (w <= 0.0) delta_S = 0.0;           //eq. i-40. 12 
+    else          delta_S = vci/(1.8*pow(w,-0.8)+(0.234*pow(w,-0.707)-0.2)*(-fpc*1.25)); // fpc change for fcc = 1.25*fpc
+    
+    double gammaSa;
+    if (s_cita == 0.0 ) {
+      gammaSa = 0.0;
+    } else {
+      gammaSa = delta_S/s_cita;
+    }
+    
+    double gammaSb = Tstrain(2)*cos(2.0*citaS) + (Tstrain(1)-Tstrain(0))*sin(2.0*citaS);  // eq. i-18
+    gamma_S = max(gammaSa, gammaSb);
+    
+    epsSlip_vec(0) = -0.5*gamma_S*sin(2.0*citaS);   // eq.i-13~15 
+    epsSlip_vec(1) =  0.5*gamma_S*sin(2.0*citaS);
+    epsSlip_vec(2) =  gamma_S*cos(2.0*citaS);
+    
+    // eSlip1,2
+    //eSlip1 = 0.5*(epsSlip_vec(0)+epsSlip_vec(1))
+    //       + 0.5*sqrt(pow(epsSlip_vec(0)-epsSlip_vec(1), 2.0)+pow(epsSlip_vec(2), 2.0));
+    //eSlip2 = 0.5*(epsSlip_vec(0)+epsSlip_vec(1))
+    //       - 0.5*sqrt(pow(epsSlip_vec(0)-epsSlip_vec(1), 2.0)+pow(epsSlip_vec(2), 2.0));
+    tempStrain.addMatrixVector(0.0, T_cita, epsSlip_vec, 1.0);
+    eSlip1 = tempStrain(0);
+    eSlip2 = tempStrain(1);
+    halfGammaOneTwo = tempStrain(2); // should be some value need further check
+    
     if (fabs(epsC1) < SMALL_STRAIN) {
-	  Ecx = theMaterial[C_ONE]->getTangent();
-	} else {
-	  Ecx = fC1/(epsC1-epsC12p(0)); //-eSlip1
-	  if (Ecx > Ec) Ecx = Ec;
-	}
+      Ecx = theMaterial[C_ONE]->getTangent();
+    } else {
+      Ecx = fC1/(epsC1-epsC12p(0)); //-eSlip1
+      if (Ecx > Ec) Ecx = Ec;
+    }
     if (fabs(epsC2) < SMALL_STRAIN) {
-	  Ecy = theMaterial[C_TWO]->getTangent();
-	} else {
-	  Ecy = fC2/(epsC2-epsC12p(1)); //-eSlip2
-	  if (Ecy > Ec) Ecy = Ec;
-	}
-  
+      Ecy = theMaterial[C_TWO]->getTangent();
+    } else {
+      Ecy = fC2/(epsC2-epsC12p(1)); //-eSlip2
+      if (Ecy > Ec) Ecy = Ec;
+    }
+    
     Dcp(0,0) = Ecx;
     Dcp(1,1) = Ecy;
     Dcp(2,2) = Ecx * Ecy / ( Ecx + Ecy );
-  
+    
     // EbarS1, EbarS2, eq.i-5
     if (fabs(epsS1) < SMALL_STRAIN) Ds1p(0,0) = rhox * (theMaterial[S_ONE]->getTangent()); //getSecant());
     else              Ds1p(0,0) = rhox * fS1 / epsS1;
     
     if (fabs(epsS2) < SMALL_STRAIN) Ds2p(0,0) = rhoy * (theMaterial[S_TWO]->getTangent()); //getSecant());
     else              Ds2p(0,0) = rhoy * fS2 / epsS2;
-  
+    
     Dc.addMatrixTripleProduct( 0.0, Tc,  Dcp,  1.0);
     Ds1.addMatrixTripleProduct(0.0, Ts1, Ds1p, 1.0);
     Ds2.addMatrixTripleProduct(0.0, Ts2, Ds2p, 1.0);
-
-	secant_matrix = Dc + Ds1 + Ds2;
-
-	secant_matrix(0,2) = 0.5 * secant_matrix(0,2);
-	secant_matrix(1,2) = 0.5 * secant_matrix(1,2);
-	secant_matrix(2,2) = 0.5 * secant_matrix(2,2);
-
+    
+    secant_matrix = Dc + Ds1 + Ds2;
+    
+    secant_matrix(0,2) = 0.5 * secant_matrix(0,2);
+    secant_matrix(1,2) = 0.5 * secant_matrix(1,2);
+    secant_matrix(2,2) = 0.5 * secant_matrix(2,2);
+    
     // Calculate pseudo-prestress vector
-	//stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
-	//static Matrix DInv(3,3);  // D invert
+    //stress0_vec.addMatrixVector(0.0, Dc, epsCp_vec, 1.0);
+    //static Matrix DInv(3,3);  // D invert
     //tangent_matrix.Invert(DInv);
-	//Vector tempVec(3);
-	//tempVec.addMatrixVector(0.0, DInv, stress0_vec, 1.0);
-
-	//epsCp_vec -= tempVec;
-	errorVec = Tstrain - epsCe_vec - epsCp_vec - epsSlip_vec;
-
+    //Vector tempVec(3);
+    //tempVec.addMatrixVector(0.0, DInv, stress0_vec, 1.0);
+    
+    //epsCp_vec -= tempVec;
+    errorVec = Tstrain - epsCe_vec - epsCp_vec - epsSlip_vec;
+    
     errNorm = errorVec.pNorm(-1);
-	// determine the norm of matrixnorm = tempMat.Norm();
-	// errNorm = norm - tempNorm;
-	
-  	if ( errNorm <= tolNorm) {
-	  vCiconverged = true;
-	} else {
+    // determine the norm of matrixnorm = tempMat.Norm();
+    // errNorm = norm - tempNorm;
+    
+    if ( errNorm <= tolNorm) {
+      vCiconverged = true;
+    } else {
       errorVec /= (pow(2.0, iteration_counter/100));
-	  epsC_vec += errorVec;
-	  iteration_counter += 1;
-	  numberDivide = iteration_counter/ 100;
-	  if (numberDivide == 5) {
-		opserr << "errorNorm = " << errNorm << endln;
-	  } 
-	}
-  }
+      epsC_vec += errorVec;
+      iteration_counter += 1;
+      numberDivide = iteration_counter/ 100;
+      if (numberDivide == 5) {
+    	opserr << "errorNorm = " << errNorm << endln;
+      } 
+    }
 
+  }
   // Calculate the tangent matrix.
   tangent_matrix = secant_matrix;
 
