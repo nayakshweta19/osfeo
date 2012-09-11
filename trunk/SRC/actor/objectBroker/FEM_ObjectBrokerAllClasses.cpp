@@ -265,6 +265,9 @@
 #include <ImposedMotionSP.h>
 #include <ImposedMotionSP1.h>
 
+// Pressure_Constraint header file
+#include <Pressure_Constraint.h>
+
 // nodal load header files
 #include <NodalLoad.h>
 
@@ -711,6 +714,22 @@ FEM_ObjectBrokerAllClasses::getNewSP(int classTag)
 	     return 0;
 	     
 	 }    
+}
+
+Pressure_Constraint *
+FEM_ObjectBrokerAllClasses::getNewPC(int classTag)
+{
+  switch(classTag) {
+  case CNSTRNT_TAG_Pressure_Constraint:  
+    return new Pressure_Constraint(classTag);
+
+  default:
+    opserr << "FEM_ObjectBrokerAllClasses::getNewPC - ";
+    opserr << " - no Pressure_Constraint type exists for class tag ";
+    opserr << classTag << endln;
+    return 0;
+
+  }    
 }
 
 NodalLoad     *

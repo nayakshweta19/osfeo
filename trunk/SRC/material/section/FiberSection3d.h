@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.14 $
-// $Date: 2008/08/26 16:47:42 $
+// $Date: 2008-08-26 16:47:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/FiberSection3d.h,v $
                                                                         
 // Written: fmk
@@ -40,12 +40,15 @@
 class UniaxialMaterial;
 class Fiber;
 class Response;
+class SectionIntegration;
 
 class FiberSection3d : public SectionForceDeformation
 {
   public:
     FiberSection3d(); 
-    FiberSection3d(int tag, int numFibers, Fiber **fibers); 
+    FiberSection3d(int tag, int numFibers, Fiber **fibers);
+    FiberSection3d(int tag, int numFibers, UniaxialMaterial **mats,
+		   SectionIntegration &si);
     ~FiberSection3d();
 
     const char *getClassType(void) const {return "FiberSection3d";};
@@ -100,17 +103,14 @@ class FiberSection3d : public SectionForceDeformation
     double yBar;       // Section centroid
     double zBar;
   
+    SectionIntegration *sectionIntegr;
+
     static ID code;
 
     Vector e;          // trial section deformations 
     Vector eCommit;    // committed section deformations 
     Vector *s;         // section resisting forces  (axial force, bending moment)
     Matrix *ks;        // section stiffness
-
-    // AddingSensitivity:BEGIN //////////////////////////////////////////
-    int parameterID;
-    Matrix *SHVs;
-    // AddingSensitivity:END ///////////////////////////////////////////
 };
 
 #endif

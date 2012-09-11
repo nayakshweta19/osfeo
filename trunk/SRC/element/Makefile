@@ -24,6 +24,7 @@ all:         $(OBJS)
 	@$(CD) $(FE)/element/brick; $(MAKE);
 	@$(CD) $(FE)/element/joint; $(MAKE);
 	@$(CD) $(FE)/element/triangle; $(MAKE);
+	@$(CD) $(FE)/element/PFEMElement; $(MAKE);
 	@$(CD) $(FE)/element/dispBeamColumn; $(MAKE);
 	@$(CD) $(FE)/element/elasticBeamColumn; $(MAKE);
 	@$(CD) $(FE)/element/updatedLagrangianBeamColumn; $(MAKE);
@@ -35,7 +36,6 @@ all:         $(OBJS)
 	@$(CD) $(FE)/element/adapter; $(MAKE);
 	@$(CD) $(FE)/element/twoNodeLink; $(MAKE);
 	@$(CD) $(FE)/element/pyMacro; $(MAKE);
-	@$(CD) $(FE)/element/simpleContact; $(MAKE);
 	@$(CD) $(FE)/element/surfaceLoad; $(MAKE);
 	@$(CD) $(FE)/element/UWelements; $(MAKE);
 
@@ -60,6 +60,7 @@ spotless: clean
 	@$(CD) $(FE)/element/brick; $(MAKE) wipe;
 	@$(CD) $(FE)/element/joint; $(MAKE) wipe;
 	@$(CD) $(FE)/element/triangle; $(MAKE) wipe;
+	@$(CD) $(FE)/element/PFEMElement; $(MAKE) wipe;
 	@$(CD) $(FE)/element/dispBeamColumn; $(MAKE) wipe;
 	@$(CD) $(FE)/element/elasticBeamColumn; $(MAKE) wipe;
 	@$(CD) $(FE)/element/updatedLagrangianBeamColumn; $(MAKE) wipe;
@@ -71,8 +72,8 @@ spotless: clean
 	@$(CD) $(FE)/element/twoNodeLink; $(MAKE) wipe;
 	@$(CD) $(FE)/element/frictionBearing; $(MAKE) wipe;
 	@$(CD) $(FE)/element/pyMacro; $(MAKE) wipe;
-	@$(CD) $(FE)/element/simpleContact; $(MAKE) wipe;
 	@$(CD) $(FE)/element/surfaceLoad; $(MAKE) wipe;
+	@$(CD) $(FE)/element/UWelements; $(MAKE) wipe;
 
 wipe: spotless
 
