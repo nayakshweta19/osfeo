@@ -253,7 +253,9 @@
 #define SEC_TAG_Parallel                         77
 #define SEC_TAG_Fiber		                 8
 #define SEC_TAG_FiberSection2d		         9
+#define SEC_TAG_NDFiberSection2d		         900
 #define SEC_TAG_FiberSection3d		        10
+#define SEC_TAG_NDFiberSection3d		         1000
 #define SEC_TAG_FiberSectionGJ		        11
 #define SEC_TAG_BeamFiberSection	        12
 #define SEC_TAG_ElasticPlateSection	        13
@@ -315,8 +317,9 @@
 #define ND_TAG_PlateFiberMaterial          2001
 #define ND_TAG_PlaneStrainMaterial          2003
 #define ND_TAG_BeamFiberMaterial		2002
+#define ND_TAG_BeamFiberMaterial2d		20041
 // BeamFiberMaterial2d - Ning Li. neallee@tju.edu.cn
-#define ND_TAG_BeamFiberMaterial2d      2004
+//#define ND_TAG_BeamFiberMaterial2d      2004
 #define ND_TAG_PlaneStressFiberMaterial 2005
 #define ND_TAG_CompressibleFluid		3001
 #define ND_TAG_GeneralizedPlasticity 3002
@@ -378,6 +381,8 @@
 
 #define FIBER_TAG_Uniaxial2d	1
 #define FIBER_TAG_Uniaxial3d	2
+#define FIBER_TAG_ND2d	3
+#define FIBER_TAG_ND3d	4
 
 #define BACKBONE_TAG_Capped		1
 #define BACKBONE_TAG_LinearCapped	2
@@ -594,6 +599,8 @@
 #define ELE_TAG_TFP_Bearing2d 21
 #define ELE_TAG_TripleFrictionPendulum 777
 
+#define ELE_TAG_PFEMElement2D 2012
+
 #define FRN_TAG_Coulomb            1
 #define FRN_TAG_VelDependent       2
 #define FRN_TAG_VelPressureDep     3
@@ -670,8 +677,9 @@
 #define CNSTRNT_TAG_MP_Joint2D          5
 #define CNSTRNT_TAG_MP_SimpleJoint2D    6
 #define CNSTRNT_TAG_MP_Joint3D          7
+#define CNSTRNT_TAG_Pressure_Constraint    8
 // Adding HAJJAR_COMPOSITE: Begin /////////
-#define CNSTRNT_TAG_MD_Constraint       8
+#define CNSTRNT_TAG_MD_Constraint       9
 // Adding HAJJAR_COMPOSITE: End /////////
 
 
@@ -765,6 +773,7 @@
 #define INTEGRATOR_TAGS_TRBDF2                          34
 #define INTEGRATOR_TAGS_GeneralizedAlpha                35
 #define INTEGRATOR_TAGS_DisplacementPath                36
+#define INTEGRATOR_TAGS_FSI                             37
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define INTEGRATOR_TAGS_ArcLengthw              48
@@ -796,6 +805,7 @@
 #define LinSOE_TAGS_MumpsSOE 23
 #define LinSOE_TAGS_MumpsParallelSOE 24
 #define LinSOE_TAGS_MPIDiagonalSOE 25
+#define LinSOE_TAGS_PFEMLinSOE    26
 
 #define SOLVER_TAGS_FullGenLinLapackSolver  	1
 #define SOLVER_TAGS_BandGenLinLapackSolver  	2

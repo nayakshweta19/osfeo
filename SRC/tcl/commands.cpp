@@ -242,6 +242,7 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 ///*/
 
 #include <SparseGenColLinSOE.h>
+#include <PFEMLinSOE.h>
 #ifdef _THREADS
 #include <ThreadedSuperLU.h>
 #else
@@ -2455,6 +2456,7 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     int npRow = 1;
     int npCol = 1;
     int np = 1;
+    bool PFEM = false;
 
     // defaults for threaded SuperLU
 
@@ -2480,6 +2482,8 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 	if (count < argc)
 	  if (Tcl_GetInt(interp, argv[count], &npCol) != TCL_OK)
 	    return TCL_ERROR;		     
+      } else if(strcmp(argv[count],"-PFEM") == 0) {
+        PFEM = true;
       }
       count++;
     }
@@ -2525,7 +2529,11 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 
     theSOE = new DistributedSparseGenColLinSOE(*theSolver);      
 #else
-    theSOE = new SparseGenColLinSOE(*theSolver);      
+    if(PFEM) {
+        theSOE = new PFEMLinSOE(*theSolver);
+    } else {
+        theSOE = new SparseGenColLinSOE(*theSolver);
+    }
 #endif
   }
 
@@ -3361,6 +3369,7 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
   int numIter = 0;
   int printIt = 0;
   int normType = 2;
+  int maxIncr = 3;
 
   if ((strcmp(argv[1],"NormDispAndUnbalance") == 0) || 
       (strcmp(argv[1],"NormDispOrUnbalance") == 0)) {
@@ -3391,6 +3400,19 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
 	return TCL_ERROR;			  
       if (Tcl_GetInt(interp, argv[6], &normType) != TCL_OK)	
 	return TCL_ERROR;			  
+    } else if (argc == 8) {
+      if (Tcl_GetDouble(interp, argv[2], &tol) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[3], &tol2) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[4], &numIter) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[5], &printIt) != TCL_OK)	
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[6], &normType) != TCL_OK)	
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[7], &maxIncr) != TCL_OK)
+        return TCL_ERROR;
     }
   } else if (strcmp(argv[1],"FixedNumIter") != 0) {
     if (argc == 4) {
@@ -3451,9 +3473,9 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
     if (strcmp(argv[1],"NormUnbalance") == 0) 
       theNewTest = new CTestNormUnbalance(tol,numIter,printIt,normType);       
     else if (strcmp(argv[1],"NormDispAndUnbalance") == 0) 
-      theNewTest = new NormDispAndUnbalance(tol,tol2, numIter,printIt,normType);       
+      theNewTest = new NormDispAndUnbalance(tol,tol2, numIter,printIt,normType,maxIncr);
     else if (strcmp(argv[1],"NormDispOrUnbalance") == 0) 
-      theNewTest = new NormDispOrUnbalance(tol,tol2, numIter,printIt,normType);       
+      theNewTest = new NormDispOrUnbalance(tol,tol2, numIter,printIt,normType,maxIncr);
     else if (strcmp(argv[1],"NormDispIncr") == 0) 
       theNewTest = new CTestNormDispIncr(tol,numIter,printIt,normType);             
     else if (strcmp(argv[1],"EnergyIncr") == 0) 
@@ -6473,6 +6495,22 @@ removeObject(ClientData clientData, Tcl_Interp *interp, int argc,
     }
   }
   
+  else if((strcmp(argv[1],"PressureConstraint")==0) || (strcmp(argv[1],"pc")==0)) {
+    if (argc < 3) {
+      opserr << "WARNING want - remove PressureConstraint pcTag?\n";
+      return TCL_ERROR;
+    }
+    if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+      opserr << "WARNING remove PressureConstraint tag? failed to read tag: " << argv[2] << endln;
+      return TCL_ERROR;
+    }
+
+    Pressure_Constraint *thePC = theDomain.removePressure_Constraint(tag);
+    if (thePC != 0) {
+      delete thePC;
+    }
+  }
+
   else if ((strcmp(argv[1],"MPconstraint") == 0) || (strcmp(argv[1],"mp") == 0)) {
     if (argc < 3) {
       opserr << "WARNING want - remove SPconstraint nNodeTag?\n";
