@@ -31,6 +31,7 @@
 // stress components which can then be integrated over an area to model a
 // shear flexible 3D beam.
 
+
 #include <BeamFiberMaterial.h>
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
@@ -38,8 +39,6 @@
 
 Vector BeamFiberMaterial::stress(3);
 Matrix BeamFiberMaterial::tangent(3,3);
-
-#define MAXITER 200
 
 BeamFiberMaterial::BeamFiberMaterial(void)
 : NDMaterial(0, ND_TAG_BeamFiberMaterial),
@@ -155,7 +154,7 @@ BeamFiberMaterial::getRho(void)
 int 
 BeamFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 {
-  static const double tolerance = 1.0e-05;
+  static const double tolerance = 1.0e-08;
 
   this->strain(0) = strainFromElement(0);
   this->strain(1) = strainFromElement(1);
@@ -173,7 +172,8 @@ BeamFiberMaterial::setTrialStrain(const Vector &strainFromElement)
   static Matrix threeDtangentCopy(6,6);
   static Matrix dd22(3,3);
 
-  int i, j, ii, jj, numIter=0;
+  int i, j;
+  int ii, jj;
 
   do {
     //set three dimensional strain
@@ -237,8 +237,6 @@ BeamFiberMaterial::setTrialStrain(const Vector &strainFromElement)
     this->Tstrain33 -= strainIncrement(1);
     this->Tgamma23  -= strainIncrement(2);
 
-	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial::setTrialStrain()-numIter > "<< MAXITER <<endln; break;}
-  
   } while (norm > tolerance);
 
   return 0;
@@ -253,93 +251,15 @@ BeamFiberMaterial::getStrain(void)
 const Vector&  
 BeamFiberMaterial::getStress()
 {
-  //newton loop to solve for out-of-plane strains
-  static const double tolerance = 1.0e-05;
-  double norm;
+  const Vector &threeDstress = theMaterial->getStress();
+  static Vector threeDstressCopy(6);
 
-  static Vector condensedStress(3);
-  static Vector strainIncrement(3);
-  static Vector threeDstress(6);
-  static Vector threeDstrain(6);
-  static Matrix threeDtangent(6,6);
-  static Vector threeDstressCopy(6); 
-  static Matrix threeDtangentCopy(6,6);
-  static Matrix dd22(3,3);
-
-  int i, j, ii, jj, numIter=0;
-
-  do {
-    //set three dimensional strain
-    threeDstrain(0) = this->strain(0);
-    threeDstrain(1) = this->Tstrain22;
-    threeDstrain(2) = this->Tstrain33;
-    threeDstrain(3) = this->strain(1); 
-    threeDstrain(4) = this->Tgamma23;
-    threeDstrain(5) = this->strain(2);
-
-    if (theMaterial->setTrialStrain(threeDstrain) < 0) {
-      opserr << "BeamFiberMaterial::setTrialStrain - setStrain failed in material with strain " << threeDstrain;
-      return -1;   
-    }
-
-    //three dimensional stress
-    threeDstress = theMaterial->getStress();
-
-    //three dimensional tangent 
-    threeDtangent = theMaterial->getTangent();
-
-    //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-    //BeamFiberMaterial strain order = 11, 12, 31, 22, 33, 23
-
-    //swap matrix indices to sort out-of-plane components 
-    for (i=0; i<6; i++) {
-
-      ii = this->indexMap(i);
-
-      threeDstressCopy(ii) = threeDstress(i);
-
-      for (j=0; j<6; j++) {
-
-	jj = this->indexMap(j);
-	
-	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
-
-      }//end for j
-       
-    }//end for i
-
-
-    //out of plane stress and tangents
-    for (i=0; i<3; i++) {
-
-      condensedStress(i) = threeDstressCopy(i+3);
-
-      for (j=0; j<3; j++) 
-	dd22(i,j) = threeDtangentCopy(i+3,j+3);
-
-    }//end for i
-
-    //set norm
-    norm = condensedStress.Norm();
-
-    //condensation 
-    dd22.Solve(condensedStress, strainIncrement);
-
-    //update out of plane strains
-    this->Tstrain22 -= strainIncrement(0);
-    this->Tstrain33 -= strainIncrement(1);
-    this->Tgamma23  -= strainIncrement(2);
-
-	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial::getStress()-numIter > "<< MAXITER<<endln; break;}
-
-  } while (norm > tolerance);
-  
-  //const Vector &threeDstress = theMaterial->getStress();
-
+  int i, ii;
   //swap matrix indices to sort out-of-plane components 
   for (i=0; i<6; i++) {
 
     ii = this->indexMap(i);
+
     threeDstressCopy(ii) = threeDstress(i);
   }
 
@@ -362,7 +282,7 @@ BeamFiberMaterial::getTangent()
   const Matrix &threeDtangent = theMaterial->getTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j, ii, jj;
+  int i, j , ii, jj;
   for (i=0; i<6; i++) {
 
     ii = this->indexMap(i);
@@ -411,7 +331,7 @@ BeamFiberMaterial::getInitialTangent()
   const Matrix &threeDtangent = theMaterial->getInitialTangent();
 
   //swap matrix indices to sort out-of-plane components 
-  int i, j, ii, jj;
+  int i, j , ii, jj;
   for (i=0; i<6; i++) {
 
     ii = this->indexMap(i);
@@ -455,18 +375,18 @@ BeamFiberMaterial::indexMap(int i)
   int ii;
 
   if (i == 3) 
-	  ii = 1;
+    ii = 1;
   else if (i == 5)
-	  ii = 2;
+    ii = 2;
   else if (i == 1)
-	  ii = 3;
+    ii = 3;
   else if (i == 2)
-	  ii = 4;
+    ii = 4;
   else if (i == 4)
-	  ii = 5;
+    ii = 5;
   else 
-	  ii = i;
-
+    ii = i;
+  
   return ii;
 }
 
@@ -572,4 +492,11 @@ BeamFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker
     opserr << "BeamFiberMaterial::sendSelf() - failed to send vector material\n";
   
   return res;
+}
+
+int
+BeamFiberMaterial::setParameter(const char **argv, int argc,
+				Parameter &param)
+{
+  return theMaterial->setParameter(argv, argc, param);
 }

@@ -162,7 +162,7 @@ BeamFiberMaterial2d::getRho(void)
 int 
 BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
 {
-  static const double tolerance = 1.0e-05;
+  static const double tolerance = 1.0e-08;
 
   this->strain(0) = strainFromElement(0);
   this->strain(1) = strainFromElement(1);
@@ -255,7 +255,7 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
 int 
 BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement, double theta)
 {
-  static const double tolerance = 1.0e-05;
+  static const double tolerance = 1.0e-08;
 
   static Matrix T(2,3);
   T(0,0) = 1.;

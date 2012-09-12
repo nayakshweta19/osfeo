@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.3 $
-// $Date: 2003/02/14 23:01:25 $
+// $Date: 2003-02-14 23:01:25 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlaneStressMaterial.cpp,v $
 
 //
@@ -483,5 +483,9 @@ PlaneStressMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBrok
   return res;
 }
  
-
-
+int
+PlaneStressMaterial::setParameter(const char **argv, int argc,
+				  Parameter &param)
+{
+  return theMaterial->setParameter(argv, argc, param);
+}

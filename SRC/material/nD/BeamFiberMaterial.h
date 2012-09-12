@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2003/02/14 23:01:24 $
+// $Date: 2003-02-14 23:01:24 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/BeamFiberMaterial.h,v $
 
 // Written: MHS
@@ -68,6 +68,8 @@ class BeamFiberMaterial: public NDMaterial {
 
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
+
+    int setParameter(const char **argv, int argc, Parameter &param);
 
   private:
     double Tstrain22;

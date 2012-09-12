@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2006/08/04 18:18:38 $
+// $Date: 2006-08-04 18:18:38 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlateFiberMaterial.h,v $
 
 // Ed "C++" Love
@@ -97,6 +97,7 @@ class PlateFiberMaterial: public NDMaterial{
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
+    int setParameter(const char **argv, int argc, Parameter &param);
 
   private :
 
