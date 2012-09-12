@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2007/05/03 23:03:26 $
+// $Date: 2007-05-03 23:03:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/PlateFiberMaterial.cpp,v $
 
 //
@@ -312,7 +312,7 @@ PlateFiberMaterial::getTangent()
     dd12(i,0) = threeDtangentCopy(i,5);
     dd21(0,i) = threeDtangentCopy(5,i);
     
-    for (j=0; j<5; j++) 
+    for (int j=0; j<5; j++) 
       dd11(i,j) = threeDtangentCopy(i,j);
     
   }//end for i
@@ -482,5 +482,9 @@ PlateFiberMaterial::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroke
   return res;
 }
  
-
-
+int
+PlateFiberMaterial::setParameter(const char **argv, int argc,
+				 Parameter &param)
+{
+  return theMaterial->setParameter(argv, argc, param);
+}
