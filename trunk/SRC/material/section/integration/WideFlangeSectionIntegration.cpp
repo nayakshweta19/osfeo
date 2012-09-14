@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.4 $
-// $Date: 2010/09/13 21:31:26 $
+// $Date: 2010-09-13 21:31:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/integration/WideFlangeSectionIntegration.cpp,v $
 
 #include <WideFlangeSectionIntegration.h>
@@ -57,15 +57,24 @@ WideFlangeSectionIntegration::~WideFlangeSectionIntegration()
 int
 WideFlangeSectionIntegration::getNumFibers(FiberType type)
 {
-  if (type == all || type == steel)
-    return Nfdw + 2*Nftf;
-  else
-    return 0;
+  return Nfdw + 2*Nftf;
 }
 
 int
 WideFlangeSectionIntegration::arrangeFibers(UniaxialMaterial **theMaterials,
 					    UniaxialMaterial *theSteel)
+{
+  int numFibers = this->getNumFibers();
+
+  for (int i = 0; i < numFibers; i++)
+    theMaterials[i] = theSteel;
+  
+  return 0;
+}
+
+int
+WideFlangeSectionIntegration::arrangeFibers(NDMaterial **theMaterials,
+					    NDMaterial *theSteel)
 {
   int numFibers = this->getNumFibers();
 
@@ -188,7 +197,7 @@ WideFlangeSectionIntegration::activateParameter(int paramID)
 void
 WideFlangeSectionIntegration::getLocationsDeriv(int nFibers, double *dyidh, double *dzidh)
 {
-  double dw = d-2*tf;
+  //double dw = d-2*tf;
   
   double dddh  = 0.0;
   double ddwdh = 0.0;

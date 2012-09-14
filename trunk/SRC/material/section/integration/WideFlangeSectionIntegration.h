@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.5 $
-// $Date: 2010/09/13 21:31:26 $
+// $Date: 2010-09-13 21:31:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/integration/WideFlangeSectionIntegration.h,v $
 
 #ifndef WideFlangeSectionIntegration_h
@@ -28,6 +28,7 @@
 #include <SectionIntegration.h>
 
 class UniaxialMaterial;
+class NDMaterial;
 
 class WideFlangeSectionIntegration : public SectionIntegration
 {
@@ -56,8 +57,10 @@ class WideFlangeSectionIntegration : public SectionIntegration
 
   void Print(OPS_Stream &s, int flag = 0);
 
-  int arrangeFibers(UniaxialMaterial **theMaterials,
+  int arrangeFibers(UniaxialMaterial **theMaterials, 
 		    UniaxialMaterial *theSteel);
+  int arrangeFibers(NDMaterial **theMaterials, 
+		    NDMaterial *theSteel);
 
  private:
   double d;
