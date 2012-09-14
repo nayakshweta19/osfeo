@@ -45,8 +45,6 @@ ConcreteMcftNonLinear5::ConcreteMcftNonLinear5
   :NDMaterial(tag, ND_TAG_ConcreteMcftNonLinear5), 
   fcu(fcui), ecu(ecui), Ec(Eci), fcr(fcri), Esv(Esvi), fyv(fyvi), alphaV(alphaVi), RoV(RoVi), epsf(2), dDri(2,2),
   TT(3,3), dDdfcu(2,2), dDdRoV(2,2), Dr(2,2), sigf(2), fx(0.0), fxy(0.0), fy(0.0), dsigfdfcu(2), dsigfdRoV(2)
-
-
 {
   exP = 0.0;
   exyP = 0.0;
@@ -68,7 +66,6 @@ ConcreteMcftNonLinear5::ConcreteMcftNonLinear5
 
   //opserr << " check1 " << endln;
 }
-
 
 ConcreteMcftNonLinear5::ConcreteMcftNonLinear5(void)
   :NDMaterial(0, ND_TAG_ConcreteMcftNonLinear5), epsf(2), dDri(2,2),
@@ -101,34 +98,25 @@ ConcreteMcftNonLinear5::~ConcreteMcftNonLinear5(void)
 
 }
 
-
 NDMaterial*
-  ConcreteMcftNonLinear5::getCopy (void)
+ConcreteMcftNonLinear5::getCopy (void)
 {
-
   ConcreteMcftNonLinear5 *theCopy;
 
   theCopy = new ConcreteMcftNonLinear5 (this->getTag(), fcu, ecu, Ec, fcr, Esv, fyv, alphaV, RoV);
   //opserr << " check3 " << endln;
   return theCopy;
-
-
 }
 
 NDMaterial*
-  ConcreteMcftNonLinear5::getCopy (const char *type)
+ConcreteMcftNonLinear5::getCopy (const char *type)
 {
   //opserr << " check4 " << endln;
   return this->getCopy();
-
-
 }
 
-
-
-
 int
-  ConcreteMcftNonLinear5::setTrialStrain (const Vector &strain)
+ConcreteMcftNonLinear5::setTrialStrain (const Vector &strain)
 {
   epsf = strain;
 
@@ -138,59 +126,46 @@ int
 }
 
 int
-  ConcreteMcftNonLinear5::setTrialStrain (const Vector &strain, const Vector &rate)
+ConcreteMcftNonLinear5::setTrialStrain (const Vector &strain, const Vector &rate)
 {
   epsf = strain;
   //opserr << " check6 " << endln;
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::setTrialStrainIncr (const Vector &strain)
+ConcreteMcftNonLinear5::setTrialStrainIncr (const Vector &strain)
 {
   epsf += strain;
   //opserr << " check7 " << endln;
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::setTrialStrainIncr (const Vector &strain, const Vector &rate)
+ConcreteMcftNonLinear5::setTrialStrainIncr (const Vector &strain, const Vector &rate)
 {
   epsf += strain;
   //opserr << " check8 " << endln;
   return 0;
-
-
 }
 
-
 const Vector&
-  ConcreteMcftNonLinear5::getStrain (void)
+ConcreteMcftNonLinear5::getStrain (void)
 {
   //opserr << " check9 " << endln;
   return epsf;
-
-
 }
 
-
 const Matrix&
-  ConcreteMcftNonLinear5::getTangent (void)
+ConcreteMcftNonLinear5::getTangent (void)
 {
   //opserr << " check10 " << endln;
   return Dr;
-
-
 }
 
 const Matrix&
-  ConcreteMcftNonLinear5::getInitialTangent (void)
+ConcreteMcftNonLinear5::getInitialTangent (void)
 {
-
   Dr(0,0) = Ec;
   Dr(0,1) = 0.0;
   Dr(1,0) = 0.0;
@@ -198,12 +173,10 @@ const Matrix&
 
   //opserr << " check11 " << endln;
   return Dr;
-
-
 }
 
 const Vector&
-  ConcreteMcftNonLinear5::getStress (void)
+ConcreteMcftNonLinear5::getStress (void)
 {
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -223,10 +196,8 @@ const Vector&
 
   InitCrackAngle = 0.000001;
   int counter1 = 0;
-  double pi = 3.141592654;
-  double degreetorad = 3.141592654*2/360.0;
+  double degreetorad = PI*2/360.0;
   double nE  = Ec/(Ec-fcu/ecu);
-
 
   //angle search algorithm boundaries
   double bound1 = InitCrackAngle*degreetorad;
@@ -237,7 +208,6 @@ const Vector&
   double stepsize;
   double nstep = 90;
 
-
   // temporary parameters
   double theta ;
   double e1, e2, ey, sig1, sig2;
@@ -245,15 +215,10 @@ const Vector&
   //final values
   double e1f, e2f, eyf, fxf, fyf, fxyf, thetaf;
 
-
   // stepsize and increments in angle
   stepsize = (bound2-bound1)/nstep;
   theta = bound1+ counter1*stepsize;
   //----------------------------------------------------------------------------------------------------------
-
-
-
-
 
   //compatibility equations depend on the sign of exy strain because e1 is always defined as Tension
   //where e2 is always defined as Compression
@@ -269,12 +234,10 @@ const Vector&
         //opserr << "exy + " << endln;
         e2 = ex - exy * tan(theta) / 2;
 
-
       } else if (exy < 0 ) {
         //CASE 2 formulation
         //opserr << "exy - " << endln;
         e2 = ex + exy * tan(theta) / 2;
-
       }
 
       if (e2<0) {
@@ -282,7 +245,6 @@ const Vector&
         double tan2 = tan(theta)*tan(theta);
         e1 = (ex - e2 + ex*tan2)/ tan2;
         ey = e1 + e2 - ex;
-
 
         //Stresses
         if (e1 <= fcr/Ec) {
@@ -292,26 +254,14 @@ const Vector&
         }
         sig2 = (e2/ecu)*fcu*nE/(nE-1+pow(e2/ecu,nE));
 
-
-
-
-
-
-
-
         fxy = (sig1 - sig2)/2 * sin(2*theta);
         fx = sig2 + fxy*tan(theta);
         fy = sig1 - fxy*tan(theta);
 
         //Force equilibrium in vertical direction
-
         ResiStress = Esv * RoV * ey + fy; 
 
-
-
-
-        //CheckPoint 1
-
+		//CheckPoint 1
         if (countStep  > 2 && ResiStress * ResiStressCheck < 0 ) {
           bound1 = theta - stepsize;
           bound2 = theta + stepsize;
@@ -321,7 +271,6 @@ const Vector&
         }
 
         //CheckPoint 2
-
         if ( ResiStress < toleranceEpsy ) {
           FinalAnglex = theta;
           Strain1 = e1;
@@ -332,11 +281,7 @@ const Vector&
         }
 
         //CheckPoint 3
-
-
-
         if( (countStep > 2) && (ResiStressCheck < 0 && ResiStress < 0) && (ResiStress < ResiStressCheck)) {
-
           e1 = e1f;
           e2 = e2f;
           ey = eyf;
@@ -357,34 +302,24 @@ const Vector&
           Sigma2 = sig2;
           epsy = ey;
 
-
           sigf(0) = fx;
           sigf(1) = fxy;
 
           break;
-
         }
 
-
         //CheckPoint 4
-
-
-
-
         if (countStep == 90) {
           break;
         }
-
 
         counter1++;		//count theta stepsize
 
         if(abs(ResiStress) > toleranceEpsy)
           theta = bound1 + counter1*stepsize;
 
-
         ResiStressCheck = ResiStress;	
         countStep++;	//count computation steps
-
 
         // record previous step parameters
         e1f = e1;
@@ -395,23 +330,17 @@ const Vector&
         fxyf= fxy;
         thetaf = theta;
 
-
       } else if (e2>0) {
-
         counter1++;		//count theta stepsize
         theta = bound1 + counter1*stepsize;
 
-
         ResiStressCheck = ResiStress;	
-        countStep++;	
-
+        countStep++;
       }
-
     }
 
     //CHECK tangent matrix Dr11 values
     if(exy>0) {
-
       Dr(0,0) = this->c1tmd00(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(0,1) = this->c1tmd01(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(1,0) = this->c1tmd10(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
@@ -427,9 +356,7 @@ const Vector&
       dDdRoV(1,0) = this->c1dd10dRoV(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       dDdRoV(1,1) = this->c1dd11dRoV(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
 
-
     } else if (exy<0) {
-
       Dr(0,0) = this->c2tmd00(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(0,1) = this->c2tmd01(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(1,0) = this->c2tmd10(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
@@ -444,19 +371,14 @@ const Vector&
       dDdRoV(0,1) = this->c2dd01dRoV(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       dDdRoV(1,0) = this->c2dd10dRoV(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       dDdRoV(1,1) = this->c2dd11dRoV(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
-
-
     }
-
 
     sigf(0) = fx;
     sigf(1) = fxy;
 
-
   } else {
 
     if (ex<0) {
-
       e2 = ex;
       e1 = 0.0;
       ey = 0.0;
@@ -467,7 +389,6 @@ const Vector&
       } else {
         fy = fcr / (1+sqrt(500*e1));
       }
-
 
       fy = e1* Ec;
       sig2 = fx;
@@ -484,7 +405,6 @@ const Vector&
       Sigma1 = sig1;
       Sigma2 = sig2;
       epsy = ey;
-
 
       sigf(0) = fx;
       sigf(1) = fxy;
@@ -532,16 +452,13 @@ const Vector&
       Sigma2 = sig2;
       epsy = ey;
 
-
       sigf(0) = fx;
       sigf(1) = fxy;
-
 
       Dr(0,0) = this->c1tmd00(ex,exy,FinalAnglex,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(0,1) = this->c1tmd01(ex,exy,FinalAnglex,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(1,0) = this->c1tmd10(ex,exy,FinalAnglex,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       Dr(1,1) = this->c1tmd11(ex,exy,FinalAnglex,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
-
 
       dDdfcu(0,0) = this->c1dd00dfcu(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
       dDdfcu(0,1) = this->c1dd01dfcu(ex,exy,theta,Ec,nE,fcu,ecu,e1,fcr,Esv,RoV);
@@ -574,7 +491,6 @@ const Vector&
       Sigma2 = sig2;
       epsy = ey;
 
-
       sigf(0) = fx;
       sigf(1) = fxy;
 
@@ -596,15 +512,12 @@ const Vector&
 
   }
 
-
   //---------------------------------------------------------------------------------------------------------
-
 
   t00 = Dr(0,0);
   t01 = Dr(0,1);
   t10 = Dr(1,0);
   t11 = Dr(1,1);
-
 
   sigf(0) =  fxP  + Dr(0,0) * exdelta + Dr(0,1) * exydelta;
   sigf(1) =  fxyP + Dr(1,0) * exdelta + Dr(1,1) * exydelta;
@@ -616,22 +529,17 @@ const Vector&
   dsigfdRoV(0) =	 dfxdRoVP   + 	dDdRoV(0,0) * exdelta + 	dDdRoV(0,1) * exydelta;
   dsigfdRoV(1) =   dfxydRoVP  + 	dDdRoV(1,0) * exdelta + 	dDdRoV(1,1) * exydelta;
 
-
   //opserr << " check12 " << endln;
   //opserr << " Dr = "  << Dr << endln;
 
   //opserr << " sensfcu = "  << dsigfdfcu << endln;
   //getchar();
   return sigf;
-
-
 }
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 int
-  ConcreteMcftNonLinear5::commitState (void)
+ConcreteMcftNonLinear5::commitState (void)
 {
   exP = epsf(0);
   exyP = epsf(1);
@@ -646,95 +554,68 @@ int
 
   //opserr << " check13 " << endln;
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::revertToLastCommit (void)
+ConcreteMcftNonLinear5::revertToLastCommit (void)
 {
   //opserr << " check14 " << endln;
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::revertToStart (void)
+ConcreteMcftNonLinear5::revertToStart (void)
 {
   epsf.Zero();
 
   //opserr << " check15 " << endln;
   return 0;
-
-
 }
 
 
 const char*
-  ConcreteMcftNonLinear5::getType (void) const
+ConcreteMcftNonLinear5::getType (void) const
 {
-
   //opserr << " check16 " << endln;
   return 0;
-
-
 }
 
 int 
-  ConcreteMcftNonLinear5::getOrder(void) const
+ConcreteMcftNonLinear5::getOrder(void) const
 {
-
   //opserr << " check17 " << endln;
   return 0;
-
-
 }
-
 
 void
-  ConcreteMcftNonLinear5::Print (OPS_Stream &s, int flag)
+ConcreteMcftNonLinear5::Print (OPS_Stream &s, int flag)
 {
-
   //opserr << " check18 " << endln;
   return;
-
 }
 
 int
-  ConcreteMcftNonLinear5::sendSelf(int commitTag, Channel &theChannel)
+ConcreteMcftNonLinear5::sendSelf(int commitTag, Channel &theChannel)
 {
-
   //opserr << " check19 " << endln;
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+ConcreteMcftNonLinear5::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-
   //opserr << " check20 " << endln;
   return 0;
-
-
 }
 
-
-
-
 Response *
-  ConcreteMcftNonLinear5::setResponse (const char **argv, int argc, 
-  OPS_Stream &s)
+ConcreteMcftNonLinear5::setResponse (const char **argv, int argc, OPS_Stream &s)
 {
-
   //opserr << " check21 " << endln;
   Response *theRes = NDMaterial::setResponse(argv, argc, s);
   if (theRes != 0)
     return theRes;
   else {
-
     if (strcmp(argv[0], "crackAngle") == 0) {
       return new MaterialResponse(this, 10, Vector(5));
     }
@@ -744,16 +625,12 @@ Response *
     else
       return 0;
   }
-
-
 }
-
 
 // AddingSensitivity:BEGIN ///////////////////////////////////
 int
-  ConcreteMcftNonLinear5::setParameter(const char **argv, int argc, Parameter &param)
+ConcreteMcftNonLinear5::setParameter(const char **argv, int argc, Parameter &param)
 {
-
   if (strcmp(argv[0],"fcu") == 0) {// Compressive strength
     //  opserr << " check22 " << endln;
     return param.addObject(1, this);
@@ -763,14 +640,10 @@ int
     return param.addObject(2, this);
   }  
   return -1;
-
-
 }
 
-
-
 int
-  ConcreteMcftNonLinear5::updateParameter(int parameterID, Information &info)
+ConcreteMcftNonLinear5::updateParameter(int parameterID, Information &info)
 {
   switch (parameterID) {
   case 1:
@@ -786,27 +659,20 @@ int
     break;
   }
 
-
-
   return 0;
-
-
 }
 
 int
-  ConcreteMcftNonLinear5::activateParameter(int passedParameterID)
+ConcreteMcftNonLinear5::activateParameter(int passedParameterID)
 {  
-
   //opserr << " check24 " << endln;
   parameterID = passedParameterID;
 
   return 0;
-
-
 }
 
 const Vector&
-  ConcreteMcftNonLinear5::getStressSensitivity(int gradNumber, bool conditional)
+ConcreteMcftNonLinear5::getStressSensitivity(int gradNumber, bool conditional)
 {
   static Vector zerodsigdh(2);
 
@@ -822,46 +688,31 @@ const Vector&
   return zerodsigdh;
 }
 
-
-
 int
-  ConcreteMcftNonLinear5::commitSensitivity(Vector &strainGradient, int gradNumber, int numGrads)
+ConcreteMcftNonLinear5::commitSensitivity(Vector &strainGradient, int gradNumber, int numGrads)
 {
   //opserr << " check27 " << endln;
   return 0;
-
-
 }
 
 // AddingSensitivity:END /////////////////////////////////////////////
 
-
-
-
-
-
-
-
 int 
-  ConcreteMcftNonLinear5::getResponse (int responseID, Information &matInformation)
+ConcreteMcftNonLinear5::getResponse (int responseID, Information &matInformation)
 {
   //opserr << " check28 " << endln;
   static Vector crackInfo(5);
   if (responseID == 10) {
-
     crackInfo(0) = epsf(0);
     crackInfo(1) = epsf(1);
     crackInfo(2) = epsy;
     crackInfo(3) = FinalAnglex;
     crackInfo(4) = crackLabel;
 
-
-
     matInformation.setVector(crackInfo);
   } 
   static Vector prinStress(8);
   if (responseID == 11) {
-
     prinStress(0) = Sigma1;
     prinStress(1) = Sigma2;
     prinStress(2) = fx;
@@ -876,12 +727,10 @@ int
   }
 
   return 0;
-
-
 }
 
-
-double ConcreteMcftNonLinear5::c1tmd00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c1tmd00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {									  
   //checkpoint
   double cott = 1/tan(theta);
@@ -1021,8 +870,6 @@ double ConcreteMcftNonLinear5::c1tmd00(double ex, double exy, double theta, doub
 
 double ConcreteMcftNonLinear5::c1tmd01(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
-
-
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
   double csct = 1/sin(theta);
@@ -1159,11 +1006,11 @@ double ConcreteMcftNonLinear5::c1tmd01(double ex, double exy, double theta, doub
       (ecu*(-1 + nE + pow((ex - (exy*tan(theta))/2.)/ecu,nE)))));
   }
 
-
   return d01;
 }
 
-double ConcreteMcftNonLinear5::c1tmd10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c1tmd10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -1278,7 +1125,8 @@ double ConcreteMcftNonLinear5::c1tmd10(double ex, double exy, double theta, doub
   return d10;
 }
 
-double ConcreteMcftNonLinear5::c1tmd11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c1tmd11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
@@ -1396,11 +1244,11 @@ double ConcreteMcftNonLinear5::c1tmd11(double ex, double exy, double theta, doub
   if(exy<0) 
     d11 = -1*d11;
 
-
   return d11;
 }
 
-double ConcreteMcftNonLinear5::tm3(double e2, double ecu, double fcu, double nE)
+double 
+ConcreteMcftNonLinear5::tm3(double e2, double ecu, double fcu, double nE)
 {
   double df2de2 = -((e2*pow(e2/ecu,-1 + nE)*fcu*pow(nE,2))/
     (pow(ecu,2)*pow(-1 + pow(e2/ecu,nE) + nE,2))) + 
@@ -1409,9 +1257,9 @@ double ConcreteMcftNonLinear5::tm3(double e2, double ecu, double fcu, double nE)
   return df2de2;
 }
 
-double ConcreteMcftNonLinear5::c2tmd00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double 
+ConcreteMcftNonLinear5::c2tmd00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
-
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
   double csct = 1/sin(theta);
@@ -1540,7 +1388,8 @@ double ConcreteMcftNonLinear5::c2tmd00(double ex, double exy, double theta, doub
   return d00;
 }
 
-double ConcreteMcftNonLinear5::c2tmd01(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c2tmd01(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -1667,12 +1516,12 @@ double ConcreteMcftNonLinear5::c2tmd01(double ex, double exy, double theta, doub
       (-(exy*tan(theta))/2. + ex*pow(tan(theta),2)) - 
       (fcu*nE*(ex + (exy*tan(theta))/2.))/(ecu*(-1 + nE + pow((ex + (exy*tan(theta))/2.)/ecu,nE)))));
 
-
   }
   return d01;
 }
 
-double ConcreteMcftNonLinear5::c2tmd10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c2tmd10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -1780,7 +1629,8 @@ double ConcreteMcftNonLinear5::c2tmd10(double ex, double exy, double theta, doub
 
 }
 
-double ConcreteMcftNonLinear5::c2tmd11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
+double
+ConcreteMcftNonLinear5::c2tmd11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -1893,13 +1743,8 @@ double ConcreteMcftNonLinear5::c2tmd11(double ex, double exy, double theta, doub
 
 }
 
-
-
-
-
-
-
-double ConcreteMcftNonLinear5::c1dd00dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
+double
+ConcreteMcftNonLinear5::c1dd00dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
   //checkpoint
   double cott = 1/tan(theta);
@@ -2116,8 +1961,6 @@ double ConcreteMcftNonLinear5::c1dd00dfcu(double ex, double exy, double theta, d
 
 double ConcreteMcftNonLinear5::c1dd01dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
-
-
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
   double csct = 1/sin(theta);
@@ -2340,7 +2183,8 @@ double ConcreteMcftNonLinear5::c1dd01dfcu(double ex, double exy, double theta, d
   return dd01dfcu;
 }
 
-double ConcreteMcftNonLinear5::c1dd10dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
+double
+ConcreteMcftNonLinear5::c1dd10dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -2523,13 +2367,13 @@ double ConcreteMcftNonLinear5::c1dd10dfcu(double ex, double exy, double theta, d
   return dd10dfcu;
 }
 
-double ConcreteMcftNonLinear5::c1dd11dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
+double
+ConcreteMcftNonLinear5::c1dd11dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
   double csct = 1/sin(theta);
   double dd11dfcu;
-
 
   if(e1 > fcr/Ec) {
 
@@ -2719,7 +2563,6 @@ double ConcreteMcftNonLinear5::c1dd11dfcu(double ex, double exy, double theta, d
 
   return dd11dfcu;
 }
-
 
 double ConcreteMcftNonLinear5::c2dd00dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
@@ -2932,11 +2775,11 @@ double ConcreteMcftNonLinear5::c2dd00dfcu(double ex, double exy, double theta, d
       (fcu*nE*(ex + (exy*tan(theta))/2.))/(ecu*(-1 + nE + pow((ex + (exy*tan(theta))/2.)/ecu,nE))))));
   }
 
-
   return dd00dfcu;
 }
 
-double ConcreteMcftNonLinear5::c2dd01dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
+double
+ConcreteMcftNonLinear5::c2dd01dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -3158,12 +3001,12 @@ double ConcreteMcftNonLinear5::c2dd01dfcu(double ex, double exy, double theta, d
       cos(2*theta)*tan(theta)*(Ec*pow(cott,2)*(-(exy*tan(theta))/2. + ex*pow(tan(theta),2)) - 
       (fcu*nE*(ex + (exy*tan(theta))/2.))/(ecu*(-1 + nE + pow((ex + (exy*tan(theta))/2.)/ecu,nE))))));
 
-
   }
   return dd01dfcu;
 }
 
-double ConcreteMcftNonLinear5::c2dd10dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
+double
+ConcreteMcftNonLinear5::c2dd10dfcu(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Es, double RoV)
 {
 
   double cott = 1/tan(theta);
@@ -4638,7 +4481,3 @@ double ConcreteMcftNonLinear5::c2dd11dRoV(double ex, double exy, double theta, d
   return dd11dRoV;
 
 }
-
-/*double cott = 1/tan(theta);
-double sect = 1/cos(theta);
-double csct = 1/sin(theta);*/
