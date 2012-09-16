@@ -39,6 +39,57 @@
 #include <Information.h>
 #include <float.h>
 
+#include <DummyStream.h>
+#include <elementAPI.h>
+#define OPS_Export 
+
+static int numConcreteMcftNonlinear7Materials = 0;
+
+OPS_Export void *
+OPS_NewConcreteMcftNonlinear7Material()
+{
+  if (numConcreteMcftNonlinear7Materials == 0) {
+    numConcreteMcftNonlinear7Materials++;
+  }
+
+  NDMaterial *theMaterial = 0;
+
+  int numRemainingArgs = OPS_GetNumRemainingInputArgs();
+
+  if (numRemainingArgs < 9) {
+    opserr << "Want: nDMaterial ConcreteMcftNonlinear7 matTag? fcui? ecui? Eci? fcri? Esvi? fyvi? alphaVi? RoVi?\n";
+    return 0;
+  }
+
+  int tag;
+  double rho;
+  int    iData[1];
+  double dData[8];
+  int numData = 0;
+
+  numData = 1;
+  if (OPS_GetInt(&numData, &tag) != 0) {
+    opserr << "WARNING invalid nDMaterial ConcreteMcftNonlinear7 matTag" << endln;
+    return 0;
+  }
+
+  numData = 8;
+  if (OPS_GetDouble(&numData, dData) != 0) {
+    opserr << "WARNING invalid data nDMaterial ConcreteMcftNonlinear7 matTag" << tag << endln;
+    return 0;
+  }
+
+  //now create the PrestressedConcretePlaneStress
+  theMaterial = new ConcreteMcftNonLinear7(tag, dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6], dData[7]);
+
+  if (theMaterial == 0) {
+    opserr << "WARNING ran out of memory creating material\n";
+    opserr << "PrestressedConcretePlaneStress: " << tag << endln;
+    return 0;
+  }
+
+  return theMaterial;
+}
 
 // constructor: 
 ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7  
@@ -48,13 +99,7 @@ ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7
   Dr(2,2), sigf(2), fx(0.0), fxy(0.0), fy(0.0), DrP(2,2), e1(0.0), e2(0.0), sig1(0.0), sig2(0.0), theta(0.0), 
   exmin(0.0), exmax(0.0), ex(0.0),ey(0.0), exy(0.0), exymin(0.0), exymax(0.0),
   loadpath(0.0), loadpathP(0.0), crackLabelP(0.0), sigfsens(2),sigfsensP(2)
-
-
-
 {
-
-
-
   exP = 0.0;
   eyP = 0.0;
   exyP = 0.0;
@@ -98,7 +143,6 @@ ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7
   //   SHVsP = 0;
   //opserr << " check2 " << endln;
 }
-
 
 ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7 (void)
   :NDMaterial(0, ND_TAG_ConcreteMcftNonLinear7), epsf(2), Dri(2,2),
@@ -144,7 +188,6 @@ ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7 (void)
   DrP(1,0) = 0.0;
   DrP(1,1) = 0.0;
 
-
   this->revertToLastCommit();
   //Sensitivity
   parameterID = 0; 
@@ -152,46 +195,42 @@ ConcreteMcftNonLinear7 ::ConcreteMcftNonLinear7 (void)
   SHVs = 0;
 }
 
-ConcreteMcftNonLinear7 ::~ConcreteMcftNonLinear7 (void)
+ConcreteMcftNonLinear7::~ConcreteMcftNonLinear7 (void)
 {
   if (SHVs != 0) 
     delete SHVs;	
 }
 
-
 NDMaterial*
-  ConcreteMcftNonLinear7 ::getCopy (void)
+ConcreteMcftNonLinear7::getCopy (void)
 {
-  ConcreteMcftNonLinear7  *theCopy;
+ConcreteMcftNonLinear7 *theCopy;
   theCopy = new ConcreteMcftNonLinear7  (this->getTag(), fcu, ecu, Ec, fcr, Esv, fyv, alphaV, RoV);
   return theCopy;
 }
 
 NDMaterial*
-  ConcreteMcftNonLinear7 ::getCopy (const char *type)
+ConcreteMcftNonLinear7::getCopy (const char *type)
 {
   return this->getCopy();
 }
 
-
-
-
 int
-  ConcreteMcftNonLinear7 ::setTrialStrain (const Vector &strain)
+ConcreteMcftNonLinear7::setTrialStrain (const Vector &strain)
 {
   epsf = strain;
   return 0;
 }
 
 int
-  ConcreteMcftNonLinear7 ::setTrialStrain (const Vector &strain, const Vector &rate)
+ConcreteMcftNonLinear7::setTrialStrain (const Vector &strain, const Vector &rate)
 {
   epsf = strain;
   return 0;
 }
 
 int
-  ConcreteMcftNonLinear7 ::setTrialStrainIncr (const Vector &strain)
+ConcreteMcftNonLinear7::setTrialStrainIncr (const Vector &strain)
 {
   epsf += strain;
   ////////opserr << " check7 " << endln;
@@ -199,16 +238,15 @@ int
 }
 
 int
-  ConcreteMcftNonLinear7 ::setTrialStrainIncr (const Vector &strain, const Vector &rate)
+ConcreteMcftNonLinear7::setTrialStrainIncr (const Vector &strain, const Vector &rate)
 {
   epsf += strain;
   ////////opserr << " check8 " << endln;
   return 0;
 }
 
-
 const Vector&
-  ConcreteMcftNonLinear7 ::getStrain (void)
+ConcreteMcftNonLinear7::getStrain (void)
 {
   ////////opserr << " check9 " << endln;
   return epsf;
@@ -216,7 +254,7 @@ const Vector&
 
 
 const Matrix&
-  ConcreteMcftNonLinear7 ::getTangent (void)
+ConcreteMcftNonLinear7::getTangent (void)
 {
   //opserr << " check10 " << endln;
   //opserr << Dr <<endln; 
@@ -224,7 +262,7 @@ const Matrix&
 }
 
 const Matrix&
-  ConcreteMcftNonLinear7 ::getInitialTangent (void)
+ConcreteMcftNonLinear7::getInitialTangent (void)
 {
   Dri.Zero();
   Dri(0,0) = Ec;
@@ -237,7 +275,7 @@ const Matrix&
 }
 
 const Vector&
-  ConcreteMcftNonLinear7 ::getStress (void)
+ConcreteMcftNonLinear7::getStress (void)
 {
   ////opserr << "GetStress ----------------------------" << endln;
   ////getchar();
@@ -253,8 +291,6 @@ const Vector&
   //fiber strains
   ex  = epsf(0);
   exy = epsf(1);
-
-
 
   if(ex == 0.0 && exy == 0.0) {
 
@@ -314,7 +350,7 @@ const Vector&
 }
 
 void
-  ConcreteMcftNonLinear7 ::Loadf(void)
+ConcreteMcftNonLinear7::Loadf(void)
 {
 
   double exdelta = ex - exP;
@@ -349,7 +385,6 @@ void
       fy = 0.0;
       FinalAnglex = 0.001;
 
-
       if (exP < 0) {
         e2P = (exP + eyP)/2 + (exP - eyP)/2*cos(2*0.0) + exyP/2*sin(2*0.0);
         e1P = (exP + eyP)/2 - (exP - eyP)/2*cos(2*0.0) - exyP/2*sin(2*0.0);
@@ -371,7 +406,6 @@ void
 
       }
 
-
       if (e2 <= e2min) {
         sig2 = (e2/ecu)*fcu*nE/(nE-1.0+pow(e2/ecu,nE));
 
@@ -391,7 +425,6 @@ void
       Sigma2 = sig2;
       epsy = ey;
 
-
       sigf(0) = fx;
       sigf(1) = fxy;
       if (e2 <= e2min) {
@@ -407,11 +440,6 @@ void
       Dr(0,1) = 0.0;
       Dr(1,0) = 0.0;
       Dr(1,1) = Ec/2;
-
-
-
-
-
 
     } else if (ex>0) {
       //uniaxial tension
@@ -436,7 +464,6 @@ void
 
       e1max = exmax;
 
-
       if (e1max >0 && e1max <= fcr/Ec) {
         fe1max = Ec*e1max;
 
@@ -446,9 +473,7 @@ void
       } else {
         fe1max = fcr / (1+sqrt(500.0*(e1max)));
 
-
       }
-
 
       //stress-strain
       //principal tension
@@ -460,7 +485,6 @@ void
         }
       } else {
         sig1 = fe1max + fe1max/e1max*(e1-e1max);
-
       }
 
       fx = sig1;
@@ -477,7 +501,6 @@ void
       Sigma1 = sig1;
       Sigma2 = sig2;
       epsy = ey;
-
 
       sigf(0) = fx;
       sigf(1) = fxy;
@@ -499,10 +522,6 @@ void
       Dr(1,0)= 0.0;
       Dr(1,1)= Ec/2;
 
-
-
-
-
     } else { 
       ////////////opserr << "C2-C" <<endln;
       loadpath = 4.4;
@@ -511,7 +530,6 @@ void
       ey = 0.0;
 
       this->StressEnvelope(e1, e2, e1P, e2P, e1max, e2min);
-
 
       fx = 0.000;
       fy = 0.000;
@@ -534,7 +552,6 @@ void
       Sigma2 = sig2;
       epsy = ey;
 
-
       sigf(0) = fx;
       sigf(1) = fxy;
 
@@ -543,9 +560,7 @@ void
       Dr(1,0) = 0.0;
       Dr(1,1) = (sig1-sig2)/2/exy;
     }
-
   }
-
 
   //Update max-min strains
   if (ex>0 && ex>exmax)
@@ -563,7 +578,6 @@ void
   if (fabs(exymin)>exymax)
     exymax= fabs(exymin);
 
-
   exminc  = exmin;
   exmaxc  = exmax;
   eyminc  = eymin;
@@ -573,9 +587,8 @@ void
 
 }
 
-
 void 
-  ConcreteMcftNonLinear7 ::ForwardAngleSearch(void)
+ConcreteMcftNonLinear7::ForwardAngleSearch(void)
 {
   //opserr << "ForwardAngleSearch" << endln;
   InitCrackAngle = 0.000001;
@@ -600,7 +613,6 @@ void
   //final values
   double e1f, e2f, eyf, fxf, fyf, fxyf, thetaf;
   int countStep = 1; 
-
 
   while((fabs(ResiStress) > toleranceEpsy) ) {
     // strain compatibility: current step for trial theta
@@ -713,12 +725,10 @@ void
       fxyf= fxy;
       thetaf = theta;
 
-
     } else if (e2>0) {
 
       counter1++;		//count theta stepsize
       theta = bound1 + counter1*stepsize;
-
 
       ResiStressCheck = ResiStress;	
       countStep++;	
@@ -727,14 +737,11 @@ void
   }
 }
 
-
-
 void 
-  ConcreteMcftNonLinear7 ::StressEnvelope(double e1, double e2, double e1P, double e2P, double e1max, double e2min)
+ConcreteMcftNonLinear7::StressEnvelope(double e1, double e2, double e1P, double e2P, double e1max, double e2min)
 {
   // stress-strain and sensitivity 
   if(e1max>0 ) {
-
     if (e1max <= fcr/Ec) {
       fe1max = Ec*e1max;
     } else {
@@ -756,7 +763,6 @@ void
       if (e1 <= fcr/Ec) {
         sig1 = Ec*e1;				
         loadpath = 4.11;
-
       } else {
         sig1 = fcr / (1+sqrt(500.0*(e1)));				
         loadpath = 4.12;
@@ -777,13 +783,11 @@ void
     sig2 = fe2min + fe2min/e2min*(e2-e2min);
     loadpath = 4.17;
   }
-
 }
 
 int
-  ConcreteMcftNonLinear7 ::commitState (void)
+ConcreteMcftNonLinear7::commitState (void)
 {
-
   exP   = epsf(0);
   exyP   = epsf(1);
   eyP   = ey;
@@ -808,9 +812,8 @@ int
 }
 
 int
-  ConcreteMcftNonLinear7 ::revertToLastCommit (void)
+ConcreteMcftNonLinear7::revertToLastCommit (void)
 {
-
   epsf(0) = exP ; 
   epsf(1) = exyP;
   ey  = eyP;
@@ -835,7 +838,7 @@ int
 }
 
 int
-  ConcreteMcftNonLinear7 ::revertToStart (void)
+ConcreteMcftNonLinear7::revertToStart (void)
 {
   epsf.Zero();
   sigf.Zero();
@@ -864,46 +867,43 @@ int
 
 
 const char*
-  ConcreteMcftNonLinear7 ::getType (void) const
+ConcreteMcftNonLinear7::getType (void) const
 {
   //////////opserr << " check16 " << endln;
   return 0;
 }
 
 int 
-  ConcreteMcftNonLinear7 ::getOrder(void) const
+ConcreteMcftNonLinear7::getOrder(void) const
 {
   //////////opserr << " check17 " << endln;
   return 0;
 }
 
 void
-  ConcreteMcftNonLinear7 ::Print (OPS_Stream &s, int flag)
+ConcreteMcftNonLinear7::Print(OPS_Stream &s, int flag)
 {
   //////////opserr << " check18 " << endln;
   return;
 }
 
 int
-  ConcreteMcftNonLinear7 ::sendSelf(int commitTag, Channel &theChannel)
+ConcreteMcftNonLinear7::sendSelf(int commitTag, Channel &theChannel)
 {
   //////////opserr << " check19 " << endln;
   return 0;
 }
 
 int
-  ConcreteMcftNonLinear7 ::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+ConcreteMcftNonLinear7::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
   //////////opserr << " check20 " << endln;
   return 0;
 }
 
-
 Response *
-  ConcreteMcftNonLinear7 ::setResponse (const char **argv, int argc, 
-  OPS_Stream &s)
+ConcreteMcftNonLinear7::setResponse (const char **argv, int argc, OPS_Stream &s)
 {
-
   Response *theRes = NDMaterial::setResponse(argv, argc, s);
   if (theRes != 0)
     return theRes;
@@ -921,7 +921,7 @@ Response *
 
 // AddingSensitivity:BEGIN ///////////////////////////////////
 int
-  ConcreteMcftNonLinear7 ::setParameter(const char **argv, int argc, Parameter &param)
+ConcreteMcftNonLinear7::setParameter(const char **argv, int argc, Parameter &param)
 {
   if (strcmp(argv[0],"fcu") == 0) {// Compressive strength
     //////////opserr << " check22 " << endln;
@@ -940,7 +940,7 @@ int
 }                         
 
 int
-  ConcreteMcftNonLinear7 ::updateParameter(int parameterID, Information &info)
+ConcreteMcftNonLinear7::updateParameter(int parameterID, Information &info)
 {
   switch (parameterID) {
   case 1:
@@ -959,14 +959,14 @@ int
 }
 
 int
-  ConcreteMcftNonLinear7 ::activateParameter(int passedParameterID)
+ConcreteMcftNonLinear7::activateParameter(int passedParameterID)
 {  
   parameterID = passedParameterID;
   return 0;
 }
 
 const Vector&
-  ConcreteMcftNonLinear7 ::getStressSensitivity(int gradNumber, bool conditional)
+ConcreteMcftNonLinear7::getStressSensitivity(int gradNumber, bool conditional)
 {
   //  sensitivity parameter sensitivity initiate
   double fcusens = 0.0;
@@ -1003,8 +1003,6 @@ const Vector&
   double eymaxsensC = 0.0;
   double exyminsensC = 0.0;
   double exymaxsensC = 0.0;
-
-
 
   if(SHVs != 0) {
     fxsensC     = (*SHVs)(0,  gradNumber);
@@ -1052,15 +1050,12 @@ const Vector&
     return sigfsens;
   }
 
-
   //gradient required for each ParamID 
   nEsens  = Ecsens/(Ec-fcu/ecu)-Ec*(Ecsens-fcusens/ecu)/(Ec-fcu/ecu)/(Ec-fcu/ecu);
-
 
   // Forward Angle Search to get sens of principal axis stresses
   if ( (exy != 0) && (fabs(exy/ex) > 0.01) ) {
     loadpath = 4.1;
-
 
     //Update the principle axis Angle LOOP
     //this->ForwardAngleSearch();
@@ -1088,7 +1083,6 @@ const Vector&
     double e1f, e2f, eyf, fxf, fyf, fxyf, thetaf;
 
     int countStep = 1; 
-
 
     while((fabs(ResiStress) > toleranceEpsy) ) {
 
@@ -1203,7 +1197,6 @@ const Vector&
         }
         ResiStress = Esv * RoV * ey + fy; 
 
-
         //CheckPoint 1
 
         if (countStep  > 2 && ResiStress * ResiStressCheck < 0 ) {
@@ -1252,10 +1245,7 @@ const Vector&
           sigfsens(0) = fxsens;
           sigfsens(1) = fxysens;
 
-
-
           break;
-
         }
 
         //CheckPoint 4
@@ -1280,12 +1270,10 @@ const Vector&
         fxyf= fxy;
         thetaf = theta;
 
-
       } else if (e2>0) {
 
         counter1++;		//count theta stepsize
         theta = bound1 + counter1*stepsize;
-
 
         ResiStressCheck = ResiStress;	
         countStep++;	
@@ -1318,12 +1306,10 @@ const Vector&
 
       e2min = exmin;
 
-
       e1maxsens = (exmaxsensC + eymaxsensC)/2 + (exmaxsensC - eymaxsensC)/2 * cos(2*0.0) + exymaxsensC/2*sin(2*0.0);
       e2minsens = (exminsensC - eyminsensC)/2 + (exminsensC - eyminsensC)/2 * cos(2*0.0) - exymaxsensC/2*sin(2*0.0);
 
       e2minsens = exminsensC;
-
 
       if(e2min<0 ) {
 
@@ -1339,7 +1325,6 @@ const Vector&
         //////////opserr << "fe2minsens (1871)= " <<  fe2minsens << endln;
       }
 
-
       if (e2 <= e2min) {
         sig2 = (e2/ecu)*fcu*nE/(nE-1.0+pow(e2/ecu,nE));
         sig2sens=	(e2sens/ecu)*fcu*nE/(nE-1.0+pow(e2/ecu,nE))+(e2/ecu)*fcusens*nE/(nE-1.0+pow(e2/ecu,nE))+
@@ -1348,10 +1333,8 @@ const Vector&
           pow(e2/ecu,nE)*(nEsens* log(e2/ecu)/log(2.718281828459)+nE*(e2sens/e2)));
 
         //////////opserr << "sig2sens  (1878)= " <<  sig2sens << endln;
-
         fxysens  =1/2*Ecsens*exy + 1/2*Ec*exysens;
         //////////opserr << "fxysens (1883)= " <<  fxysens << endln;
-
 
       } else {
         sig2 = fe2min + fe2min/e2min*(e2-e2min);
@@ -1389,18 +1372,15 @@ const Vector&
 
       e1max = exmax;
 
-
       e1maxsens = (exmaxsensC + eymaxsensC)/2 + (exmaxsensC - eymaxsensC)/2 * cos(2*0.0) + exymaxsensC/2*sin(2*0.0);
       e2minsens = (exminsensC + eyminsensC)/2 + (exminsensC - eyminsensC)/2 * cos(2*0.0) - exymaxsensC/2*sin(2*0.0);
 
       e1maxsens = exmaxsensC ;
 
-
       if (e1max >0 && e1max <= fcr/Ec) {
         fe1max = Ec*e1max;
         fe1maxsens = Ecsens*e1max+Ec*e1maxsens;
         //////////opserr << "fe1maxsens (1932)= " <<  fe1maxsens << endln;
-
 
       }  else if (e1max <=0 ) {
         fe1max= 0.0;
@@ -1413,7 +1393,6 @@ const Vector&
           -fcr/(1+sqrt(500.0*e1max))/(1+sqrt(500.0*e1max))*(0.5/pow(500*e1max,0.5)*500*e1maxsens);
 
       }
-
 
       //stress-strain
       //principal tension
@@ -1451,7 +1430,6 @@ const Vector&
       sig1=fx;
       sig2=fy;
 
-
       e1sens = 0.0;
       e2sens = 0.0;
       eysens = 0.0;
@@ -1475,7 +1453,6 @@ const Vector&
     }
 
   }
-
 
   //Update max-min strains
   if (ex>0 && ex>exmax){
@@ -1507,16 +1484,11 @@ const Vector&
     exymaxsensC= fabs(exysens);
   }
 
-
-
   return sigfsens;
-
 }
 
-
-
 const Matrix&
-  ConcreteMcftNonLinear7 ::getInitialTangentSensitivity(int gradNumber)
+ConcreteMcftNonLinear7::getInitialTangentSensitivity(int gradNumber)
 {
   static Matrix dDridh(2,2);
 
@@ -1544,7 +1516,7 @@ const Matrix&
 }
 
 int
-  ConcreteMcftNonLinear7 ::commitSensitivity(Vector &strainGradient, int gradNumber, int numGrads)
+ConcreteMcftNonLinear7::commitSensitivity(Vector &strainGradient, int gradNumber, int numGrads)
 {
 
   //  sensitivity parameter sensitivity initiate
@@ -1601,9 +1573,6 @@ int
     exymaxsensC = (*SHVs)(11, gradNumber);
   }
 
-
-
-
   if (  parameterID == 1 ) {
     fcusens = 1.0;
   } else if ( parameterID == 2 ) {
@@ -1627,7 +1596,6 @@ int
   eymax = eymaxP;
   exymin = exyminP;
   exymax = exymaxP;
-
 
   nE  = Ec/(Ec-fcu/ecu);
 
@@ -1681,7 +1649,6 @@ int
     (*SHVs)(10, gradNumber) = 0.0;
     (*SHVs)(11, gradNumber) = 0.0;
 
-
   } else {
 
     // Forward Angle Search to get sens of principal axis stresses
@@ -1715,7 +1682,6 @@ int
       double e1f, e2f, eyf, fxf, fyf, fxyf, thetaf;
 
       int countStep = 1; 
-
 
       while((fabs(ResiStress) > toleranceEpsy) ) {
 
@@ -1772,8 +1738,6 @@ int
             fe2minsens = 0.0;
           }
 
-
-
           //stress-strain
           //principal tension
           if(e1>0) {
@@ -1794,7 +1758,6 @@ int
             sig1 = Ec*e1;
             sig1sens = Ecsens*e1+Ec*e1sens;
           }
-
 
           //principal compression
           if (e2 <= e2min) {
@@ -1831,7 +1794,6 @@ int
             fysens = sig1sens - fxysens*tan(theta); 
           }
           ResiStress = Esv * RoV * ey + fy; 
-
 
           //CheckPoint 1
 
@@ -1904,12 +1866,10 @@ int
           fxyf= fxy;
           thetaf = theta;
 
-
         } else if (e2>0) {
 
           counter1++;		//count theta stepsize
           theta = bound1 + counter1*stepsize;
-
 
           ResiStressCheck = ResiStress;	
           countStep++;	
@@ -1942,7 +1902,6 @@ int
 
         e2min = exmin;
 
-
         e1maxsens = (exmaxsensC + eymaxsensC)/2 + (exmaxsensC - eymaxsensC)/2 * cos(2*0.0) + exymaxsensC/2*sin(2*0.0);
         e2minsens = (exminsensC - eyminsensC)/2 + (exminsensC - eyminsensC)/2 * cos(2*0.0) - exymaxsensC/2*sin(2*0.0);
 
@@ -1961,7 +1920,6 @@ int
           fe2minsens = 0.0;
         }
 
-
         if (e2 <= e2min) {
 
           sig2 = (e2/ecu)*fcu*nE/(nE-1.0+pow(e2/ecu,nE));
@@ -1974,7 +1932,6 @@ int
 
           fxysens  =1/2*Ecsens*exy + 1/2*Ec*exysens;
           //////////opserr << "fxysens (1883)= " <<  fxysens << endln;
-
 
         } else {
           sig2 = fe2min + fe2min/e2min*(e2-e2min);
@@ -2000,14 +1957,11 @@ int
         exysens = 0.0;
         FinalAnglex = 89.999;
 
-
-
         //derive maximum and minimum strain envelopes on the same pronipal direction
         e1max = (exmax + eymax)/2 + (exmax - eymax)/2 * cos(2*0.0) + exymax/2*sin(2*0.0);
         e2min = (exmin + eymin)/2 + (exmin - eymin)/2 * cos(2*0.0) - exymax/2*sin(2*0.0);
 
         e1max = exmax;
-
 
         e1maxsens = (exmaxsensC + eymaxsensC)/2 + (exmaxsensC - eymaxsensC)/2 * cos(2*0.0) + exymaxsensC/2*sin(2*0.0);
         e2minsens = (exminsensC + eyminsensC)/2 + (exminsensC - eyminsensC)/2 * cos(2*0.0) - exymaxsensC/2*sin(2*0.0);
@@ -2018,7 +1972,6 @@ int
           fe1max = Ec*e1max;
           fe1maxsens = Ecsens*e1max+Ec*e1maxsens;
           //////////opserr << "fe1maxsens (1932)= " <<  fe1maxsens << endln;
-
 
         }  else if (e1max <=0 ) {
           fe1max= 0.0;
@@ -2031,7 +1984,6 @@ int
             -fcr/(1+sqrt(500.0*e1max))/(1+sqrt(500.0*e1max))*(0.5/pow(500*e1max,0.5)*500*e1maxsens);
 
         }
-
 
         //stress-strain
         //principal tension
@@ -2052,8 +2004,7 @@ int
             sig1 = fe1max + fe1max/e1max*(e1-e1max);
             sig1sens = fe1maxsens*e1/e1max + fe1max*(e1sens/e1max-e1*e1maxsens/e1max/e1max);
           }
-
-        }				
+        }
 
         fxsens = sig1sens;		
         fxysens  =1/2*Ecsens*exy + Ec/2*exysens;	
@@ -2068,7 +2019,6 @@ int
         fxy =0.000;
         sig1=fx;
         sig2=fy;
-
 
         e1sens = 0.0;
         e2sens = 0.0;
@@ -2087,7 +2037,6 @@ int
         }
       }	
     }
-
 
     //Update max-min strains
     if (ex>0 && ex>exmax){
@@ -2138,7 +2087,7 @@ int
 // AddingSensitivity:END /////////////////////////////////////////////
 
 int 
-  ConcreteMcftNonLinear7 ::getResponse (int responseID, Information &matInformation)
+ConcreteMcftNonLinear7::getResponse (int responseID, Information &matInformation)
 {
   double epsx = ex;
   double epsxy = exy;
@@ -2174,7 +2123,7 @@ int
 }
 
 double 
-  ConcreteMcftNonLinear7 ::tangentstifness00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
+ConcreteMcftNonLinear7::tangentstifness00(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
 {
 
   double cott = 1/tan(theta);
@@ -2631,7 +2580,7 @@ double
 }
 
 double 
-  ConcreteMcftNonLinear7 ::tangentstifness01(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
+ConcreteMcftNonLinear7::tangentstifness01(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
 {
 
   double cott = 1/tan(theta);
@@ -3108,7 +3057,7 @@ double
 
 
 double 
-  ConcreteMcftNonLinear7 ::tangentstifness10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
+ConcreteMcftNonLinear7::tangentstifness10(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
 {
 
   double cott = 1/tan(theta);
@@ -3529,7 +3478,7 @@ double
 
 
 double 
-  ConcreteMcftNonLinear7 ::tangentstifness11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
+ConcreteMcftNonLinear7::tangentstifness11(double ex, double exy, double theta, double Ec, double nE, double fcu, double ecu, double e1, double fcr, double Esv, double RoV, double e1P, double e2P, double fe1max, double e1max, double fe2min, double e2min)
 {
   double cott = 1/tan(theta);
   double sect = 1/cos(theta);
