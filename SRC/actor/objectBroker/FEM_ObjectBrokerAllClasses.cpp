@@ -584,7 +584,7 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 	case ELE_TAG_EnhancedQuad:
 		return new EnhancedQuad();
 
-        case ELE_TAG_NineNodeMixedQuad:
+    case ELE_TAG_NineNodeMixedQuad:
 		return new NineNodeMixedQuad();
 
 	case ELE_TAG_ConstantPressureVolumeQuad:

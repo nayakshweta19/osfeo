@@ -182,9 +182,9 @@ ConcreteMcftNonLinear5::getStress (void)
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   double ex  = epsf(0);
-  double 	exy = epsf(1);
+  double exy = epsf(1);
 
-  double exdelta = ex - exP;
+  double exdelta  = ex - exP;
   double exydelta = exy - exyP;
   //opserr << exdelta <<endln;
 
@@ -196,7 +196,7 @@ ConcreteMcftNonLinear5::getStress (void)
 
   InitCrackAngle = 0.000001;
   int counter1 = 0;
-  double degreetorad = PI*2/360.0;
+  double degreetorad = PI/180.0;
   double nE  = Ec/(Ec-fcu/ecu);
 
   //angle search algorithm boundaries
