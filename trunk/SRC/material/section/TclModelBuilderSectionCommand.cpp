@@ -38,7 +38,7 @@
 #include <ElasticShearSection2d.h>
 #include <ElasticShearSection3d.h>
 #include <ElasticTubeSection3d.h>
-#include <GenericSection1d.h>
+//#include <GenericSection1d.h>
 //#include <GenericSectionNd.h>
 #include <SectionAggregator.h>
 #include <ParallelSection.h>
@@ -363,7 +363,12 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
 	}
 	
 	// Parsing was successful, allocate the section
-	theSection = new GenericSection1d (tag, *theMat, code);
+	//theSection = new GenericSection1d (tag, *theMat, code);
+    UniaxialMaterial *theMats[1];
+    theMats[0] = theMat;
+    ID codeID(1);
+    codeID(0) = code;
+    theSection = new SectionAggregator(tag, 1, theMats, codeID);
     }
 
     else if (strcmp(argv[1],"GenericND") == 0 || strcmp(argv[1],"GenericNd") == 0) {
@@ -857,7 +862,6 @@ TclModelBuilderSectionCommand (ClientData clientData, Tcl_Interp *interp, int ar
 		NsteelTop, NsteelBottom);
 	steel.arrangeFibers(theUniMat, theNDMat, 0, 0, theSteel);
 	FiberSection2d steelSec(0, numSFibers, theUniMat, steel);
-	
 	
 	RCTBeamSectionIntegration
 	  concrete(d, bw, beff, hf, Atop, Abottom, flcov, wcov,
