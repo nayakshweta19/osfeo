@@ -89,6 +89,7 @@ extern  void *OPS_NewCSMMRCPlateFiberMaterial(void);
 extern  void *OPS_NewNonlinearBSMaterial(void);
 extern  void *OPS_NewCSMMRCPlaneStressFiberMaterial(void);
 extern  void *OPS_NewRARCPlaneStressFiberMaterial(void);
+extern  void *OPS_NewConcreteMcftNonlinear7Material();
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -324,6 +325,15 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	    theMaterial = (NDMaterial *)theMat;
 	  else 
 	    return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1],"Mcft07") == 0)) {
+
+      void *theMat = OPS_NewConcreteMcftNonlinear7Material();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else 
+        return TCL_ERROR;
     }
 	// added by neallee@tju.edu.cn
     else if ((strcmp(argv[1],"DruckerPrager") == 0)){
