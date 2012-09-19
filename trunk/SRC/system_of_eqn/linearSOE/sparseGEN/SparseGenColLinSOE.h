@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.5 $
-// $Date: 2009/05/11 20:57:49 $
+// $Date: 2009-05-11 20:57:49 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSOE.h,v $
                                                                         
                                                                         
@@ -83,6 +83,7 @@ class SparseGenColLinSOE : public LinearSOE
     friend class DistributedSuperLU;        
 #else
     friend class SuperLU;    
+    friend class PFEMSolver;
 #endif
 #endif
 

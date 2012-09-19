@@ -18,80 +18,59 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 1.5 $
-// $Date: 2009-05-14 22:45:39 $
-// $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/LinearSOE.cpp,v $
+// $Revision: 1.0 $
+// $Date: 2012-09-17 10:51:44 $
+// $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.h,v $
                                                                         
                                                                         
-// Written: fmk 
-// Created: 11/96
+#ifndef PFEMSolver_h
+#define PFEMSolver_h
+
+// File: ~/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.h
 //
-// Description: This file contains the implementation of LinearSOE.
+// Written: Minjie 
+// Created: Sep 17 2012
 //
-// What: "@(#) LinearSOE.C, revA"
+// Description: This file contains the class definition for PFEMSolver.
+// A PFEMSolver object can be constructed to solve a PFEMLinSOE
+// object. It obtains the solution by making calls on the
+// the PFEMSolver library developed at UC Berkeley by Prof. James Demmel, 
+// Xiaoye S. Li and John R. Gilbert.
+// The PFEMSolver uses Fractional Step Method to solve PFEM equations. 
+//
+// What: "@(#) PFEMSolver.h, revA"
 
-#include<LinearSOE.h>
-#include<LinearSOESolver.h>
-
-LinearSOE::LinearSOE(LinearSOESolver &theLinearSOESolver, int classtag)
-    :MovableObject(classtag), theModel(0), theSolver(&theLinearSOESolver)
-{
-
+#include <SparseGenColLinSolver.h>
+extern "C" {
+#include <cs.h>
 }
 
-LinearSOE::LinearSOE(int classtag)
-:MovableObject(classtag), theModel(0), theSolver(0)
+class ID;
+
+
+class PFEMSolver : public SparseGenColLinSolver
 {
+public:
+    PFEMSolver();
+    virtual ~PFEMSolver();
 
-}
+    int solve();
+    int setSize();
 
+    int sendSelf(int commitTag, Channel &theChannel);
+    int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);  
 
-LinearSOE::~LinearSOE()
-{
-  if (theSolver != 0)
-    delete theSolver;
-}
+    virtual int setDofIDs();
+    virtual cs* setMatIDs();
 
-int 
-LinearSOE::solve(void)
-{
-  if (theSolver != 0)
-    return (theSolver->solve());
-  else 
-    return -1;
-}
+protected:
 
 
-double
-LinearSOE::getDeterminant(void)
-{
-  if (theSolver != 0)
-    return theSolver->getDeterminant();
-  else 
-    return 0;
-}
+private:
+    ID* mID, *pID, *piID, *mIDall;
+    ID* Mid, *Mhatid, *Gid, *Gtid, *Lid, *Qtid;
+    cs* G, *Gt, *L, *Qt;
+};
 
-
-
-int 
-LinearSOE::setSolver(LinearSOESolver &newSolver)
-{
-    theSolver = &newSolver;
-    return 0;
-}
-
-LinearSOESolver *
-LinearSOE::getSolver(void)
-{
-    return theSolver;
-}
-
-int 
-LinearSOE::setLinks(AnalysisModel &theModel)
-{
-    this->theModel = &theModel;
-    return 0;
-}
-
-
+#endif
 
