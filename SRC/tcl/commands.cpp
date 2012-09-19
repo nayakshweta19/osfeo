@@ -242,7 +242,8 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 ///*/
 
 #include <SparseGenColLinSOE.h>
-#include <PFEMLinSOE.h>
+#include <PFEMSolver.h>
+
 #ifdef _THREADS
 #include <ThreadedSuperLU.h>
 #else
@@ -828,9 +829,19 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
     Tcl_CreateCommand(interp, "sectionDeformation", &sectionDeformation, 
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
+	Tcl_CreateCommand(interp, "sectionStiffness", &sectionStiffness, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
+	Tcl_CreateCommand(interp, "sectionFlexibility", &sectionFlexibility, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
 	Tcl_CreateCommand(interp, "sectionLocation", &sectionLocation, 
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
 	Tcl_CreateCommand(interp, "sectionWeight", &sectionWeight, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
+	Tcl_CreateCommand(interp, "basicDeformation", &basicDeformation, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
+	Tcl_CreateCommand(interp, "basicForce", &basicForce, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
+	Tcl_CreateCommand(interp, "basicStiffness", &basicStiffness, 
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
 
     // command added for initial state analysis for nDMaterials
@@ -2445,6 +2456,10 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
   }
 #endif
 
+  else if(strcmp(argv[1], "PFEM") == 0) {
+	  PFEMSolver* theSolver = new PFEMSolver();
+	  theSOE = new SparseGenColLinSOE(*theSolver);
+  }
 
   // SPARSE GENERAL SOE * SOLVER
   else if ((strcmp(argv[1],"SparseGeneral") == 0) || (strcmp(argv[1],"SuperLU") == 0) ||
@@ -2456,7 +2471,6 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     int npRow = 1;
     int npCol = 1;
     int np = 1;
-    bool PFEM = false;
 
     // defaults for threaded SuperLU
 
@@ -2482,8 +2496,6 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 	if (count < argc)
 	  if (Tcl_GetInt(interp, argv[count], &npCol) != TCL_OK)
 	    return TCL_ERROR;		     
-      } else if(strcmp(argv[count],"-PFEM") == 0) {
-        PFEM = true;
       }
       count++;
     }
@@ -2529,11 +2541,7 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 
     theSOE = new DistributedSparseGenColLinSOE(*theSolver);      
 #else
-    if(PFEM) {
-        theSOE = new PFEMLinSOE(*theSolver);
-    } else {
-        theSOE = new SparseGenColLinSOE(*theSolver);
-    }
+    theSOE = new SparseGenColLinSOE(*theSolver);
 #endif
   }
 
@@ -7445,6 +7453,8 @@ sensSectionForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char *
 
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
+  theParam->activate(false);
+
   delete theResponse;
 #endif
   return TCL_OK;
@@ -7577,7 +7587,7 @@ sectionDeformation(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char
   const Vector &theVec = *(info.theVector);
 
   char buffer[40];
-  sprintf(buffer,"%35.20f",theVec(dof-1));
+  sprintf(buffer,"%12.8g",theVec(dof-1));
 
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
@@ -7637,7 +7647,7 @@ sectionLocation(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **
   const Vector &theVec = *(info.theVector);
 
   char buffer[40];
-  sprintf(buffer,"%12.8f",theVec(secNum-1));
+  sprintf(buffer,"%12.8g",theVec(secNum-1));
 
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
@@ -7696,7 +7706,7 @@ sectionWeight(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
   const Vector &theVec = *(info.theVector);
 
   char buffer[40];
-  sprintf(buffer,"%12.8f",theVec(secNum-1));
+  sprintf(buffer,"%12.8g",theVec(secNum-1));
 
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
@@ -7704,6 +7714,335 @@ sectionWeight(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 
   return TCL_OK;
 }
+
+int 
+sectionStiffness(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  // make sure at least one other argument to contain type of system
+  if (argc < 3) {
+    interp->result = "WARNING want - sectionStiffness eleTag? secNum? \n";
+    return TCL_ERROR;
+  }    
+  
+  //opserr << "sectionDeformation: ";
+  //for (int i = 0; i < argc; i++) 
+  //  opserr << argv[i] << ' ' ;
+  //opserr << endln;
+
+  int tag, secNum;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING sectionStiffness eleTag? secNum? - could not read eleTag? \n";
+    return TCL_ERROR;	        
+  }    
+  if (Tcl_GetInt(interp, argv[2], &secNum) != TCL_OK) {
+    opserr << "WARNING sectionStiffness eleTag? secNum? - could not read secNum? \n";
+    return TCL_ERROR;	        
+  }    
+
+  Element *theElement = theDomain.getElement(tag);
+  if (theElement == 0) {
+    opserr << "WARNING sectionStiffness element with tag " << tag << " not found in domain \n";
+    return TCL_ERROR; 
+  }
+
+  int argcc = 3;
+  char a[80] = "section";
+  char b[80];
+  sprintf(b, "%d", secNum);
+  char c[80] = "stiffness";
+  const char *argvv[3];
+  argvv[0] = a;
+  argvv[1] = b;
+  argvv[2] = c;
+
+  DummyStream dummy;
+
+  Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
+  if (theResponse == 0) {
+    Tcl_SetResult(interp, "0.0", TCL_VOLATILE);
+    return TCL_OK;
+  }
+
+  theResponse->getResponse();
+  Information &info = theResponse->getInformation();
+
+  const Matrix &theMat = *(info.theMatrix);
+  int nsdof = theMat.noCols();
+
+  char buffer[200];
+  for (int i = 0; i < nsdof; i++) {
+    for (int j = 0; j < nsdof; j++) {
+      sprintf(buffer,"%12.8g ",theMat(i,j));
+      Tcl_AppendResult(interp, buffer, NULL);
+    }
+  }
+  
+  delete theResponse;
+
+  return TCL_OK;
+}
+
+int 
+sectionFlexibility(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  // make sure at least one other argument to contain type of system
+  if (argc < 3) {
+    interp->result = "WARNING want - sectionFlexibility eleTag? secNum? \n";
+    return TCL_ERROR;
+  }    
+  
+  //opserr << "sectionDeformation: ";
+  //for (int i = 0; i < argc; i++) 
+  //  opserr << argv[i] << ' ' ;
+  //opserr << endln;
+
+  int tag, secNum;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING sectionFlexibility eleTag? secNum? - could not read eleTag? \n";
+    return TCL_ERROR;	        
+  }    
+  if (Tcl_GetInt(interp, argv[2], &secNum) != TCL_OK) {
+    opserr << "WARNING sectionFlexibility eleTag? secNum? - could not read secNum? \n";
+    return TCL_ERROR;	        
+  }    
+
+  Element *theElement = theDomain.getElement(tag);
+  if (theElement == 0) {
+    opserr << "WARNING sectionFlexibility element with tag " << tag << " not found in domain \n";
+    return TCL_ERROR; 
+  }
+
+  int argcc = 3;
+  char a[80] = "section";
+  char b[80];
+  sprintf(b, "%d", secNum);
+  char c[80] = "flexibility";
+  const char *argvv[3];
+  argvv[0] = a;
+  argvv[1] = b;
+  argvv[2] = c;
+
+  DummyStream dummy;
+
+  Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
+  if (theResponse == 0) {
+    Tcl_SetResult(interp, "0.0", TCL_VOLATILE);
+    return TCL_OK;
+  }
+
+  theResponse->getResponse();
+  Information &info = theResponse->getInformation();
+
+  const Matrix &theMat = *(info.theMatrix);
+  int nsdof = theMat.noCols();
+
+  char buffer[200];
+  for (int i = 0; i < nsdof; i++) {
+    for (int j = 0; j < nsdof; j++) {
+      sprintf(buffer,"%12.8g ",theMat(i,j));
+      Tcl_AppendResult(interp, buffer, NULL);
+    }
+  }
+  
+  delete theResponse;
+
+  return TCL_OK;
+}
+
+
+int 
+basicDeformation(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  // make sure at least one other argument to contain type of system
+  if (argc < 2) {
+    interp->result = "WARNING want - basicDeformation eleTag? \n";
+    return TCL_ERROR;
+  }    
+  
+  //opserr << "sectionDeformation: ";
+  //for (int i = 0; i < argc; i++) 
+  //  opserr << argv[i] << ' ' ;
+  //opserr << endln;
+
+  int tag, secNum;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING basicDeformation eleTag? dofNum? - could not read eleTag? \n";
+    return TCL_ERROR;	        
+  }
+  /*    
+  if (Tcl_GetInt(interp, argv[2], &secNum) != TCL_OK) {
+    opserr << "WARNING basicDeformation eleTag? dofNum? - could not read dofNum? \n";
+    return TCL_ERROR;	        
+  }    
+  */
+
+  Element *theElement = theDomain.getElement(tag);
+  if (theElement == 0) {
+    opserr << "WARNING basicDeformation element with tag " << tag << " not found in domain \n";
+    return TCL_ERROR; 
+  }
+
+  int argcc = 1;
+  char a[80] = "basicDeformation";
+  const char *argvv[1];
+  argvv[0] = a;
+
+  DummyStream dummy;
+
+  Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
+  if (theResponse == 0) {
+    Tcl_SetResult(interp, "0.0", TCL_VOLATILE);
+    return TCL_OK;
+  }
+
+  theResponse->getResponse();
+  Information &info = theResponse->getInformation();
+
+  const Vector &theVec = *(info.theVector);
+  int nbf = theVec.Size();
+
+  char buffer[200];
+  for (int i = 0; i < nbf; i++) {
+    sprintf(buffer, "%12.8f ", theVec(i));
+    Tcl_AppendResult(interp, buffer, NULL);
+  }
+
+  delete theResponse;
+
+  return TCL_OK;
+}
+
+int 
+basicForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  // make sure at least one other argument to contain type of system
+  if (argc < 2) {
+    interp->result = "WARNING want - basicForce eleTag? \n";
+    return TCL_ERROR;
+  }    
+  
+  //opserr << "sectionDeformation: ";
+  //for (int i = 0; i < argc; i++) 
+  //  opserr << argv[i] << ' ' ;
+  //opserr << endln;
+
+  int tag, secNum;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING basicForce eleTag? dofNum? - could not read eleTag? \n";
+    return TCL_ERROR;	        
+  }
+  /*    
+  if (Tcl_GetInt(interp, argv[2], &secNum) != TCL_OK) {
+    opserr << "WARNING basicDeformation eleTag? dofNum? - could not read dofNum? \n";
+    return TCL_ERROR;	        
+  }    
+  */
+
+  Element *theElement = theDomain.getElement(tag);
+  if (theElement == 0) {
+    opserr << "WARNING basicDeformation element with tag " << tag << " not found in domain \n";
+    return TCL_ERROR; 
+  }
+
+  int argcc = 1;
+  char a[80] = "basicForce";
+  const char *argvv[1];
+  argvv[0] = a;
+
+  DummyStream dummy;
+
+  Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
+  if (theResponse == 0) {
+    Tcl_SetResult(interp, "0.0", TCL_VOLATILE);
+    return TCL_OK;
+  }
+
+  theResponse->getResponse();
+  Information &info = theResponse->getInformation();
+
+  const Vector &theVec = *(info.theVector);
+  int nbf = theVec.Size();
+
+  char buffer[200];
+  for (int i = 0; i < nbf; i++) {
+    sprintf(buffer, "%12.8f ", theVec(i));
+    Tcl_AppendResult(interp, buffer, NULL);
+  }
+
+  delete theResponse;
+
+  return TCL_OK;
+}
+
+int 
+basicStiffness(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  // make sure at least one other argument to contain type of system
+  if (argc < 2) {
+    interp->result = "WARNING want - basicStiffness eleTag? \n";
+    return TCL_ERROR;
+  }    
+  
+  //opserr << "sectionDeformation: ";
+  //for (int i = 0; i < argc; i++) 
+  //  opserr << argv[i] << ' ' ;
+  //opserr << endln;
+
+  int tag, secNum;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING basicStiffness eleTag? - could not read eleTag? \n";
+    return TCL_ERROR;	        
+  }
+  /*    
+  if (Tcl_GetInt(interp, argv[2], &secNum) != TCL_OK) {
+    opserr << "WARNING basicDeformation eleTag? dofNum? - could not read dofNum? \n";
+    return TCL_ERROR;	        
+  }    
+  */
+
+  Element *theElement = theDomain.getElement(tag);
+  if (theElement == 0) {
+    opserr << "WARNING basicStiffness element with tag " << tag << " not found in domain \n";
+    return TCL_ERROR; 
+  }
+
+  int argcc = 1;
+  char a[80] = "basicStiffness";
+  const char *argvv[1];
+  argvv[0] = a;
+
+  DummyStream dummy;
+
+  Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
+  if (theResponse == 0) {
+    Tcl_SetResult(interp, "0.0", TCL_VOLATILE);
+    return TCL_OK;
+  }
+
+  theResponse->getResponse();
+  Information &info = theResponse->getInformation();
+
+  const Matrix &theMatrix = *(info.theMatrix);
+  int nbf = theMatrix.noCols();
+
+  char buffer[200];
+  for (int i = 0; i < nbf; i++) {
+    for (int j = 0; j < nbf; j++) {
+      sprintf(buffer, "%12.8f ", theMatrix(i,j));
+      Tcl_AppendResult(interp, buffer, NULL);
+    }
+  }
+
+  delete theResponse;
+
+  return TCL_OK;
+}
+
 
 // added by C.McGann, U.Washington
 int
