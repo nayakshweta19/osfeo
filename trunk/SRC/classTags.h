@@ -810,6 +810,8 @@
 #define LinSOE_TAGS_MumpsParallelSOE 24
 #define LinSOE_TAGS_MPIDiagonalSOE 25
 #define LinSOE_TAGS_PFEMLinSOE 26
+#define LinSOE_TAGS_SProfileSPDLinSOE           27
+
 
 #define SOLVER_TAGS_FullGenLinLapackSolver  	1
 #define SOLVER_TAGS_BandGenLinLapackSolver  	2
@@ -837,6 +839,8 @@
 #define SOLVER_TAGS_MumpsParallelSolver			24
 #define SOLVER_TAGS_MPIDiagonalSolver 25
 #define SOLVER_TAGS_PFEMSolver 26
+#define SOLVER_TAGS_SProfileSPDLinSolver        27
+
 
 #define RECORDER_TAGS_ElementRecorder		1
 #define RECORDER_TAGS_NodeRecorder		2
@@ -914,6 +918,8 @@
 #define SPECTRUM_jonswap                  1
 #define SPECTRUM_constant                 2
 #define SPECTRUM_points                   3
+
+#define CHANNEL_TAGS_FileDatastore        1
 
 //////////////////////////////////////////////////////////////////////////
 #define ND_TAG_NonlinearBS 198112
