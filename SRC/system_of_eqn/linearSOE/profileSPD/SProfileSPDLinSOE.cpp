@@ -29,8 +29,8 @@
 // Description: This file contains the implementation for ProfileSPDLinSOE
 
 #include <stdlib.h>
-#include <ProfileSPDLinSOE.h>
-#include <ProfileSPDLinSolver.h>
+#include <SProfileSPDLinSOE.h>
+#include <SProfileSPDLinSolver.h>
 #include <Matrix.h>
 #include <Graph.h>
 #include <Vertex.h>
@@ -43,40 +43,39 @@
 #include <iostream>
 using std::nothrow;
 
-
-ProfileSPDLinSOE::ProfileSPDLinSOE(ProfileSPDLinSolver &the_Solver)
-:LinearSOE(the_Solver, LinSOE_TAGS_ProfileSPDLinSOE),
- size(0), profileSize(0), A(0), B(0), X(0), vectX(0), vectB(0),
- iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), isAcondensed(false),
- numInt(0) 
+SProfileSPDLinSOE::SProfileSPDLinSOE(SProfileSPDLinSolver &the_Solver)
+:LinearSOE(the_Solver, LinSOE_TAGS_SProfileSPDLinSOE),
+ size(0), profileSize(0), A(0), B(0), X(0), doubleB(0), doubleX(0),
+ vectX(0), vectB(0), iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), 
+ isAcondensed(false), numInt(0) 
 {
     the_Solver.setLinearSOE(*this);
 }
 
 
-ProfileSPDLinSOE::ProfileSPDLinSOE(int classTag)
+SProfileSPDLinSOE::SProfileSPDLinSOE(int classTag)
 :LinearSOE(classTag),
- size(0), profileSize(0), A(0), B(0), X(0), vectX(0), vectB(0),
- iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), isAcondensed(false),
- numInt(0) 
+ size(0), profileSize(0), A(0), B(0), X(0), doubleB(0), doubleX(0),
+ vectX(0), vectB(0), iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), 
+ isAcondensed(false), numInt(0) 
 {
 
 }
 
 
-ProfileSPDLinSOE::ProfileSPDLinSOE(ProfileSPDLinSolver &the_Solver, int classTag)
+SProfileSPDLinSOE::SProfileSPDLinSOE(SProfileSPDLinSolver &the_Solver, int classTag)
 :LinearSOE(the_Solver, classTag),
- size(0), profileSize(0), A(0), B(0), X(0), vectX(0), vectB(0),
- iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), isAcondensed(false),
- numInt(0) 
+ size(0), profileSize(0), A(0), B(0), X(0), doubleB(0), doubleX(0),
+ vectX(0), vectB(0), iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), 
+ isAcondensed(false), numInt(0) 
 {
     the_Solver.setLinearSOE(*this);
 }
 
 
-ProfileSPDLinSOE::ProfileSPDLinSOE(int N, int *iLoc,
-				   ProfileSPDLinSolver &the_Solver)
-:LinearSOE(the_Solver, LinSOE_TAGS_ProfileSPDLinSOE),
+SProfileSPDLinSOE::SProfileSPDLinSOE(int N, int *iLoc,
+					       SProfileSPDLinSolver &the_Solver)
+:LinearSOE(the_Solver, LinSOE_TAGS_SProfileSPDLinSOE),
  size(0), profileSize(0), A(0), B(0), X(0), vectX(0), vectB(0),
  iDiagLoc(0), Asize(0), Bsize(0), isAfactored(false), isAcondensed(false),
  numInt(0)
@@ -84,7 +83,7 @@ ProfileSPDLinSOE::ProfileSPDLinSOE(int N, int *iLoc,
     size = N;
     profileSize = iLoc[N-1];
     
-    A = new (nothrow) double[iLoc[N-1]];
+    A = new (nothrow) float[iLoc[N-1]];
 	
     if (A == 0) {
 	opserr << "FATAL:BandSPDLinSOE::BandSPDLinSOE :";
@@ -98,12 +97,14 @@ ProfileSPDLinSOE::ProfileSPDLinSOE(int N, int *iLoc,
 	for (int k=0; k<Asize; k++)
 	    A[k] = 0;
     
-	B = new (nothrow) double[size];
-	X = new (nothrow) double[size];
+	B = new (nothrow) float[size];
+	X = new (nothrow) float[size];
+	doubleB = new (nothrow) double[size];
+	doubleX = new (nothrow) double[size];
 	iDiagLoc = new (nothrow) int[size];
     
-	if (B == 0 || X == 0 || iDiagLoc == 0 ) {
-	    opserr << "WARNING ProfileSPDLinSOE::ProfileSPDLinSOE :";
+	if (B == 0 || X == 0 || iDiagLoc == 0 || doubleX == 0 || doubleB == 0) {
+	    opserr << "WARNING SProfileSPDLinSOE::SProfileSPDLinSOE :";
 	    opserr << " ran out of memory for vectors (size) (";
 	    opserr << size << ") \n";
 	    size = 0; Bsize = 0;
@@ -114,28 +115,32 @@ ProfileSPDLinSOE::ProfileSPDLinSOE(int N, int *iLoc,
 	for (int i=0; i<size; i++) {
 	    B[i] = 0;
 	    X[i] = 0;
+	    doubleB[i] = 0;
+	    doubleX[i] = 0;
 	    iDiagLoc[i] = iLoc[i];
 	}
     }
 
-    vectX = new Vector(X,size);
-    vectB = new Vector(B,size);
+    vectX = new Vector(doubleX,size);
+    vectB = new Vector(doubleB,size);
     
     the_Solver.setLinearSOE(*this);        
     
     int solverOK = the_Solver.setSize();
     if (solverOK < 0) {
-	opserr << "WARNING ProfileSPDLinSOE::ProfileSPDLinSOE :";
+	opserr << "WARNING SProfileSPDLinSOE::SProfileSPDLinSOE :";
 	opserr << " solver failed setSize() in constructor\n";
     }
 }
 
     
-ProfileSPDLinSOE::~ProfileSPDLinSOE()
+SProfileSPDLinSOE::~SProfileSPDLinSOE()
 {
     if (A != 0) delete [] A;
     if (B != 0) delete [] B;
     if (X != 0) delete [] X;
+    if (B != 0) delete [] doubleB;
+    if (X != 0) delete [] doubleX;
     if (iDiagLoc != 0) delete [] iDiagLoc;
     if (vectX != 0) delete vectX;    
     if (vectB != 0) delete vectB;    
@@ -143,13 +148,13 @@ ProfileSPDLinSOE::~ProfileSPDLinSOE()
 
 
 int 
-ProfileSPDLinSOE::getNumEqn(void) const
+SProfileSPDLinSOE::getNumEqn(void) const
 {
     return size;
 }
 
 int 
-ProfileSPDLinSOE::setSize(Graph &theGraph)
+SProfileSPDLinSOE::setSize(Graph &theGraph)
 {
     int oldSize = size;
     int result = 0;
@@ -162,7 +167,7 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
 	iDiagLoc = new (nothrow) int[size];
 
 	if (iDiagLoc == 0) {
-	    opserr << "WARNING ProfileSPDLinSOE::setSize() : ";
+	    opserr << "WARNING SProfileSPDLinSOE::setSize() : ";
 	    opserr << " - ran out of memory for iDiagLoc\n";
 	    size = 0; Asize = 0;
 	    result = -1;
@@ -219,10 +224,10 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
 	    delete [] A;
 	
 	// get new space
-	A = new (nothrow) double[profileSize];
+	A = new (nothrow) float[profileSize];
 	
         if (A == 0) {
-            opserr << "ProfileSPDLinSOE::ProfileSPDLinSOE :";
+            opserr << "SProfileSPDLinSOE::SProfileSPDLinSOE :";
 	    opserr << " ran out of memory for A (size,Profile) (";
 	    opserr << size <<", " << profileSize << ") \n";
 	    size = 0;  Asize = 0;  profileSize = 0;
@@ -244,13 +249,17 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
 	// delete the old
 	if (B != 0) delete [] B;
 	if (X != 0) delete [] X;
+	if (doubleB != 0) delete [] doubleB;
+	if (doubleX != 0) delete [] doubleX;
 
 	// create the new	
-	B = new double[size];
-	X = new double[size];
+	B = new (nothrow)  float[size];
+	X = new (nothrow) float[size];
+	doubleB = new (nothrow) double[size];
+	doubleX = new (nothrow) double[size];
 	
-        if (B == 0 || X == 0 ) {
-            opserr << "ProfileSPDLinSOE::ProfileSPDLinSOE :";
+        if (B == 0 || X == 0 || doubleB == 0 || doubleX == 0) {
+            opserr << "SProfileSPDLinSOE::SProfileSPDLinSOE :";
 	    opserr << " ran out of memory for vectors (size) (";
 	    opserr << size << ") \n";
 	    size = 0; Bsize = 0;
@@ -262,6 +271,8 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
     for (int l=0; l<size; l++) {
 	B[l] = 0;
 	X[l] = 0;
+	doubleB[l] = 0;
+	doubleX[l] = 0;
     }
     
     if (size != oldSize) {
@@ -271,18 +282,18 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
 	if (vectB != 0)
 	    delete vectB;
 	
-	vectX = new Vector(X,size);
-	vectB = new Vector(B,size);
+	vectX = new Vector(doubleX,size);
+	vectB = new Vector(doubleB,size);
 	
 	if (size > Bsize)
-	    Bsize = size;
+	  Bsize = size;
     }
     
     // invoke setSize() on the Solver
     LinearSOESolver *the_Solver = this->getSolver();
     int solverOK = the_Solver->setSize();
     if (solverOK < 0) {
-	opserr << "WARNING ProfileSPDLinSOE::setSize :";
+	opserr << "WARNING SProfileSPDLinSOE::setSize :";
 	opserr << " solver failed setSize()\n";
 	return solverOK;
     }    
@@ -291,7 +302,7 @@ ProfileSPDLinSOE::setSize(Graph &theGraph)
 }
 
 int 
-ProfileSPDLinSOE::addA(const Matrix &m, const ID &id, double fact)
+SProfileSPDLinSOE::addA(const Matrix &m, const ID &id, double fact)
 {
     // check for a quick return 
     if (fact == 0.0)  return 0;
@@ -299,62 +310,61 @@ ProfileSPDLinSOE::addA(const Matrix &m, const ID &id, double fact)
     // check that m and id are of similar size
     int idSize = id.Size();    
     if (idSize != m.noRows() && idSize != m.noCols()) {
-	opserr << "ProfileSPDLinSOE::addA()	- Matrix and ID not of similar sizes\n";
+	opserr << "SProfileSPDLinSOE::addA()	- Matrix and ID not of similar sizes\n";
 	return -1;
     }
-
-    if (fact == 1.0) { // do not need to multiply 
-	for (int i=0; i<idSize; i++) {
-	    int col = id(i);
-	    if (col < size && col >= 0) {
-		double *coliiPtr = &A[iDiagLoc[col] -1]; // -1 as fortran indexing 
-		int minColRow;
-		if (col == 0)
-		    minColRow = 0;
-		else
-		    minColRow = col - (iDiagLoc[col] - iDiagLoc[col-1]) +1;
-		for (int j=0; j<idSize; j++) {
-		    int row = id(j);
-		    if (row <size && row >= 0 && 
-			row <= col && row >= minColRow) { 
-
-			// we only add upper and inside profile
-			double *APtr = coliiPtr + (row-col);
-			 *APtr += m(j,i);
-		     }
-		}  // for j
-	    } 
-	}  // for i
-    } else {
-	for (int i=0; i<idSize; i++) {
-	    int col = id(i);
-	    if (col < size && col >= 0) {
-		double *coliiPtr = &A[iDiagLoc[col] -1]; // -1 as fortran indexing 		
-		int minColRow;
-		if (col == 0)
-		    minColRow = 0;
-		else
-		    minColRow = col - (iDiagLoc[col] - iDiagLoc[col-1]) +1;
-		for (int j=0; j<idSize; j++) {
-		    int row = id(j);
-		    if (row <size && row >= 0 && 
-			row <= col && row >= minColRow) { 
-
-			// we only add upper and inside profile
-			double *APtr = coliiPtr + (row-col);
-			 *APtr += m(j,i) * fact;
-		     }
-		}  // for j
-	    } 
-	}  // for i
     
+    if (fact == 1.0) { // do not need to multiply 
+      for (int i=0; i<idSize; i++) {
+	int col = id(i);
+	if (col < size && col >= 0) {
+	  float *coliiPtr = &A[iDiagLoc[col] -1]; // -1 as fortran indexing 
+	  int minColRow;
+	  if (col == 0)
+	    minColRow = 0;
+	  else
+	    minColRow = col - (iDiagLoc[col] - iDiagLoc[col-1]) +1;
+	  for (int j=0; j<idSize; j++) {
+	    int row = id(j);
+	    if (row <size && row >= 0 && 
+		row <= col && row >= minColRow) { 
+	      
+	      // we only add upper and inside profile
+	      float *APtr = coliiPtr + (row-col);
+	      *APtr += m(j,i);
+	    }
+	  }  // for j
+	} 
+      }  // for i
+    } else {
+      for (int i=0; i<idSize; i++) {
+	int col = id(i);
+	if (col < size && col >= 0) {
+	  float *coliiPtr = &A[iDiagLoc[col] -1]; // -1 as fortran indexing 		
+	  int minColRow;
+	  if (col == 0)
+	    minColRow = 0;
+	  else
+	    minColRow = col - (iDiagLoc[col] - iDiagLoc[col-1]) +1;
+	  for (int j=0; j<idSize; j++) {
+	    int row = id(j);
+	    if (row <size && row >= 0 && 
+		row <= col && row >= minColRow) { 
+	      
+	      // we only add upper and inside profile
+	      float *APtr = coliiPtr + (row-col);
+	      *APtr += m(j,i) * fact;
+	    }
+	  }  // for j
+	} 
+      }  // for i
     }
     return 0;
 }
 
     
 int 
-ProfileSPDLinSOE::addB(const Vector &v, const ID &id, double fact)
+SProfileSPDLinSOE::addB(const Vector &v, const ID &id, double fact)
 {
     
     // check for a quick return 
@@ -363,7 +373,7 @@ ProfileSPDLinSOE::addB(const Vector &v, const ID &id, double fact)
     // check that m and id are of similar size
     int idSize = id.Size();        
     if (idSize != v.Size() ) {
-	opserr << "ProfileSPDLinSOE::addB() -";
+	opserr << "SProfileSPDLinSOE::addB() -";
 	opserr << " Vector and ID not of similar sizes\n";
 	return -1;
     }    
@@ -392,7 +402,7 @@ ProfileSPDLinSOE::addB(const Vector &v, const ID &id, double fact)
 
 
 int
-ProfileSPDLinSOE::setB(const Vector &v, double fact)
+SProfileSPDLinSOE::setB(const Vector &v, double fact)
 {
     // check for a quick return 
     if (fact == 0.0)  return 0;
@@ -421,9 +431,9 @@ ProfileSPDLinSOE::setB(const Vector &v, double fact)
 }
 
 void 
-ProfileSPDLinSOE::zeroA(void)
+SProfileSPDLinSOE::zeroA(void)
 {
-    double *Aptr = A;
+    float *Aptr = A;
     for (int i=0; i<Asize; i++)
 	*Aptr++ = 0;
     
@@ -431,50 +441,51 @@ ProfileSPDLinSOE::zeroA(void)
 }
 	
 void 
-ProfileSPDLinSOE::zeroB(void)
+SProfileSPDLinSOE::zeroB(void)
 {
-    double *Bptr = B;
+    float *Bptr = B;
     for (int i=0; i<size; i++)
 	*Bptr++ = 0;
 }
 
 
 void 
-ProfileSPDLinSOE::setX(int loc, double value)
+SProfileSPDLinSOE::setX(int loc, double value)
 {
     if (loc < size && loc >=0)
 	X[loc] = value;
 }
 
 void 
-ProfileSPDLinSOE::setX(const Vector &x)
+SProfileSPDLinSOE::setX(const Vector &x)
 {
   if (x.Size() == size && vectX != 0)
     *vectX = x;
 }
 
 const Vector &
-ProfileSPDLinSOE::getX(void)
+SProfileSPDLinSOE::getX(void)
 {
-    if (vectX == 0) {
-	opserr << "FATAL ProfileSPDLinSOE::getX - vectX == 0";
-	exit(-1);
-    }    
-    return *vectX;
+  
+  if (vectX == 0) {
+    opserr << "FATAL SProfileSPDLinSOE::getX - vectX == 0";
+    exit(-1);
+  }    
+  return *vectX;
 }
 
 const Vector &
-ProfileSPDLinSOE::getB(void)
+SProfileSPDLinSOE::getB(void)
 {
-    if (vectB == 0) {
-	opserr << "FATAL ProfileSPDLinSOE::getB - vectB == 0";
-	exit(-1);
-    }        
-    return *vectB;
+  if (vectB == 0) {
+    opserr << "FATAL SProfileSPDLinSOE::getB - vectB == 0";
+    exit(-1);
+  }        
+  return *vectB;
 }
 
 double 
-ProfileSPDLinSOE::normRHS(void)
+SProfileSPDLinSOE::normRHS(void)
 {
     double norm =0.0;
     for (int i=0; i<size; i++) {
@@ -487,14 +498,14 @@ ProfileSPDLinSOE::normRHS(void)
 
 
 int
-ProfileSPDLinSOE::setProfileSPDSolver(ProfileSPDLinSolver &newSolver)
+SProfileSPDLinSOE::setProfileSPDSolver(SProfileSPDLinSolver &newSolver)
 {
     newSolver.setLinearSOE(*this);
 
     if (size != 0) {
 	int solverOK = newSolver.setSize();
 	if (solverOK < 0) {
-	    opserr << "WARNING:ProfileSPDLinSOE::setSolver :";
+	    opserr << "WARNING:SProfileSPDLinSOE::setSolver :";
 	    opserr << "the new solver could not setSeize() - staying with old\n";
 	    return -1;
 	}
@@ -505,14 +516,14 @@ ProfileSPDLinSOE::setProfileSPDSolver(ProfileSPDLinSolver &newSolver)
 
 
 int 
-ProfileSPDLinSOE::sendSelf(int cTag, Channel &theChannel)
+SProfileSPDLinSOE::sendSelf(int cTag, Channel &theChannel)
 {
     return 0;
 }
 
 
 int 
-ProfileSPDLinSOE::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+SProfileSPDLinSOE::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
     return 0;
 }
