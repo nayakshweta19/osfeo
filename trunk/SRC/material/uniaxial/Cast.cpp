@@ -363,7 +363,7 @@ double  epsmaxr = epsmaxrP;
 
 	// MG: recalculate d1 if the material hasn't yielded in this excursion
 	if (fabs(yieldcheck) > 1){
-	   epsminr = epsmin;
+	   double epsminr = epsmin;
 	} 
 	double d1 = (epsmax - epsminr) / (2.0*(a2 * epsy));
     double shft = 1.0 + a1 * pow(d1, 0.8);

@@ -582,6 +582,11 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/J2AxiSymm.o \
 	$(FE)/material/nD/J2ThreeDimensional.o \
 	$(FE)/material/nD/J2PlateFiber.o \
+	$(FE)/material/nD/ConcreteMcftNonLinear5.o \
+	$(FE)/material/nD/ConcreteMcftNonLinear7.o \
+	$(FE)/material/nD/CycLiqCP.o \
+	$(FE)/material/nD/CycLiqCP3D.o \
+	$(FE)/material/nD/CycLiqCPPlaneStrain.o \
 	$(FE)/material/nD/UWmaterials/DruckerPrager.o \
 	$(FE)/material/nD/UWmaterials/DruckerPrager3D.o \
 	$(FE)/material/nD/UWmaterials/DruckerPragerPlaneStrain.o \
@@ -616,6 +621,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/PlaneStrainMaterial.o \
 	$(FE)/material/nD/PlateFiberMaterial.o \
 	$(FE)/material/nD/BeamFiberMaterial.o \
+	$(FE)/material/nD/BeamFiberMaterial2d.o \
 	$(FE)/material/uniaxial/TclModelBuilderUniaxialMaterialCommand.o \
 	$(FE)/material/nD/TclModelBuilderNDMaterialCommand.o \
 	$(FE)/material/nD/cyclicSoil/MultiaxialCyclicPlasticity.o \
@@ -675,16 +681,20 @@ SECTION_LIBS = $(FE)/material/section/SectionForceDeformation.o \
 	$(FE)/material/section/fiber/Fiber.o \
 	$(FE)/material/section/fiber/UniaxialFiber2d.o \
 	$(FE)/material/section/fiber/UniaxialFiber3d.o \
+	$(FE)/material/section/fiber/NDFiber2d.o \
+	$(FE)/material/section/fiber/NDFiber3d.o \
 	$(FE)/material/section/ElasticSection2d.o \
 	$(FE)/material/section/ElasticSection3d.o \
 	$(FE)/material/section/ElasticShearSection2d.o \
 	$(FE)/material/section/ElasticShearSection3d.o \
 	$(FE)/material/section/ElasticTubeSection3d.o \
 	$(FE)/material/section/FiberSection2d.o \
+	$(FE)/material/section/NDFiberSection2d.o \
 	$(FE)/material/section/FiberSection2dThermal.o \
 	$(FE)/material/section/FiberSection3d.o \
-	$(FE)/material/section/FiberSectionGJ.o \
+	$(FE)/material/section/NDFiberSection3d.o \
 	$(FE)/material/section/SectionAggregator.o \
+	$(FE)/material/section/ParallelSection.o \
 	$(FE)/material/section/GenericSection1d.o \
 	$(FE)/material/section/ElasticPlateSection.o \
 	$(FE)/material/section/ElasticMembranePlateSection.o \
@@ -694,6 +704,7 @@ SECTION_LIBS = $(FE)/material/section/SectionForceDeformation.o \
 	$(FE)/material/section/integration/SectionIntegration.o \
 	$(FE)/material/section/integration/RCSectionIntegration.o \
 	$(FE)/material/section/integration/WideFlangeSectionIntegration.o \
+	$(FE)/material/section/integration/RCTBeamSectionIntegration.o \
 	$(FE)/material/section/repres/patch/Patch.o \
 	$(FE)/material/section/repres/patch/QuadPatch.o \
 	$(FE)/material/section/repres/patch/CircPatch.o \
@@ -754,13 +765,15 @@ SysOfEqn_LIBS =	$(FE)/system_of_eqn/linearSOE/LinearSOE.o \
 	$(FE)/system_of_eqn/linearSOE/diagonal/DiagonalDirectSolver.o \
 	$(FE)/system_of_eqn/linearSOE/diagonal/DistributedDiagonalSOE.o \
 	$(FE)/system_of_eqn/linearSOE/diagonal/DistributedDiagonalSolver.o \
+	$(FE)/system_of_eqn/linearSOE/profileSPD/SProfileSPDLinSOE.o \
+	$(FE)/system_of_eqn/linearSOE/profileSPD/SProfileSPDLinSolver.o \
 	$(FE)/system_of_eqn/linearSOE/profileSPD/ProfileSPDLinSOE.o \
 	$(FE)/system_of_eqn/linearSOE/profileSPD/DistributedProfileSPDLinSOE.o \
 	$(FE)/system_of_eqn/linearSOE/profileSPD/ProfileSPDLinSolver.o \
 	$(FE)/system_of_eqn/linearSOE/profileSPD/ProfileSPDLinDirectSolver.o \
 	$(FE)/system_of_eqn/linearSOE/profileSPD/ProfileSPDLinSubstrSolver.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSOE.o \
-	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMLinSOE.o \
+	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSolver.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenRowLinSOE.o \
     $(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenRowLinSolver.o \

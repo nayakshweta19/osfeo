@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2010/02/04 20:12:15 $
+// $Date: 2010-02-04 20:12:15 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/SAWSMaterial.cpp,v $
 
 // Written: Patxi (Converted from FORTRAN code originally written by Bryan Folz)
@@ -1140,7 +1140,7 @@ SAWSMaterial::setTrialStrain(double strain, double strainRate)
     }
 
   }
-
+return 0;
 
 }
 

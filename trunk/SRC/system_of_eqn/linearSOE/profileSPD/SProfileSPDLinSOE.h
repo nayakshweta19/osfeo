@@ -18,89 +18,75 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 1.5 $
-// $Date: 2009-05-11 20:57:49 $
-// $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSOE.h,v $
+// $Revision: 1.4 $
+// $Date: 2009-05-11 20:58:23 $
+// $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/profileSPD/ProfileSPDLinSOE.h,v $
                                                                         
                                                                         
-#ifndef SparseGenColLinSOE_h
-#define SparseGenColLinSOE_h
-
 // Written: fmk 
-// Created: 04/98
+// Revision: A
 //
-// Description: This file contains the class definition for SparseGenColLinSOE
-// SparseGenColLinSOE is a subclass of LinearSOE. It stores the matrix equation
-// Ax=b using the sparse column-compacted storage scheme for storing the 
-// matrix A. 
-//
-// What: "@(#) SparseGenColLinSOE.h, revA"
+// Description: This file contains the class definition for ProfileSPDLinSOE
+// ProfileSPDLinSOE is a subclass of LinearSOE. It uses the LAPACK Upper storage
+// scheme to store the components of the A matrix.
+
+// What: "@(#) ProfileSPDLinSOE.h, revA"
+
+#ifndef SProfileSPDLinSOE_h
+#define SProfileSPDLinSOE_h
 
 #include <LinearSOE.h>
 #include <Vector.h>
+class SProfileSPDLinSolver;
 
-class SparseGenColLinSolver;
-
-class SparseGenColLinSOE : public LinearSOE
+class SProfileSPDLinSOE : public LinearSOE
 {
   public:
-    SparseGenColLinSOE(SparseGenColLinSolver &theSolver);        
-    SparseGenColLinSOE(int classTag);        
-    SparseGenColLinSOE();        
-    SparseGenColLinSOE(SparseGenColLinSolver &theSolver, int classTag);        
-    SparseGenColLinSOE(int N, int NNZ, int *rowStartA, int *colA,
-		       SparseGenColLinSolver &theSolver);        
+    SProfileSPDLinSOE(SProfileSPDLinSolver &theSolver);
+    SProfileSPDLinSOE(SProfileSPDLinSolver &theSolver, int classTag);
+    SProfileSPDLinSOE(int classTag);
+    SProfileSPDLinSOE(int N, int *iLoc, SProfileSPDLinSolver &theSolver);
 
-    virtual ~SparseGenColLinSOE();
+    virtual ~SProfileSPDLinSOE();
 
     virtual int getNumEqn(void) const;
     virtual int setSize(Graph &theGraph);
     virtual int addA(const Matrix &, const ID &, double fact = 1.0);
     virtual int addB(const Vector &, const ID &, double fact = 1.0);    
-    virtual int setB(const Vector &, double fact = 1.0);        
+    virtual int setB(const Vector &, double fact = 1.0);
     
     virtual void zeroA(void);
     virtual void zeroB(void);
+
+    virtual void setX(int loc, double value);
+    virtual void setX(const Vector &x);
     
     virtual const Vector &getX(void);
-    virtual const Vector &getB(void);    
+    virtual const Vector &getB(void);
     virtual double normRHS(void);
 
-    virtual void setX(int loc, double value);        
-    virtual void setX(const Vector &x);        
-    virtual int setSparseGenColSolver(SparseGenColLinSolver &newSolver);    
-
+    virtual int setProfileSPDSolver(SProfileSPDLinSolver &newSolver);    
     virtual int sendSelf(int commitTag, Channel &theChannel);
-    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
-#ifdef _PARALLEL_PROCESSING
-    friend class SuperLU;    
-    friend class ThreadedSuperLU;        
-    friend class DistributedSuperLU;        
-#else
-#ifdef _PARALLEL_INTERPRETERS
-    friend class SuperLU;    
-    friend class ThreadedSuperLU;        
-    friend class DistributedSuperLU;        
-#else
-    friend class SuperLU;    
-#endif
-#endif
-    friend class PFEMSolver;
+    virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
+    friend class SProfileSPDLinSolver;    
+    
   protected:
-    int size;            // order of A
-    int nnz;             // number of non-zeros in A
-    double *A, *B, *X;   // 1d arrays containing coefficients of A, B and X
-    int *rowA, *colStartA; // int arrays containing info about coeficientss in A
+    int size, profileSize;    
+    float *A, *B, *X;
+    double *doubleB, *doubleX;
     Vector *vectX;
-    Vector *vectB;    
-    int Asize, Bsize;    // size of the 1d array holding A
-    bool factored;
+    Vector *vectB;
+    int *iDiagLoc;
+    int Asize, Bsize;
+    bool isAfactored, isAcondensed;
+    int numInt;
     
   private:
-
 };
 
 
 #endif
+
+
 

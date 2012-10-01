@@ -231,6 +231,9 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 #include <DiagonalSOE.h>
 #include <DiagonalDirectSolver.h>
 
+#include <SProfileSPDLinSolver.h>
+#include <SProfileSPDLinSOE.h>
+
 // #include <ProfileSPDLinDirectBlockSolver.h>
 // #include <ProfileSPDLinDirectThreadSolver.h>
 // #include <ProfileSPDLinDirectSkypackSolver.h>
@@ -243,7 +246,6 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 
 #include <SparseGenColLinSOE.h>
 #include <PFEMSolver.h>
-
 #ifdef _THREADS
 #include <ThreadedSuperLU.h>
 #else
@@ -449,8 +451,8 @@ extern int OPS_ResetInput(ClientData clientData,
 MachineBroker *theMachineBroker =0;
 Channel **theChannels =0;
 int numChannels =0;
-int rank =0;
-int np =0;
+int OPS_rank =0;
+int OPS_np =0;
 
 
 
@@ -2385,6 +2387,12 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
   } 
 
   // PROFILE SPD SOE * SOLVER
+  else if (strcmp(argv[1],"SProfileSPD") == 0) {
+    // now must determine the type of solver to create from rest of args
+    SProfileSPDLinSolver *theSolver = new SProfileSPDLinSolver(); 	
+    theSOE = new SProfileSPDLinSOE(*theSolver);      
+  }
+
   else if (strcmp(argv[1],"ProfileSPD") == 0) {
     // now must determine the type of solver to create from rest of args
     ProfileSPDLinSolver *theSolver = new ProfileSPDLinDirectSolver(); 	
@@ -2451,14 +2459,14 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     ProfileSPDLinSolver *theSolver = new ProfileSPDLinDirectSolver(); 	
     DistributedProfileSPDLinSOE *theParallelSOE = new DistributedProfileSPDLinSOE(*theSolver);
     theSOE = theParallelSOE;
-    theParallelSOE->setProcessID(rank);
+    theParallelSOE->setProcessID(OPS_rank);
     theParallelSOE->setChannels(numChannels, theChannels);
   }
 #endif
 
   else if(strcmp(argv[1], "PFEM") == 0) {
-	  PFEMSolver* theSolver = new PFEMSolver();
-	  theSOE = new SparseGenColLinSOE(*theSolver);
+    PFEMSolver* theSolver = new PFEMSolver();
+    theSOE = new SparseGenColLinSOE(*theSolver);
   }
 
   // SPARSE GENERAL SOE * SOLVER
@@ -2703,7 +2711,7 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 #elif _PARALLEL_INTERPRETERS
     MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl7, icntl14);
     MumpsParallelSOE *theParallelSOE = new MumpsParallelSOE(*theSolver);
-    theParallelSOE->setProcessID(rank);
+    theParallelSOE->setProcessID(OPS_rank);
     theParallelSOE->setChannels(numChannels, theChannels);
     theSOE = theParallelSOE;
 #else
@@ -2849,13 +2857,13 @@ specifyNumberer(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **
   else if ((strcmp(argv[1],"ParallelPlain") == 0) || (strcmp(argv[1],"Parallel") == 0)) {
     ParallelNumberer *theParallelNumberer = new ParallelNumberer;
     theNumberer = theParallelNumberer;       
-    theParallelNumberer->setProcessID(rank);
+    theParallelNumberer->setProcessID(OPS_rank);
     theParallelNumberer->setChannels(numChannels, theChannels);
   } else if (strcmp(argv[1],"ParallelRCM") == 0) {
     RCM *theRCM = new RCM(false);	
     ParallelNumberer *theParallelNumberer = new ParallelNumberer(*theRCM);    	
     theNumberer = theParallelNumberer;       
-    theParallelNumberer->setProcessID(rank);
+    theParallelNumberer->setProcessID(OPS_rank);
     theParallelNumberer->setChannels(numChannels, theChannels);
   }   
 
@@ -3845,7 +3853,7 @@ specifyIntegrator(ClientData clientData, Tcl_Interp *interp, int argc,
       DistributedDisplacementControl *theDDC  = new DistributedDisplacementControl(node,dof-1,increment,
 										   numIter, minIncr, maxIncr);
 
-      theDDC->setProcessID(rank);
+      theDDC->setProcessID(OPS_rank);
       theDDC->setChannels(numChannels, theChannels);
       theStaticIntegrator = theDDC;
 
@@ -5854,11 +5862,30 @@ eigenAnalysis(ClientData clientData, Tcl_Interp *interp, int argc,
 	
       }  else if (typeSolver == 6) {  
 	
-	
+	int icntl7 = 7;
 	int icntl14 = 20;
-	MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl14);
+#ifdef _PARALLEL_PROCESSING
+    MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl7, icntl14);
+    LinearSOE *theArpackSOE = new MumpsParallelSOE(*theSolver);
+    theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
+
+#elif _PARALLEL_INTERPRETERS
+
+    MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl7, icntl14);
+    MumpsParallelSOE *theParallelSOE = new MumpsParallelSOE(*theSolver);
+    theParallelSOE->setProcessID(OPS_rank);
+    theParallelSOE->setChannels(numChannels, theChannels);
+    theSOE = theParallelSOE;
 	LinearSOE *theArpackSOE = new MumpsParallelSOE(*theSolver);
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
+	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);
+
+#else
+    MumpsSolver *theSolver = new MumpsSolver(icntl7, icntl14);
+    LinearSOE *theArpackSOE = new MumpsSOE(*theSolver);
+    theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
+    theSOE = new MumpsSOE(*theSolver);
+#endif
+
 #endif
       }  else if (typeSolver == 7) {  
 	SparseGenColLinSolver *theSolver =0;    
@@ -8042,7 +8069,6 @@ basicStiffness(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **a
 
   return TCL_OK;
 }
-
 
 // added by C.McGann, U.Washington
 int

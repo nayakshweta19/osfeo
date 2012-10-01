@@ -132,6 +132,8 @@ class Matrix
 	int  Extract(const Matrix &V, int init_row, int init_col, double fact = 1.0);
 	double Norm(void) const; // neallee@tju.edu.cn
 
+    int Eigen3(const Matrix &M);
+    
     friend OPS_Stream &operator<<(OPS_Stream &s, const Matrix &M);
     //    friend istream &operator>>(istream &s, Matrix &M);    
     friend Matrix operator*(double a, const Matrix &M);
