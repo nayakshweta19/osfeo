@@ -2,15 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{6def3fdc-1d3c-4a88-87fd-694f0b78deaf}</UniqueIdentifier>
+      <UniqueIdentifier>{afab8c71-f5ce-4a3e-b61b-bf040357fe1b}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{872185b2-1097-4c37-81ff-0321c31b54eb}</UniqueIdentifier>
+      <UniqueIdentifier>{8790148e-c90e-4952-b256-0eab700e77eb}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{61e6ff38-6668-47a9-a010-58b3072f3ec7}</UniqueIdentifier>
+      <UniqueIdentifier>{0df84f64-87de-4c12-b313-00979fa51075}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
   </ItemGroup>
@@ -62,5 +62,8 @@
     <ClInclude Include="..\..\..\SRC\damage\ParkAng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
   </ItemGroup>
 </Project>

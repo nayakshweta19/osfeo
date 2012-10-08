@@ -11,29 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DE8A4685-DE62-451A-AC04-61D931900AC2}</ProjectGuid>
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{E9027F29-2D4C-8E95-46E4-8D1A9BBAD31E}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -48,16 +50,18 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>c:\Program Files\tcl\include;..\..\..\src\analysis\integrator;..\..\..\src\handler;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\channel;..\..\..\src\matrix;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\convergenceTest;..\..\..\src\nDarray;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\..\..\obj\convergence\debug/convergence.pch</PrecompiledHeaderOutputFile>
@@ -70,25 +74,24 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Lib>
       <OutputFile>.\..\..\lib\debug\convergence.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>c:\Program Files\tcl\include;..\..\..\src\analysis\integrator;..\..\..\src\handler;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\channel;..\..\..\src\matrix;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\convergenceTest;..\..\..\src\nDarray;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -99,25 +102,17 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
-      <Parallelization>true</Parallelization>
-      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
-      <GlobalOptimizations>false</GlobalOptimizations>
-      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
-      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
-      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
-      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Lib>
       <OutputFile>.\..\..\lib\release\convergence.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SRC\convergenceTest\ConvergenceTest.cpp" />
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestEnergyIncr.cpp" />
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestFixedNumIter.cpp" />
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestNormDispIncr.cpp" />
@@ -126,9 +121,11 @@
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.cpp" />
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.cpp" />
     <ClCompile Include="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.cpp" />
+    <ClCompile Include="..\..\..\SRC\convergenceTest\ConvergenceTest.cpp" />
+    <ClCompile Include="..\..\..\SRC\convergenceTest\NormDispAndUnbalance.cpp" />
+    <ClCompile Include="..\..\..\SRC\convergenceTest\NormDispOrUnbalance.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SRC\convergenceTest\ConvergenceTest.h" />
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestEnergyIncr.h" />
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestFixedNumIter.h" />
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestNormDispIncr.h" />
@@ -137,6 +134,9 @@
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.h" />
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.h" />
     <ClInclude Include="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.h" />
+    <ClInclude Include="..\..\..\SRC\convergenceTest\ConvergenceTest.h" />
+    <ClInclude Include="..\..\..\SRC\convergenceTest\NormDispAndUnbalance.h" />
+    <ClInclude Include="..\..\..\SRC\convergenceTest\NormDispOrUnbalance.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

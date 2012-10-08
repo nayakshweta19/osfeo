@@ -2,14 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="storage">
-      <UniqueIdentifier>{a08d3071-0980-496b-aaac-5eedadd7f234}</UniqueIdentifier>
+      <UniqueIdentifier>{46716544-b787-4029-bdc1-dd12a03491b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source">
-      <UniqueIdentifier>{845293b6-38c7-4d58-af53-76e4ccfba4a6}</UniqueIdentifier>
+      <UniqueIdentifier>{379e0ab7-b6b2-4de6-a3c6-4773563b9e6c}</UniqueIdentifier>
       <Extensions>.cpp</Extensions>
     </Filter>
     <Filter Include="Header">
-      <UniqueIdentifier>{e69e35ce-e298-4d7b-b503-f016aebe990a}</UniqueIdentifier>
+      <UniqueIdentifier>{59e801ac-e2bf-46a4-9867-8b2fff0d32b9}</UniqueIdentifier>
       <Extensions>.h</Extensions>
     </Filter>
   </ItemGroup>

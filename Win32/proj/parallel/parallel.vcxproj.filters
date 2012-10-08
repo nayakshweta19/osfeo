@@ -2,36 +2,36 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{e73a98d5-e61b-4a4f-92b1-d28d22369af2}</UniqueIdentifier>
+      <UniqueIdentifier>{9a35e40e-7ea0-4f6b-a0c7-b178ba32428a}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{c8b6dfe4-56e7-461f-bb56-0763c26d96a3}</UniqueIdentifier>
+      <UniqueIdentifier>{68810a83-a4e0-4537-8d0d-e392a705727f}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
     <Filter Include="actor">
-      <UniqueIdentifier>{5999f799-c290-4c2e-8315-678c435cfb5d}</UniqueIdentifier>
+      <UniqueIdentifier>{742f1384-0b35-4e1f-87ca-135e7e0a9df5}</UniqueIdentifier>
     </Filter>
     <Filter Include="solver">
-      <UniqueIdentifier>{77b7d526-60eb-4f49-a6f6-a5db561262d4}</UniqueIdentifier>
+      <UniqueIdentifier>{fcd5a4cf-96fc-4573-944b-c07e0fdf2f2b}</UniqueIdentifier>
     </Filter>
     <Filter Include="solver\mumps">
-      <UniqueIdentifier>{26252ce9-d605-4ee2-8f5b-721ac834801f}</UniqueIdentifier>
+      <UniqueIdentifier>{44ed80d2-013e-452f-a6e6-72404a52387a}</UniqueIdentifier>
     </Filter>
     <Filter Include="numberer">
-      <UniqueIdentifier>{a2e77ae7-e3a6-4442-92bd-c50bcb135b7a}</UniqueIdentifier>
+      <UniqueIdentifier>{1b15e358-8756-467d-81cd-c5b3a471945b}</UniqueIdentifier>
     </Filter>
     <Filter Include="partitioner">
-      <UniqueIdentifier>{f53b0228-7aa6-4d3f-99d8-760b0afd0ca1}</UniqueIdentifier>
+      <UniqueIdentifier>{dcadb2f8-4501-4730-84f7-24a81560e0c0}</UniqueIdentifier>
     </Filter>
     <Filter Include="partitioner\metis">
-      <UniqueIdentifier>{9ceabd40-7aa5-4bab-9e5a-5575c005d847}</UniqueIdentifier>
+      <UniqueIdentifier>{c70eb7c0-b062-489a-b319-b1407a94f102}</UniqueIdentifier>
     </Filter>
     <Filter Include="domain">
-      <UniqueIdentifier>{935966f8-e337-4764-a060-764f03185e09}</UniqueIdentifier>
+      <UniqueIdentifier>{be4104e4-c406-433b-b42f-b334515ae750}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis">
-      <UniqueIdentifier>{5120603d-f528-431c-8f1a-8ce2e1e0fa8e}</UniqueIdentifier>
+      <UniqueIdentifier>{0a731bd1-b20a-4e2f-b9d0-649481822902}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,15 +50,6 @@
     <ClCompile Include="..\..\..\SRC\actor\channel\HTTP.cpp">
       <Filter>actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\actor\machineBroker\MachineBroker.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\actor\message\Message.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\actor\actor\MovableObject.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\actor\channel\MPI_Channel.cpp">
       <Filter>actor</Filter>
     </ClCompile>
@@ -66,6 +57,15 @@
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\actor\machineBroker\MPI_MachineBroker.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\machineBroker\MachineBroker.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\message\Message.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\actor\MovableObject.cpp">
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\actor\objectBroker\ObjectBroker.cpp">
@@ -316,15 +316,6 @@
     <ClInclude Include="..\..\..\SRC\actor\objectBroker\FEM_ObjectBrokerAllClasses.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\actor\machineBroker\MachineBroker.h">
-      <Filter>actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\actor\message\Message.h">
-      <Filter>actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\actor\actor\MovableObject.h">
-      <Filter>actor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\actor\channel\MPI_Channel.h">
       <Filter>actor</Filter>
     </ClInclude>
@@ -332,6 +323,15 @@
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\actor\machineBroker\MPI_MachineBroker.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\machineBroker\MachineBroker.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\message\Message.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\actor\MovableObject.h">
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\actor\objectBroker\ObjectBroker.h">

@@ -19,11 +19,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -49,16 +51,18 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\src\domain\load;..\..\..\src\api;..\..\..\src\package;..\..\..\src\utility;..\..\..\SRC\actor\message;..\..\..\SRC\actor\objectBroker;..\..\..\src\modelbuilder\tcl;..\..\..\src\damage;..\..\..\src\domain\pattern;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\integrator;..\..\..\src\material\section\fiber;..\..\..\src\material;..\..\..\src\recorder\response;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\handler;..\..\..\src\renderer;..\..\..\src\tcl;..\..\..\src\actor\channel;..\..\..\src\modelbuilder;..\..\..\src\database;..\..\..\src\tagged;..\..\..\src\actor\actor;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src;..\..\..\src\recorder;..\..\..\src\domain\node;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\domain\constraints;..\..\..\src\element\updatedlagrangianbeamcolumn;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldsurface\yieldSurfaceBC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_WGL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
@@ -71,14 +75,6 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
-      <Parallelization>true</Parallelization>
-      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
-      <GlobalOptimizations>false</GlobalOptimizations>
-      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
-      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
-      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -120,6 +116,7 @@
     <ClCompile Include="..\..\..\SRC\recorder\DamageRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\DatastoreRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\DriftRecorder.cpp" />
+    <ClCompile Include="..\..\..\SRC\recorder\ElementGiDRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\ElementRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\EnvelopeDriftRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\EnvelopeElementRecorder.cpp" />
@@ -127,6 +124,7 @@
     <ClCompile Include="..\..\..\SRC\recorder\FilePlotter.cpp" />
     <ClCompile Include="..\..\..\Src\recorder\GSA_Recorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\MaxNodeDispRecorder.cpp" />
+    <ClCompile Include="..\..\..\SRC\recorder\NodeGiDRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\NodeRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\PatternRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\Recorder.cpp" />
@@ -143,12 +141,15 @@
     <ClInclude Include="..\..\..\SRC\recorder\AlgorithmIncrements.h" />
     <ClInclude Include="..\..\..\SRC\recorder\DatastoreRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\DriftRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\ElementGiDRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\ElementRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\EnvelopeDriftRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\EnvelopeElementRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\EnvelopeNodeRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\FilePlotter.h" />
     <ClInclude Include="..\..\..\Src\recorder\GSA_Recorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\MaxNodeDispRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\NodeGiDRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\NodeRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\PatternRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\Recorder.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\..\..\SRC\recorder\response\FiberResponse.h" />
     <ClInclude Include="..\..\..\SRC\recorder\response\MaterialResponse.h" />
     <ClInclude Include="..\..\..\SRC\recorder\response\Response.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\YsVisual.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

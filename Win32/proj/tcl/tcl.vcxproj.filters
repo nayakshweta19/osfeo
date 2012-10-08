@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{821a8347-48ae-44fd-865d-899cc77d1575}</UniqueIdentifier>
+      <UniqueIdentifier>{da7c0a16-a2e6-4f58-8b05-0a9ceed786bd}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{f493f5d1-34af-4092-8aa1-c45f979bd432}</UniqueIdentifier>
+      <UniqueIdentifier>{7638ef4d-9b7f-4ba1-a700-b2d0d0ecece0}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
   </ItemGroup>
@@ -23,9 +23,6 @@
     <ClCompile Include="..\..\..\SRC\tcl\TclVideoPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclModelBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\tcl\TclFeViewer.h">
@@ -38,9 +35,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\tcl\TclVideoPlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\modelbuilder\tcl\TclModelBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

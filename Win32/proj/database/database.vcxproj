@@ -18,11 +18,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -48,17 +50,19 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\src\package;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\actor;..\..\..\src\ndarray;..\..\..\src\handler;..\..\..\src\domain\domain;..\..\..\src\actor\objectbroker;..\..\..\src\matrix;..\..\..\src\actor\channel;..\..\..\src\database;..\..\..\src;c:\Program Files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src\package;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\actor;..\..\..\src\ndarray;..\..\..\src\handler;..\..\..\src\domain\domain;..\..\..\src\actor\objectbroker;..\..\..\src\matrix;..\..\..\src\actor\channel;..\..\..\src\database;..\..\..\src;c:\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -70,14 +74,6 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
-      <Parallelization>true</Parallelization>
-      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
-      <GlobalOptimizations>false</GlobalOptimizations>
-      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
-      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
-      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

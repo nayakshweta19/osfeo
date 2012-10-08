@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{e5077b81-0f6a-4883-a329-65de9cc6c1fb}</UniqueIdentifier>
+      <UniqueIdentifier>{69a8ea77-1fe1-4f67-bbc1-5f3b627b3493}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{3aa7e8db-dfd7-46a6-b5c1-b793a43ff972}</UniqueIdentifier>
+      <UniqueIdentifier>{319423a9-13e2-4964-903b-618239152f87}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
   </ItemGroup>
@@ -41,6 +41,15 @@
     <ClCompile Include="..\..\..\SRC\handler\XmlFileStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\handler\ConsoleErrorHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\handler\ErrorHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\handler\GiDStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\handler\BinaryFileStream.h">
@@ -68,6 +77,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\handler\XmlFileStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\handler\ConsoleErrorHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\handler\DatabaseStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\handler\ErrorHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\handler\GiDStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

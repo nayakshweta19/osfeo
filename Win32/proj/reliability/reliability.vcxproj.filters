@@ -2,94 +2,94 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="analysis">
-      <UniqueIdentifier>{610531ba-df31-4e94-9ced-69c10bfff99a}</UniqueIdentifier>
+      <UniqueIdentifier>{938c0cfa-4ba3-4d52-9377-a6b299027087}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\curvature">
-      <UniqueIdentifier>{e58a7964-1743-4d4d-aef8-c42f312e1158}</UniqueIdentifier>
+      <UniqueIdentifier>{bc06ad83-acd8-41e3-b8a3-bb63c0924466}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\designPoint">
-      <UniqueIdentifier>{0dca8537-f4f4-4d7c-a8ce-252db8a8531c}</UniqueIdentifier>
+      <UniqueIdentifier>{e3c1d8ce-f8dc-459c-bf1b-c78c7b8a2b7c}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\direction">
-      <UniqueIdentifier>{88422e1b-f0a0-431d-80a4-c6db0f90d862}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="analysis\gFunction">
-      <UniqueIdentifier>{151b9377-1bfb-482b-a066-1831e2d789b4}</UniqueIdentifier>
+      <UniqueIdentifier>{ee1edc96-fce0-4e4d-be5d-e0f186f91120}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\misc">
-      <UniqueIdentifier>{f492d3d2-3ed9-4831-b04e-994b33e09e3b}</UniqueIdentifier>
+      <UniqueIdentifier>{1356131b-7969-43f4-8275-d56d4ba7989b}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\randomNumber">
-      <UniqueIdentifier>{561ad774-3798-40a7-885a-9b9909ec5480}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="analysis\sensitivity">
-      <UniqueIdentifier>{dccfac72-829e-4cbf-ba6b-2c786e862cc7}</UniqueIdentifier>
+      <UniqueIdentifier>{7d38fbd8-eef7-4a94-a1cd-831a6c29652d}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\stepSize">
-      <UniqueIdentifier>{da27c632-749b-4a7c-bbf2-52b52d22ad2a}</UniqueIdentifier>
+      <UniqueIdentifier>{4e31bd42-897f-4b52-9771-92bcf60c71b0}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\transformation">
-      <UniqueIdentifier>{d1d8edcd-6870-4908-abf4-90c582a6a079}</UniqueIdentifier>
+      <UniqueIdentifier>{3b18a75f-c276-4f77-8f5d-ef74247478f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\analysis">
-      <UniqueIdentifier>{2ff936ac-d748-4d73-9b13-40fde39053a2}</UniqueIdentifier>
+      <UniqueIdentifier>{736a4067-4f1f-4215-ad10-5492a5786fcb}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\analysis\system">
-      <UniqueIdentifier>{cf5a68fe-071a-479e-a739-956f3246f4f5}</UniqueIdentifier>
+      <UniqueIdentifier>{38469178-4261-40d5-b769-079b68574d16}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\meritFunction">
-      <UniqueIdentifier>{27def43b-2228-436f-8a1b-77c79e6139ac}</UniqueIdentifier>
+      <UniqueIdentifier>{c6dea58d-83fb-46a6-acda-cfd320ab5458}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\hessianApproximation">
-      <UniqueIdentifier>{a585da85-ddb1-43d2-a745-48f2e3799cfc}</UniqueIdentifier>
+      <UniqueIdentifier>{b18caf63-9307-4174-9ec4-f67e13682f8e}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\convergenceCheck">
-      <UniqueIdentifier>{6d76c4ab-ed11-440e-ac5b-e7452d1ccb91}</UniqueIdentifier>
+      <UniqueIdentifier>{6fa97487-e6c9-448e-9c57-e0011d3f5a98}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\rootFinding">
-      <UniqueIdentifier>{5cef1afd-bdec-46d9-b56b-f8cd52454d09}</UniqueIdentifier>
+      <UniqueIdentifier>{a737a048-29e3-41be-a852-6c792492a4a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\telm">
-      <UniqueIdentifier>{a3f7a227-edee-4644-8b18-faa7c5433c2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain">
-      <UniqueIdentifier>{477d938a-7865-4867-b0ff-01e1ffebda2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\components">
-      <UniqueIdentifier>{90b32558-a888-42a5-b421-1d8aca66cc28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\distributions">
-      <UniqueIdentifier>{bed3fb26-4426-4bee-a586-53034f3af284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\filter">
-      <UniqueIdentifier>{9df44ffa-e56b-47bb-ab82-172946266666}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\spectrum">
-      <UniqueIdentifier>{c23a7c3f-d2a7-4510-b06d-50fe374cda22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\modulatingFunction">
-      <UniqueIdentifier>{a854cc5f-357f-4a2d-aee6-c3416867376d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="tcl">
-      <UniqueIdentifier>{d819f7f0-de5e-426a-8069-73eb2a353c7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FEsensitivity">
-      <UniqueIdentifier>{b0301a0d-0c45-4afa-be75-16e6a18ea430}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="optimization">
-      <UniqueIdentifier>{927ebe63-197d-491f-a817-71948dce4643}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\functionEvaluator">
-      <UniqueIdentifier>{6d6c8bd5-f400-45ab-a4ba-c4116abb3928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="domain\performanceFunction">
-      <UniqueIdentifier>{b338ce21-d274-4231-b14c-9c633622fcda}</UniqueIdentifier>
+      <UniqueIdentifier>{290ebd3b-d4b2-44d0-8173-d4afb6f79c4d}</UniqueIdentifier>
     </Filter>
     <Filter Include="analysis\gradient">
-      <UniqueIdentifier>{da957db3-a4a4-431e-84a1-c3dfe31c272c}</UniqueIdentifier>
+      <UniqueIdentifier>{aae3edd3-e1af-4bcb-a2f9-d6d8eade5fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="analysis\hessian">
+      <UniqueIdentifier>{cc54a6bf-ba71-4b3e-9d9b-54a482988f06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain">
+      <UniqueIdentifier>{ebc3da62-0a67-4ed9-84b6-ec7f0dc5e78b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\components">
+      <UniqueIdentifier>{a3dae517-ed67-436d-9495-c2621dc271aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\distributions">
+      <UniqueIdentifier>{b8380f2e-7fe7-47fc-8ae3-2f63d9b5bddf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\filter">
+      <UniqueIdentifier>{5ffb4f15-4e93-4955-8274-888a6fc6e146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\spectrum">
+      <UniqueIdentifier>{12baefb7-c6a1-4f3a-af77-cbce0337ed51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\modulatingFunction">
+      <UniqueIdentifier>{80ceda6f-a9d9-4846-a4cd-63b9f8dc3435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\functionEvaluator">
+      <UniqueIdentifier>{4773c267-84af-4b8f-975d-a61c3fed92f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\performanceFunction">
+      <UniqueIdentifier>{62237326-6c52-48a2-a742-2879ae44899e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="domain\storage">
+      <UniqueIdentifier>{13951e0a-e380-4c91-ba42-e5810ba92b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tcl">
+      <UniqueIdentifier>{d73cdc08-a53e-4eca-870b-381fa33bf2d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FEsensitivity">
+      <UniqueIdentifier>{29d72487-187b-4a65-82c9-69d284687992}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\curvature\CurvatureFitting.cpp">
+      <Filter>analysis\curvature</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\curvature\CurvaturesBySearchAlgorithm.cpp">
       <Filter>analysis\curvature</Filter>
     </ClCompile>
@@ -114,23 +114,11 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\direction\PolakHeSearchDirectionAndMeritFunction.cpp">
       <Filter>analysis\direction</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\direction\SearchDirection.cpp">
-      <Filter>analysis\direction</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\direction\SQPsearchDirectionMeritFunctionAndHessian.cpp">
       <Filter>analysis\direction</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gFunction\BasicGFunEvaluator.cpp">
-      <Filter>analysis\gFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gFunction\GFunEvaluator.cpp">
-      <Filter>analysis\gFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gFunction\OpenSeesGFunEvaluator.cpp">
-      <Filter>analysis\gFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gFunction\TclGFunEvaluator.cpp">
-      <Filter>analysis\gFunction</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\direction\SearchDirection.cpp">
+      <Filter>analysis\direction</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\misc\CorrelatedStandardNormal.cpp">
       <Filter>analysis\misc</Filter>
@@ -144,12 +132,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\randomNumber\RandomNumberGenerator.cpp">
       <Filter>analysis\randomNumber</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\sensitivity\GradGEvaluator.cpp">
-      <Filter>analysis\sensitivity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\sensitivity\OpenSeesGradGEvaluator.cpp">
-      <Filter>analysis\sensitivity</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\stepSize\ArmijoStepSizeRule.cpp">
       <Filter>analysis\stepSize</Filter>
     </ClCompile>
@@ -158,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\stepSize\StepSizeRule.cpp">
       <Filter>analysis\stepSize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.cpp">
+      <Filter>analysis\transformation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\NatafProbabilityTransformation.cpp">
       <Filter>analysis\transformation</Filter>
@@ -183,9 +168,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\FOSMAnalysis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\FragilityAnalysis.cpp">
-      <Filter>analysis\analysis</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\GFunVisualizationAnalysis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
@@ -207,9 +189,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\OutCrossingAnalysis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\ParametricReliabilityAnalysis.cpp">
-      <Filter>analysis\analysis</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\PrincipalAxis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
@@ -219,10 +198,10 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\RespSurfaceSimulation.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\SamplingAnalysis.cpp">
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\SORMAnalysis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\SORMAnalysis.cpp">
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\SamplingAnalysis.cpp">
       <Filter>analysis\analysis</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\analysis\SurfaceDesign.cpp">
@@ -273,9 +252,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\convergenceCheck\StandardReliabilityConvergenceCheck.cpp">
       <Filter>analysis\convergenceCheck</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\rootFinding\ModNewtonRootFinding.cpp">
-      <Filter>analysis\rootFinding</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\rootFinding\RootFinding.cpp">
       <Filter>analysis\rootFinding</Filter>
     </ClCompile>
@@ -303,31 +279,22 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\DynamciAnalyzer.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\FirstPassageAnalyzer.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\FOSeriesSimulation.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\GeneralRandGenerator.cpp">
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\FirstPassageAnalyzer.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\GFunEachstepEvaluator.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\GeneralRandGenerator.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\InitialPointBuilder.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\InitialStaticAnalysis.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\localMath.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\mersenne.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\mother.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\NewDiscretizedRandomProcessSeries.cpp">
@@ -366,9 +333,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\PerformanceFunctionCoefficientIter.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\rancombi.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\RandomProcess.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
@@ -379,12 +343,6 @@
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\RandomVibrationSimulatorResult.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ranrotb.cpp">
-      <Filter>analysis\telm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ranrotw.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ReliabilityDirectIntegrationAnalysis.cpp">
@@ -402,10 +360,10 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\StatFirstPassageAnalyzer.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\StaticAnalyzer.cpp">
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\StatRandomVibrationSimulation.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\StatRandomVibrationSimulation.cpp">
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\StaticAnalyzer.cpp">
       <Filter>analysis\telm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ThresholdIncInitialPointBuilder.cpp">
@@ -416,6 +374,42 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\UniformGenerator.cpp">
       <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\localMath.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\mersenne.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\mother.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\rancombi.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ranrotb.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\telm\ranrotw.cpp">
+      <Filter>analysis\telm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\FiniteDifferenceGradient.cpp">
+      <Filter>analysis\gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\GradientEvaluator.cpp">
+      <Filter>analysis\gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\ImplicitGradient.cpp">
+      <Filter>analysis\gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\hessian\FiniteDifferenceHessian.cpp">
+      <Filter>analysis\hessian</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\analysis\hessian\HessianEvaluator.cpp">
+      <Filter>analysis\hessian</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.cpp">
+      <Filter>domain</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\domain\components\CorrelationCoefficient.cpp">
       <Filter>domain\components</Filter>
@@ -561,45 +555,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\domain\modulatingFunction\TrapezoidalModulatingFunction.cpp">
       <Filter>domain\modulatingFunction</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.cpp">
-      <Filter>tcl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.cpp">
-      <Filter>FEsensitivity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.cpp">
-      <Filter>FEsensitivity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityIntegrator.cpp">
-      <Filter>FEsensitivity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.cpp">
-      <Filter>FEsensitivity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\ConstraintFunction.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\DesignVariable.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\DesignVariablePositioner.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\ObjectiveFunction.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\SnoptAnalysis.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\SnoptWrapper.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\ToyFunction.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\optimization\ToyOptFunction.cpp">
-      <Filter>optimization</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\domain\functionEvaluator\FunctionEvaluator.cpp">
       <Filter>domain\functionEvaluator</Filter>
     </ClCompile>
@@ -618,29 +573,32 @@
     <ClCompile Include="..\..\..\SRC\reliability\domain\performanceFunction\PerformanceFunctionIter.cpp">
       <Filter>domain\performanceFunction</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.cpp">
-      <Filter>domain\distributions</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\domain\storage\FORMStorage.cpp">
+      <Filter>domain\storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\domain\filter\DeltaFilter.cpp">
-      <Filter>domain\filter</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\domain\storage\ReliabilityStorage.cpp">
+      <Filter>domain\storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gFunction\TclMatlabGFunEvaluator.cpp">
-      <Filter>analysis\gFunction</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.cpp">
+      <Filter>tcl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\FiniteDifferenceGradient.cpp">
-      <Filter>analysis\gradient</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.cpp">
+      <Filter>FEsensitivity</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\GradientEvaluator.cpp">
-      <Filter>analysis\gradient</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.cpp">
+      <Filter>FEsensitivity</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\gradient\ImplicitGradient.cpp">
-      <Filter>analysis\gradient</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityIntegrator.cpp">
+      <Filter>FEsensitivity</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.cpp">
-      <Filter>analysis\transformation</Filter>
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.cpp">
+      <Filter>FEsensitivity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\curvature\CurvatureFitting.h">
+      <Filter>analysis\curvature</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\curvature\CurvaturesBySearchAlgorithm.h">
       <Filter>analysis\curvature</Filter>
     </ClInclude>
@@ -665,23 +623,11 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\direction\PolakHeSearchDirectionAndMeritFunction.h">
       <Filter>analysis\direction</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\direction\SearchDirection.h">
-      <Filter>analysis\direction</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\direction\SQPsearchDirectionMeritFunctionAndHessian.h">
       <Filter>analysis\direction</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gFunction\BasicGFunEvaluator.h">
-      <Filter>analysis\gFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gFunction\GFunEvaluator.h">
-      <Filter>analysis\gFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gFunction\OpenSeesGFunEvaluator.h">
-      <Filter>analysis\gFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gFunction\TclGFunEvaluator.h">
-      <Filter>analysis\gFunction</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\direction\SearchDirection.h">
+      <Filter>analysis\direction</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\misc\CorrelatedStandardNormal.h">
       <Filter>analysis\misc</Filter>
@@ -695,12 +641,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\randomNumber\RandomNumberGenerator.h">
       <Filter>analysis\randomNumber</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\sensitivity\GradGEvaluator.h">
-      <Filter>analysis\sensitivity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\sensitivity\OpenSeesGradGEvaluator.h">
-      <Filter>analysis\sensitivity</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\stepSize\ArmijoStepSizeRule.h">
       <Filter>analysis\stepSize</Filter>
     </ClInclude>
@@ -709,6 +649,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\stepSize\StepSizeRule.h">
       <Filter>analysis\stepSize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.h">
+      <Filter>analysis\transformation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\NatafProbabilityTransformation.h">
       <Filter>analysis\transformation</Filter>
@@ -734,9 +677,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\FOSMAnalysis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\FragilityAnalysis.h">
-      <Filter>analysis\analysis</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\GFunVisualizationAnalysis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
@@ -758,9 +698,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\OutCrossingAnalysis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\ParametricReliabilityAnalysis.h">
-      <Filter>analysis\analysis</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\PrincipalAxis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
@@ -770,10 +707,10 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\RespSurfaceSimulation.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\SamplingAnalysis.h">
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\SORMAnalysis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\SORMAnalysis.h">
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\SamplingAnalysis.h">
       <Filter>analysis\analysis</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\analysis\SurfaceDesign.h">
@@ -824,9 +761,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\convergenceCheck\StandardReliabilityConvergenceCheck.h">
       <Filter>analysis\convergenceCheck</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\rootFinding\ModNewtonRootFinding.h">
-      <Filter>analysis\rootFinding</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\rootFinding\RootFinding.h">
       <Filter>analysis\rootFinding</Filter>
     </ClInclude>
@@ -854,25 +788,22 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\DynamicAnalyzer.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\FirstPassageAnalyzer.h">
-      <Filter>analysis\telm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\FOSeriesSimulation.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\GeneralRandGenerator.h">
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\FirstPassageAnalyzer.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\GFunEachStepEvaluator.h">
+      <Filter>analysis\telm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\GeneralRandGenerator.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\InitialPointBuilder.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\InitialStaticAnalysis.h">
-      <Filter>analysis\telm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\localMath.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\NewDiscretizedRandomProcessSeries.h">
@@ -911,9 +842,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\PerformanceFunctionCoefficientIter.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\randomc.h">
-      <Filter>analysis\telm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\RandomProcess.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
@@ -941,10 +869,10 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\StatFirstPassageAnalyzer.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\StaticAnalyzer.h">
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\StatRandomVibrationSimulation.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\StatRandomVibrationSimulation.h">
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\StaticAnalyzer.h">
       <Filter>analysis\telm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\ThresholdIncInitialPointBuilder.h">
@@ -952,6 +880,30 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\TimePoints.h">
       <Filter>analysis\telm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\localMath.h">
+      <Filter>analysis\telm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\telm\randomc.h">
+      <Filter>analysis\telm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\FiniteDifferenceGradient.h">
+      <Filter>analysis\gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\GradientEvaluator.h">
+      <Filter>analysis\gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\ImplicitGradient.h">
+      <Filter>analysis\gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\hessian\FiniteDifferenceHessian.h">
+      <Filter>analysis\hessian</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\analysis\hessian\HessianEvaluator.h">
+      <Filter>analysis\hessian</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.h">
+      <Filter>domain</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\domain\components\CorrelationCoefficient.h">
       <Filter>domain\components</Filter>
@@ -1097,51 +1049,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\domain\modulatingFunction\TrapezoidalModulatingFunction.h">
       <Filter>domain\modulatingFunction</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.h">
-      <Filter>tcl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.h">
-      <Filter>FEsensitivity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.h">
-      <Filter>FEsensitivity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityIntegrator.h">
-      <Filter>FEsensitivity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.h">
-      <Filter>FEsensitivity</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\ConstraintFunction.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\DesignVariable.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\DesignVariablePositioner.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\ObjectiveFunction.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\snopt.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\SnoptAnalysis.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\snoptfilewrapper.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\SnoptWrapper.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\ToyFunction.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\optimization\ToyOptFunction.h">
-      <Filter>optimization</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\domain\functionEvaluator\FunctionEvaluator.h">
       <Filter>domain\functionEvaluator</Filter>
     </ClInclude>
@@ -1160,26 +1067,26 @@
     <ClInclude Include="..\..\..\SRC\reliability\domain\performanceFunction\PerformanceFunctionIter.h">
       <Filter>domain\performanceFunction</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.h">
-      <Filter>domain\distributions</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\domain\storage\FORMStorage.h">
+      <Filter>domain\storage</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\domain\filter\DeltaFilter.h">
-      <Filter>domain\filter</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\domain\storage\ReliabilityStorage.h">
+      <Filter>domain\storage</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gFunction\TclMatlabGFunEvaluator.h">
-      <Filter>analysis\gFunction</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.h">
+      <Filter>tcl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\FiniteDifferenceGradient.h">
-      <Filter>analysis\gradient</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.h">
+      <Filter>FEsensitivity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\GradientEvaluator.h">
-      <Filter>analysis\gradient</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.h">
+      <Filter>FEsensitivity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\gradient\ImplicitGradient.h">
-      <Filter>analysis\gradient</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityIntegrator.h">
+      <Filter>FEsensitivity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\analysis\transformation\AllIndependentTransformation.h">
-      <Filter>analysis\transformation</Filter>
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.h">
+      <Filter>FEsensitivity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

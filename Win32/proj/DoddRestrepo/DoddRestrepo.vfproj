@@ -3,7 +3,7 @@
 	<Platforms>
 		<Platform Name="Win32"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\debug\" IntermediateDirectory=".\..\..\obj\DoddRestrepo\debug\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" FPS4Libs="false" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -12,7 +12,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|Win32" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\DoddRestrepo\release\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" FPS4Libs="false"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>

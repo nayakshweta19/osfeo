@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{453f6db7-9a6c-46a7-a406-28667f9fc96e}</UniqueIdentifier>
+      <UniqueIdentifier>{b8629715-212c-456e-abc1-bd7f8c6fb55c}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{17ee1617-6fdf-4749-99b9-5425cd77872a}</UniqueIdentifier>
+      <UniqueIdentifier>{fa73f1cf-e4a6-4dfd-bd5f-ea1f1dbbcdea}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
   </ItemGroup>
@@ -39,12 +39,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\matrix\Vector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstraint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstresst.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,12 +74,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\matrix\Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstresst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

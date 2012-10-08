@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{3050e6a4-fadf-4e42-844e-b6352bd24cbb}</UniqueIdentifier>
+      <UniqueIdentifier>{ec79c40d-6c63-434e-bd9b-21a08eae3cbb}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{e2e7cca5-a5ed-48a4-aad0-c89b8c22e5b6}</UniqueIdentifier>
+      <UniqueIdentifier>{9e2cf43c-9fcb-49fe-bf3f-3e035a6e330a}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
   </ItemGroup>
@@ -20,36 +20,21 @@
     <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\myCommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\tcl\TclFeViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\tcl\tclMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclSectionTester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclUniaxialMaterialTester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\tcl\TclVideoPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\VC2005errno.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SRC\classTags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\tcl\commands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\OPS_Globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\modelbuilder\tcl\TclSectionTester.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\classTags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\tcl\commands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
