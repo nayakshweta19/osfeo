@@ -2,50 +2,50 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{65e72cec-544f-499a-b9cd-dbe1a394c373}</UniqueIdentifier>
+      <UniqueIdentifier>{00f16856-e32b-4835-a0ac-fa1e3e5096cc}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{79263268-f05d-490b-a29a-2e3dbf986c8e}</UniqueIdentifier>
+      <UniqueIdentifier>{5cb815f5-6c6d-4666-9980-e29f1dff6ba6}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
     <Filter Include="profileSPD">
-      <UniqueIdentifier>{59aea63b-457f-46e0-b73a-eb7f0ccebca1}</UniqueIdentifier>
+      <UniqueIdentifier>{518842f0-4d46-45a6-851d-76e6c300b85c}</UniqueIdentifier>
     </Filter>
     <Filter Include="symSparse">
-      <UniqueIdentifier>{3390258c-c2cc-4f30-8ea5-08e5aace8703}</UniqueIdentifier>
+      <UniqueIdentifier>{ee76a981-6443-44db-ac9c-a1b53b2b5ea0}</UniqueIdentifier>
     </Filter>
     <Filter Include="bandGEN">
-      <UniqueIdentifier>{8b36795e-9f5f-456b-9bd6-4bfcff417c1f}</UniqueIdentifier>
+      <UniqueIdentifier>{51bc8044-be64-4c51-b34a-554294ff25a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="bandSPD">
-      <UniqueIdentifier>{5fd5cda4-2aeb-49e8-aa8f-b4406755e993}</UniqueIdentifier>
+      <UniqueIdentifier>{211ab88c-df06-4c14-8721-5df1acdc54de}</UniqueIdentifier>
     </Filter>
     <Filter Include="fullGEN">
-      <UniqueIdentifier>{f3e1165d-5516-4a2f-8706-444c4cb98673}</UniqueIdentifier>
+      <UniqueIdentifier>{c2cc2c64-9547-4d3b-be39-4d469b0b498a}</UniqueIdentifier>
     </Filter>
     <Filter Include="umfpack">
-      <UniqueIdentifier>{9d6d20a5-62ef-4b90-80fd-12dac9ce8b1e}</UniqueIdentifier>
+      <UniqueIdentifier>{ccf79fac-4e93-43c3-8847-421f7cecc472}</UniqueIdentifier>
       <Extensions>.cpp; .h</Extensions>
     </Filter>
     <Filter Include="superLU">
-      <UniqueIdentifier>{7ff80e55-d24c-4773-865d-460f9b4cecb0}</UniqueIdentifier>
+      <UniqueIdentifier>{bcfa1891-ba29-46be-9142-ebaa29b3646a}</UniqueIdentifier>
       <Extensions>.cpp; .h</Extensions>
     </Filter>
     <Filter Include="arpack">
-      <UniqueIdentifier>{a37b3260-fee2-48c0-98ab-00601671f9ef}</UniqueIdentifier>
+      <UniqueIdentifier>{8d7d37eb-b730-4461-924d-2ecab49b1688}</UniqueIdentifier>
     </Filter>
     <Filter Include="symBandEigen">
-      <UniqueIdentifier>{edb49913-c849-425b-99b3-df95e6c90a4d}</UniqueIdentifier>
+      <UniqueIdentifier>{a1fc7b67-12ea-45dc-ad19-9e5fe591ac68}</UniqueIdentifier>
     </Filter>
     <Filter Include="diagonal">
-      <UniqueIdentifier>{2f2dfeaf-cded-4a8f-b228-0bb98fc330d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ritz">
-      <UniqueIdentifier>{9e3b7332-528a-4b16-a4f3-1955ca07fc74}</UniqueIdentifier>
+      <UniqueIdentifier>{42f2549b-3bc8-4a49-8264-271af69e31cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="itpack">
-      <UniqueIdentifier>{64ff0345-8eb0-466b-a48e-1aec8900d1df}</UniqueIdentifier>
+      <UniqueIdentifier>{a74ab461-75b5-4afd-86f6-6fda0a8341a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ritz">
+      <UniqueIdentifier>{08f1db7d-d00f-493c-98e6-e4e8c11f0784}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +85,12 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.cpp">
       <Filter>profileSPD</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp">
+      <Filter>symSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp">
+      <Filter>symSparse</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\grcm.c">
       <Filter>symSparse</Filter>
     </ClCompile>
@@ -101,12 +107,6 @@
       <Filter>symSparse</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\symbolic.c">
-      <Filter>symSparse</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp">
-      <Filter>symSparse</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp">
       <Filter>symSparse</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.c">
@@ -196,32 +196,44 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp">
       <Filter>diagonal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.cpp">
-      <Filter>Ritz</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.cpp">
-      <Filter>Ritz</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.cpp">
-      <Filter>Ritz</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.cpp">
-      <Filter>Ritz</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.cpp">
-      <Filter>Ritz</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.cpp">
       <Filter>itpack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.cpp">
       <Filter>itpack</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.cpp">
+      <Filter>ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.cpp">
+      <Filter>ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.cpp">
+      <Filter>ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.cpp">
+      <Filter>ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.cpp">
+      <Filter>ritz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMLinSOE.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>fullGEN</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMSolver.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSOE.cpp">
+      <Filter>profileSPD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.cpp">
+      <Filter>profileSPD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -264,13 +276,13 @@
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\FeStructs.h">
       <Filter>symSparse</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h">
-      <Filter>symSparse</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.h">
       <Filter>symSparse</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.h">
+      <Filter>symSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h">
       <Filter>symSparse</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.h">
@@ -360,32 +372,44 @@
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.h">
       <Filter>diagonal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.h">
-      <Filter>Ritz</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.h">
-      <Filter>Ritz</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.h">
-      <Filter>Ritz</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.h">
-      <Filter>Ritz</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.h">
-      <Filter>Ritz</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSOE.h">
       <Filter>itpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\itpack\ItpackLinSolver.h">
       <Filter>itpack</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.h">
+      <Filter>ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.h">
+      <Filter>ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.h">
+      <Filter>ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.h">
+      <Filter>ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.h">
+      <Filter>ritz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMLinSOE.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSOE.h">
-      <Filter>Header Files</Filter>
+      <Filter>fullGEN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenRowLinSolver.h">
-      <Filter>Header Files</Filter>
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMSolver.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSOE.h">
+      <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.h">
+      <Filter>profileSPD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

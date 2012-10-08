@@ -2,15 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{0a1c531f-5723-4164-857b-ed8be02a1572}</UniqueIdentifier>
+      <UniqueIdentifier>{1d3bb404-7a20-4858-9f2e-41e431751f11}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{c2ce130c-1055-47d9-9367-bf551d6e5a33}</UniqueIdentifier>
+      <UniqueIdentifier>{5e52294f-2d5f-4439-bfac-9770a8d44f71}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
     <Filter Include="response">
-      <UniqueIdentifier>{19b5edc4-ee9b-41c0-9294-70bce619de4c}</UniqueIdentifier>
+      <UniqueIdentifier>{58c0a138-3cef-407f-8c9e-f8ebfd9251c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,8 +77,17 @@
     <ClCompile Include="..\..\..\SRC\recorder\response\CompositeResponse.cpp">
       <Filter>response</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\recorder\ElementGiDRecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\recorder\NodeGiDRecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\recorder\DamageRecorder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\SRC\recorder\AlgorithmIncrements.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -133,7 +142,16 @@
     <ClInclude Include="..\..\..\SRC\recorder\response\CompositeResponse.h">
       <Filter>response</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\recorder\DamageRecorder.h">
+    <ClInclude Include="..\..\..\SRC\recorder\ElementGiDRecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\recorder\NodeGiDRecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\recorder\EnvelopeDriftRecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\recorder\YsVisual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

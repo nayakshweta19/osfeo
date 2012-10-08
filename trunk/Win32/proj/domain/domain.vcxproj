@@ -11,30 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C37ADC16-EF1E-4F37-831E-3030AA330DFC}</ProjectGuid>
-    <RootNamespace>domain</RootNamespace>
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{71F2E0A7-EAA4-81A3-0BFD-151723C3BAFD}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -49,20 +50,21 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\..\src\element\elasticBeamColumn;..\..\..\src\coordTransformation;..\..\..\src\element\zerolength;..\..\..\src\domain\pattern\drm;..\..\..\src\actor\shadow;..\..\..\src\element\brick;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;..\..\..\src\api;..\..\..\src\reliability\domain\component;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\Program Files\Tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\tcl\include;..\..\..\src\reliability\domain\component;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\Program Files\Tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -75,27 +77,20 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CallingConvention>Cdecl</CallingConvention>
       <CompileAs>Default</CompileAs>
-      <Parallelization>true</Parallelization>
-      <UseProcessorExtensions>SSE41</UseProcessorExtensions>
-      <GlobalOptimizations>false</GlobalOptimizations>
-      <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
-      <FlushDenormalResultsToZero>false</FlushDenormalResultsToZero>
-      <EnableMatrixMultiplyLibraryCall>Default</EnableMatrixMultiplyLibraryCall>
-      <GenerateAlternateCodePaths>SSE41</GenerateAlternateCodePaths>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Lib>
       <OutputFile>.\..\..\lib\release\domain.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\element\elasticBeamColumn;..\..\..\src\coordTransformation;..\..\..\src\actor\shadow;..\..\..\src\element\zeroLength;..\..\..\src\domain\pattern\drm;..\..\..\src\element\brick;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;..\..\..\src\api;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nD;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\program files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\Program Files\tcl\include;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\program files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -109,19 +104,19 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Lib>
       <OutputFile>.\..\..\lib\debug\domain.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\domain\constraints\MD_Constraint.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\load\SelfWeight.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\load\SurfaceLoader.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\constraints\Pressure_Constraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\node\NodalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\node\Node.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\Domain.cpp" />
@@ -131,25 +126,25 @@
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomNodIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomParamIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomSP_Iter.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMBoundaryLayerDecorator.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMInputHandler.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPattern.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPatternWrapper.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\GeometricBrickDecorator.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\Mesh3DSubdomain.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\PlaneDRMInputHandler.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\TclPatternCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\PBowlLoading.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\subdomain\Subdomain.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\subdomain\SubdomainNodIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\component\DomainComponent.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\component\MaterialStageParameter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\component\ElementStateParameter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\component\InitialStateParameter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\component\MatParameter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\component\MaterialStageParameter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\component\NodeResponseParameter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\component\Parameter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\component\RVParameter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\component\TclParameterCommands.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\component\TclUpdateMaterialCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\load\Beam2dThermalAction.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\load\ElementalLoadIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\load\Load.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\load\NodalLoadIter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\load\SelfWeight.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\load\SurfaceLoader.cpp" />
     <ClCompile Include="..\..\..\Src\domain\load\Beam2dPointLoad.cpp" />
     <ClCompile Include="..\..\..\Src\domain\load\Beam2dTempLoad.cpp" />
     <ClCompile Include="..\..\..\Src\domain\load\Beam2dUniformLoad.cpp" />
@@ -164,12 +159,20 @@
     <ClCompile Include="..\..\..\SRC\domain\constraints\RigidRod.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\constraints\SP_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\EarthquakePattern.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\FireLoadPattern.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\LoadPattern.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\LoadPatternIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\MultiSupportPattern.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\PBowlLoading.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\PeerNGAMotion.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\TclPatternCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\UniformExcitation.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMBoundaryLayerDecorator.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMInputHandler.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPattern.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPatternWrapper.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\GeometricBrickDecorator.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\Mesh3DSubdomain.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\pattern\drm\PlaneDRMInputHandler.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\groundMotion\GroundMotion.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\groundMotion\GroundMotionRecord.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\groundMotion\InterpolatedGroundMotion.cpp" />
@@ -180,7 +183,6 @@
     <ClCompile Include="..\..\..\SRC\domain\pattern\PathSeries.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\PathTimeSeries.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\PeerMotion.cpp" />
-    <ClCompile Include="..\..\..\SRC\domain\pattern\PeerNGAMotion.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\PulseSeries.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\RectangularSeries.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\SimulatedRandomProcessSeries.cpp" />
@@ -196,38 +198,40 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\domain\constraints\MD_Constraint.h" />
-    <ClInclude Include="..\..\..\SRC\domain\load\SelfWeight.h" />
-    <ClInclude Include="..\..\..\SRC\domain\load\SurfaceLoader.h" />
+    <ClInclude Include="..\..\..\SRC\domain\constraints\Pressure_Constraint.h" />
+    <ClInclude Include="..\..\..\SRC\domain\domain\Pressure_ConstraintIter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.h" />
     <ClInclude Include="..\..\..\SRC\domain\node\NodalLoad.h" />
     <ClInclude Include="..\..\..\SRC\domain\node\Node.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\Domain.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\ElementIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\MP_ConstraintIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\NodeIter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\domain\SP_ConstraintIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomAllSP_Iter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomEleIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomMP_Iter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomNodIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomParamIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomSP_Iter.h" />
-    <ClInclude Include="..\..\..\SRC\domain\domain\SP_ConstraintIter.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMBoundaryLayerDecorator.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMInputHandler.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPattern.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPatternWrapper.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\GeometricBrickDecorator.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\Mesh3DSubdomain.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\PlaneDRMInputHandler.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\PBowlLoading.h" />
     <ClInclude Include="..\..\..\SRC\domain\subdomain\Subdomain.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\SubdomainIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\subdomain\SubdomainNodIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\component\DomainComponent.h" />
-    <ClInclude Include="..\..\..\SRC\domain\component\MaterialStageParameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\component\ElementStateParameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\component\InitialStateParameter.h" />
     <ClInclude Include="..\..\..\SRC\domain\component\MatParameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\component\MaterialStageParameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\component\NodeResponseParameter.h" />
     <ClInclude Include="..\..\..\SRC\domain\component\Parameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\component\RVParameter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\load\Beam2dThermalAction.h" />
     <ClInclude Include="..\..\..\SRC\domain\load\ElementalLoadIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\load\Load.h" />
     <ClInclude Include="..\..\..\SRC\domain\load\NodalLoadIter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\load\SelfWeight.h" />
+    <ClInclude Include="..\..\..\SRC\domain\load\SurfaceLoader.h" />
     <ClInclude Include="..\..\..\Src\domain\load\Beam2dPointLoad.h" />
     <ClInclude Include="..\..\..\Src\domain\load\Beam2dTempLoad.h" />
     <ClInclude Include="..\..\..\Src\domain\load\Beam2dUniformLoad.h" />
@@ -242,11 +246,19 @@
     <ClInclude Include="..\..\..\SRC\domain\constraints\RigidRod.h" />
     <ClInclude Include="..\..\..\SRC\domain\constraints\SP_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\EarthquakePattern.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\FireLoadPattern.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\LoadPattern.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\LoadPatternIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\MultiSupportPattern.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\PBowlLoading.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\PeerNGAMotion.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\UniformExcitation.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMBoundaryLayerDecorator.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMInputHandler.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPattern.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\DRMLoadPatternWrapper.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\GeometricBrickDecorator.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\Mesh3DSubdomain.h" />
+    <ClInclude Include="..\..\..\SRC\domain\pattern\drm\PlaneDRMInputHandler.h" />
     <ClInclude Include="..\..\..\SRC\domain\groundMotion\GroundMotion.h" />
     <ClInclude Include="..\..\..\SRC\domain\groundMotion\GroundMotionRecord.h" />
     <ClInclude Include="..\..\..\SRC\domain\groundMotion\InterpolatedGroundMotion.h" />
@@ -256,7 +268,6 @@
     <ClInclude Include="..\..\..\SRC\domain\pattern\PathSeries.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\PathTimeSeries.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\PeerMotion.h" />
-    <ClInclude Include="..\..\..\SRC\domain\pattern\PeerNGAMotion.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\PulseSeries.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\RectangularSeries.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\SimulatedRandomProcessSeries.h" />

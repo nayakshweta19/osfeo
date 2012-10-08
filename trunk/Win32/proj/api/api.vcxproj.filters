@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SRC\api\packages.cpp">
+    <ClCompile Include="..\..\..\SRC\api\elementAPI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\api\elementAPI_TCL.cpp">
+    <ClCompile Include="..\..\..\SRC\api\packages.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,644 +1,439 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="7.00"
 	Name="system"
-	ProjectGUID="{246BBCA1-426F-4A76-8B78-59516862F9CE}"
-	RootNamespace="system"
-	TargetFrameworkVersion="131072"
-	>
+	SccProjectName=""
+	SccLocalPath="">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\lib\debug"
 			IntermediateDirectory=".\..\..\obj\system\debug"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;&quot;c:\Program Files\tcl&quot;"
-				PreprocessorDefinitions="WIN32,_DEBUG,_LIB,_WIN32,_TCL85"
+				AdditionalIncludeDirectories="..\..\..\src\utility;..\..\..\OTHER\MUMPS_4.7.3\libseq;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\mumps;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;&quot;c:\Program Files\tcl&quot;"
+				PreprocessorDefinitions="WIN32,_DEBUG,_LIB,_WIN32"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="5"
 				PrecompiledHeaderFile=".\..\..\obj\system\debug/system.pch"
 				AssemblerListingLocation=".\..\..\obj\system\debug/"
 				ObjectFile=".\..\..\obj\system\debug/"
 				ProgramDataBaseFileName=".\..\..\obj\system\debug/"
 				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="0"
-			/>
+				CompileAs="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile=".\..\..\lib\debug\system.lib"
-				SuppressStartupBanner="true"
-			/>
+				SuppressStartupBanner="TRUE"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\..\lib\release"
 			IntermediateDirectory=".\..\..\obj\system\release"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="4"
-				InlineFunctionExpansion="0"
-				EnableIntrinsicFunctions="false"
-				AdditionalIncludeDirectories="..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;&quot;c:\Program Files\tcl&quot;"
-				PreprocessorDefinitions="WIN32,NDEBUG,_LIB,_TCL85"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;&quot;c:\Program Files\tcl&quot;"
+				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
+				StringPooling="TRUE"
+				RuntimeLibrary="4"
+				EnableFunctionLevelLinking="TRUE"
 				PrecompiledHeaderFile=".\..\..\obj\system\release/system.pch"
 				AssemblerListingLocation=".\..\..\obj\system\release/"
 				ObjectFile=".\..\..\obj\system\release/"
 				ProgramDataBaseFileName=".\..\..\obj\system\release/"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
-				CompileAs="0"
-			/>
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile=".\..\..\lib\release\system.lib"
-				SuppressStartupBanner="true"
-			/>
+				SuppressStartupBanner="TRUE"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-			>
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\Solver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\Solver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\SystemOfEqn.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\SystemOfEqn.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl"
-			>
+			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\LinearSOESolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\Solver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\Solver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\SystemOfEqn.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\SystemOfEqn.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="profileSPD"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\DistributedProfileSPDLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinDirectSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\ProfileSPDLinSubstrSolver.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="symSparse"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\FeStructs.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\FeStructs.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\grcm.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nest.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\newordr.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nmat.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\globalVars.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nnsim.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\grcm.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\symbolic.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nest.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\newordr.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nmat.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\nnsim.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\SymSparseLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\symbolic.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\tim.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.c"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.c">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseSYM\utility.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="bandGEN"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinLapackSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\BandGenLinSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandGEN\DistributedBandGenLinSOE.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="bandSPD"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinLapackSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\BandSPDLinSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\bandSPD\DistributedBandSPDLinSOE.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="fullGEN"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\FullGenEigenSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinLapackSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\fullGEN\FullGenLinSolver.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="umfpack"
-			Filter=".cpp; .h"
-			>
+			Filter=".cpp; .h">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\umfGEN\UmfpackGenLinSolver.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="superLU"
-			Filter=".cpp; .h"
-			>
+			Filter=".cpp; .h">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SparseGenColLinSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\SuperLU.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="arpack"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\ArpackSolver.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="symBandEigen"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\eigenSOE\SymBandEigenSolver.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="diagonal"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalDirectSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DiagonalSolver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSOE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.h"
-				>
+				RelativePath="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="Ritz"
-			>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzLapackSolver.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOE.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\FullGenRitzSOESolver.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOE.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\SRC\system_of_eqn\ritzSOE\RitzSOESolver.h"
-				>
-			</File>
+			Name="itpack"
+			Filter="">
 		</Filter>
 	</Files>
 	<Globals>

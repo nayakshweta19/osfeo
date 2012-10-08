@@ -1,246 +1,178 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="7.00"
 	Name="convergence"
-	ProjectGUID="{DE8A4685-DE62-451A-AC04-61D931900AC2}"
-	TargetFrameworkVersion="131072"
-	>
+	SccProjectName=""
+	SccLocalPath="">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\lib\debug"
 			IntermediateDirectory=".\..\..\obj\convergence\debug"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;c:\Program Files\tcl\include&quot;;..\..\..\src\analysis\integrator;..\..\..\src\handler;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\channel;..\..\..\src\matrix;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\convergenceTest;..\..\..\src\nDarray;&quot;c:\Program Files\tcl&quot;"
-				PreprocessorDefinitions="WIN32,_DEBUG,_LIB,_TCL85"
+				PreprocessorDefinitions="WIN32,_DEBUG,_LIB"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="5"
 				PrecompiledHeaderFile=".\..\..\obj\convergence\debug/convergence.pch"
 				AssemblerListingLocation=".\..\..\obj\convergence\debug/"
 				ObjectFile=".\..\..\obj\convergence\debug/"
 				ProgramDataBaseFileName=".\..\..\obj\convergence\debug/"
 				BrowseInformation="1"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="0"
-			/>
+				CompileAs="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile=".\..\..\lib\debug\convergence.lib"
-				SuppressStartupBanner="true"
-			/>
+				SuppressStartupBanner="TRUE"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\..\lib\release"
 			IntermediateDirectory=".\..\..\obj\convergence\release"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="4"
-				InlineFunctionExpansion="0"
-				EnableIntrinsicFunctions="false"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
+				OmitFramePointers="TRUE"
+				EnableFiberSafeOptimizations="TRUE"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="&quot;c:\Program Files\tcl\include&quot;;..\..\..\src\analysis\integrator;..\..\..\src\handler;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\actor\channel;..\..\..\src\matrix;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\convergenceTest;..\..\..\src\nDarray;&quot;c:\Program Files\tcl&quot;"
-				PreprocessorDefinitions="WIN32,NDEBUG,_LIB,_TCL85"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
+				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
+				StringPooling="TRUE"
+				RuntimeLibrary="4"
+				EnableFunctionLevelLinking="TRUE"
 				PrecompiledHeaderFile=".\..\..\obj\convergence\release/convergence.pch"
 				AssemblerListingLocation=".\..\..\obj\convergence\release/"
 				ObjectFile=".\..\..\obj\convergence\release/"
 				ProgramDataBaseFileName=".\..\..\obj\convergence\release/"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
-				CompileAs="0"
-			/>
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile=".\..\..\lib\release\convergence.lib"
-				SuppressStartupBanner="true"
-			/>
+				SuppressStartupBanner="TRUE"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\ConvergenceTest.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestEnergyIncr.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\ConvergenceTest.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestEnergyIncr.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestEnergyIncr.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestFixedNumIter.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestEnergyIncr.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestFixedNumIter.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestFixedNumIter.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestNormDispIncr.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestFixedNumIter.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestNormDispIncr.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestNormDispIncr.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestNormUnbalance.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestNormDispIncr.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestNormUnbalance.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestNormUnbalance.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeEnergyIncr.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestNormUnbalance.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeEnergyIncr.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeEnergyIncr.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeEnergyIncr.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormDispIncr.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeNormUnbalance.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.h">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.cpp"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\ConvergenceTest.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\SRC\convergenceTest\CTestRelativeTotalNormDispIncr.h"
-			>
+			RelativePath="..\..\..\SRC\convergenceTest\ConvergenceTest.h">
+		</File>
+		<File
+			RelativePath="..\..\..\SRC\convergenceTest\NormDispAndUnbalance.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\SRC\convergenceTest\NormDispAndUnbalance.h">
+		</File>
+		<File
+			RelativePath="..\..\..\SRC\convergenceTest\NormDispOrUnbalance.cpp">
+		</File>
+		<File
+			RelativePath="..\..\..\SRC\convergenceTest\NormDispOrUnbalance.h">
 		</File>
 	</Files>
 	<Globals>

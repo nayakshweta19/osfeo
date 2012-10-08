@@ -53,8 +53,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;C:\Program Files (x86)\Intel\Composer XE 2011 SP1\compiler\include\ia32;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;C:\Program Files (x86)\Intel\Composer XE 2011 SP1\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files\MPICH2\include;C:\Program Files\Intel\Composer XE 2011 SP1\compiler\include\ia32;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files\MPICH2\lib;C:\Program Files\Intel\Composer XE 2011 SP1\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\Program Files %28x86%29\MPICH2\include;C:\Program Files (x86)\Intel\Composer XE 2011 SP1\compiler\include\ia32;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\Program Files %28x86%29\MPICH2\lib;C:\Program Files (x86)\Intel\Composer XE 2011 SP1\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -157,6 +157,96 @@
     <ClInclude Include="..\..\..\SRC\classTags.h" />
     <ClInclude Include="..\..\..\SRC\tcl\commands.h" />
     <ClInclude Include="..\..\..\SRC\OPS_Globals.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\actor\actor.vcxproj">
+      <Project>{a16cb44d-5108-44de-a9a0-acd57471f646}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\analysis\analysis.vcxproj">
+      <Project>{a7cd535a-d2ec-4608-882b-18047e500eef}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\cblas\cblas.vcxproj">
+      <Project>{236695d2-0637-454d-8989-283d2f92745d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\convergence\convergence.vcxproj">
+      <Project>{de8a4685-de62-451a-ac04-61d931900ac2}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\damage\damage.vcxproj">
+      <Project>{0775a4b2-93d2-4440-83b7-c1df58021602}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\database\database.vcxproj">
+      <Project>{86ddd075-acde-401b-afc4-9769262aa689}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\domain\domain.vcxproj">
+      <Project>{c37adc16-ef1e-4f37-831e-3030aa330dfc}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\element\element.vcxproj">
+      <Project>{8e3d4bd8-1527-41dd-8c26-0c5f1ba2dfaf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\graph\graph.vcxproj">
+      <Project>{bde7acc2-a5a5-49c1-8904-0020198b391c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\handler\handler.vcxproj">
+      <Project>{35752b76-c98b-49d0-af6f-ade4622a8e98}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\material\material.vcxproj">
+      <Project>{0bc79d76-4b10-4344-bf64-51fc0127c7f7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\matrix\matrix.vcxproj">
+      <Project>{f94b9b20-9046-4e28-9542-d4be9da486ac}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\modelbuilder\modelbuilder.vcxproj">
+      <Project>{1192bcce-2a5b-4606-888f-4b8c0b90b58e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\recorder\recorder.vcxproj">
+      <Project>{34ccb153-1cef-4760-94e4-81e3cff20c03}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\reliability\reliability.vcxproj">
+      <Project>{95870d53-c903-4b5e-a830-aec01df82cd9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\renderer\renderer.vcxproj">
+      <Project>{ad7b7080-e9e6-464c-a066-a596f02043af}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\string\string.vcxproj">
+      <Project>{7c1e0e24-0436-4de9-b542-7f3db29d3537}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\superLU\superLU.vcxproj">
+      <Project>{d1534902-5858-4be2-9212-1e7b9deb813e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\system\system.vcxproj">
+      <Project>{246bbca1-426f-4a76-8b78-59516862f9ce}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\tagged\tagged.vcxproj">
+      <Project>{5d124d10-815c-43cd-b2ac-741b7df046f4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\tcl\tcl.vcxproj">
+      <Project>{b4f48abb-2789-4753-aa82-7e2c1954d31a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\utility\utility.vcxproj">
+      <Project>{c17940b4-003f-48eb-9535-3ff4ce2174ee}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
