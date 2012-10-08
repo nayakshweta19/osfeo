@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{A9F774A2-E2B7-42EA-A67C-C49E051CB6CC}">
+	<Platforms>
+		<Platform Name="Win32"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\debug\" IntermediateDirectory=".\..\..\obj\feap\debug\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\feap\release\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="element" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath="..\..\..\SRC\element\feap\dummyFeap.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elas1d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt01.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt02.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt03.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt04.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt06.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt11.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\fbody2d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\fillCommon.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\getCommon.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\hvisc.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\int1dg.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\int1dl.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\modl1d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\modl1u.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\plas1d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\sbodyf.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\shp1d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\visc1d.f"/></Filter>
+		<Filter Name="Header Files" Filter="fi;fd"/>
+		<Filter Name="material" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		<File RelativePath="..\..\..\SRC\material\nD\feap\feapCommon.f"/>
+		<File RelativePath="..\..\..\SRC\material\nD\feap\matl01.f"/>
+		<File RelativePath="..\..\..\SRC\material\nD\feap\matl02.f"/>
+		<File RelativePath="..\..\..\SRC\material\nD\feap\matl03.f"/></Filter></Files>
+	<Globals/></VisualStudioProject>
