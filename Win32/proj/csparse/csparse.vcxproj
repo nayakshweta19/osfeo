@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1DD595CF-4CAC-4CF2-80E3-76CFE0B61907}</ProjectGuid>
+    <RootNamespace>csparse</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\csparse\debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\csparse\release\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\SRC\element\upU;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\SRC\tcl;..\..\..\SRC\element\UP-ucsd;..\..\..\src\actor\machineBroker;..\..\..\SRC\actor\shadow;..\..\..\src\package;..\..\..\src\api;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\shell;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\beamWithHinges;c:\Program Files\tcl\include;..\..\..\src\element\forceBeamColumn;..\..\..\src\material\section\fiber;..\..\..\src\element\fourNodeQuad;..\..\..\src\material\backbone;..\..\..\src\material\state;..\..\..\src\material\state\stiffness;..\..\..\src\material\state\deformation;..\..\..\src\material\state\strength;..\..\..\src\material\nD;..\..\..\src\coordTransformation;..\..\..\src\domain\groundMotion;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\analysis\algorithm\domaindecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\material\section;..\..\..\src\modelbuilder;..\..\..\src\renderer;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\patch;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\reinfBar;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\reinfLayer;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\cell;..\..\..\src\element\nonlinearBeamColumn;..\..\..\src\element\nonlinearBEamCOlumn\quadrule;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\nonlinearBeamColumn\fiber;..\..\..\src\material;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\domain\load;..\..\..\src\domain\pattern;..\..\..\src\element\zeroLength;..\..\..\src\element\feap;..\..\..\src\element\truss;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material\uniaxial;..\..\..\src\actor\address;..\..\..\src\actor\message;..\..\..\src\nDarray;..\..\..\src\material\uniaxial\fedeas;..\..\..\src\material\uniaxial\drain;..\..\..\src\element\8nbrick;..\..\..\src\element\brick;..\..\..\src\material\uniaxial\py;..\..\..\src\material\nd\soil;..\..\..\src\element\joint;..\..\..\src\material\nd\feap;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;_WIN32;_COROTATIONAL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\csparse\debug/csparse.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\csparse\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\csparse\debug/</ObjectFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\debug\csparse.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL84;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\csparse\release/csparse.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\csparse\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\csparse\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\csparse\release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib\release\csparse.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\OTHER\CSPARSE\cs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_add.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_amd.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_chol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_cholsol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_compress.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_counts.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_cumsum.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_dfs.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_dmperm.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_droptol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_dropzeros.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_dupl.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_entry.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_ereach.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_etree.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_fkeep.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_gaxpy.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_happly.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_house.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_ipvec.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_leaf.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_load.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_lsolve.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_ltsolve.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_lu.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_lusol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_malloc.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_maxtrans.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_multiply.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_norm.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_permute.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_pinv.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_post.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_print.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_pvec.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_qr.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_qrsol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_randperm.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_reach.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_scatter.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_scc.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_schol.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_spsolve.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_sqr.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_symperm.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_tdfs.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_transpose.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_updown.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_usolve.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_util.c" />
+    <ClCompile Include="..\..\..\OTHER\CSPARSE\cs_utsolve.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
