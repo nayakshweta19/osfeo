@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2006/08/03 23:49:46 $
+// $Date: 2006-08-03 23:49:46 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/MembranePlateFiberSection.h,v $
 
 // Ed "C++" Love
@@ -102,12 +102,17 @@ class MembranePlateFiberSection : public SectionForceDeformation{
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
+    Response *setResponse(const char **argv, int argc, 
+			  OPS_Stream &s);
+    int getResponse(int responseID, Information &info);
 
   private :
 
+    enum {numFibers = 5};
+
     //quadrature data
-    static const double sg[5] ;
-    static const double wg[5] ;
+    static const double sg[numFibers] ;
+    static const double wg[numFibers] ;
 
     double h ; //plate thickness
 
