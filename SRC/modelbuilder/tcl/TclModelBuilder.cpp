@@ -2583,7 +2583,7 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
 {
     // ensure the destructor has not been called - 
     if (theTclBuilder == 0) {
-        opserr << "WARNING builder has been destroyed - sp \n";    
+        opserr << "WARNING builder has been destroyed - pc \n";    
         return TCL_ERROR;
     }
 
