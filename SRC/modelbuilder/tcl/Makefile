@@ -44,6 +44,8 @@ ifeq ($(PROGRAMMING_MODE), PARALLEL_INTERPRETERS)
 
 tcl: $(OBJS)  
 	@$(CD) $(FE)/tcl; $(MAKE) tcl;
+	@$(CD) $(FE)/system_of_eqn/diagonal; $(MAKE) mpi;
+	@$(CD) $(FE)/actor/channel; $(MAKE) mpi;
 	$(ECHO)	$(LINKER) $(LINKFLAGS) $(INTERPRETER_LIBS_MPI_PARAMETERS) \
 	$(FE_LIBRARY) $(MACHINE_LINKLIBS) $(PARALLEL_LIB) \
 	$(MACHINE_NUMERICAL_LIBS) $(TCL_LIBRARY)  \
@@ -78,6 +80,8 @@ INTERPRETER_LIBS_MPI = $(FE)/tcl/tclMain.o \
 	$(FE)/modelbuilder/tcl/myCommands.o \
 	$(FE)/actor/channel/MPI_Channel.o \
 	$(FE)/actor/machineBroker/MPI_MachineBroker.o \
+	$(FE)/system_of_eqn/linearSOE/diagonal/MPIDiagonalSOE.o \
+	$(FE)/system_of_eqn/linearSOE/diagonal/MPIDiagonalSolver.o \
 	$(FE)/domain/subdomain/ActorSubdomain.o \
 	$(FE)/domain/subdomain/ShadowSubdomain.o $(GRAPHIC_LIBS_TCL)
 
@@ -87,6 +91,8 @@ INTERPRETER_LIBS_MPI_PARAMETERS = $(FE)/tcl/tclMain.o \
 	$(FE)/modelbuilder/tcl/myCommands.o \
 	$(FE)/actor/channel/MPI_Channel.o \
 	$(FE)/actor/machineBroker/MPI_MachineBroker.o \
+	$(FE)/system_of_eqn/linearSOE/diagonal/MPIDiagonalSOE.o \
+	$(FE)/system_of_eqn/linearSOE/diagonal/MPIDiagonalSolver.o \
 	$(FE)/domain/subdomain/ActorSubdomain.o \
 	$(FE)/domain/subdomain/ShadowSubdomain.o $(GRAPHIC_LIBS_TCL)
 
