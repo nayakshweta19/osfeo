@@ -146,6 +146,7 @@ extern void *OPS_NewConcrete02Thermal(void);
 
 extern void *OPS_ModIMKPeakOriented(void);
 extern void *OPS_ModIMKPinching(void);
+extern void *OPS_RambergOsgoodSteel(void);
 
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
@@ -2149,6 +2150,14 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
     return TCL_ERROR;
   	}
+	// 2012-11-07
+	else if (strcmp(argv[1], "RambergOsgoodSteel") == 0 || strcmp(argv[1], "Ramberg") == 0) {
+		void *theMat = OPS_RambergOsgoodSteel();
+		if (theMat != 0)
+	theMaterial = (UniaxialMaterial *)theMat;
+		else
+	return TCL_ERROR;
+	}
     // end neallee@tju.edu.cn added ////////////////////////////////////////////
 
     else if ((strcmp(argv[1],"TendonL01Material") == 0) || (strcmp(argv[1],"TendonL01") == 0)) {
