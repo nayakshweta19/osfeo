@@ -1,5 +1,5 @@
 // $Revision: 1.20 $
-// $Date: 2009/01/16 19:40:36 $
+// $Date: 2009-01-16 19:40:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/soil/PressureIndependMultiYield.h,v $
                                                                         
 // Written: ZHY
@@ -15,7 +15,6 @@
 #include <NDMaterial.h>
 #include <MultiYieldSurface.h>
 #include <Matrix.h>
-#include <Tensor.h>
 
 class PressureIndependMultiYield : public NDMaterial
 {
@@ -67,11 +66,6 @@ public:
      const Vector &getStrain (void);
      const Vector &getCommittedStress (void);
      const Vector &getCommittedStrain (void);
-
-     int setTrialStrain (const Tensor &v) {return 0;}
-     int setTrialStrain (const Tensor &v, const Tensor &r) {return 0;}
-     int setTrialStrainIncr (const Tensor &v) {return 0;}
-     int setTrialStrainIncr (const Tensor &v, const Tensor &r) {return 0;}
 
      // Accepts the current trial strain values as being on the solution path, and updates 
      // all model parameters related to stress/strain states. Return 0 on success.
@@ -143,6 +137,7 @@ private:
 	T2Vector currentStrain;
 	T2Vector strainRate;
 	static T2Vector subStrainRate;
+    double * mGredu;
 
 	void elast2Plast(void);
 	// Called by constructor
