@@ -207,11 +207,12 @@ NodeRecorder::record(int commitTag, double timeStamp)
     return -1;
   }
 
-  if (initializationDone != true) 
+  if (initializationDone == false) {
     if (this->initialize() != 0) {
       opserr << "NodeRecorder::record() - failed in initialize()\n";
       return -1;
     }
+  }
 
   int numDOF = theDofs->Size();
   
@@ -439,7 +440,7 @@ NodeRecorder::record(int commitTag, double timeStamp)
 	  theNode = theNodes[i];
 	  int column = mode;
 	  
-	  //const Matrix &theEigenvectors = theNode->getEigenvectors();
+	  const Matrix &theEigenvectors = theNode->getEigenvectors();
 	  if (theEigenvectors.noCols() > column) {
 	    int noRows = theEigenvectors.noRows();
 	    for (int j=0; j<numDOF; j++) {
@@ -478,6 +479,8 @@ NodeRecorder::sendSelf(int commitTag, Channel &theChannel)
     opserr << "NodeRecorder::sendSelf() - does not send data to a datastore\n";
     return -1;
   }
+
+  initializationDone = false;
 
   static ID idData(7); 
   idData.Zero();
@@ -632,7 +635,6 @@ NodeRecorder::recvSelf(int commitTag, Channel &theChannel,
     opserr << "NodeRecorder::sendSelf() - failed to send the DataOutputHandler\n";
     return -1;
   }
-
   return 0;
 }
 

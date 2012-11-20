@@ -132,6 +132,9 @@ int
 eleForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
+eleDynamicalForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int 
 eleResponse(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
