@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2007/10/17 22:11:35 $
+// $Date: 2007-10-17 22:11:35 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/load/Beam3dUniformLoad.cpp,v $
                                                                         
 
@@ -70,7 +70,8 @@ Beam3dUniformLoad::sendSelf(int commitTag, Channel &theChannel)
 {
   int dbTag = this->getDbTag();
 
-  static Vector vectData(4);
+  static Vector vectData(5);
+  vectData(4) = this->getTag();
   vectData(0) = wx;
   vectData(1) = wy;
   vectData(2) = wz;
@@ -91,7 +92,7 @@ Beam3dUniformLoad::recvSelf(int commitTag, Channel &theChannel,
 {
   int dbTag = this->getDbTag();
 
-  static Vector vectData(4);
+  static Vector vectData(5);
 
   int result = theChannel.recvVector(dbTag, commitTag, vectData);
   if (result < 0) {
@@ -103,6 +104,7 @@ Beam3dUniformLoad::recvSelf(int commitTag, Channel &theChannel,
   wy = vectData(1);;
   wz = vectData(2);;
   eleTag = (int)vectData(3);
+  this->setTag(vectData(4));
 
   return 0;
 }
@@ -110,7 +112,7 @@ Beam3dUniformLoad::recvSelf(int commitTag, Channel &theChannel,
 void 
 Beam3dUniformLoad::Print(OPS_Stream &s, int flag)
 {
-  s << "Beam3dUniformLoad - Reference load" << endln;
+  s << "Beam3dUniformLoad - Reference load: " << this->getTag() << endln;
   s << "  Transverse (y): " << wy << endln;
   s << "  Transverse (z): " << wz << endln;
   s << "  Axial (x):      " << wx << endln;

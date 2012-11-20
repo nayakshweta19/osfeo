@@ -781,6 +781,7 @@
 #define INTEGRATOR_TAGS_GeneralizedAlpha                35
 #define INTEGRATOR_TAGS_DisplacementPath                36
 #define INTEGRATOR_TAGS_FSI                             37
+#define INTEGRATOR_TAGS_TRBDF3                          38
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define INTEGRATOR_TAGS_ArcLengthw              48

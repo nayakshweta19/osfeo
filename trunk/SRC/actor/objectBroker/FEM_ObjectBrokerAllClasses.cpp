@@ -333,6 +333,7 @@
 #include <Newmark.h>
 #include <HHT.h>
 #include <TRBDF2.h>
+#include <TRBDF3.h>
 #include <CentralDifference.h>
 
 #include <DisplacementControl.h>
@@ -1686,6 +1687,9 @@ FEM_ObjectBrokerAllClasses::getNewTransientIntegrator(int classTag)
 
 	case INTEGRATOR_TAGS_TRBDF2:  
 	     return new TRBDF2();
+
+	case INTEGRATOR_TAGS_TRBDF3:  
+	     return new TRBDF3();
 
 	case INTEGRATOR_TAGS_HHT:  
 	     return new HHT();
