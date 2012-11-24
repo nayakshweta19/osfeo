@@ -6912,7 +6912,7 @@ eleDynamicalForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char 
 {
     // make sure at least one other argument to contain type of system
     if (argc < 2) {
-	opserr << "WARNING want - eleForce eleTag? <dof?>\n";
+	opserr << "WARNING want - eleDynamicalForce eleTag? <dof?>\n";
 	return TCL_ERROR;
    }    
 
@@ -6920,13 +6920,13 @@ eleDynamicalForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char 
     int dof = -1;
 
     if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
-	opserr << "WARNING eleForce eleTag? dof? - could not read nodeTag? \n";
+	opserr << "WARNING eleDynamicalForce eleTag? dof? - could not read nodeTag? \n";
 	return TCL_ERROR;	        
     }    
 
     if (argc > 2) {
       if (Tcl_GetInt(interp, argv[2], &dof) != TCL_OK) {
-	opserr << "WARNING eleForce eleTag? dof? - could not read dof? \n";
+	opserr << "WARNING eleDynamicalForce eleTag? dof? - could not read dof? \n";
 	return TCL_ERROR;	        
       }   
     }     
@@ -7310,14 +7310,24 @@ nodeResponse(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
 int 
 calculateNodalReactions(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
-    // make sure at least one other argument to contain type of system
-  bool incInertia = false;
-  if (argc == 2) 
-    if ((strcmp(argv[1],"-incIneria") == 0) || strcmp(argv[1],"-incIneria") == 0)
-      incInertia = true;
-  
+  // make sure at least one other argument to contain type of system
+  int incInertia = 0;
+
+  if (argc == 2)  {
+    if ((strcmp(argv[1],"-incInertia") == 0)
+	|| (strcmp(argv[1],"-dynamical") == 0)
+	|| (strcmp(argv[1],"-Dynamic") == 0)
+	|| (strcmp(argv[1],"-dynamic") == 0))
+
+      incInertia = 1;
+    
+    else if ((strcmp(argv[1],"-rayleigh") == 0))
+
+      incInertia = 2;
+  }
 
   theDomain.calculateNodalReactions(incInertia);
+
   return TCL_OK;
 }
 
