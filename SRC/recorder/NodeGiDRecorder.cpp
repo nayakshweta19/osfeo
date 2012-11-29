@@ -247,20 +247,20 @@ NodeGiDRecorder::record(int commitTag, double timeStamp)
 
 	if (numDOF == 2) {
 	  // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
-	  sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
+	  sprintf(outputData,"Result \" Nodal %s\" \"GiDNodalResult_Analysis\" %i Vector OnNodes\n", dataType, int(timeStamp/ops_Dt)); //
 	  theOutputHandler->write(outputData,100);
 	  // ComponentNames "X-Disp"  "Y-Disp"
-	  sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"\n",dataType,dataType);
+	  sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"\n", dataType, dataType);
 	  theOutputHandler->write(outputData,100);
 	  // Values
 	  theOutputHandler->write(" Values\n",16);
 
 	} else if (numDOF == 3) {
       // Result " Nodal Disp ," Analysis"      1.00000 Vector OnNodes
-      sprintf(outputData,"Result \" Nodal %s\"  \"GiDNodalResult_Analysis\" %i Vector OnNodes\n",dataType,stepN);
+      sprintf(outputData,"Result \" Nodal %s\" \"GiDNodalResult_Analysis\" %i Vector OnNodes\n", dataType, int(timeStamp/ops_Dt));//
       theOutputHandler->write(outputData,100);
       //ComponentNames "X-Disp"  "Y-Disp"
-      sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"  \"Z-%s\"\n",dataType,dataType,dataType);
+      sprintf(outputData, " ComponentNames \"X-%s\"  \"Y-%s\"  \"Z-%s\"\n", dataType, dataType, dataType);
       theOutputHandler->write(outputData,100);
 	  // Values
 	  theOutputHandler->write(" Values\n",16);

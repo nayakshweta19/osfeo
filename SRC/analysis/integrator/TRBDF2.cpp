@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.1 $
-// $Date: 2009/03/20 18:36:30 $
+// $Date: 2009-03-20 18:36:30 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/TRBDF2.cpp,v $
 
 // Written : fmk
@@ -373,26 +373,4 @@ void TRBDF2::Print(OPS_Stream &s, int flag)
     } else 
         s << "\t TRBDF2 - no associated AnalysisModel\n";
 }
-
-
-// AddingSensitivity:BEGIN //////////////////////////////
-int TRBDF2::revertToStart()
-{
-    if (Ut != 0) 
-        Ut->Zero();
-    if (Utdot != 0) 
-        Utdot->Zero();
-    if (Utdotdot != 0) 
-        Utdotdot->Zero();
-
-    if (U != 0) 
-        U->Zero();
-    if (Udot != 0) 
-        Udot->Zero();
-    if (Udotdot != 0) 
-        Udotdot->Zero();
-    
-    return 0;
-}
-// AddingSensitivity:END ////////////////////////////////
 
