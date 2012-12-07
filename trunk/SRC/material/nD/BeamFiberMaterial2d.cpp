@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 1.4 $
-// $Date: 2003-02-14 23:01:24 $
+// $Revision: $
+// $Date: $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/BeamFiberMaterial2d.cpp,v $
 
 // Written: MHS
@@ -40,6 +40,11 @@ Vector BeamFiberMaterial2d::stress(2);
 Matrix BeamFiberMaterial2d::tangent(2,2);
 Vector BeamFiberMaterial2d::stress3d(3);
 Matrix BeamFiberMaterial2d::tangent3d(3,3);
+
+//      0  1  2  3  4  5
+// ND: 11 22 33 12 23 31
+// BF: 11 12 22 33 23 31
+int BeamFiberMaterial2d::iMap[] = {0, 2, 3, 1, 4, 5};
 
 #define MAXITER 200
 
@@ -201,19 +206,16 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement)
     //three dimensional tangent 
     threeDtangent = theMaterial->getTangent();
 
-    //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-    //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
-
     //swap matrix indices to sort out-of-plane components 
     for (i=0; i<6; i++) {
 
-      ii = this->indexMap(i);
+	  ii = iMap[i];
 
       threeDstressCopy(ii) = threeDstress(i);
 
       for (j=0; j<6; j++) {
 
-	jj = this->indexMap(j);
+	jj = iMap[j];
 	
 	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
 
@@ -298,19 +300,16 @@ BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement, double thet
     //three dimensional tangent 
     threeDtangent = theMaterial->getTangent();
 
-    //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-    //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
-
     //swap matrix indices to sort out-of-plane components 
     for (i=0; i<6; i++) {
 
-      ii = this->indexMap(i);
+      ii = iMap[i];
 
       threeDstressCopy(ii) = threeDstress(i);
 
       for (j=0; j<6; j++) {
 
-	jj = this->indexMap(j);
+	jj = iMap[j];
 	
 	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
 
@@ -367,94 +366,17 @@ BeamFiberMaterial2d::getStrain(double theta)
 const Vector&  
 BeamFiberMaterial2d::getStress()
 {
-  //newton loop to solve for out-of-plane strains
-  static const double tolerance = 1.0e-05;
-  double norm;
-  static Vector condensedStress(4);
-  static Vector strainIncrement(4);
-  static Vector threeDstress(6);
-  static Vector threeDstrain(6);
-  static Matrix threeDtangent(6,6);
-  static Vector threeDstressCopy(6); 
-  static Matrix threeDtangentCopy(6,6);
-  static Matrix dd22(4,4);
-
-  int i, j, ii, jj, numIter=0;
-
-  do {
-	  //set three dimensional strain
-    threeDstrain(0) = this->strain(0);
-    threeDstrain(1) = this->Tstrain22;
-    threeDstrain(2) = this->Tstrain33;
-    threeDstrain(3) = this->strain(1); 
-    threeDstrain(4) = this->Tgamma23;
-    threeDstrain(5) = this->Tgamma31;
-
-    if (theMaterial->setTrialStrain(threeDstrain) < 0) {
-      opserr << "BeamFiberMaterial2d::setTrialStrain - setStrain failed in material with strain " << threeDstrain;
-      return -1;   
-    }
-
-    //three dimensional stress
-    threeDstress = theMaterial->getStress();
-
-    //three dimensional tangent 
-    threeDtangent = theMaterial->getTangent();
-
-    //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-    //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
-
-    //swap matrix indices to sort out-of-plane components 
-    for (i=0; i<6; i++) {
-
-      ii = this->indexMap(i);
-
-      threeDstressCopy(ii) = threeDstress(i);
-
-      for (j=0; j<6; j++) {
-
-	jj = this->indexMap(j);
-	
-	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
-
-      }//end for j
-       
-    }//end for i
-
-    //out of plane stress and tangents
-    for (i=0; i<4; i++) {
-      condensedStress(i) = threeDstressCopy(i+2);
-
-      for (j=0; j<4; j++) 
-	dd22(i,j) = threeDtangentCopy(i+2,j+2);
-
-    }//end for i
-
-    //set norm
-    norm = condensedStress.Norm();
-
-    //condensation 
-    dd22.Solve(condensedStress, strainIncrement);
-
-    //update out of plane strains
-	this->Tgamma31  -= strainIncrement(0);
-	this->Tstrain22 -= strainIncrement(1);
-	this->Tstrain33 -= strainIncrement(2);
-	this->Tgamma23  -= strainIncrement(3);
-
-	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial2d::getStress()-numIter >  "<<MAXITER<< endln; break;}
-
-  } while (norm > tolerance);
+  const Vector &threeDstress = theMaterial->getStress();
+  static Vector threeDstressCopy(6);
   
-  //const Vector &threeDstress = theMaterial->getStress();
-  
+  int i, ii;
   //swap matrix indices to sort out-of-plane components 
-  //for (i=0; i<6; i++) {
-  //
-  //  ii = this->indexMap(i);
-  //  threeDstressCopy(ii) = threeDstress(i);
-  //
-  //}
+  for (i=0; i<6; i++) {
+  
+    ii = iMap[i];
+
+    threeDstressCopy(ii) = threeDstress(i);
+  }
   
   for (i=0; i<2; i++) 
     this->stress(i)     = threeDstressCopy(i);
@@ -465,94 +387,17 @@ BeamFiberMaterial2d::getStress()
 const Vector&  
 BeamFiberMaterial2d::getStress(double theta)
 {
-  //newton loop to solve for out-of-plane strains
-  static const double tolerance = 1.0e-05;
-  double norm;
-  static Vector condensedStress(4);
-  static Vector strainIncrement(4);
-  static Vector threeDstress(6);
-  static Vector threeDstrain(6);
-  static Matrix threeDtangent(6,6);
-  static Vector threeDstressCopy(6); 
-  static Matrix threeDtangentCopy(6,6);
-  static Matrix dd22(4,4);
+  const Vector &threeDstress = theMaterial->getStress();
+  static Vector threeDstressCopy(6);
 
-  int i, j, ii, jj, numIter=0;
-
-  do {
-	  //set three dimensional strain
-    threeDstrain(0) = this->strain(0);
-    threeDstrain(1) = this->Tstrain22;
-    threeDstrain(2) = this->Tstrain33;
-    threeDstrain(3) = this->strain(1); 
-    threeDstrain(4) = this->Tgamma23;
-    threeDstrain(5) = this->Tgamma31;
-
-    if (theMaterial->setTrialStrain(threeDstrain) < 0) {
-      opserr << "BeamFiberMaterial2d::setTrialStrain - setStrain failed in material with strain " << threeDstrain;
-      return -1;   
-    }
-
-    //three dimensional stress
-    threeDstress = theMaterial->getStress();
-
-    //three dimensional tangent 
-    threeDtangent = theMaterial->getTangent();
-
-    //NDmaterial strain order        = 11, 22, 33, 12, 23, 31  
-    //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
-
-    //swap matrix indices to sort out-of-plane components 
-    for (i=0; i<6; i++) {
-
-      ii = this->indexMap(i);
-
-      threeDstressCopy(ii) = threeDstress(i);
-
-      for (j=0; j<6; j++) {
-
-	jj = this->indexMap(j);
-	
-	threeDtangentCopy(ii,jj) = threeDtangent(i,j);
-
-      }//end for j
-       
-    }//end for i
-
-    //out of plane stress and tangents
-    for (i=0; i<4; i++) {
-      condensedStress(i) = threeDstressCopy(i+2);
-
-      for (j=0; j<4; j++) 
-	dd22(i,j) = threeDtangentCopy(i+2,j+2);
-
-    }//end for i
-
-    //set norm
-    norm = condensedStress.Norm();
-
-    //condensation 
-    dd22.Solve(condensedStress, strainIncrement);
-
-    //update out of plane strains
-	this->Tgamma31  -= strainIncrement(0);
-	this->Tstrain22 -= strainIncrement(1);
-	this->Tstrain33 -= strainIncrement(2);
-	this->Tgamma23  -= strainIncrement(3);
-
-	numIter ++; if (numIter > MAXITER) {opserr<<"BeamFiberMaterial2d::getStress()-numIter >  "<<MAXITER<< endln; break;}
-
-  } while (norm > tolerance);
-  
-  //const Vector &threeDstress = theMaterial->getStress();
-  
+  int i, ii;
   //swap matrix indices to sort out-of-plane components 
-  //for (i=0; i<6; i++) {
-  //
-  //  ii = this->indexMap(i);
-  //  threeDstressCopy(ii) = threeDstress(i);
-  //
-  //}
+  for (i=0; i<6; i++) {
+  
+    ii = iMap[i];
+    threeDstressCopy(ii) = threeDstress(i);
+  
+  }
   
   for (i=0; i<2; i++) 
     this->stress(i)     = threeDstressCopy(i);
@@ -583,12 +428,12 @@ BeamFiberMaterial2d::getTangent()
   int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
-    ii = this->indexMap(i);
+    ii = iMap[i];
 
     for (j=0; j<6; j++) {
       
-      jj = this->indexMap(j);
-      
+      jj = iMap[j];
+
       threeDtangentCopy(ii,jj) = threeDtangent(i,j);
       
     }//end for j
@@ -616,8 +461,11 @@ BeamFiberMaterial2d::getTangent()
   //int Solve(const Matrix &M, Matrix &res) const;
   //condensation 
   dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
+
+  //this->tangent   = dd11; 
+  //this->tangent  -= (dd12*dd22invdd21);
+  dd11.addMatrixProduct(1.0, dd12, dd22invdd21, -1.0);
+  this->tangent = dd11;
 
   return this->tangent;
 }
@@ -638,11 +486,11 @@ BeamFiberMaterial2d::getTangent(double theta)
   int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
-    ii = this->indexMap(i);
+    ii = iMap[i];
 
     for (j=0; j<6; j++) {
       
-      jj = this->indexMap(j);
+      jj = iMap[j];
       
       threeDtangentCopy(ii,jj) = threeDtangent(i,j);
       
@@ -671,8 +519,11 @@ BeamFiberMaterial2d::getTangent(double theta)
   //int Solve(const Matrix &M, Matrix &res) const;
   //condensation 
   dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
+
+  //this->tangent   = dd11; 
+  //this->tangent  -= (dd12*dd22invdd21);
+  dd11.addMatrixProduct(1.0, dd12, dd22invdd21, -1.0);
+  this->tangent = dd11;
 
   static Matrix T(2,3);
   T(0,0) = 1.;
@@ -702,11 +553,11 @@ BeamFiberMaterial2d::getInitialTangent()
   int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
-    ii = this->indexMap(i);
+    ii = iMap[i];
 
     for (j=0; j<6; j++) {
       
-      jj = this->indexMap(j);
+      jj = iMap[j];
       
       threeDtangentCopy(ii,jj) = threeDtangent(i,j);
       
@@ -734,8 +585,10 @@ BeamFiberMaterial2d::getInitialTangent()
   //int Solve(const Matrix &M, Matrix &res) const;
   //condensation 
   dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
+  //this->tangent   = dd11; 
+  //this->tangent  -= (dd12*dd22invdd21);
+  dd11.addMatrixProduct(1.0, dd12, dd22invdd21, -1.0);
+  this->tangent = dd11;
 
   return this->tangent;
 }
@@ -756,11 +609,11 @@ BeamFiberMaterial2d::getInitialTangent(double theta)
   int i, j, ii, jj;
   for (i=0; i<6; i++) {
 
-    ii = this->indexMap(i);
+    ii = iMap[i];
 
     for (j=0; j<6; j++) {
       
-      jj = this->indexMap(j);
+      jj = iMap[j];
       
       threeDtangentCopy(ii,jj) = threeDtangent(i,j);
       
@@ -788,8 +641,10 @@ BeamFiberMaterial2d::getInitialTangent(double theta)
   //int Solve(const Matrix &M, Matrix &res) const;
   //condensation 
   dd22.Solve(dd21, dd22invdd21);
-  this->tangent   = dd11; 
-  this->tangent  -= (dd12*dd22invdd21);
+  //this->tangent   = dd11; 
+  //this->tangent  -= (dd12*dd22invdd21);
+  dd11.addMatrixProduct(1.0, dd12, dd22invdd21, -1.0);
+  this->tangent = dd11;
 
   static Matrix T(2,3);
   T(0,0) = 1.;
@@ -803,26 +658,26 @@ BeamFiberMaterial2d::getInitialTangent(double theta)
 
 //NDmaterial strain order        = 11, 22, 33, 12, 23, 31 
 //BeamFiberMaterial2d strain order = 11, 12, 31, 22, 33, 23
-int 
-BeamFiberMaterial2d::indexMap(int i)
-{
-  int ii;
-
-  if (i == 3) 
-	  ii = 1;
-  else if (i == 5)
-	  ii = 2;
-  else if (i == 1)
-	  ii = 3;
-  else if (i == 2)
-	  ii = 4;
-  else if (i == 4)
-	  ii = 5;
-  else 
-	  ii = i;
-
-  return ii;
-}
+//int 
+//BeamFiberMaterial2d::indexMap(int i)
+//{
+//  int ii;
+//
+//  if (i == 3) 
+//	  ii = 1;
+//  else if (i == 5)
+//	  ii = 2;
+//  else if (i == 1)
+//	  ii = 3;
+//  else if (i == 2)
+//	  ii = 4;
+//  else if (i == 4)
+//	  ii = 5;
+//  else 
+//	  ii = i;
+//
+//  return ii;
+//}
 
 void  
 BeamFiberMaterial2d::Print(OPS_Stream &s, int flag)

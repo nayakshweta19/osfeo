@@ -60,7 +60,7 @@ OPS_SSPquadUP(void)
 {
 	if (num_SSPquadUP == 0) {
     	num_SSPquadUP++;
-    	//OPS_Error("SSPquadUP element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    	OPS_Error("SSPquadUP element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   	}
 
   	// Pointer to an element that will be returned
@@ -1124,10 +1124,7 @@ SSPquadUP::GetSolidMass(void)
 // this function computes the stiffness matrix for the solid phase
 {
 	// get mass density from the material
-	double sDens = theMaterial->getRho();
-
-	// compute mass density of the mixture
-	double density = (1.0 - mPorosity)*sDens + mPorosity*fDens;
+	double density = theMaterial->getRho();
 
 	// local coordinates of nodes
 	double xi[4];
