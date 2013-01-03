@@ -325,9 +325,8 @@
 #define ND_TAG_PlateFiberMaterial          2001
 #define ND_TAG_PlaneStrainMaterial          2003
 #define ND_TAG_BeamFiberMaterial		2002
-#define ND_TAG_BeamFiberMaterial2d		20041
 // BeamFiberMaterial2d - Ning Li. neallee@tju.edu.cn
-//#define ND_TAG_BeamFiberMaterial2d      2004
+#define ND_TAG_BeamFiberMaterial2d      2004
 #define ND_TAG_PlaneStressFiberMaterial 2005
 #define ND_TAG_CompressibleFluid		3001
 #define ND_TAG_GeneralizedPlasticity 3002
@@ -364,7 +363,7 @@
 #define ND_TAG_FAPrestressedConcretePlaneStress  109
 #define ND_TAG_FAFourSteelPCPlaneStress  110
 #define ND_TAG_RAFourSteelPCPlaneStress  111
-//added by LN
+//added by  - Ning Li. neallee@tju.edu.cn
 #define FIBER_TAG_Biaxial2d       3
 #define FIBER_TAG_Biaxial3d       4
 #define FIBER_TAG_Triaxial        5
@@ -376,7 +375,7 @@
 #define ND_TAG_MCFTRCPlateFiber   117
 #define ND_TAG_MCFTRCPlaneStress02  118
 #define ND_TAG_DSFMRCPlaneStress    119
-//end by Ln
+//end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang
 #define ND_TAG_MultiaxialCyclicPlasticity             10031
@@ -479,6 +478,7 @@
 #define ELE_TAG_ZeroLengthContactNTS2D	 5005
 #define ELE_TAG_ZeroLengthInterface2D	 5006
 #define ELE_TAG_CoupledZeroLength	 5007
+#define ELE_TAG_ZeroLengthRocking   5008
 #define ELE_TAG_NLBeamColumn2d	 6000
 #define ELE_TAG_NLBeamColumn3d	 6001
 #define ELE_TAG_LargeDispBeamColumn3d	 6002
@@ -786,6 +786,7 @@
 #define INTEGRATOR_TAGS_Houbolt                         39
 #define INTEGRATOR_TAGS_ParkLMS3                        40
 #define INTEGRATOR_TAGS_BackwardEuler                   41
+#define INTEGRATOR_TAGS_EnergyConserved                 42
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define INTEGRATOR_TAGS_ArcLengthw              48
@@ -865,7 +866,11 @@
 #define RECORDER_TAGS_DamageRecorder		12
 #define RECORDER_TAGS_PatternRecorder		13
 #define RECORDER_TAGS_TclFeViewer		14
-#define RECORDER_TAGS_RemoveRecorder	16
+#define RECORDER_TAGS_RemoveRecorder	15
+#define RECORDER_TAGS_NormElementRecorder	16
+#define RECORDER_TAGS_NormNodeRecorder	        17
+#define RECORDER_TAGS_NormEnvelopeElementRecorder	18
+
 #define RECORDER_TAGS_NodeGiDRecorder	21
 #define RECORDER_TAGS_ElementGiDRecorder	22
 

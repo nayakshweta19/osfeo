@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.17 $
-// $Date: 2010/04/23 22:47:42 $
+// $Date: 2010-04-23 22:47:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/NodeRecorder.h,v $
                                                                         
 #ifndef NodeRecorder_h
@@ -57,7 +57,7 @@ class NodeRecorder: public Recorder
 		 OPS_Stream &theOutputHandler,
 		 double deltaT = 0.0,
 		 bool echoTimeFlag = true,
-		 TimeSeries *timeSeries = 0); 
+		 TimeSeries **timeSeries = 0); 
     
     ~NodeRecorder();
 
@@ -97,7 +97,8 @@ class NodeRecorder: public Recorder
 
     int addColumnInfo;
 
-    TimeSeries *theTimeSeries;
+    TimeSeries **theTimeSeries;
+    double *timeSeriesValues;
 };
 
 #endif
