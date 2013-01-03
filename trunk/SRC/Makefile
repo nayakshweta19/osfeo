@@ -407,6 +407,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/zeroLength/ZeroLengthContact3D.o \
 	$(FE)/element/zeroLength/ZeroLengthContactNTS2D.o \
 	$(FE)/element/zeroLength/ZeroLengthInterface2D.o \
+    $(FE)/element/zeroLength/ZeroLengthRocking.o \
 	$(FE)/element/surfaceLoad/SurfaceLoad.o \
 	$(FE)/element/UWelements/SimpleContact2D.o \
 	$(FE)/element/UWelements/SimpleContact3D.o \
@@ -526,6 +527,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Concrete06.o \
 	$(FE)/material/uniaxial/Concrete07.o \
 	$(FE)/material/uniaxial/Steel01.o \
+	$(FE)/material/uniaxial/RambergOsgoodSteel.o \
 	$(FE)/material/uniaxial/Steel02.o \
 	$(FE)/material/uniaxial/Steel03.o \
 	$(FE)/material/uniaxial/SteelMP.o \
