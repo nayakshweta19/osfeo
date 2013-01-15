@@ -110,13 +110,13 @@ PlasticDamageMaterial::getInitialTangent(void)
 
 #ifdef _WIN32
 
-extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
+extern "C" int PD (double *matpar, double *hstvP, double *hstv,
 		  double *strainP, double *stressP, double *dStrain,
 		  double *tangent, double *stress, int *ist);
 
 // Add more declarations as needed
 
-//#define pd_	PD
+#define pd_	PD
 
 #else
 

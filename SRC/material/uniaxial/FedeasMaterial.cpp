@@ -295,6 +295,9 @@ FedeasMaterial::Print(OPS_Stream &s, int flag)
   case MAT_TAG_FedeasSteel2:
     s << "Steel2" << endln;
     break;
+  case MAT_TAG_PlasticDamage:
+    s << "PlasticDamage" << endln;
+    break;
     // Add more cases as needed
     
   default:
@@ -352,6 +355,10 @@ extern "C" int  STEEL_2(double *matpar, double *hstvP, double *hstv,
 				double *strainP, double *stressP, double *dStrain,
 				double *tangent, double *stress, int *ist);
 
+extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
+		  double *strainP, double *stressP, double *dStrain,
+		  double *tangent, double *stress, int *ist);
+
 // Add more declarations as needed
 
 #define bond_1__	BOND_1
@@ -364,6 +371,7 @@ extern "C" int  STEEL_2(double *matpar, double *hstvP, double *hstv,
 #define hyster_2__	HYSTER_2
 #define steel_1__	STEEL_1
 #define steel_2__	STEEL_2
+#define pd_        PD
 
 #else
 
@@ -406,6 +414,10 @@ extern "C" int steel_1__(double *matpar, double *hstvP, double *hstv,
 extern "C" int steel_2__(double *matpar, double *hstvP, double *hstv,
 			 double *strainP, double *stressP, double *dStrain,
 			 double *tangent, double *stress, int *ist);
+
+extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
+		   double *strainP, double *stressP, double *dStrain,
+		   double *tangent, double *stress, int *ist);
 
 // Add more declarations as needed
 
@@ -509,6 +521,15 @@ FedeasMaterial::invokeSubroutine(int ist)
 	      &sigma, &tangent, &ist);
 #elif _STEEL2
     steel_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
+	      &sigma, &tangent, &ist);
+#else
+    opserr << "FedeasMaterial::invokeSubroutine -- Steel2 subroutine not yet linked\n";
+#endif
+    break;
+    
+  case MAT_TAG_PlasticDamage:
+#ifdef _WIN32
+    pd_(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
 	      &sigma, &tangent, &ist);
 #else
     opserr << "FedeasMaterial::invokeSubroutine -- Steel2 subroutine not yet linked\n";
