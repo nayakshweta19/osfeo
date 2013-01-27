@@ -381,7 +381,11 @@ TclModelBuilder_addSingleFPBearing(ClientData clientData, Tcl_Interp *interp,  i
   TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 */
 extern int
-TclModelBuilder_addElastomericBearing(ClientData clientData, Tcl_Interp *interp,  int argc,
+TclModelBuilder_addElastomericBearingPlasticity(ClientData clientData, Tcl_Interp *interp,  int argc,
+				      TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
+
+extern int
+TclModelBuilder_addElastomericBearingBoucWen(ClientData clientData, Tcl_Interp *interp,  int argc,
 				      TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
 extern int
@@ -1289,9 +1293,17 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     return result;
   }*/
 
-  else if (strcmp(argv[1],"elastomericBearing") == 0) {
+  else if (strcmp(argv[1],"elastomericBearing") == 0 ||
+      strcmp(argv[1],"elastomericBearingPlasticity") == 0) {
     int eleArgStart = 1;
-    int result = TclModelBuilder_addElastomericBearing(clientData, interp, argc, argv,
+    int result = TclModelBuilder_addElastomericBearingPlasticity(clientData, interp, argc, argv,
+						       theTclDomain, theTclBuilder, eleArgStart);
+    return result;
+  }
+
+  else if (strcmp(argv[1],"elastomericBearingBoucWen") == 0) {
+    int eleArgStart = 1;
+    int result = TclModelBuilder_addElastomericBearingBoucWen(clientData, interp, argc, argv,
 						       theTclDomain, theTclBuilder, eleArgStart);
     return result;
   }

@@ -2800,7 +2800,7 @@ TclCommand_addRCFTDOF_MP (ClientData clientData, Tcl_Interp *interp,
 
     // Check number of arguments
     if (argc < 7) {
-	  opserr << "WARNING bad command - want: rcftequalDOF RnodeID? DOF1? X? Y? Z? ";
+	  opserr << "WARNING bad command - want: rcftequalDOF RnodeID? DOF1? DOF2? X? Y? Z? ";
 	  printCommand (argc, argv);
 	  return TCL_ERROR;
     }
@@ -2811,7 +2811,7 @@ TclCommand_addRCFTDOF_MP (ClientData clientData, Tcl_Interp *interp,
 
     if (Tcl_GetInt (interp, argv[1], &RnodeID) != TCL_OK) {
 	  opserr << "WARNING invalid RnodeID: " << argv[1]
-	       << " rcftequalDOF RnodeID? DOF1? X? Y? Z? ";
+	       << " rcftequalDOF RnodeID? DOF1? DOF2? X? Y? Z? ";
 	  return TCL_ERROR;
     }
 

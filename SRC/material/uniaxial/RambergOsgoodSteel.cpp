@@ -41,8 +41,6 @@
 #include <Channel.h>
 #include <math.h>
 
-#define MAT_TAG_RambergOsgoodSteel 7028426
-
 static int numRambergOsgoodSteel = 0;
 
 void *

@@ -419,7 +419,67 @@ FullGenLinSOE::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &th
 }
 
 
+double *
+FullGenLinSOE::getA(void)
+{
+    return A;
+}
 
-
-
-
+double 
+FullGenLinSOE::getminEigenValue(int n, double *b)
+{
+     //this funtion dtermines the minimum eigen value of the global stiffness matrix
+     //global stiffness matrix should be entered in vector form and starting index is zero
+     int i, j, p, q, u, w, t, s;
+     double eig, fm, cn, sn, omega, x, y, d;
+     double eps = 1.e-3;
+	      
+     double *a = new double[ n * n ];
+     for ( i = 0; i < n * n; i++ ) *(a+i) = * (b+i);
+	         
+     while (1){
+        fm = 0.0;
+        for ( i = 0; i < n; i++ )
+            for ( j = 0; j < n; j++ ){
+               d = fabs(a[i*n+j]);
+               if ( ( i != j ) && ( d > fm ) ) { fm = d; p = i; q= j; }
+            }
+            if ( fm < eps ){
+               eig = a[0];
+               for ( i = 1; i < n; i++ ) if ( a[i*n+i] < eig ) eig = a[i*n+i];
+	       return (eig);
+	    }
+	    u = p * n + q; w = p * n + p;
+	    t = q * n + p; s = q * n + q;
+	               
+	    x = -a[u]; y = (a[s]-a[w])/2.0;
+	    omega = x/sqrt(x*x+y*y);
+	                                            
+	    if ( y < 0.0 ) omega = -omega;
+	       sn = 1.0 + sqrt(1.0-omega*omega);
+	       sn = omega / sqrt(2.0*sn);
+	       cn = sqrt(1.0-sn*sn);
+	       fm = a[w];
+	       a[w] = fm*cn*cn + a[s]*sn*sn + a[u]*omega;
+	       a[s] = fm*sn*sn + a[s]*cn*cn - a[u]*omega;
+	       a[u] = 0.0; a[t] = 0.0;
+	       for ( j = 0; j < n; j++ )
+	           if ( ( j != p ) && ( j != q ) ){
+	               u = p * n + j; w = q * n + j;
+	               fm = a[u];
+	               a[u] = fm * cn + a[w] * sn;
+	               a[w] = -fm * sn + a[w] * cn;
+	           }
+	       for ( i = 0; i < n; i++ )
+	           if ( ( i != p ) && ( i != q ) ){
+	               u = i * n + p; w = i * n + q;
+	               fm = a[u];
+	               a[u] = fm * cn + a[w] * sn;
+	               a[w] = -fm * sn + a[w] * cn;
+	           }
+     }
+     eig = a[0];
+     for ( i = 1; i < n; i++ ) if ( a[i*n+i] < eig ) eig = a[i*n+i];
+      delete a;
+     return (eig);
+}

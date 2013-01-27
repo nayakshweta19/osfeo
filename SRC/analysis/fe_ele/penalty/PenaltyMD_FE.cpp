@@ -43,8 +43,7 @@
 
 PenaltyMD_FE::PenaltyMD_FE(int tag, Domain &theDomain, 
 			   MP_Constraint &TheMP, double Alpha)
-			   :FE_Element(tag, 2,(TheMP.getConstrainedDOFs()).Size()+
-			   (TheMP.getRetainedDOFs()).Size()),
+			   :FE_Element(tag, 1, 9),
 			   theMP(&TheMP), theConstrainedNode(0) , theRetainedNode(0),
 			   tang(0), resid(0), alpha(Alpha)
 {
@@ -56,7 +55,7 @@ PenaltyMD_FE::PenaltyMD_FE(int tag, Domain &theDomain,
     resid = new Vector(size);
 
     if (tang == 0 || resid == 0 || tang->noCols() != size || resid->Size() != size) {
-	opserr << "FATAL PenaltyMP_FE::PenaltyMP_FE() - out of memory\n";
+	opserr << "FATAL PenaltyMD_FE::PenaltyMD_FE() - out of memory\n";
 	exit(-1);
     }
 	    
@@ -64,7 +63,7 @@ PenaltyMD_FE::PenaltyMD_FE(int tag, Domain &theDomain,
     theConstrainedNode = theDomain.getNode(theMP->getNodeConstrained());
 
     if (theRetainedNode == 0 || theConstrainedNode == 0) {
-	opserr << "FATAL PenaltyMP_FE::PenaltyMP_FE() - Constrained or Retained";
+	opserr << "FATAL PenaltyMD_FE::PenaltyMD_FE() - Constrained or Retained";
 	opserr << " Node does not exist in Domain\n";
 	opserr << theMP->getNodeRetained() << " " << theMP->getNodeConstrained() << endln;
 	exit(-1);
@@ -77,7 +76,7 @@ PenaltyMD_FE::PenaltyMD_FE(int tag, Domain &theDomain,
     if (dofGrpPtr != 0) 
 	myDOF_Groups(0) = dofGrpPtr->getTag();	        
     else
-	opserr << "WARNING PenaltyMP_FE::PenaltyMP_FE() - node no Group yet?\n"; 
+	opserr << "WARNING PenaltyMD_FE::PenaltyMD_FE() - node no Group yet?\n"; 
     
     
     if (theMP->isTimeVarying() == false) {
@@ -105,7 +104,7 @@ PenaltyMD_FE::setID(void)
     // associated with the constrained node
     DOF_Group *theConstrainedNodesDOFs = theConstrainedNode->getDOF_GroupPtr();
     if (theConstrainedNodesDOFs == 0) {
-	opserr << "WARNING PenaltyMP_FE::setID(void)";
+	opserr << "WARNING PenaltyMD_FE::setID(void)";
 	opserr << " - no DOF_Group with Constrained Node\n";
 	return -2;
     }    
@@ -119,14 +118,14 @@ PenaltyMD_FE::setID(void)
 	if (constrained < 0 || 
 	    constrained >= theConstrainedNode->getNumberDOF()) {
 	    
-	    opserr << "WARNING PenaltyMP_FE::setID(void) - unknown DOF ";
+	    opserr << "WARNING PenaltyMD_FE::setID(void) - unknown DOF ";
 	    opserr << constrained << " at Node\n";
 	    myID(i) = -1; // modify so nothing will be added to equations
 	    result = -3;
 	}    	
 	else {
 	    if (constrained >= theConstrainedNodesID.Size()) {
-		opserr << "WARNING PenaltyMP_FE::setID(void) - ";
+		opserr << "WARNING PenaltyMD_FE::setID(void) - ";
 		opserr << " Nodes DOF_Group too small\n";
 		myID(i) = -1; // modify so nothing will be added to equations
 		result = -4;
@@ -172,7 +171,7 @@ PenaltyMD_FE::getTangForce(const Vector &disp, double fact)
 const Vector &
 PenaltyMD_FE::getK_Force(const Vector &disp, double fact)
 {
- //opserr << "WARNING PenaltyMP_FE::getK_Force() - not yet implemented\n";
+ //opserr << "WARNING PenaltyMD_FE::getK_Force() - not yet implemented\n";
  (*resid).Zero();
  return *resid;
 }
@@ -180,7 +179,7 @@ PenaltyMD_FE::getK_Force(const Vector &disp, double fact)
 const Vector &
 PenaltyMD_FE::getC_Force(const Vector &disp, double fact)
 {
- //opserr << "WARNING PenaltyMP_FE::getC_Force() - not yet implemented\n";
+ //opserr << "WARNING PenaltyMD_FE::getC_Force() - not yet implemented\n";
  (*resid).Zero();
  return *resid;
 }
@@ -188,7 +187,7 @@ PenaltyMD_FE::getC_Force(const Vector &disp, double fact)
 const Vector &
 PenaltyMD_FE::getM_Force(const Vector &disp, double fact)
 {
- //opserr << "WARNING PenaltyMP_FE::getM_Force() - not yet implemented\n";
+ //opserr << "WARNING PenaltyMD_FE::getM_Force() - not yet implemented\n";
  (*resid).Zero();
  return *resid;
 }
