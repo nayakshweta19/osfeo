@@ -64,6 +64,8 @@ class FullGenLinSOE : public LinearSOE
     const Vector &getX(void);
     const Vector &getB(void);    
     double normRHS(void);
+	double *getA(void);
+    double getminEigenValue(int n, double *b);
 
     void setX(int loc, double value);        
     void setX(const Vector &x);        

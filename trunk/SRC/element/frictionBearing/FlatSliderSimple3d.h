@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4952 $
-// $Date: 2012-08-08 22:56:05 -0700 (Wed, 08 Aug 2012) $
+// $Revision: 5186 $
+// $Date: 2013-01-25 10:44:44 +0800 (星期五, 25 一月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/FlatSliderSimple3d.h $
 
 #ifndef FlatSliderSimple3d_h
@@ -52,7 +52,7 @@ public:
         const Vector y = 0, const Vector x = 0,
         double shearDistI = 0.0,
         int addRayleigh = 0, double mass = 0.0,
-        int maxIter = 20, double tol = 1E-12);
+        int maxIter = 25, double tol = 1E-12);
     FlatSliderSimple3d();
     
     // destructor

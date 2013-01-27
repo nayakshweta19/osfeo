@@ -18,17 +18,16 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5186 $
-// $Date: 2013-01-25 10:44:44 +0800 (星期五, 25 一月 2013) $
-// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/TclFlatSliderCommand.cpp $
+// $Revision: 5187 $
+// $Date: 2013-01-25 10:54:02 +0800 (星期五, 25 一月 2013) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/TclElastomericBearingPlasticityCommand.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 02/06
 // Revision: A
 //
 // Description: This file contains the function to parse the TCL input
-// for the flatSliderBearing element.
-
+// for the elastomericBearing element.
 
 #include <TclModelBuilder.h>
 
@@ -38,21 +37,20 @@
 #include <ID.h>
 #include <Vector.h>
 
-#include <FlatSliderSimple2d.h>
-#include <FlatSliderSimple3d.h>
-#include <FrictionModel.h>
+#include <ElastomericBearingPlasticity2d.h>
+#include <ElastomericBearingPlasticity3d.h>
 #include <UniaxialMaterial.h>
 
 extern void printCommand(int argc, TCL_Char **argv);
 
 
-int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
+int TclModelBuilder_addElastomericBearingPlasticity(ClientData clientData,
     Tcl_Interp *interp, int argc, TCL_Char **argv, Domain *theTclDomain,
     TclModelBuilder *theTclBuilder, int eleArgStart)
 {
     // ensure the destructor has not been called
     if (theTclBuilder == 0)  {
-        opserr << "WARNING builder has been destroyed - flatSliderBearing\n";    
+        opserr << "WARNING builder has been destroyed - elastomericBearing\n";
         return TCL_ERROR;
     }
     
@@ -65,90 +63,86 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
         // check plane frame problem has 3 dof per node
         if (ndf != 3)  {
             opserr << "WARNING invalid ndf: " << ndf;
-            opserr << ", for plane problem need 3 - flatSliderBearing\n";    
+            opserr << ", for plane problem need 3 - elastomericBearing\n";
             return TCL_ERROR;
         } 
         
         // check the number of arguments is correct
-        if ((argc-eleArgStart) < 10)  {
+        if ((argc-eleArgStart) < 11)  {
             opserr << "WARNING insufficient arguments\n";
             printCommand(argc, argv);
-            opserr << "Want: flatSliderBearing eleTag iNode jNode frnMdlTag kInit -P matTag -Mz matTag <-orient x1 x2 x3 y1 y2 y3> <-shearDist sDratio> <-doRayleigh> <-mass m> <-iter maxIter tol>\n";
+            opserr << "Want: elastomericBearing eleTag iNode jNode ke fy alpha -P matTag -Mz matTag <-orient x1 x2 x3 y1 y2 y3> <-shearDist sDratio> <-doRayleigh> <-mass m>\n";
             return TCL_ERROR;
         }    
         
-        // get the id and end nodes 
-        int iNode, jNode, frnMdlTag, matTag, argi, i, j;
+        // get the id and end nodes
+        int iNode, jNode, matTag, argi, i, j;
         int recvMat = 0;
-        double kInit;
-        double shearDistI = 0.0;
+        double ke, fy, alpha;
+        double shearDistI = 0.5;
         int doRayleigh = 0;
         double mass = 0.0;
-        int maxIter = 25;
-        double tol = 1E-12;
         
         if (Tcl_GetInt(interp, argv[1+eleArgStart], &tag) != TCL_OK)  {
-            opserr << "WARNING invalid flatSliderBearing eleTag\n";
+            opserr << "WARNING invalid elastomericBearing eleTag\n";
             return TCL_ERROR;
         }
         if (Tcl_GetInt(interp, argv[2+eleArgStart], &iNode) != TCL_OK)  {
             opserr << "WARNING invalid iNode\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         if (Tcl_GetInt(interp, argv[3+eleArgStart], &jNode) != TCL_OK)  {
             opserr << "WARNING invalid jNode\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        if (Tcl_GetInt(interp, argv[4+eleArgStart], &frnMdlTag) != TCL_OK)  {
-            opserr << "WARNING invalid frnMdlTag\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[4+eleArgStart], &ke) != TCL_OK)  {
+            opserr << "WARNING invalid ke\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        FrictionModel *theFrnMdl = OPS_getFrictionModel(frnMdlTag);
-        if (theFrnMdl == 0)  {
-            opserr << "WARNING friction model not found\n";
-            opserr << "frictionModel: " << frnMdlTag << endln;
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[5+eleArgStart], &fy) != TCL_OK)  {
+            opserr << "WARNING invalid fy\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        if (Tcl_GetDouble(interp, argv[5+eleArgStart], &kInit) != TCL_OK)  {
-            opserr << "WARNING invalid kInit\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[6+eleArgStart], &alpha) != TCL_OK)  {
+            opserr << "WARNING invalid alpha\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         UniaxialMaterial *theMaterials[2];
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-P") == 0)  {
                 theMaterials[0] = 0;
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[0] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[0] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-Mz") == 0)  {
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[1] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[1] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
@@ -157,24 +151,23 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
         if (recvMat != 2)  {
             opserr << "WARNING wrong number of materials\n";
             opserr << "got " << recvMat << " materials, but want 2 materials\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         
         // check for optional arguments
         Vector x = 0;
         Vector y = 0;
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (strcmp(argv[i],"-orient") == 0)  {
                 j = i+1;
                 int numOrient = 0;
                 while (j < argc &&
                     strcmp(argv[j],"-shearDist") != 0 &&
                     strcmp(argv[j],"-doRayleigh") != 0 &&
-                    strcmp(argv[j],"-mass") != 0 &&
-                    strcmp(argv[j],"-iter") != 0)  {
-                    numOrient++;
-                    j++;
+                    strcmp(argv[j],"-mass") != 0)  {
+                        numOrient++;
+                        j++;
                 }
                 if (numOrient == 6)  {
                     argi = i+1;
@@ -185,7 +178,7 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                     for (j=0; j<3; j++)  {
                         if (Tcl_GetDouble(interp, argv[argi], &value) != TCL_OK)  {
                             opserr << "WARNING invalid -orient value\n";
-                            opserr << "flatSliderBearing element: " << tag << endln;
+                            opserr << "elastomericBearing element: " << tag << endln;
                             return TCL_ERROR;
                         } else  {
                             argi++;
@@ -196,198 +189,180 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                     for (j=0; j<3; j++)  {
                         if (Tcl_GetDouble(interp, argv[argi], &value) != TCL_OK)  {
                             opserr << "WARNING invalid -orient value\n";
-                            opserr << "flatSliderBearing element: " << tag << endln;
+                            opserr << "elastomericBearing element: " << tag << endln;
                             return TCL_ERROR;
                         } else  {
                             argi++;
-                            y(j) = value;		
+                            y(j) = value;
                         }
                     }
                 }
                 else  {
                     opserr << "WARNING insufficient arguments after -orient flag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
-        for (int i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-shearDist") == 0)  {
                 if (Tcl_GetDouble(interp, argv[i+1], &shearDistI) != TCL_OK)  {
                     opserr << "WARNING invalid -shearDist value\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
-        for (int i = 6+eleArgStart; i < argc; i++)  {
+        for (int i = 7+eleArgStart; i < argc; i++)  {
             if (strcmp(argv[i], "-doRayleigh") == 0)
                 doRayleigh = 1;
         }
-        for (int i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-mass") == 0)  {
                 if (Tcl_GetDouble(interp, argv[i+1], &mass) != TCL_OK)  {
                     opserr << "WARNING invalid -mass value\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
-                    return TCL_ERROR;
-                }
-            }
-        }
-        for (int i = 6+eleArgStart; i < argc; i++)  {
-            if (i+2 < argc && strcmp(argv[i], "-iter") == 0)  {
-                if (Tcl_GetInt(interp, argv[i+1], &maxIter) != TCL_OK)  {
-                    opserr << "WARNING invalid maxIter\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
-                    return TCL_ERROR;
-                }
-                if (Tcl_GetDouble(interp, argv[i+2], &tol) != TCL_OK)  {
-                    opserr << "WARNING invalid tol\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
         
-        // now create the flatSliderBearing
-        theElement = new FlatSliderSimple2d(tag, iNode, jNode, *theFrnMdl, kInit,
-            theMaterials, y, x, shearDistI, doRayleigh, mass, maxIter, tol);
+        // now create the elastomericBearing
+        theElement = new ElastomericBearingPlasticity2d(tag, iNode, jNode,
+            ke, fy, alpha, theMaterials, y, x, shearDistI, doRayleigh, mass);
         
         if (theElement == 0)  {
             opserr << "WARNING ran out of memory creating element\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         
-        // then add the flatSliderBearing to the domain
+        // then add the elastomericBearing to the domain
         if (theTclDomain->addElement(theElement) == false)  {
             opserr << "WARNING could not add element to the domain\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             delete theElement;
             return TCL_ERROR;
         }       
     }
-
+    
     else if (ndm == 3)  {
         // check space frame problem has 6 dof per node
         if (ndf != 6)  {
             opserr << "WARNING invalid ndf: " << ndf;
-            opserr << ", for space problem need 6 - flatSliderBearing \n";    
+            opserr << ", for space problem need 6 - elastomericBearing \n";
             return TCL_ERROR;
         } 
-
+        
         // check the number of arguments is correct
-        if ((argc-eleArgStart) < 14)  {
+        if ((argc-eleArgStart) < 15)  {
             opserr << "WARNING insufficient arguments\n";
             printCommand(argc, argv);
-            opserr << "Want: flatSliderBearing eleTag iNode jNode frnMdlTag kInit -P matTag -T matTag -My matTag -Mz matTag <-orient <x1 x2 x3> y1 y2 y3> <-shearDist sDratio> <-doRayleigh> <-mass m> <-iter maxIter tol>\n";
+            opserr << "Want: elastomericBearing eleTag iNode jNode ke fy alpha -P matTag -T matTag -My matTag -Mz matTag <-orient <x1 x2 x3> y1 y2 y3> <-shearDist sDratio> <-mass m>\n";
             return TCL_ERROR;
-        }    
+        }
         
-        // get the id and end nodes 
-        int iNode, jNode, frnMdlTag, matTag, argi, i, j;
+        // get the id and end nodes
+        int iNode, jNode, matTag, argi, i, j;
         int recvMat = 0;
-        double kInit;
-        double shearDistI = 0.0;
+        double ke, fy, alpha;
+        double shearDistI = 0.5;
         int doRayleigh = 0;
         double mass = 0.0;
-        int maxIter = 25;
-        double tol = 1E-12;
         
         if (Tcl_GetInt(interp, argv[1+eleArgStart], &tag) != TCL_OK)  {
-            opserr << "WARNING invalid flatSliderBearing eleTag\n";
+            opserr << "WARNING invalid elastomericBearing eleTag\n";
             return TCL_ERROR;
         }
         if (Tcl_GetInt(interp, argv[2+eleArgStart], &iNode) != TCL_OK)  {
             opserr << "WARNING invalid iNode\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         if (Tcl_GetInt(interp, argv[3+eleArgStart], &jNode) != TCL_OK)  {
             opserr << "WARNING invalid jNode\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        if (Tcl_GetInt(interp, argv[4+eleArgStart], &frnMdlTag) != TCL_OK)  {
-            opserr << "WARNING invalid frnMdlTag\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[4+eleArgStart], &ke) != TCL_OK)  {
+            opserr << "WARNING invalid ke\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        FrictionModel *theFrnMdl = OPS_getFrictionModel(frnMdlTag);
-        if (theFrnMdl == 0)  {
-            opserr << "WARNING friction model not found\n";
-            opserr << "frictionModel: " << frnMdlTag << endln;
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[5+eleArgStart], &fy) != TCL_OK)  {
+            opserr << "WARNING invalid fy\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
-        if (Tcl_GetDouble(interp, argv[5+eleArgStart], &kInit) != TCL_OK)  {
-            opserr << "WARNING invalid kInit\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+        if (Tcl_GetDouble(interp, argv[6+eleArgStart], &alpha) != TCL_OK)  {
+            opserr << "WARNING invalid alpha\n";
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         UniaxialMaterial *theMaterials[4];
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-P") == 0)  {
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid axial matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[0] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[0] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-T") == 0)  {
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid torsional matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[1] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[1] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-My") == 0)  {
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid moment y matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[2] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[2] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-Mz") == 0)  {
                 if (Tcl_GetInt(interp, argv[i+1], &matTag) != TCL_OK)  {
                     opserr << "WARNING invalid moment z matTag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 theMaterials[3] = OPS_getUniaxialMaterial(matTag);
                 if (theMaterials[3] == 0)  {
                     opserr << "WARNING material model not found\n";
                     opserr << "uniaxialMaterial: " << matTag << endln;
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
                 recvMat++;
@@ -396,24 +371,23 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
         if (recvMat != 4)  {
             opserr << "WARNING wrong number of materials\n";
             opserr << "got " << recvMat << " materials, but want 4 materials\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         
         // check for optional arguments
         Vector x(0);
         Vector y(3); y(0) = 0.0; y(1) = 1.0; y(2) = 0.0;
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (strcmp(argv[i],"-orient") == 0)  {
                 j = i+1;
                 int numOrient = 0;
                 while (j < argc &&
                     strcmp(argv[j],"-shearDist") != 0 &&
                     strcmp(argv[j],"-doRayleigh") != 0 &&
-                    strcmp(argv[j],"-mass") != 0 &&
-                    strcmp(argv[j],"-iter") != 0)  {
-                    numOrient++;
-                    j++;
+                    strcmp(argv[j],"-mass") != 0)  {
+                        numOrient++;
+                        j++;
                 }
                 if (numOrient == 3)  {
                     argi = i+1;
@@ -422,7 +396,7 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                     for (j=0; j<3; j++)  {
                         if (Tcl_GetDouble(interp, argv[argi], &value) != TCL_OK)  {
                             opserr << "WARNING invalid -orient value\n";
-                            opserr << "flatSliderBearing element: " << tag << endln;
+                            opserr << "elastomericBearing element: " << tag << endln;
                             return TCL_ERROR;
                         } else  {
                             argi++;
@@ -438,7 +412,7 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                     for (j=0; j<3; j++)  {
                         if (Tcl_GetDouble(interp, argv[argi], &value) != TCL_OK)  {
                             opserr << "WARNING invalid -orient value\n";
-                            opserr << "flatSliderBearing element: " << tag << endln;
+                            opserr << "elastomericBearing element: " << tag << endln;
                             return TCL_ERROR;
                         } else  {
                             argi++;
@@ -449,7 +423,7 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                     for (j=0; j<3; j++)  {
                         if (Tcl_GetDouble(interp, argv[argi], &value) != TCL_OK)  {
                             opserr << "WARNING invalid -orient value\n";
-                            opserr << "flatSliderBearing element: " << tag << endln;
+                            opserr << "elastomericBearing element: " << tag << endln;
                             return TCL_ERROR;
                         } else  {
                             argi++;
@@ -459,73 +433,59 @@ int TclModelBuilder_addFlatSliderBearing(ClientData clientData,
                 }
                 else  {
                     opserr << "WARNING insufficient arguments after -orient flag\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-shearDist") == 0)  {
                 if (Tcl_GetDouble(interp, argv[i+1], &shearDistI) != TCL_OK)  {
                     opserr << "WARNING invalid -shearDist value\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-doRayleigh") == 0)
                 doRayleigh = 1;
         }
-        for (i = 6+eleArgStart; i < argc; i++)  {
+        for (i = 7+eleArgStart; i < argc; i++)  {
             if (i+1 < argc && strcmp(argv[i], "-mass") == 0)  {
                 if (Tcl_GetDouble(interp, argv[i+1], &mass) != TCL_OK)  {
                     opserr << "WARNING invalid -mass value\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
-                    return TCL_ERROR;
-                }
-            }
-        }
-        for (int i = 6+eleArgStart; i < argc; i++)  {
-            if (i+2 < argc && strcmp(argv[i], "-iter") == 0)  {
-                if (Tcl_GetInt(interp, argv[i+1], &maxIter) != TCL_OK)  {
-                    opserr << "WARNING invalid maxIter\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
-                    return TCL_ERROR;
-                }
-                if (Tcl_GetDouble(interp, argv[i+2], &tol) != TCL_OK)  {
-                    opserr << "WARNING invalid tol\n";
-                    opserr << "flatSliderBearing element: " << tag << endln;
+                    opserr << "elastomericBearing element: " << tag << endln;
                     return TCL_ERROR;
                 }
             }
         }
         
-        // now create the flatSliderBearing
-        theElement = new FlatSliderSimple3d(tag, iNode, jNode, *theFrnMdl, kInit,
-            theMaterials, y, x, shearDistI, doRayleigh, mass, maxIter, tol);
+        // now create the elastomericBearing
+        theElement = new ElastomericBearingPlasticity3d(tag, iNode, jNode,
+            ke, fy, alpha, theMaterials, y, x, shearDistI, doRayleigh, mass);
         
         if (theElement == 0)  {
             opserr << "WARNING ran out of memory creating element\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             return TCL_ERROR;
         }
         
-        // then add the flatSliderBearing to the domain
+        // then add the elastomericBearing to the domain
         if (theTclDomain->addElement(theElement) == false)  {
             opserr << "WARNING could not add element to the domain\n";
-            opserr << "flatSliderBearing element: " << tag << endln;
+            opserr << "elastomericBearing element: " << tag << endln;
             delete theElement;
             return TCL_ERROR;
         }       
     }
     
     else  {
-        opserr << "WARNING flatSliderBearing command only works when ndm is 2 or 3, ndm: ";
+        opserr << "WARNING elastomericBearing command only works when ndm is 2 or 3, ndm: ";
         opserr << ndm << endln;
         return TCL_ERROR;
     }
     
-    // if get here we have sucessfully created the flatSliderBearing and added it to the domain
+    // if get here we have sucessfully created the elastomericBearing and added it to the domain
     return TCL_OK;
 }

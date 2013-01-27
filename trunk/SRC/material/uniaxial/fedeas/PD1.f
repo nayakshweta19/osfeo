@@ -15,7 +15,6 @@ c
 c    ! ist = 1: dd is tangent stiffness in any case
 c
 
-
       integer ist
       real*8 d(10),hstvp(11),hstv(11),delt,xl(2,2),eps,str,dd
       real*8 oldeps,phibound
@@ -34,17 +33,14 @@ c  Local Variables ----------------------------------------------
       real*8 mu,viscom,viscot
       real*8 temp
 
-
 c set numerical parameters ------------------------------------------
 
       tol = 10.d-12
       tol2 = 10.d-8
-	  maxitr = 10
+      maxitr = 10
 
 c temperary setting ++++++++++-----------------------
 
-
-	  
 	  eps = epsp + deps
 	  
 	  xl(1,1) = 0.
@@ -53,7 +49,6 @@ c temperary setting ++++++++++-----------------------
 	  xl(2,2) = 0.
 	  
 	  delt = 1.d0
-	  
 
 c initialize the material properties & variables --------------------
 
@@ -61,7 +56,6 @@ c initialize the material properties & variables --------------------
 
       ktcrit = d(7)
       mu = d(8)*delt
-
 
 c  retrieve history variables ---------------------------------------
  
@@ -92,8 +86,6 @@ c      endif
         cohn(2) = -d(5)
       endif
 
-
-         
 c  compute trial effective stresses ---------------------------------
 
       deleps = eps - peps
@@ -116,7 +108,7 @@ c  check whether tensile or compressive state
       flag = 0
 	  
 	  
-	  call setpara(d,matpara)
+      call setpara(d,matpara)
   
       call yield1(index,cohn,trstr,resf,temp)
 
@@ -125,19 +117,19 @@ c  check whether tensile or compressive state
       if (resf .lt. tol*cmax) then
 
         if (kp.gt.0.d0 .and. index.eq.2) then
-        deps = eps - oldeps
-        if (deps.lt.0.d0) then
+          deps = eps - oldeps
+          if (deps.lt.0.d0) then
 C+++++++++++++++++++++++++ Reloading +++++++++++++++++++++++++++++++
-          chleng = dsqrt((xl(1,1)-xl(1,2))**2+(xl(2,1)-xl(2,2))**2) 
+            chleng = dsqrt((xl(1,1)-xl(1,2))**2+(xl(2,1)-xl(2,2))**2) 
        
 	      call reloading(chleng,kp,d,matpara,eps,deps,peps,phibound
      & 	                  ,cohn,tol,maxitr)
-          kapa(2) = kp
-        else
-   
-          call unloading(d,eps,deps,kp,cohn,peps,tol,maxitr)
-          phibound = resf/cohn(2) + 1.d0
-        endif
+            kapa(2) = kp
+          else
+C+++++++++++++++++++++++++ Unloading +++++++++++++++++++++++++++++++
+            call unloading(d,eps,deps,kp,cohn,peps,tol,maxitr)
+            phibound = resf/cohn(2) + 1.d0
+          endif
         endif
 
         call degrad1(0,index,d,matpara,kapa(1),kapa(2),ck,deg,degstr)
@@ -155,7 +147,7 @@ C+++++++++++++++++++++++++ Reloading +++++++++++++++++++++++++++++++
    
 c  plastic loading state  ---------------------------------------------
         
-	chleng = dsqrt((xl(1,1)-xl(1,2))**2+(xl(2,1)-xl(2,2))**2)
+	  chleng = dsqrt((xl(1,1)-xl(1,2))**2+(xl(2,1)-xl(2,2))**2)
 
         if ((kp.gt.ktcrit).and.(index.eq.1)) then
 
@@ -199,8 +191,6 @@ c          write(*,*) '!!! crmode ON'
  
       endif
 
-
-
 c  Compute secant tangent stiffness (only for elastic part)
 
 c  Post-processing part
@@ -223,21 +213,15 @@ c  ------------------------------------------------------------
       return
       end
 
-
       
-	  
- 
-	  
-	  
       subroutine setpara(d,matpara)
 
       real*8 d(*), matpara(4)
       real*8 temp
 
-
       deg_para1 = 0.7d0
-	  deg_para2 = 0.5d0
-	  deg_para3 = 1.0d0
+      deg_para2 = 0.5d0
+      deg_para3 = 1.0d0
 c ----- compute the parameters for the material model
 
       temp = d(6)/d(5)
@@ -251,17 +235,11 @@ c ----- compute the parameters for the material model
       return
       end
 
-
-	  
-	  
-
-
-
+      
       subroutine crstr1(e,cohn,trstr,dplas,dplas1,d2_eps)
 
       real*8 e,trstr,cohn(*),dplas,dplas1,d2_eps
 
-      
       dplas1 = dplas1*cohn(1)/trstr
       dplas = 1.d0 - dplas1
       d2_eps = -e*dplas/trstr
@@ -270,14 +248,8 @@ c ----- compute the parameters for the material model
       end
 
 
-
-
-
-
       subroutine plasto1(d,matpara,index,sign,chleng,eps,trstr
      &           ,lam,kp,cohn,fenergy,fstr,fkp,ck,dplas1,toler,maxitr)
-
-
 
       integer index
 
@@ -291,10 +263,7 @@ c ----- compute the parameters for the material model
 
       real*8 temp
       
-
-         
 c plastic or viscoplastic loading case ---------------------------------
-
 
       e = dplas1*d(1)
       
@@ -327,20 +296,19 @@ c   check the convergence of the damage evolution eqn
       resq = kpn - kp + sign*lam*fstr/fenergy
       error = dabs(resq)
 
-
-c      write(*,*) '#################################'
-c      write(*,*) 'toler =',toler
-c      write(*,*) 'error =', error
-c      write(*,*) 'kp =',kp
+      write(*,*) '#################################'
+      write(*,*) 'toler =',toler
+      write(*,*) 'error =', error
+      write(*,*) 'kp =',kp
 
       if (error .gt. toler) then
 
         if (iter .gt. maxitr) then
 	  
-	  write(*,*) 'toler =',toler
-	  write(*,*) 'error =', error
-	  write(*,*) 'kp =',kp
-	  error = error/0.d0
+          write(*,*) 'toler =',toler
+          write(*,*) 'error =', error
+          write(*,*) 'kp =',kp
+          error = error/0.d0
           stop 'VEPD_2D: exceed the maximum iteration (iter)!'
         endif
 
@@ -351,31 +319,26 @@ c      write(*,*) 'kp =',kp
 
         kp = kp - resq
 
-	temp = 1.d0 - toler
+        temp = 1.d0 - toler
         if (kp.lt.kpn) then 
           kp = kpn
         elseif (kp.gt.temp) then
           kp = temp 
-	  switch = -1
-	endif
+          switch = -1
+        endif
 
-        goto 100                 ! ---> go back to 100 
+      goto 100                 ! ---> go back to 100 
 
       endif
         
 c     end of iteration loop ----------------------------------------
       
-      
       return
       end
 
 
-
-
-
       subroutine algotan1(e,sign,lam,fenergy,fstr,fkp,ck,dd)
-        
-
+      
       real*8 sign,e,lam,fenergy,fstr,fkp,ck,dd
       
       real*8 omega
@@ -389,15 +352,8 @@ c   construct the algorithmic tangent stiffness: dd
       end
 
 
-
-
-
-
-
-
       subroutine vdtan1(crmode,index,d,dplas1,mu,delt
      &                 ,tstr,estr,vdeg,degstr,d2_eps,dd)
-
 
       integer index,crmode
 
@@ -407,9 +363,9 @@ c   construct the algorithmic tangent stiffness: dd
    
       real*8 temp,temp2,vdeg1
 
-
       e = d(1)
       vdeg1 = 1.d0 - vdeg
+      
 c --- Modify Inviscid Algorithmic Tangent for Large Crack Mode ---
 
       if (crmode .ge. 1) then
@@ -430,34 +386,21 @@ c --- Modify Inviscid Algorithmic Tangent for Large Crack Mode ---
       return
       end
 
-
-
-
-
-
+      
       subroutine elastan1(e,vdeg,dplas1,dd)
-
 
       real*8 e,vdeg,dd,dplas1
       
-      
 c    compute the elastic tangent stiffness
-
 
       dd =(1.d0-vdeg)*dplas1*e
  
-
       return
       end
       
 
-
-
-
-
       subroutine coml1(index,e,trstr,cohn,ck,lam,lamkp)
       
-
       integer index
 
       real*8 e,trstr,cohn(2),ck
@@ -465,8 +408,6 @@ c    compute the elastic tangent stiffness
       
       real*8 temp
 
-    
-     
       if (index .eq. 1) then
         lam = (trstr - cohn(1))/e
         lamkp = -ck/e
@@ -479,16 +420,11 @@ c    compute the elastic tangent stiffness
       end
 
 
-
-
-
-
       subroutine yield1(index,cohn,str,resf,fb)
 
       integer index
       real*8 cohn(2),resf,fb,str
        
-
       if (index .eq. 1) then
         fb = cohn(2)*str/cohn(1)
       else
@@ -497,13 +433,8 @@ c    compute the elastic tangent stiffness
 
       resf = fb - cohn(2)
 
-      
       return
       end
-
-
-
-
 
 
       subroutine damg1(flag,index,d,matpara,kapa,cohn,fstr,fkp,ck)
@@ -517,7 +448,6 @@ c    compute the elastic tangent stiffness
       real*8 ty,cy,at,ac,rt,rc,rpht,rphc
 
       real*8 temp
-
 
       ac = matpara(1)
       rt = matpara(2)
@@ -534,20 +464,18 @@ C--- Tensile Damage
         rpht = dsqrt(pht)
         fstr = ty*((1.d0+at)*dsqrt(pht)-pht)/at
 
-  
 c----------- compute cohesions -----------------------------
 
-          cohn(1) = ty*rpht*((1.d0+at-rpht)/at)**(1.d0-rt)
+        cohn(1) = ty*rpht*((1.d0+at-rpht)/at)**(1.d0-rt)
  
 c----------- compute derivatives ---------------------------
 
-          fkp = ty*(2.d0+at)*((1.d0+at)/(2.d0*dsqrt(pht))-1.d0)
+        fkp = ty*(2.d0+at)*((1.d0+at)/(2.d0*dsqrt(pht))-1.d0)
 
-          temp = (1.d0 + at - rpht)/at
+        temp = (1.d0 + at - rpht)/at
           ck = .5d0*ty*at*(2.d0+at)*(temp**(1.d0-rt)/rpht -
      &           (1.d0 - rt)*temp**(-rt)/at)
   
-
 C--- Compressive Damage
 
       else
@@ -558,39 +486,31 @@ C--- Compressive Damage
         rphc = dsqrt(phc)
         fstr = cy*((1.d0+ac)*dsqrt(phc)-phc)/ac
 
-   
 c----------- compute cohesions -----------------------------
 
-          cohn(2) = -cy*rphc*((1.d0+ac-rphc)/ac)**(1.d0-rc)
+        cohn(2) = -cy*rphc*((1.d0+ac-rphc)/ac)**(1.d0-rc)
   
 c----------- compute derivatives ---------------------------
 
-          fkp = cy*(2.d0+ac)*((1.d0+ac)/(2.d0*dsqrt(phc))-1.d0)
+        fkp = cy*(2.d0+ac)*((1.d0+ac)/(2.d0*dsqrt(phc))-1.d0)
 
-          temp = (1.d0 + ac - rphc)/ac
+        temp = (1.d0 + ac - rphc)/ac
           ck = -.5d0*cy*ac*(2.d0+ac)*(temp**(1.d0-rc)/rphc -
      &             (1.d0 - rc)*temp**(-rc)/ac)
           
- 
        endif
 
       return
       end
 
 
-
-      
-
-
       subroutine degrad1(flag,index,d,matpara,kapa1,kapa2,ck,deg,degstr)
-
 
       integer flag,index
       
       real*8 d(*),ck,kapa1,kapa2,deg,degkp,degstr,matpara(*)
 
       real*8 s,dt,dc,rt,rc,ac,at,phi,phi2,temp,temp2,cmax,dfac
-
 
       ac = matpara(1)
       rt = matpara(2)
@@ -633,14 +553,8 @@ c----------- compute derivatives ---------------------------
       end
 
 
-
-
-
-
-
       subroutine reloading(chleng,kp,d,matpara,eps,deps,peps,phib,cohn
      &                     ,toler,maxitr)
-
 
       integer index
 
@@ -654,8 +568,6 @@ c----------- compute derivatives ---------------------------
 
       real*8 temp
       
-
-         
 c plastic or viscoplastic loading case ---------------------------------
  
       e = d(1)
@@ -678,7 +590,6 @@ c initial setting --------------------------------------------------
       pepsn = peps
       kpn = kp
 
- 
 c iteration for damage evolution ------------------------------------
 
 100   continue
@@ -705,10 +616,10 @@ c   check the convergence of the damage evolution eqn
 
         if (iter .gt. maxitr) then
 	  
-	  write(*,*) 'toler =',toler
-	  write(*,*) 'error =', error
-	  write(*,*) 'kp =',kp
-	  error = error/0.d0
+	    write(*,*) 'toler =',toler
+	    write(*,*) 'error =', error
+	    write(*,*) 'kp =',kp
+	    error = error/0.d0
           stop 'RELOADING: exceed the maximum iteration (iter)!'
         endif
 
@@ -719,13 +630,13 @@ c   check the convergence of the damage evolution eqn
 
         kp = kp - resq
 
-	temp = 1.d0 - toler
+	  temp = 1.d0 - toler
         if (kp.lt.kpn) then 
           kp = kpn
         elseif (kp.gt.temp) then
           kp = temp 
-	  switch = -1
-	endif
+	    switch = -1
+	  endif
 
         peps = pepsn + (kp-kpn)*fenergy/(fstr*(1.d0-br))
 
@@ -735,13 +646,8 @@ c   check the convergence of the damage evolution eqn
         
 c     end of iteration loop ----------------------------------------
  
-
       return
       end
-
-
-
-
 
 
       subroutine unloading(d,eps,deps,kp,cohn,peps,toler,maxitr)
@@ -754,8 +660,6 @@ c     end of iteration loop ----------------------------------------
       real*8 resf,q_epsr,estr,pepsn
       real*8 toler,resq,error,q_kapa,ek,fstr,ck,temp
       
-
-         
 c plastic or viscoplastic loading case ---------------------------------
  
       e = d(1)

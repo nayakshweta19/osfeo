@@ -176,7 +176,7 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
 		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
 		sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
 		theOutputHandler->write(outputData,80);
-		theOutputHandler->write("\Vector OnNodes \n",80);
+		theOutputHandler->write("\tVector OnNodes \n",80);
 		// ComponentNames 
 		if (ndm == 2) {
 		  theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"\n",80);

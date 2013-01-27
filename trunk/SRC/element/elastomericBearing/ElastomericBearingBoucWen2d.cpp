@@ -18,18 +18,18 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5186 $
-// $Date: 2013-01-25 10:44:44 +0800 (星期五, 25 一月 2013) $
-// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/FlatSliderSimple2d.cpp $
+// $Revision: 4945 $
+// $Date: 2012-07-27 16:05:47 -0700 (Fri, 27 Jul 2012) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingBoucWen2d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 02/06
 // Revision: A
 //
 // Description: This file contains the implementation of the
-// FlatSliderSimple2d class.
+// ElastomericBearingBoucWen2d class.
 
-#include "FlatSliderSimple2d.h"
+#include "ElastomericBearingBoucWen2d.h"
 
 #include <Domain.h>
 #include <Node.h>
@@ -38,7 +38,6 @@
 #include <Renderer.h>
 #include <Information.h>
 #include <ElementResponse.h>
-#include <FrictionModel.h>
 #include <UniaxialMaterial.h>
 
 #include <float.h>
@@ -48,26 +47,26 @@
 
 
 // initialize the class wide variables
-Matrix FlatSliderSimple2d::theMatrix(6,6);
-Vector FlatSliderSimple2d::theVector(6);
-Vector FlatSliderSimple2d::theLoad(6);
+Matrix ElastomericBearingBoucWen2d::theMatrix(6,6);
+Vector ElastomericBearingBoucWen2d::theVector(6);
+Vector ElastomericBearingBoucWen2d::theLoad(6);
 
 
-FlatSliderSimple2d::FlatSliderSimple2d(int tag, int Nd1, int Nd2,
-    FrictionModel &thefrnmdl, double kInit, UniaxialMaterial **materials,
-    const Vector _y, const Vector _x, double sdI, int addRay,
-    double m, int maxiter, double _tol)
-    : Element(tag, ELE_TAG_FlatSliderSimple2d),
-    connectedExternalNodes(2), theFrnMdl(0),
-    k0(kInit), x(_x), y(_y),
-    shearDistI(sdI), addRayleigh(addRay),
-    mass(m), maxIter(maxiter), tol(_tol),
-    L(0.0), ub(3), ubPlastic(0.0), qb(3), kb(3,3), ul(6),
-    Tgl(6,6), Tlb(3,6), ubPlasticC(0.0), kbInit(3,3)
+ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d(int tag,
+    int Nd1, int Nd2, double kInit, double fy, double alpha, double _eta,
+    UniaxialMaterial **materials, const Vector _y, const Vector _x,
+    double _beta, double _gamma, double sdI, int addRay, double m,
+    int maxiter, double _tol)
+    : Element(tag, ELE_TAG_ElastomericBearingBoucWen2d),
+    connectedExternalNodes(2), k0(0.0), qYield(0.0), k2(0.0),
+    eta(_eta), beta(_beta), gamma(_gamma), A(1.0), x(_x), y(_y),
+    shearDistI(sdI), addRayleigh(addRay), mass(m), maxIter(maxiter),
+    tol(_tol), L(0.0), ub(3), z(0.0), dzdu(0.0), qb(3), kb(3,3),
+    ul(6), Tgl(6,6), Tlb(3,6), ubC(3), zC(0.0), kbInit(3,3)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
     if (connectedExternalNodes.Size() != 2)  {
-        opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - element: "
+        opserr << "ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d() - element: "
             << this->getTag() << " - failed to create an ID of size 2.\n";
         exit(-1);
     }
@@ -79,32 +78,28 @@ FlatSliderSimple2d::FlatSliderSimple2d(int tag, int Nd1, int Nd2,
     for (int i=0; i<2; i++)
         theNodes[i] = 0;
     
-    // get a copy of the friction model
-    theFrnMdl = thefrnmdl.getCopy();
-    if (theFrnMdl == 0)  {
-        opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - element: "
-            << this->getTag() << " - failed to get copy of the "
-            << "friction model.\n";
-        exit(-1);
-    }
+    // initialize parameters
+    k0 = (1.0-alpha)*kInit;
+    qYield = (1.0-alpha)*fy;
+    k2 = alpha*kInit;
     
     // check material input
     if (materials == 0)  {
-        opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - "
+        opserr << "ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d() - "
             << "null material array passed.\n";
         exit(-1);
     }
     
     // get copies of the uniaxial materials
     for (int i=0; i<2; i++)  {
-        if (materials[i] == 0)  {
-            opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - "
+        if (materials[i] == 0) {
+            opserr << "ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d() - "
                 "null uniaxial material pointer passed.\n";
             exit(-1);
         }
         theMaterials[i] = materials[i]->getCopy();
-        if (theMaterials[i] == 0)  {
-            opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - "
+        if (theMaterials[i] == 0) {
+            opserr << "ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d() - "
                 << "failed to copy uniaxial material.\n";
             exit(-1);
         }
@@ -113,7 +108,7 @@ FlatSliderSimple2d::FlatSliderSimple2d(int tag, int Nd1, int Nd2,
     // initialize initial stiffness matrix
     kbInit.Zero();
     kbInit(0,0) = theMaterials[0]->getInitialTangent();
-    kbInit(1,1) = k0;
+    kbInit(1,1) = A*k0 + k2;
     kbInit(2,2) = theMaterials[1]->getInitialTangent();
     
     // initialize other variables
@@ -121,25 +116,24 @@ FlatSliderSimple2d::FlatSliderSimple2d(int tag, int Nd1, int Nd2,
 }
 
 
-FlatSliderSimple2d::FlatSliderSimple2d()
-    : Element(0, ELE_TAG_FlatSliderSimple2d),
-    connectedExternalNodes(2), theFrnMdl(0),
-    k0(0.0), x(0), y(0),
-    shearDistI(0.0), addRayleigh(0),
-    mass(0.0), maxIter(25), tol(1E-12),
-    L(0.0), ub(3), ubPlastic(0.0), qb(3), kb(3,3), ul(6),
-    Tgl(6,6), Tlb(3,6), ubPlasticC(0.0), kbInit(3,3)
+ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d()
+    : Element(0, ELE_TAG_ElastomericBearingBoucWen2d),
+    connectedExternalNodes(2), k0(0.0), qYield(0.0), k2(0.0),
+    eta(1.0), beta(0.5), gamma(0.5), A(1.0), x(0), y(0),
+    shearDistI(0.5), addRayleigh(0), mass(0.0), maxIter(25),
+    tol(1E-12), L(0.0), ub(3), z(0.0), dzdu(0.0), qb(3), kb(3,3),
+    ul(6), Tgl(6,6), Tlb(3,6), ubC(3), zC(0.0), kbInit(3,3)
 {
     // ensure the connectedExternalNode ID is of correct size
     if (connectedExternalNodes.Size() != 2)  {
-        opserr << "FlatSliderSimple2d::FlatSliderSimple2d() - element: "
+        opserr << "ElastomericBearingBoucWen2d::ElastomericBearingBoucWen2d() - element: "
             << this->getTag() << " - failed to create an ID of size 2.\n";
         exit(-1);
     }
     
     // set node pointers to NULL
     for (int i=0; i<2; i++)
-        theNodes[i] = 0;
+        theNodes[i] = 0;    
     
     // set material pointers to NULL
     for (int i=0; i<2; i++)
@@ -147,44 +141,41 @@ FlatSliderSimple2d::FlatSliderSimple2d()
 }
 
 
-FlatSliderSimple2d::~FlatSliderSimple2d()
+ElastomericBearingBoucWen2d::~ElastomericBearingBoucWen2d()
 {
     // invoke the destructor on any objects created by the object
     // that the object still holds a pointer to
-    if (theFrnMdl)
-        delete theFrnMdl;
-    
     for (int i=0; i<2; i++)
         if (theMaterials[i] != 0)
             delete theMaterials[i];
 }
 
 
-int FlatSliderSimple2d::getNumExternalNodes() const
+int ElastomericBearingBoucWen2d::getNumExternalNodes() const
 {
     return 2;
 }
 
 
-const ID& FlatSliderSimple2d::getExternalNodes() 
+const ID& ElastomericBearingBoucWen2d::getExternalNodes()
 {
     return connectedExternalNodes;
 }
 
 
-Node** FlatSliderSimple2d::getNodePtrs() 
+Node** ElastomericBearingBoucWen2d::getNodePtrs()
 {
     return theNodes;
 }
 
 
-int FlatSliderSimple2d::getNumDOF() 
+int ElastomericBearingBoucWen2d::getNumDOF()
 {
     return 6;
 }
 
 
-void FlatSliderSimple2d::setDomain(Domain *theDomain)
+void ElastomericBearingBoucWen2d::setDomain(Domain *theDomain)
 {
     // check Domain is not null - invoked when object removed from a domain
     if (!theDomain)  {
@@ -201,11 +192,11 @@ void FlatSliderSimple2d::setDomain(Domain *theDomain)
     // if can't find both - send a warning message
     if (!theNodes[0] || !theNodes[1])  {
         if (!theNodes[0])  {
-            opserr << "WARNING FlatSliderSimple2d::setDomain() - Nd1: " 
+            opserr << "WARNING ElastomericBearingBoucWen2d::setDomain() - Nd1: "
                 << connectedExternalNodes(0)
                 << " does not exist in the model for";
         } else  {
-            opserr << "WARNING FlatSliderSimple2d::setDomain() - Nd2: " 
+            opserr << "WARNING ElastomericBearingBoucWen2d::setDomain() - Nd2: "
                 << connectedExternalNodes(1)
                 << " does not exist in the model for";
         }
@@ -216,17 +207,17 @@ void FlatSliderSimple2d::setDomain(Domain *theDomain)
     
     // now determine the number of dof and the dimension
     int dofNd1 = theNodes[0]->getNumberDOF();
-    int dofNd2 = theNodes[1]->getNumberDOF();	
+    int dofNd2 = theNodes[1]->getNumberDOF();
     
     // if differing dof at the ends - print a warning message
     if (dofNd1 != 3)  {
-        opserr << "FlatSliderSimple2d::setDomain() - node 1: "
+        opserr << "ElastomericBearingBoucWen2d::setDomain() - node 1: "
             << connectedExternalNodes(0)
             << " has incorrect number of DOF (not 3).\n";
         return;
     }
     if (dofNd2 != 3)  {
-        opserr << "FlatSliderSimple2d::setDomain() - node 2: "
+        opserr << "ElastomericBearingBoucWen2d::setDomain() - node 2: "
             << connectedExternalNodes(1)
             << " has incorrect number of DOF (not 3).\n";
         return;
@@ -240,15 +231,13 @@ void FlatSliderSimple2d::setDomain(Domain *theDomain)
 }
 
 
-int FlatSliderSimple2d::commitState()
+int ElastomericBearingBoucWen2d::commitState()
 {
     int errCode = 0;
     
     // commit trial history variables
-    ubPlasticC = ubPlastic;
-    
-    // commit friction model
-    errCode += theFrnMdl->commitState();
+    ubC = ub;
+    zC  = z;
     
     // commit material models
     for (int i=0; i<2; i++)
@@ -261,12 +250,9 @@ int FlatSliderSimple2d::commitState()
 }
 
 
-int FlatSliderSimple2d::revertToLastCommit()
+int ElastomericBearingBoucWen2d::revertToLastCommit()
 {
     int errCode = 0;
-    
-    // revert friction model
-    errCode += theFrnMdl->revertToLastCommit();
     
     // revert material models
     for (int i=0; i<2; i++)
@@ -276,23 +262,24 @@ int FlatSliderSimple2d::revertToLastCommit()
 }
 
 
-int FlatSliderSimple2d::revertToStart()
+int ElastomericBearingBoucWen2d::revertToStart()
 {
     int errCode = 0;
     
     // reset trial history variables
     ub.Zero();
-    ubPlastic = 0.0;
+    z = 0.0;
     qb.Zero();
     
     // reset committed history variables
-    ubPlasticC = 0.0;
+    ubC.Zero();
+    zC = 0.0;
+    
+    // reset tangent of hysteretic evolution parameters
+    dzdu = A*k0/qYield;
     
     // reset stiffness matrix in basic system
     kb = kbInit;
-    
-    // revert friction model
-    errCode += theFrnMdl->revertToStart();
     
     // revert material models
     for (int i=0; i<2; i++)
@@ -302,7 +289,7 @@ int FlatSliderSimple2d::revertToStart()
 }
 
 
-int FlatSliderSimple2d::update()
+int ElastomericBearingBoucWen2d::update()
 {
     // get global trial displacements and velocities
     const Vector &dsp1 = theNodes[0]->getTrialDisp();
@@ -324,74 +311,60 @@ int FlatSliderSimple2d::update()
     ub = Tlb*ul;
     ubdot = Tlb*uldot;
     
-    // get absolute velocity
-    double ubdotAbs = fabs(ubdot(1));
-    
     // 1) get axial force and stiffness in basic x-direction
-    double ub0Old = theMaterials[0]->getStrain();
     theMaterials[0]->setTrialStrain(ub(0),ubdot(0));
     qb(0) = theMaterials[0]->getStress();
     kb(0,0) = theMaterials[0]->getTangent();
     
-    // check for uplift
-    if (qb(0) >= 0.0)  {
-        kb = kbInit;
-        if (qb(0) > 0.0)  {
-            theMaterials[0]->setTrialStrain(ub0Old,0.0);
-            kb = DBL_EPSILON*kbInit;
-            // update plastic displacement
-            ubPlastic = ub(1);
-        }
-        qb.Zero();
-        return 0;
-    }
-    
     // 2) calculate shear force and stiffness in basic y-direction
-    int iter = 0;
-    double qb1Old = 0.0;
-    do  {
-        // save old shear force
-        qb1Old = qb(1);
+    // get displacement increment (trial - commited)
+    double delta_ub = ub(1) - ubC(1);
+    if (fabs(delta_ub) > 0.0)  {
         
-        // get normal and friction (yield) forces
-        double N = -qb(0) - qb(1)*ul(2);
-        theFrnMdl->setTrial(N, ubdotAbs);
-        double qYield = (theFrnMdl->getFrictionForce());
+        // get yield displacement
+        double uy = qYield/k0;
         
-        // get trial shear force of hysteretic component
-        double qTrial = k0*(ub(1) - ubPlasticC);
+        // calculate hysteretic evolution parameter z using Newton-Raphson
+        int iter = 0;
+        double zAbs, tmp1, f, Df, delta_z;
+        do  {
+            zAbs = fabs(z);
+            if (zAbs == 0.0)    // check because of negative exponents
+                zAbs = DBL_EPSILON;
+            tmp1 = gamma + beta*sgn(z*delta_ub);
+            
+            // function and derivative
+            f  = z - zC - delta_ub/uy*(A - pow(zAbs,eta)*tmp1);
+            Df = 1.0 + delta_ub/uy*eta*pow(zAbs,eta-1.0)*sgn(z)*tmp1;
+            
+            // issue warning if derivative Df is zero
+            if (fabs(Df) <= DBL_EPSILON)  {
+                opserr << "WARNING: ElastomericBearingBoucWen2d::update() - "
+                    << "zero derivative in Newton-Raphson scheme for "
+                    << "hysteretic evolution parameter z.\n";
+                return -1;
+            }
+            
+            // advance one step
+            delta_z = f/Df;
+            z -= delta_z;
+            iter++;
+        } while ((fabs(delta_z) >= tol) && (iter < maxIter));
         
-        // compute yield criterion of hysteretic component
-        double qTrialNorm = fabs(qTrial);
-        double Y = qTrialNorm - qYield;
-        
-        // elastic step -> no updates required
-        if (Y <= 0.0)  {
-            // set shear force
-            qb(1) = qTrial - N*ul(2);
-            // set tangent stiffness
-            kb(1,1) = k0;
+        // issue warning if Newton-Raphson scheme did not converge
+        if (iter >= maxIter)   {
+            opserr << "WARNING: ElastomericBearingBoucWen2d::update() - "
+                << "did not find the hysteretic evolution parameter z after "
+                << iter << " iterations and norm: " << fabs(delta_z) << endln;
+            return -2;
         }
-        // plastic step -> return mapping
-        else  {
-            // compute consistency parameter
-            double dGamma = Y/k0;
-            // update plastic displacement
-            ubPlastic = ubPlasticC + dGamma*qTrial/qTrialNorm;
-            // set shear force
-            qb(1) = qYield*qTrial/qTrialNorm - N*ul(2);
-            // set tangent stiffness
-            kb(1,1) = 0.0;
-        }
-        iter++;
-    } while ((fabs(qb(1)-qb1Old) >= tol) && (iter <= maxIter));
-    
-    // issue warning if iteration did not converge
-    if (iter >= maxIter)  {
-        opserr << "WARNING: FlatSliderSimple2d::update() - element: "
-            << this->getTag() << " - did not find the shear force after "
-            << iter << " iterations and norm: " << fabs(qb(1)-qb1Old) << ".\n";
-        return -1;
+        
+        // get derivative of hysteretic evolution parameter
+        dzdu = 1.0/uy*(A - pow(fabs(z),eta)*(gamma + beta*sgn(z*delta_ub)));
+        // set shear force
+        qb(1) = qYield*z + k2*ub(1);
+        // set tangent stiffness
+        kb(1,1) = qYield*dzdu + k2;
     }
     
     // 3) get moment and stiffness in basic z-direction
@@ -403,7 +376,7 @@ int FlatSliderSimple2d::update()
 }
 
 
-const Matrix& FlatSliderSimple2d::getTangentStiff()
+const Matrix& ElastomericBearingBoucWen2d::getTangentStiff()
 {
     // zero the matrix
     theMatrix.Zero();
@@ -413,11 +386,17 @@ const Matrix& FlatSliderSimple2d::getTangentStiff()
     kl.addMatrixTripleProduct(0.0, Tlb, kb, 1.0);
     
     // add geometric stiffness to local stiffness
-    double kGeo = qb(0)*(1.0 - shearDistI)*L;
-    kl(2,1) -= qb(0);
-    kl(2,4) += qb(0);
-    kl(2,5) -= kGeo;
-    kl(5,5) += kGeo;
+    double kGeo1 = 0.5*qb(0);
+    kl(2,1) -= kGeo1;
+    kl(2,4) += kGeo1;
+    kl(5,1) -= kGeo1;
+    kl(5,4) += kGeo1;
+    double kGeo2 = kGeo1*shearDistI*L;
+    kl(2,2) += kGeo2;
+    kl(5,2) -= kGeo2;
+    double kGeo3 = kGeo1*(1.0 - shearDistI)*L;
+    kl(2,5) -= kGeo3;
+    kl(5,5) += kGeo3;
     
     // transform from local to global system
     theMatrix.addMatrixTripleProduct(0.0, Tgl, kl, 1.0);
@@ -426,7 +405,7 @@ const Matrix& FlatSliderSimple2d::getTangentStiff()
 }
 
 
-const Matrix& FlatSliderSimple2d::getInitialStiff()
+const Matrix& ElastomericBearingBoucWen2d::getInitialStiff()
 {
     // zero the matrix
     theMatrix.Zero();
@@ -442,7 +421,7 @@ const Matrix& FlatSliderSimple2d::getInitialStiff()
 }
 
 
-const Matrix& FlatSliderSimple2d::getDamp()
+const Matrix& ElastomericBearingBoucWen2d::getDamp()
 {
     // zero the matrix
     theMatrix.Zero();
@@ -471,7 +450,7 @@ const Matrix& FlatSliderSimple2d::getDamp()
 }
 
 
-const Matrix& FlatSliderSimple2d::getMass()
+const Matrix& ElastomericBearingBoucWen2d::getMass()
 {
     // zero the matrix
     theMatrix.Zero();
@@ -487,19 +466,19 @@ const Matrix& FlatSliderSimple2d::getMass()
         theMatrix(i+3,i+3) = m;
     }
     
-    return theMatrix; 
+    return theMatrix;
 }
 
 
-void FlatSliderSimple2d::zeroLoad()
+void ElastomericBearingBoucWen2d::zeroLoad()
 {
     theLoad.Zero();
 }
 
 
-int FlatSliderSimple2d::addLoad(ElementalLoad *theLoad, double loadFactor)
+int ElastomericBearingBoucWen2d::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
-    opserr <<"FlatSliderSimple2d::addLoad() - "
+    opserr <<"ElastomericBearingBoucWen2d::addLoad() - "
         << "load type unknown for element: "
         << this->getTag() << ".\n";
     
@@ -507,19 +486,19 @@ int FlatSliderSimple2d::addLoad(ElementalLoad *theLoad, double loadFactor)
 }
 
 
-int FlatSliderSimple2d::addInertiaLoadToUnbalance(const Vector &accel)
+int ElastomericBearingBoucWen2d::addInertiaLoadToUnbalance(const Vector &accel)
 {
     // check for quick return
     if (mass == 0.0)  {
         return 0;
-    }    
+    }
     
     // get R * accel from the nodes
     const Vector &Raccel1 = theNodes[0]->getRV(accel);
     const Vector &Raccel2 = theNodes[1]->getRV(accel);
     
     if (3 != Raccel1.Size() || 3 != Raccel2.Size())  {
-        opserr << "FlatSliderSimple2d::addInertiaLoadToUnbalance() - "
+        opserr << "ElastomericBearingBoucWen2d::addInertiaLoadToUnbalance() - "
             << "matrix and vector sizes are incompatible.\n";
         return -1;
     }
@@ -536,7 +515,7 @@ int FlatSliderSimple2d::addInertiaLoadToUnbalance(const Vector &accel)
 }
 
 
-const Vector& FlatSliderSimple2d::getResistingForce()
+const Vector& ElastomericBearingBoucWen2d::getResistingForce()
 {
     // zero the residual
     theVector.Zero();
@@ -546,11 +525,16 @@ const Vector& FlatSliderSimple2d::getResistingForce()
     ql = Tlb^qb;
     
     // add P-Delta moments to local forces
-    double MpDelta1 = qb(0)*(ul(4)-ul(1));
+    double kGeo1 = 0.5*qb(0);
+    double MpDelta1 = kGeo1*(ul(4)-ul(1));
     ql(2) += MpDelta1;
-    double MpDelta2 = qb(0)*(1.0 - shearDistI)*L*ul(5);
-    ql(2) -= MpDelta2;
-    ql(5) += MpDelta2;
+    ql(5) += MpDelta1;
+    double MpDelta2 = kGeo1*shearDistI*L*ul(2);
+    ql(2) += MpDelta2;
+    ql(5) -= MpDelta2;
+    double MpDelta3 = kGeo1*(1.0 - shearDistI)*L*ul(5);
+    ql(2) -= MpDelta3;
+    ql(5) += MpDelta3;
     
     // determine resisting forces in global system
     theVector = Tgl^ql;
@@ -562,7 +546,7 @@ const Vector& FlatSliderSimple2d::getResistingForce()
 }
 
 
-const Vector& FlatSliderSimple2d::getResistingForceIncInertia()
+const Vector& ElastomericBearingBoucWen2d::getResistingForceIncInertia()
 {
     // this already includes damping forces from materials
     theVector = this->getResistingForce();
@@ -589,31 +573,29 @@ const Vector& FlatSliderSimple2d::getResistingForceIncInertia()
 }
 
 
-int FlatSliderSimple2d::sendSelf(int commitTag, Channel &sChannel)
+int ElastomericBearingBoucWen2d::sendSelf(int commitTag, Channel &sChannel)
 {
     // send element parameters
-    static Vector data(9);
+    static Vector data(15);
     data(0) = this->getTag();
     data(1) = k0;
-    data(2) = shearDistI;
-    data(3) = addRayleigh;
-    data(4) = mass;
-    data(5) = maxIter;
-    data(6) = tol;
-    data(7) = x.Size();
-    data(8) = y.Size();
+    data(2) = qYield;
+    data(3) = k2;
+    data(4) = eta;
+    data(5) = beta;
+    data(6) = gamma;
+    data(7) = A;
+    data(8) = shearDistI;
+    data(9) = addRayleigh;
+    data(10) = mass;
+    data(11) = maxIter;
+    data(12) = tol;
+    data(13) = x.Size();
+    data(14) = y.Size();
     sChannel.sendVector(0, commitTag, data);
     
     // send the two end nodes
     sChannel.sendID(0, commitTag, connectedExternalNodes);
-    
-    // send the friction model class tag
-    ID frnClassTag(1);
-    frnClassTag(0) = theFrnMdl->getClassTag();
-    sChannel.sendID(0, commitTag, frnClassTag);
-    
-    // send the friction model
-    theFrnMdl->sendSelf(commitTag, sChannel);
     
     // send the material class tags
     ID matClassTags(2);
@@ -635,7 +617,7 @@ int FlatSliderSimple2d::sendSelf(int commitTag, Channel &sChannel)
 }
 
 
-int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
+int ElastomericBearingBoucWen2d::recvSelf(int commitTag, Channel &rChannel,
     FEM_ObjectBroker &theBroker)
 {
     // delete material memory
@@ -644,31 +626,24 @@ int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
             delete theMaterials[i];
     
     // receive element parameters
-    static Vector data(9);
+    static Vector data(15);
     rChannel.recvVector(0, commitTag, data);
     this->setTag((int)data(0));
     k0 = data(1);
-    shearDistI = data(2);
-    addRayleigh = (int)data(3);
-    mass = data(4);
-    maxIter = (int)data(5);
-    tol = data(6);
+    qYield = data(2);
+    k2 = data(3);
+    eta = data(4);
+    beta = data(5);
+    gamma = data(6);
+    A = data(7);
+    shearDistI = data(8);
+    addRayleigh = (int)data(9);
+    mass = data(10);
+    maxIter = (int)data(11);
+    tol = data(12);
     
     // receive the two end nodes
     rChannel.recvID(0, commitTag, connectedExternalNodes);
-    
-    // receive the friction model class tag
-    ID frnClassTag(1);
-    rChannel.recvID(0, commitTag, frnClassTag);
-    
-    // receive the friction model
-    theFrnMdl = theBroker.getNewFrictionModel(frnClassTag(0));
-    if (theFrnMdl == 0) {
-        opserr << "FlatSliderSimple2d::recvSelf() - "
-            << "failed to get blank friction model.\n";
-        return -1;
-    }
-    theFrnMdl->recvSelf(commitTag, rChannel, theBroker);
     
     // receive the material class tags
     ID matClassTags(2);
@@ -678,7 +653,7 @@ int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
     for (int i=0; i<2; i++)  {
         theMaterials[i] = theBroker.getNewUniaxialMaterial(matClassTags(i));
         if (theMaterials[i] == 0) {
-            opserr << "FlatSliderSimple2d::recvSelf() - "
+            opserr << "ElastomericBearingBoucWen2d::recvSelf() - "
                 << "failed to get blank uniaxial material.\n";
             return -2;
         }
@@ -686,11 +661,11 @@ int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
     }
     
     // receive remaining data
-    if ((int)data(7) == 3)  {
+    if ((int)data(13) == 3)  {
         x.resize(3);
         rChannel.recvVector(0, commitTag, x);
     }
-    if ((int)data(8) == 3)  {
+    if ((int)data(14) == 3)  {
         y.resize(3);
         rChannel.recvVector(0, commitTag, y);
     }
@@ -698,7 +673,7 @@ int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
     // initialize initial stiffness matrix
     kbInit.Zero();
     kbInit(0,0) = theMaterials[0]->getInitialTangent();
-    kbInit(1,1) = kbInit(0,0)*DBL_EPSILON;
+    kbInit(1,1) = A*k0 + k2;
     kbInit(2,2) = theMaterials[1]->getInitialTangent();
     
     // initialize other variables
@@ -708,19 +683,16 @@ int FlatSliderSimple2d::recvSelf(int commitTag, Channel &rChannel,
 }
 
 
-int FlatSliderSimple2d::displaySelf(Renderer &theViewer,
+int ElastomericBearingBoucWen2d::displaySelf(Renderer &theViewer,
     int displayMode, float fact)
 {
-    int errCode = 0;
-    
     // first determine the end points of the element based on
     // the display factor (a measure of the distorted image)
     const Vector &end1Crd = theNodes[0]->getCrds();
-    const Vector &end2Crd = theNodes[1]->getCrds();	
+    const Vector &end2Crd = theNodes[1]->getCrds();
     
     static Vector v1(3);
     static Vector v2(3);
-    static Vector v3(3);
     
     if (displayMode >= 0)  {
         const Vector &end1Disp = theNodes[0]->getDisp();
@@ -728,8 +700,7 @@ int FlatSliderSimple2d::displaySelf(Renderer &theViewer,
         
         for (int i=0; i<2; i++)  {
             v1(i) = end1Crd(i) + end1Disp(i)*fact;
-            v2(i) = end1Crd(i) + (end1Disp(i) + end2Disp(i))*fact;
-            v3(i) = end2Crd(i) + end2Disp(i)*fact;    
+            v2(i) = end2Crd(i) + end2Disp(i)*fact;
         }
     } else  {
         int mode = displayMode * -1;
@@ -739,34 +710,30 @@ int FlatSliderSimple2d::displaySelf(Renderer &theViewer,
         if (eigen1.noCols() >= mode)  {
             for (int i=0; i<2; i++)  {
                 v1(i) = end1Crd(i) + eigen1(i,mode-1)*fact;
-                v2(i) = end1Crd(i) + (eigen1(i,mode-1) + eigen2(i,mode-1))*fact;
-                v3(i) = end2Crd(i) + eigen2(i,mode-1)*fact;
+                v2(i) = end2Crd(i) + eigen2(i,mode-1)*fact;
             }
         } else  {
             for (int i=0; i<2; i++)  {
                 v1(i) = end1Crd(i);
-                v2(i) = end1Crd(i);
-                v3(i) = end2Crd(i);
+                v2(i) = end2Crd(i);
             }
         }
     }
     
-    errCode += theViewer.drawLine (v1, v2, 1.0, 1.0);
-    errCode += theViewer.drawLine (v2, v3, 1.0, 1.0);
-    
-    return errCode;
+    return theViewer.drawLine (v1, v2, 1.0, 1.0);
 }
 
 
-void FlatSliderSimple2d::Print(OPS_Stream &s, int flag)
+void ElastomericBearingBoucWen2d::Print(OPS_Stream &s, int flag)
 {
     if (flag == 0)  {
         // print everything
         s << "Element: " << this->getTag(); 
-        s << "  type: FlatSliderSimple2d  iNode: " << connectedExternalNodes(0);
+        s << "  type: ElastomericBearingBoucWen2d";
+        s << "  iNode: " << connectedExternalNodes(0);
         s << "  jNode: " << connectedExternalNodes(1) << endln;
-        s << "  FrictionModel: " << theFrnMdl->getTag() << endln;
-        s << "  kInit: " << k0 << endln;
+        s << "  k0: " << k0 << "  qYield: " << qYield << "  k2: " << k2 << endln;
+        s << "  eta: " << eta << "  beta: " << beta << "  gamma: " << gamma << endln;
         s << "  Material ux: " << theMaterials[0]->getTag() << endln;
         s << "  Material rz: " << theMaterials[1]->getTag() << endln;
         s << "  shearDistI: " << shearDistI << "  addRayleigh: "
@@ -780,22 +747,20 @@ void FlatSliderSimple2d::Print(OPS_Stream &s, int flag)
 }
 
 
-Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
+Response* ElastomericBearingBoucWen2d::setResponse(const char **argv, int argc,
     OPS_Stream &output)
 {
     Response *theResponse = 0;
     
     output.tag("ElementOutput");
-    output.attr("eleType","FlatSliderSimple2d");
+    output.attr("eleType","ElastomericBearingBoucWen2d");
     output.attr("eleTag",this->getTag());
     output.attr("node1",connectedExternalNodes[0]);
     output.attr("node2",connectedExternalNodes[1]);
     
     // global forces
-    if (strcmp(argv[0],"force") == 0 ||
-        strcmp(argv[0],"forces") == 0 ||
-        strcmp(argv[0],"globalForce") == 0 ||
-        strcmp(argv[0],"globalForces") == 0)
+    if (strcmp(argv[0],"force") == 0 || strcmp(argv[0],"forces") == 0 ||
+        strcmp(argv[0],"globalForce") == 0 || strcmp(argv[0],"globalForces") == 0)
     {
         output.tag("ResponseType","Px_1");
         output.tag("ResponseType","Py_1");
@@ -807,8 +772,7 @@ Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
         theResponse = new ElementResponse(this, 1, theVector);
     }
     // local forces
-    else if (strcmp(argv[0],"localForce") == 0 ||
-        strcmp(argv[0],"localForces") == 0)
+    else if (strcmp(argv[0],"localForce") == 0 || strcmp(argv[0],"localForces") == 0)
     {
         output.tag("ResponseType","N_1");
         output.tag("ResponseType","V_1");
@@ -820,8 +784,7 @@ Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
         theResponse = new ElementResponse(this, 2, theVector);
     }
     // basic forces
-    else if (strcmp(argv[0],"basicForce") == 0 ||
-        strcmp(argv[0],"basicForces") == 0)
+    else if (strcmp(argv[0],"basicForce") == 0 || strcmp(argv[0],"basicForces") == 0)
     {
         output.tag("ResponseType","qb1");
         output.tag("ResponseType","qb2");
@@ -843,12 +806,9 @@ Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
         theResponse = new ElementResponse(this, 4, theVector);
     }
     // basic displacements
-    else if (strcmp(argv[0],"deformation") == 0 ||
-        strcmp(argv[0],"deformations") == 0 || 
-        strcmp(argv[0],"basicDeformation") == 0 ||
-        strcmp(argv[0],"basicDeformations") == 0 ||
-        strcmp(argv[0],"basicDisplacement") == 0 ||
-        strcmp(argv[0],"basicDisplacements") == 0)
+    else if (strcmp(argv[0],"deformation") == 0 || strcmp(argv[0],"deformations") == 0 || 
+        strcmp(argv[0],"basicDeformation") == 0 || strcmp(argv[0],"basicDeformations") == 0 ||
+        strcmp(argv[0],"basicDisplacement") == 0 || strcmp(argv[0],"basicDisplacements") == 0)
     {
         output.tag("ResponseType","ub1");
         output.tag("ResponseType","ub2");
@@ -856,19 +816,22 @@ Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
         
         theResponse = new ElementResponse(this, 5, Vector(3));
     }
+    // hysteretic evolution parameter
+    else if (strcmp(argv[0],"hystereticParameter") == 0 || strcmp(argv[0],"hystParameter") == 0 || 
+        strcmp(argv[0],"hystereticParam") == 0 || strcmp(argv[0],"hystParam") == 0 ||
+        strcmp(argv[0],"z") == 0)
+    {
+        output.tag("ResponseType","z");
+        
+        theResponse = new ElementResponse(this, 6, z);
+    }
     // material output
     else if (strcmp(argv[0],"material") == 0)  {
         if (argc > 2)  {
             int matNum = atoi(argv[1]);
             if (matNum >= 1 && matNum <= 2)
-                theResponse = theMaterials[matNum-1]->setResponse(&argv[2], argc-2, output);
+                theResponse =  theMaterials[matNum-1]->setResponse(&argv[2], argc-2, output);
         }
-    }
-    // friction model output
-    else if (strcmp(argv[0],"frictionModel") == 0 || strcmp(argv[0],"frnMdl") == 0 ||
-        strcmp(argv[0],"frictionMdl") == 0 || strcmp(argv[0],"frnModel") == 0)  {
-            if (argc > 1)
-                theResponse = theFrnMdl->setResponse(&argv[1], argc-1, output);
     }
     
     output.endTag(); // ElementOutput
@@ -877,9 +840,9 @@ Response* FlatSliderSimple2d::setResponse(const char **argv, int argc,
 }
 
 
-int FlatSliderSimple2d::getResponse(int responseID, Information &eleInfo)
+int ElastomericBearingBoucWen2d::getResponse(int responseID, Information &eleInfo)
 {
-    double MpDelta1, MpDelta2;
+    double kGeo1, MpDelta1, MpDelta2, MpDelta3;
     
     switch (responseID)  {
     case 1:  // global forces
@@ -890,11 +853,17 @@ int FlatSliderSimple2d::getResponse(int responseID, Information &eleInfo)
         // determine resisting forces in local system
         theVector = Tlb^qb;
         // add P-Delta moments
-        MpDelta1 = qb(0)*(ul(4)-ul(1));
+        kGeo1 = 0.5*qb(0);
+        MpDelta1 = kGeo1*(ul(4)-ul(1));
         theVector(2) += MpDelta1;
-        MpDelta2 = qb(0)*(1.0 - shearDistI)*L*ul(5);
-        theVector(2) -= MpDelta2;
-        theVector(5) += MpDelta2;
+        theVector(5) += MpDelta1;
+        MpDelta2 = kGeo1*shearDistI*L*ul(2);
+        theVector(2) += MpDelta2;
+        theVector(5) -= MpDelta2;
+        MpDelta3 = kGeo1*(1.0 - shearDistI)*L*ul(5);
+        theVector(2) -= MpDelta3;
+        theVector(5) += MpDelta3;
+        
         return eleInfo.setVector(theVector);
         
     case 3:  // basic forces
@@ -906,14 +875,17 @@ int FlatSliderSimple2d::getResponse(int responseID, Information &eleInfo)
     case 5:  // basic displacements
         return eleInfo.setVector(ub);
         
+    case 6:  // hysteretic evolution parameter
+        return eleInfo.setDouble(z);
+        
     default:
         return -1;
     }
 }
 
 
-// establish the external nodes and set up the transformation matrix for orientation
-void FlatSliderSimple2d::setUp()
+// set up the transformation matrix for orientation
+void ElastomericBearingBoucWen2d::setUp()
 {
     const Vector &end1Crd = theNodes[0]->getCrds();
     const Vector &end2Crd = theNodes[1]->getCrds();	
@@ -927,7 +899,7 @@ void FlatSliderSimple2d::setUp()
             y.resize(3);
             y(0) = -x(1);  y(1) = x(0);  y(2) = 0.0;
         } else  {
-            opserr << "WARNING FlatSliderSimple2d::setUp() - " 
+            opserr << "WARNING ElastomericBearingBoucWen2d::setUp() - " 
                 << "element: " << this->getTag()
                 << " - ignoring nodes and using specified "
                 << "local x vector to determine orientation.\n";
@@ -935,7 +907,7 @@ void FlatSliderSimple2d::setUp()
     }
     // check that vectors for orientation are of correct size
     if (x.Size() != 3 || y.Size() != 3)  {
-        opserr << "FlatSliderSimple2d::setUp() - "
+        opserr << "ElastomericBearingBoucWen2d::setUp() - "
             << "element: " << this->getTag()
             << " - incorrect dimension of orientation vectors.\n";
         exit(-1);
@@ -960,7 +932,7 @@ void FlatSliderSimple2d::setUp()
     
     // check valid x and y vectors, i.e. not parallel and of zero length
     if (xn == 0 || yn == 0 || zn == 0)  {
-        opserr << "FlatSliderSimple2d::setUp() - "
+        opserr << "ElastomericBearingBoucWen2d::setUp() - "
             << "element: " << this->getTag()
             << " - invalid orientation vectors.\n";
         exit(-1);
@@ -983,7 +955,7 @@ void FlatSliderSimple2d::setUp()
 }
 
 
-double FlatSliderSimple2d::sgn(double x)
+double ElastomericBearingBoucWen2d::sgn(double x)
 {
     if (x > 0)
         return 1.0;
