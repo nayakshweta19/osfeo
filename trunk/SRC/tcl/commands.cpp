@@ -102,6 +102,9 @@ OPS_Stream *opserrPtr = &sserr;
 #include <InitialStateParameter.h>
 #include <ElementStateParameter.h>
 
+#include <RCFTMMBeamColumn3D.h> //tort
+#include <RCFTSTLMBeamColumn3D.h>
+
 // analysis model
 #include <AnalysisModel.h>
 
@@ -750,7 +753,11 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);       
 	///*/
 	Tcl_CreateCommand(interp, "ritz", &ritzAnalysis, 
-		(ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);       
+		(ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+	Tcl_CreateCommand(interp, "RecoveryTypeRCFT", &setRecoveryTypeRCFT,
+        (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+	Tcl_CreateCommand(interp, "RecoveryTypeSTL", &setRecoveryTypeSTL,
+        (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
 	///*/
     Tcl_CreateCommand(interp, "video", &videoPlayer, 
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);       
@@ -6334,6 +6341,40 @@ ritzAnalysis(ClientData clientData, Tcl_Interp *interp, int argc,
 	theRitzAnalysis = 0;
 
 	return TCL_OK;
+}
+
+int
+setRecoveryTypeRCFT(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  if (argc < 2) {
+      opserr << "WARNING illegal command - recoveryType \n";
+      return TCL_ERROR;
+  }
+  int recoverytype;
+  if (Tcl_GetInt(interp, argv[1], &recoverytype) != TCL_OK) {
+      opserr << "WARNING reading time value - recoveryType \n";
+      return TCL_ERROR;
+  } else {
+      RCFTMMBeamColumn3D::setrecoveryflag(recoverytype);
+  }
+  return TCL_OK;
+}
+
+int
+setRecoveryTypeSTL(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  if (argc < 2) {
+      opserr << "WARNING illegal command - recoveryType \n";
+      return TCL_ERROR;
+  }
+  int recoverytype;
+  if (Tcl_GetInt(interp, argv[1], &recoverytype) != TCL_OK) {
+      opserr << "WARNING reading time value - recoveryType \n";
+      return TCL_ERROR;
+  } else {
+      RCFTSTLMBeamColumn3D::setrecoveryflag(recoverytype);
+  }
+  return TCL_OK;
 }
 ///*/
 
