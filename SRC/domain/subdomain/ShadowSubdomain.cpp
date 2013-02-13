@@ -36,7 +36,8 @@
 #include <ShadowSubdomain.h>
 #include <stdlib.h>
 
-#include <Node.h> #include <Element.h>
+#include <Node.h>
+#include <Element.h>
 #include <SP_Constraint.h>
 #include <MP_Constraint.h>
 #include <DomainDecompositionAnalysis.h>

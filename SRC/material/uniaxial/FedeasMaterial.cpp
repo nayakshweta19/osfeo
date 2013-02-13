@@ -355,9 +355,14 @@ extern "C" int  STEEL_2(double *matpar, double *hstvP, double *hstv,
 				double *strainP, double *stressP, double *dStrain,
 				double *tangent, double *stress, int *ist);
 
-extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
+extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
 		  double *strainP, double *stressP, double *dStrain,
 		  double *tangent, double *stress, int *ist);
+
+//// Fedeas fortran subroutine
+//extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
+//		  double *strainP, double *stressP, double *dStrain,
+//		  double *tangent, double *stress, int *ist); 
 
 // Add more declarations as needed
 
@@ -371,7 +376,8 @@ extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
 #define hyster_2__	HYSTER_2
 #define steel_1__	STEEL_1
 #define steel_2__	STEEL_2
-#define pd_        PD
+//// Fedeas fortran subroutine
+//#define pd_        PD
 
 #else
 
@@ -415,6 +421,7 @@ extern "C" int steel_2__(double *matpar, double *hstvP, double *hstv,
 			 double *strainP, double *stressP, double *dStrain,
 			 double *tangent, double *stress, int *ist);
 
+//// Fedeas fortran subroutine
 extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
 		   double *strainP, double *stressP, double *dStrain,
 		   double *tangent, double *stress, int *ist);

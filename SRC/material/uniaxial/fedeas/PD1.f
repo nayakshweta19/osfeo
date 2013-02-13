@@ -309,7 +309,7 @@ c   check the convergence of the damage evolution eqn
           write(*,*) 'error =', error
           write(*,*) 'kp =',kp
           error = error/0.d0
-          stop 'VEPD_2D: exceed the maximum iteration (iter)!'
+c          stop 'VEPD_2D: exceed the maximum iteration (iter)!'
         endif
 
         q_lam = sign*fstr/fenergy
@@ -620,7 +620,7 @@ c   check the convergence of the damage evolution eqn
 	    write(*,*) 'error =', error
 	    write(*,*) 'kp =',kp
 	    error = error/0.d0
-          stop 'RELOADING: exceed the maximum iteration (iter)!'
+c          stop 'RELOADING: exceed the maximum iteration (iter)!'
         endif
 
         ek = (fenergy/(1.d0-br) + (peps-pepsn)*fkp)/fstr

@@ -23,15 +23,15 @@
 // $Source: /scratch/slocal/chroot/cvsroot/openseescomp/OpenSEESComp/OpenSees/SRC/domain/constraints/MD_Constraint.cpp,v $
                                                                         
                                                                         
-// File: ~/domain/constraints//MP_Constraint.C
+// File: ~/domain/constraints//MD_Constraint.C
 //
 // Written: fmk 
 // Created: 11/96
 // Revision: A
 //
-// Purpose: This file contains the implementation of class MP_Constraint.
+// Purpose: This file contains the implementation of class MD_Constraint.
 //
-// The class MP_Constraint interface:
+// The class MD_Constraint interface:
 //
 
 #include <MD_Constraint.h>
@@ -44,7 +44,10 @@
 #include <FEM_ObjectBroker.h>
 #include <iostream>
 #include <fstream>
- 
+
+static int numMDs = 0;
+static int nextTag = 0;
+
 // constructor for FEM_ObjectBroker			// Cenk
 MD_Constraint::MD_Constraint()		
 :MP_Constraint(CNSTRNT_TAG_MD_Constraint),thisDomain(0), 
@@ -57,7 +60,7 @@ MD_Constraint::MD_Constraint()
 // general constructor for ModelBuilder
 MD_Constraint::MD_Constraint(Domain *theDomain, int tag, int nodeRetain, int nodeConstr, 
 			     ID &constrainedDOF, ID &retainedDOF, Vector &gv)
-:MP_Constraint(CNSTRNT_TAG_MP_Constraint), 
+:MP_Constraint(CNSTRNT_TAG_MD_Constraint), 
  nodeRetained(nodeRetain), nodeConstrained(nodeConstr), 
  commit_constraint(0), constraint(0), constrDOF(0), retainDOF(0), ConstrainedNode(0), dbTag1(0), dbTag2(0), dbTag3(0), cnvg(0)
 {
@@ -362,6 +365,12 @@ MD_Constraint::update(void)
 const Matrix &
 MD_Constraint::getConstraint(void)
 {
+	if (constraint == 0) {
+	opserr << "MD_Constraint::getConstraint - no Matrix was set\n";
+	exit(-1);
+    }
+
+    // return the constraint matrix Ccr
     //fstream mdc;
     //mdc.open("mdc.dat",ios::app);
     //mdc>>(*constraint);
@@ -371,6 +380,60 @@ MD_Constraint::getConstraint(void)
 int 
 MD_Constraint::sendSelf(int cTag, Channel &theChannel)
 {
+        static ID data(10);
+    int dataTag = this->getDbTag();
+
+    data(0) = this->getTag(); 
+    data(1) = nodeRetained;
+    data(2) = nodeConstrained;
+    if (constraint == 0) data(3) = 0; else data(3) = constraint->noRows();
+    if (constraint == 0) data(4) = 0; else data(4) = constraint->noCols();    
+    if (constrDOF == 0) data(5) = 0; else data(5) = constrDOF->Size();    
+    if (retainDOF == 0) data(6) = 0; else data(6) = retainDOF->Size();        
+    
+    // need two database tags for ID objects
+    if (constrDOF != 0 && dbTag1 == 0) 
+      dbTag1 = theChannel.getDbTag();
+    if (retainDOF != 0 && dbTag2 == 0) 
+      dbTag2 = theChannel.getDbTag();
+
+    data(7) = dbTag1;
+    data(8) = dbTag2;
+	data(9) = nextTag;
+
+    int result = theChannel.sendID(dataTag, cTag, data);
+    if (result < 0) {
+	opserr << "WARNING MD_Constraint::sendSelf - error sending ID data\n";
+	return result;  
+    }    
+    
+    if (constraint != 0 && constraint->noRows() != 0) {
+	int result = theChannel.sendMatrix(dataTag, cTag, *constraint);
+	if (result < 0) {
+	    opserr << "WARNING MD_Constraint::sendSelf ";
+	    opserr << "- error sending Matrix data\n"; 
+	    return result;  
+	}
+    }
+
+    if (constrDOF != 0 && constrDOF->Size() != 0) {
+	int result = theChannel.sendID(dbTag1, cTag, *constrDOF);
+	if (result < 0) {
+	    opserr << "WARNING MD_Constraint::sendSelf ";
+	    opserr << "- error sending constrained data\n"; 
+	    return result;  
+	}
+    }
+
+    if (retainDOF != 0 && retainDOF->Size() != 0) {
+	int result = theChannel.sendID(dbTag2, cTag, *retainDOF);
+	if (result < 0) {
+	    opserr << "WARNING MD_Constraint::sendSelf ";
+	    opserr << "- error sending retained data\n"; 
+	    return result;  
+	}
+    }
+    
     return 0;
 }
 
@@ -379,6 +442,55 @@ int
 MD_Constraint::recvSelf(int cTag, Channel &theChannel, 
 			FEM_ObjectBroker &theBroker)
 {
+    int dataTag = this->getDbTag();
+    static ID data(10);
+    int result = theChannel.recvID(dataTag, cTag, data);
+    if (result < 0) {
+	opserr << "WARNING MD_Constraint::recvSelf - error receiving ID data\n";
+	return result;  
+    }    
+
+    this->setTag(data(0));
+    nodeRetained = data(1);
+    nodeConstrained = data(2);
+    int numRows = data(3); 
+    int numCols = data(4);
+    dbTag1 = data(7);
+    dbTag2 = data(8);
+    nextTag = data(9);
+
+    if (numRows != 0 && numCols != 0) {
+	constraint = new Matrix(numRows,numCols);
+	
+	int result = theChannel.recvMatrix(dataTag, cTag, *constraint);
+	if (result < 0) {
+	    opserr << "WARNING MD_Constraint::recvSelf ";
+	    opserr << "- error receiving Matrix data\n"; 
+	    return result;  
+	}
+    }    
+    int size = data(5);
+    if (size != 0) {
+	constrDOF = new ID(size);
+	int result = theChannel.recvID(dbTag1, cTag, *constrDOF);
+	if (result < 0) {
+	    opserr << "WARNING MD_Constraint::recvSelf ";
+	    opserr << "- error receiving constrained data\n"; 
+	    return result;  
+	}	
+    }
+    
+    size = data(6);
+    if (size != 0) {
+	retainDOF = new ID(size);
+	int result = theChannel.recvID(dbTag2, cTag, *retainDOF);
+	if (result < 0) {
+	    opserr << "WARNING MP_Retainaint::recvSelf ";
+	    opserr << "- error receiving retained data\n"; 
+	    return result;  
+	}	
+    }    
+    
     return 0;
 }
 

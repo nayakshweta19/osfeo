@@ -120,6 +120,13 @@ eigenAnalysis(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 ///*/
 int
 ritzAnalysis(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+setRecoveryTypeRCFT(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+setRecoveryTypeSTL(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
 ///*/
 
 int 
