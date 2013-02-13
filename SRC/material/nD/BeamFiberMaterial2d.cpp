@@ -44,7 +44,7 @@ Matrix BeamFiberMaterial2d::tangent3d(3,3);
 //      0  1  2  3  4  5
 // ND: 11 22 33 12 23 31
 // BF: 11 12 22 33 23 31
-int BeamFiberMaterial2d::iMap[] = {0, 2, 3, 1, 4, 5};
+int BeamFiberMaterial2d::iMap[] = {0, 3, 4, 1, 5, 2};
 
 #define MAXITER 200
 
