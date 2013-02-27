@@ -1030,28 +1030,67 @@ Timoshenko2d04::displaySelf(Renderer &theViewer, int displayMode, float fact)
 Response*
 Timoshenko2d04::setResponse(const char **argv, int argc, OPS_Stream &s)
 {
+	Response *theResponse = 0;
+
+    s.tag("ElementOutput");
+    s.attr("eleType","Timoshenko2D");
+    s.attr("eleTag",this->getTag());
+    s.attr("node1",connectedExternalNodes[0]);
+    s.attr("node2",connectedExternalNodes[1]);
+
     // global force - 
     if (strcmp(argv[0],"forces") == 0 || strcmp(argv[0],"force") == 0
-		|| strcmp(argv[0],"globalForce") == 0 || strcmp(argv[0],"globalForces") == 0)
-		return new ElementResponse(this, 1, P);
+		|| strcmp(argv[0],"globalForce") == 0 || strcmp(argv[0],"globalForces") == 0) {
+		
+	    s.tag("ResponseType","Px_1");
+        s.tag("ResponseType","Py_1");
+        s.tag("ResponseType","Mz_1");
+        s.tag("ResponseType","Px_2");
+        s.tag("ResponseType","Py_2");
+        s.tag("ResponseType","Mz_2");
+
+		theResponse = new ElementResponse(this, 1, P);
 
     // local force -
-    else if (strcmp(argv[0],"localForce") == 0 || strcmp(argv[0],"localForces") == 0)
-		return new ElementResponse(this, 2, P);
+    } else if (strcmp(argv[0],"localForce") == 0 || strcmp(argv[0],"localForces") == 0) {
+		
+        s.tag("ResponseType","N_1");
+        s.tag("ResponseType","V_1");
+        s.tag("ResponseType","M_1");
+        s.tag("ResponseType","N_2");
+        s.tag("ResponseType","V_2");
+        s.tag("ResponseType","M_2");
+
+		theResponse = new ElementResponse(this, 2, P);
 
     // chord rotation -
-    else if (strcmp(argv[0],"chordRotation") == 0 || strcmp(argv[0],"chordDeformation") == 0
-	     || strcmp(argv[0],"basicDeformation") == 0)
-      return new ElementResponse(this, 3, Vector(3));
+	} else if (strcmp(argv[0],"chordRotation") == 0 || strcmp(argv[0],"chordDeformation") == 0
+		|| strcmp(argv[0],"basicDeformation") == 0) {
+      
+		 s.tag("ResponseType","eps");
+         s.tag("ResponseType","theta_1");
+         s.tag("ResponseType","theta_2");
+
+		 theResponse = new ElementResponse(this, 3, Vector(3));
     
     // plastic rotation -
-    else if (strcmp(argv[0],"plasticRotation") == 0 || strcmp(argv[0],"plasticDeformation") == 0)
-      return new ElementResponse(this, 4, Vector(3));
-    
-    // section response -
-    else if (strcmp(argv[0],"section") == 0 || strcmp(argv[0],"-section") == 0) {
+	} else if (strcmp(argv[0],"plasticRotation") == 0 || strcmp(argv[0],"plasticDeformation") == 0) {
 
-      Response *theResponse = 0;
+        s.tag("ResponseType","epsP");
+        s.tag("ResponseType","thetaP_1");
+        s.tag("ResponseType","thetaP_2");
+
+		theResponse = new ElementResponse(this, 4, Vector(3));
+    
+
+	} else if (strcmp(argv[0],"integrationPoints") == 0)
+		theResponse = new ElementResponse(this, 10, Vector(numSections));
+
+	else if (strcmp(argv[0],"integrationWeights") == 0)
+		theResponse = new ElementResponse(this, 11, Vector(numSections));
+
+    // section response -
+	else if (strcmp(argv[0],"section") == 0 || strcmp(argv[0],"-section") == 0) {
 
       int sectionNum = atoi(argv[1]);
       if (sectionNum > 0 && sectionNum <= numSections)
@@ -1086,8 +1125,9 @@ Timoshenko2d04::setResponse(const char **argv, int argc, OPS_Stream &s)
 	  }
     }
     
-    else
-      return 0;
+    s.endTag(); // ElementOutput
+    
+    return theResponse;
 }
 
 int 
@@ -1125,7 +1165,28 @@ Timoshenko2d04::getResponse(int responseID, Information &eleInfo)		//LN modify
     vp -= ve;
     return eleInfo.setVector(vp);
   }
+  
+  // integrationPoints
+  else if (responseID == 10) {
+    double L = crdTransf->getInitialLength();
+    double pts[maxNumSections];
+    beamInt->getSectionLocations(numSections, L, pts);
+    Vector locs(numSections);
+    for (int i = 0; i < numSections; i++)
+      locs(i) = pts[i]*L;
+    return eleInfo.setVector(locs);
+  }
 
+  //integrationWeight
+  else if (responseID == 11) {
+    double L = crdTransf->getInitialLength();
+    double wts[maxNumSections];
+    beamInt->getSectionWeights(numSections, L, wts);
+    Vector weights(numSections);
+    for (int i = 0; i < numSections; i++)
+      weights(i) = wts[i]*L;
+    return eleInfo.setVector(weights);
+  }
   else
     return -1;
 }

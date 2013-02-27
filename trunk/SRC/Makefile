@@ -349,6 +349,8 @@ RECORDER_LIBS = $(FE)/recorder/Recorder.o \
 	$(FE)/recorder/EnvelopeDriftRecorder.o \
 	$(FE)/recorder/PatternRecorder.o \
 	$(FE)/recorder/ElementRecorder.o \
+	$(FE)/recorder/NormEnvelopeElementRecorder.o \
+	$(FE)/recorder/NormElementRecorder.o \
 	$(FE)/recorder/EnvelopeElementRecorder.o \
 	$(FE)/recorder/TclRecorderCommands.o \
 	$(FE)/recorder/response/Response.o \
@@ -470,9 +472,12 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/adapter/TclActuatorCommand.o \
 	$(FE)/element/adapter/TclActuatorCorotCommand.o \
 	$(FE)/element/adapter/TclAdapterCommand.o \
-	$(FE)/element/elastomericBearing/ElastomericBearing2d.o \
-	$(FE)/element/elastomericBearing/ElastomericBearing3d.o \
-	$(FE)/element/elastomericBearing/TclElastomericBearingCommand.o \
+	$(FE)/element/elastomericBearing/ElastomericBearingBoucWen2d.o \
+	$(FE)/element/elastomericBearing/ElastomericBearingBoucWen3d.o \
+	$(FE)/element/elastomericBearing/TclElastomericBearingBoucWenCommand.o \
+	$(FE)/element/elastomericBearing/ElastomericBearingPlasticity2d.o \
+	$(FE)/element/elastomericBearing/ElastomericBearingPlasticity3d.o \
+	$(FE)/element/elastomericBearing/TclElastomericBearingPlasticityCommand.o \
 	$(FE)/element/frictionBearing/MultiFP2d.o \
 	$(FE)/element/frictionBearing/TripleFrictionPendulum.o \
 	$(FE)/element/frictionBearing/TFP_Bearing.o \
@@ -503,6 +508,11 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/UWelements/SSPbrickUP.o \
 	$(FE)/element/UWelements/Quad4FiberOverlay.o \
 	$(FE)/element/UWelements/Brick8FiberOverlay.o
+
+#	$(FE)/material/nD/Damage2p.o \
+#	$(FE)/material/nD/Damage2p3D.o \
+#	$(FE)/material/nD/Damage2ppstress.o \
+
 
 MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/UniaxialMaterial.o \
@@ -795,6 +805,7 @@ MODEL_BUILDER_LIBS = $(FE)/modelbuilder/ModelBuilder.o \
 
 DOMAIN_LIBS =  $(FE)/domain/component/DomainComponent.o \
 	$(FE)/domain/component/Parameter.o \
+	$(FE)/domain/component/ElementParameter.o \
 	$(FE)/domain/component/InitialStateParameter.o \
 	$(FE)/domain/component/ElementStateParameter.o \
 	$(FE)/domain/component/RVParameter.o \
