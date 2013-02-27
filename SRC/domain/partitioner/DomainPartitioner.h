@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.3 $
-// $Date: 2006/01/10 00:31:52 $
+// $Date: 2006-01-10 00:31:52 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/partitioner/DomainPartitioner.h,v $
                                                                         
 // Written: fmk 

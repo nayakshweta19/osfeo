@@ -164,6 +164,8 @@ OPS_Stream *opserrPtr = &sserr;
 #include <LoadControl.h>
 #include <ArcLength.h>
 #include <ArcLength1.h>
+#include <ArcLengthw.h>
+#include <ArcLengthy.h>
 /******************************/
 #include <HSConstraint.h>
 /******************************/
@@ -1579,7 +1581,6 @@ analyzeModel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
     if (partitionModel() < 0) {
       opserr << "WARNING before analysis; partition failed - too few elements\n";
       OpenSeesExit(clientData, interp, argc, argv);
-      opserr << "WARNING called OpenSeesExit\n";
       return TCL_ERROR;
     }
 #endif
@@ -3644,6 +3645,39 @@ specifyIntegrator(ClientData clientData, Tcl_Interp *interp, int argc,
       if (Tcl_GetDouble(interp, argv[3], &alpha) != TCL_OK)	
 	return TCL_ERROR;	
       theStaticIntegrator = new ArcLength1(arcLength,alpha);       
+
+  // if the analysis exists - we want to change the Integrator
+  if (theStaticAnalysis != 0)
+    theStaticAnalysis->setIntegrator(*theStaticIntegrator);
+  }
+
+  else if (strcmp(argv[1],"ArcLengthw") == 0) {
+    double iFactor;
+    int Jd;
+    if (argc != 4) {
+      opserr << "WARNING integrator ArcLengthw iFactor Jd \n";
+      return TCL_ERROR;
+    }
+    if (Tcl_GetDouble(interp, argv[2], &iFactor) != TCL_OK)
+      return TCL_ERROR;
+    if (Tcl_GetInt(interp, argv[3], &Jd) != TCL_OK)
+      return TCL_ERROR;
+    theStaticIntegrator = new ArcLengthw(iFactor,Jd);
+
+  // if the analysis exists - we want to change the Integrator
+  if (theStaticAnalysis != 0)
+    theStaticAnalysis->setIntegrator(*theStaticIntegrator);
+  }
+
+  else if (strcmp(argv[1],"ArcLengthy") == 0) {
+    double Lambda1;
+    if (argc != 3) {
+      opserr << "WARNING integrator ArcLengthy iFactor Jd \n";
+      return TCL_ERROR;
+    }
+    if (Tcl_GetDouble(interp, argv[2], &Lambda1) != TCL_OK)
+      return TCL_ERROR;
+    theStaticIntegrator = new ArcLengthy(Lambda1);
 
   // if the analysis exists - we want to change the Integrator
   if (theStaticAnalysis != 0)
@@ -8955,7 +8989,8 @@ const char * getInterpPWD(Tcl_Interp *interp) {
 }
 
 
-int OpenSeesExit(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+int
+OpenSeesExit(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
   theDomain.clearAll();
 
@@ -8967,8 +9002,8 @@ int OpenSeesExit(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char *
   if (theMachineBroker != 0) {
     theMachineBroker->shutdown();
     fprintf(stderr, "Process Terminating\n");
-    delete theMachineBroker;
-    theMachineBroker = 0;
+    //delete theMachineBroker;
+    //theMachineBroker = 0;
   }
 #endif
 
@@ -8980,8 +9015,8 @@ int OpenSeesExit(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char *
   if (theMachineBroker != 0) {
     theMachineBroker->shutdown();
     fprintf(stderr, "Process Terminating\n");
-    delete theMachineBroker;
-    theMachineBroker = 0;
+    //delete theMachineBroker;
+    //theMachineBroker = 0;
   }
 #endif
 
