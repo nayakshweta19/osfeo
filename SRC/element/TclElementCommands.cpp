@@ -1315,11 +1315,11 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     return result;
   }
 
-  else if (strcmp(argv[1],"PFEMElement2D") == 0) {
-    int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
-      theTclDomain, theTclBuilder);
-    return result;
-  }
+  //else if (strcmp(argv[1],"PFEMElement2D") == 0) {
+  //  int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
+  //    theTclDomain, theTclBuilder);
+  //  return result;
+  //}
 
   //////////////////////////////////////////////////////////////////////////
   else if (strcmp(argv[1],"Timoshenko2d01") == 0) {

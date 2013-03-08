@@ -793,6 +793,7 @@
 #define INTEGRATOR_TAGS_ParkLMS3                        40
 #define INTEGRATOR_TAGS_BackwardEuler                   41
 #define INTEGRATOR_TAGS_EnergyConserved                 42
+#define INTEGRATOR_TAGS_PFEMIntegrator                  43
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define INTEGRATOR_TAGS_ArcLengthw              48

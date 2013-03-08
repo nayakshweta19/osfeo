@@ -19,51 +19,53 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.0 $
-// $Date: 2012-09-17 10:51:44 $
-// $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.h,v $
+// $Date: 2012-11-30 13:01:13 $
+// $Source: /usr/local/cvs/OpenSees/SRC/analysis/analysis/PFEMAnalysis.h,v $
                                                                         
                                                                         
-#ifndef PFEMSolver_h
-#define PFEMSolver_h
+#ifndef PFEMAnalysis_h
+#define PFEMAnalysis_h
 
-// File: ~/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.h
+// Written: Minjie  
+// Created: Nov 2012
+// Revision: A
 //
-// Written: Minjie 
-// Created: Sep 17 2012
+// Description: This file contains the class definition for 
+// PFEMAnalysis. PFEMAnalysis is a 
+// subclass of DirectIntegrationAnalysis. It is used to perform a 
+// dynamic analysis for PFEM using a direct integration scheme.
 //
-// Description: This file contains the class definition for PFEMSolver.
-// A PFEMSolver object can be constructed to solve a PFEMLinSOE
-// object. It obtains the solution by making calls on the
-// The PFEMSolver uses Fractional Step Method to solve PFEM equations. 
-//
-// What: "@(#) PFEMSolver.h, revA"
+// What: "@(#) PFEMAnalysis.h, revA"
 
-#include <LinearSOESolver.h>
-extern "C" {
-#include <cs.h>
-}
+#include <DirectIntegrationAnalysis.h>
 
-class PFEMLinSOE;
-
-class PFEMSolver : public LinearSOESolver
+class PFEMAnalysis : public DirectIntegrationAnalysis
 {
 public:
-    PFEMSolver();
-    virtual ~PFEMSolver();
+    PFEMAnalysis(Domain &theDomain, 
+                 ConstraintHandler &theHandler,
+                 DOF_Numberer &theNumberer,
+                 AnalysisModel &theModel,
+                 EquiSolnAlgo &theSolnAlgo,		   
+                 LinearSOE &theSOE,
+                 TransientIntegrator &theIntegrator,
+                 ConvergenceTest *theTest,
+                 double max, double min, double r);
 
-    int solve();
-    int setSize();
-    int setLinearSOE(PFEMLinSOE& theSOE);
+    int analyze();
 
-    int sendSelf(int commitTag, Channel &theChannel);
-    int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);  
+    virtual ~PFEMAnalysis();
 
 private:
-    
-    PFEMLinSOE* theSOE;
-    css* Msym;
-    csn* Mnum;
+
+    double dtmax;
+    double dtmin;
+    double ratio;
+    double dt;
+    double currenttime;
+    double nexttime;
+    int curr;
+    bool instep;
 };
 
 #endif
-
