@@ -339,7 +339,7 @@ TclModelBuilderPFEM2DCommand(ClientData clientData, Tcl_Interp *interp, int argc
         if(argc < 4) {
             opserr << "WARNING: wrong num of args -- ";
             opserr << "PFEM2D doTriangulation alpha -nodes (start end)  ";
-            opserr << "<-addnodes (start end) -PFEM2DElement2D starteletag rho mu b1 b2>\n";
+            opserr << "<-addnodes (start end) -PFEMElement2D starteletag rho mu b1 b2>\n";
             return TCL_ERROR;
         }
         double alpha;

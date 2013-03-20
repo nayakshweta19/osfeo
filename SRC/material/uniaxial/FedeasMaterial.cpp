@@ -315,111 +315,30 @@ FedeasMaterial::Print(OPS_Stream &s, int flag)
 
 #ifdef _WIN32
 
-extern "C" int BOND_1(double *matpar, double *hstvP, double *hstv,
-			       double *strainP, double *stressP, double *dStrain,
-			       double *tangent, double *stress, int *ist);
-
-extern "C" int BOND_2(double *matpar, double *hstvP, double *hstv,
-			       double *strainP, double *stressP, double *dStrain,
-			       double *tangent, double *stress, int *ist);
-
-extern "C" int CONCRETE_1(double *matpar, double *hstvP, double *hstv,
-				   double *strainP, double *stressP, double *dStrain,
-				   double *tangent, double *stress, int *ist);
-
-extern "C" int CONCRETE_2(double *matpar, double *hstvP, double *hstv,
-				   double *strainP, double *stressP, double *dStrain,
-				   double *tangent, double *stress, int *ist);
-
-extern "C" int CONCRETE_3(double *matpar, double *hstvP, double *hstv,
-				   double *strainP, double *stressP, double *dStrain,
-				   double *tangent, double *stress, int *ist);
-
 extern "C" int HARD_1(double *matpar, double *hstvP, double *hstv,
 			       double *strainP, double *stressP, double *dStrain,
 			       double *tangent, double *stress, int *ist);
 
-extern "C" int HYSTER_1(double *matpar, double *hstvP, double *hstv,
-				 double *strainP, double *stressP, double *dStrain,
-				 double *tangent, double *stress, int *ist);
-
-extern "C" int HYSTER_2(double *matpar, double *hstvP, double *hstv,
-				 double *strainP, double *stressP, double *dStrain,
-				 double *tangent, double *stress, int *ist);
-
-extern "C" int STEEL_1(double *matpar, double *hstvP, double *hstv,
-				double *strainP, double *stressP, double *dStrain,
-				double *tangent, double *stress, int *ist);
-
-extern "C" int  STEEL_2(double *matpar, double *hstvP, double *hstv,
-				double *strainP, double *stressP, double *dStrain,
-				double *tangent, double *stress, int *ist);
-
-extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
-		  double *strainP, double *stressP, double *dStrain,
-		  double *tangent, double *stress, int *ist);
+//extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
+//		  double *strainP, double *stressP, double *dStrain,
+//		  double *tangent, double *stress, int *ist);
 
 //// Fedeas fortran subroutine
-//extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
-//		  double *strainP, double *stressP, double *dStrain,
-//		  double *tangent, double *stress, int *ist); 
+extern "C" int  PD (double *matpar, double *hstvP, double *hstv,
+		  double *strainP, double *stressP, double *dStrain,
+		  double *tangent, double *stress, int *ist); 
 
 // Add more declarations as needed
 
-#define bond_1__	BOND_1
-#define bond_2__	BOND_2
-#define concrete_1__	CONCRETE_1
-#define concrete_2__	CONCRETE_2
-#define concrete_3__	CONCRETE_3
 #define hard_1__ 	HARD_1
-#define hyster_1__	HYSTER_1
-#define hyster_2__	HYSTER_2
-#define steel_1__	STEEL_1
-#define steel_2__	STEEL_2
 //// Fedeas fortran subroutine
-//#define pd_        PD
+#define pd_        PD
 
 #else
-
-extern "C" int bond_1__(double *matpar, double *hstvP, double *hstv,
-			double *strainP, double *stressP, double *dStrain,
-			double *tangent, double *stress, int *ist);
-
-extern "C" int bond_2__(double *matpar, double *hstvP, double *hstv,
-			double *strainP, double *stressP, double *dStrain,
-			double *tangent, double *stress, int *ist);
-
-extern "C" int concrete_1__(double *matpar, double *hstvP, double *hstv,
-			    double *strainP, double *stressP, double *dStrain,
-			    double *tangent, double *stress, int *ist);
-
-extern "C" int concrete_2__(double *matpar, double *hstvP, double *hstv,
-			    double *strainP, double *stressP, double *dStrain,
-			    double *tangent, double *stress, int *ist);
-
-extern "C" int concrete_3__(double *matpar, double *hstvP, double *hstv,
-			    double *strainP, double *stressP, double *dStrain,
-			    double *tangent, double *stress, int *ist);
 
 extern "C" int hard_1__(double *matpar, double *hstvP, double *hstv,
 			double *strainP, double *stressP, double *dStrain,
 			double *tangent, double *stress, int *ist);
-
-extern "C" int hyster_1__(double *matpar, double *hstvP, double *hstv,
-			  double *strainP, double *stressP, double *dStrain,
-			  double *tangent, double *stress, int *ist);
-
-extern "C" int hyster_2__(double *matpar, double *hstvP, double *hstv,
-			  double *strainP, double *stressP, double *dStrain,
-			  double *tangent, double *stress, int *ist);
-
-extern "C" int steel_1__(double *matpar, double *hstvP, double *hstv,
-			 double *strainP, double *stressP, double *dStrain,
-			 double *tangent, double *stress, int *ist);
-
-extern "C" int steel_2__(double *matpar, double *hstvP, double *hstv,
-			 double *strainP, double *stressP, double *dStrain,
-			 double *tangent, double *stress, int *ist);
 
 //// Fedeas fortran subroutine
 extern "C" int pd_(double *matpar, double *hstvP, double *hstv,
@@ -438,102 +357,6 @@ FedeasMaterial::invokeSubroutine(int ist)
   double dEpsilon = epsilon-epsilonP;
   
   switch (this->getClassTag()) {
-#ifdef _WIN32
-  case MAT_TAG_FedeasHardening:
-    hard_1__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	     &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Hard1 subroutine not yet linked\n";
-#endif
-    break;
-
-  case MAT_TAG_FedeasBond1:
-#ifdef _WIN32
-    bond_1__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon,
-	     &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Bond1 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasBond2:
-#ifdef _WIN32
-    bond_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon,
-	     &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Bond2 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasConcrete1:
-#ifdef _WIN32
-    concrete_1__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-		 &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Concrete1 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasConcrete2:
-#ifdef _WIN32
-    concrete_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-		 &sigma, &tangent, &ist);
-#elif _CONCR2
-    concrete_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-		 &sigma, &tangent, &ist);
-#else
-    opserr << "FedeasMaterial::invokeSubroutine -- Concrete2 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasConcrete3:
-#ifdef _WIN32
-    concrete_3__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-		 &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Concrete3 subroutine not yet linked\n";
-#endif
-    break;
-        
-  case MAT_TAG_FedeasHysteretic1:
-#ifdef _WIN32
-    hyster_1__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	       &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Hysteretic1 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasHysteretic2:
-#ifdef _WIN32
-    hyster_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	       &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Hysteretic2 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasSteel1:
-#ifdef _WIN32
-    steel_1__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	      &sigma, &tangent, &ist);
-#else
-	opserr << "FedeasMaterial::invokeSubroutine -- Steel1 subroutine not yet linked\n";
-#endif
-    break;
-    
-  case MAT_TAG_FedeasSteel2:
-#ifdef _WIN32
-    steel_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	      &sigma, &tangent, &ist);
-#elif _STEEL2
-    steel_2__(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
-	      &sigma, &tangent, &ist);
-#else
-    opserr << "FedeasMaterial::invokeSubroutine -- Steel2 subroutine not yet linked\n";
-#endif
-    break;
-    
   case MAT_TAG_PlasticDamage:
 #ifdef _WIN32
     pd_(data, hstv, &hstv[numHstv], &epsilonP, &sigmaP, &dEpsilon, 
