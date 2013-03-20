@@ -9764,7 +9764,7 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 			hasLinear = 1;
 		} else if (nNode == 4) {
 			hasQuad4 = 1;
-		} else if (nNode == 3) {
+		} else if (nNode == 3 || nNode == 6) { // 6 dof for PFEM2D
 			hasTri3 = 1;
 		} else if (nNode == 9) {
 			hasQuad9 = 1;
@@ -9931,6 +9931,19 @@ printModelGID(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 					NodePtrs = theElement->getNodePtrs();		
 					Vector tagNodes(nNode);
 					for (int i = 0; i < nNode; i++) {
+						tagNodes(i)=NodePtrs[i]->getTag();
+					}
+					outputFile << tag << "\t\t";
+					for (int i = 0; i < nNode; i++) {
+						outputFile << tagNodes(i) << "\t";
+					}
+					outputFile << endln;
+				}
+				if (nNode == 6) { // for PFEM2D
+					Node **NodePtrs;
+					NodePtrs = theElement->getNodePtrs();		
+					Vector tagNodes(nNode);
+					for (int i = 0; i < 3; i++) {
 						tagNodes(i)=NodePtrs[i]->getTag();
 					}
 					outputFile << tag << "\t\t";
