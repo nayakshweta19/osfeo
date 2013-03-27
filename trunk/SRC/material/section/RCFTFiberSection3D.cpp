@@ -61,9 +61,10 @@ RCFTFiberSection3D::RCFTFiberSection3D(int tag, int num, Fiber **fibers, double 
   SectionForceDeformation(tag, SEC_TAG_RCFTFiberSection3D), numFibers(num), theMaterials(0), matData(0),
   yBar(0.0), zBar(0.0), e(6), eCommit(6), s(0), ks(0), ksCommit(12,12), GJ(gj), D(d), B(b), T(t)
 {
-
+#ifdef COMPOSITE_DEBUG
     ofstream output;
     output.open("fibers.dat",ios::app);
+#endif
 
     double EAc = 0.0;
     double EQzc = 0.0;
@@ -77,86 +78,90 @@ RCFTFiberSection3D::RCFTFiberSection3D(int tag, int num, Fiber **fibers, double 
     double EIzs = 0.0;
     double EIys = 0.0;
     double EIyzs = 0.0;
-    if (numFibers != 0){
-      theMaterials = new UniaxialMaterial *[numFibers];
+	if (numFibers != 0){
+		theMaterials = new UniaxialMaterial *[numFibers];
 
-      if (theMaterials == 0) {
-       opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to allocate Material pointers\n";
-              exit(-1);
-      }
+		if (theMaterials == 0) {
+			opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to allocate Material pointers\n";
+			exit(-1);
+		}
 
-      matData = new double [numFibers*3];
+		matData = new double [numFibers*3];
 
-      if (matData == 0) {
-       opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to allocate double array for material data\n";
-       exit(-1);
-      }
+		if (matData == 0) {
+			opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to allocate double array for material data\n";
+			exit(-1);
+		}
 
-      double Qz = 0.0;
-      double Qy = 0.0;
-      double A  = 0.0;
+		double Qz = 0.0;
+		double Qy = 0.0;
+		double A  = 0.0;
 
-      double Qzc = 0.0;
-      double Qyc = 0.0;
-      double Ac  = 0.0;
+		double Qzc = 0.0;
+		double Qyc = 0.0;
+		double Ac  = 0.0;
 
-      double Qzs = 0.0;
-      double Qys = 0.0;
-      double As  = 0.0;
+		double Qzs = 0.0;
+		double Qys = 0.0;
+		double As  = 0.0;
 
-      for (int i = 0; i < numFibers; i++) {
-        Fiber *theFiber = fibers[i];
-        double Es, Ec, yLoc, zLoc, Area;
-        theFiber->getFiberLocation(yLoc, zLoc);
-        Area = theFiber->getArea();
-        UniaxialMaterial *theMat = theFiber->getMaterial();
-        if(theMat->getInitialTangent() < 25000.0){
-	  Ec = theMat->getInitialTangent();  
-          output<<i<<"  "<<yLoc<<"   "<<zLoc<<"   "<<Area<<"    "<<Ec<<endl;
-	  Qzc += yLoc*Area;
-          Qyc += zLoc*Area;
-          Ac  += Area;
-          EQzc += yLoc*Area*Ec;
-	  EQyc += zLoc*Area*Ec;
-	  EAc  += Area*Ec;
-          EIzc += yLoc*yLoc*Area*Ec;
-	  EIyc += zLoc*zLoc*Area*Ec;
-	  EIyzc += yLoc*zLoc*Area*Ec;
-        }
-        else if(theMat->getInitialTangent() > 25000.0){
-	  Es = theMat->getInitialTangent(); 
-          output<<i<<"  "<<yLoc<<"   "<<zLoc<<"   "<<Area<<"   "<<Es<<endl;
-	  Qzs += yLoc*Area;
-          Qys += zLoc*Area;
-          As  += Area;
-          EQzs += yLoc*Area*Es;
-          EQys += zLoc*Area*Es;
-          EAs  += Area*Es;
-          EIzs += yLoc*yLoc*Area*Es;
-          EIys += zLoc*zLoc*Area*Es;
-          EIyzs += yLoc*zLoc*Area*Es;
-        }
+		for (int i = 0; i < numFibers; i++) {
+			Fiber *theFiber = fibers[i];
+			double Es, Ec, yLoc, zLoc, Area;
+			theFiber->getFiberLocation(yLoc, zLoc);
+			Area = theFiber->getArea();
+			UniaxialMaterial *theMat = theFiber->getMaterial();
+			if(theMat->getInitialTangent() < 25000.0){
+				Ec = theMat->getInitialTangent();  
+#ifdef COMPOSITE_DEBUG
+				output<<i<<"  "<<yLoc<<"   "<<zLoc<<"   "<<Area<<"    "<<Ec<<endl;
+#endif
+				Qzc += yLoc*Area;
+				Qyc += zLoc*Area;
+				Ac  += Area;
+				EQzc += yLoc*Area*Ec;
+				EQyc += zLoc*Area*Ec;
+				EAc  += Area*Ec;
+				EIzc += yLoc*yLoc*Area*Ec;
+				EIyc += zLoc*zLoc*Area*Ec;
+				EIyzc += yLoc*zLoc*Area*Ec;
+			}
+			else if(theMat->getInitialTangent() > 25000.0){
+				Es = theMat->getInitialTangent(); 
+#ifdef COMPOSITE_DEBUG
+				output<<i<<"  "<<yLoc<<"   "<<zLoc<<"   "<<Area<<"   "<<Es<<endl;
+#endif
+				Qzs += yLoc*Area;
+				Qys += zLoc*Area;
+				As  += Area;
+				EQzs += yLoc*Area*Es;
+				EQys += zLoc*Area*Es;
+				EAs  += Area*Es;
+				EIzs += yLoc*yLoc*Area*Es;
+				EIys += zLoc*zLoc*Area*Es;
+				EIyzs += yLoc*zLoc*Area*Es;
+			}
 
-        Qz += yLoc*Area;
-        Qy += zLoc*Area;
-        A  += Area;
+			Qz += yLoc*Area;
+			Qy += zLoc*Area;
+			A  += Area;
 
-        matData[i*3] = yLoc;
-        matData[i*3+1] = zLoc;
-        matData[i*3+2] = Area;
+			matData[i*3] = yLoc;
+			matData[i*3+1] = zLoc;
+			matData[i*3+2] = Area;
 
-        theMaterials[i] = theMat->getCopy();
+			theMaterials[i] = theMat->getCopy();
 
-        if (theMaterials[i] == 0) {
-          opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to get copy of a Material\n";
-	  exit(-1);
-        }
-      }
+			if (theMaterials[i] == 0) {
+				opserr << "RCFTFiberSection3D::RCFTFiberSection3D -- failed to get copy of a Material\n";
+				exit(-1);
+			}
+		}
 
-      yBar = Qz/A;
-      zBar = Qy/A;
+		yBar = Qz/A;
+		zBar = Qy/A;
 
-    }
+	}
 
     s = new Vector(sData,12);
     ks = new Matrix(kData,12,12);
@@ -1025,51 +1030,53 @@ RCFTFiberSection3D::commitState(void)
     err += theMaterials[i]->commitState();
   }
 
-  //ofstream stl36;
-  //stl36.open("stl36.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream stl36;
+  stl36.open("stl36.dat",ios::app);
 
-  //ofstream stl40;
-  //stl40.open("stl40.dat",ios::app);
+  ofstream stl40;
+  stl40.open("stl40.dat",ios::app);
 
-  //ofstream stl100;
-  //stl100.open("stl100.dat",ios::app);
+  ofstream stl100;
+  stl100.open("stl100.dat",ios::app);
 
-  //ofstream stl108;
-  //stl108.open("stl108.dat",ios::app);
+  ofstream stl108;
+  stl108.open("stl108.dat",ios::app);
 
-  //ofstream conc0;
-  //conc0.open("conc0.dat",ios::app);
+  ofstream conc0;
+  conc0.open("conc0.dat",ios::app);
 
-  //ofstream conc2;
-  //conc2.open("conc2.dat",ios::app);
+  ofstream conc2;
+  conc2.open("conc2.dat",ios::app);
 
-//  for( int i = 0; i < 42; i++ ){
-//    stringstream number;
-//    number << i;
-//    string conc = "strsStrn";
-//    string type = ".dat";
-//    string name = conc + number.str() + type;
-//    ofstream output;
-//    output.open(name.c_str(),ios::app);
-//    output<<theMaterials[i]->getStrain()<<" "<<theMaterials[i]->getStress()<<" "<<theMaterials[i]->getTangent()<<endl;
-//  }
+  for( int i = 0; i < 42; i++ ){
+    stringstream number;
+    number << i;
+    string conc = "strsStrn";
+    string type = ".dat";
+    string name = conc + number.str() + type;
+    ofstream output;
+    output.open(name.c_str(),ios::app);
+    output<<theMaterials[i]->getStrain()<<" "<<theMaterials[i]->getStress()<<" "<<theMaterials[i]->getTangent()<<endl;
+  }
 
-//  for( int i = 100; i < 136; i++ ){
-//    stringstream number;
-//    number << i;
-//    string conc = "stl";
-//    string type = ".dat";
-//    string name = conc + number.str() + type;
-//    ofstream output;
-//    output.open(name.c_str(),ios::app);
-//    output<<theMaterials[i]->getStrain()<<" "<<theMaterials[i]->getStress()<<" "<<theMaterials[i]->getTangent()<<endl;
-//  }
+  for( int i = 100; i < 136; i++ ){
+    stringstream number;
+    number << i;
+    string conc = "stl";
+    string type = ".dat";
+    string name = conc + number.str() + type;
+    ofstream output;
+    output.open(name.c_str(),ios::app);
+    output<<theMaterials[i]->getStrain()<<" "<<theMaterials[i]->getStress()<<" "<<theMaterials[i]->getTangent()<<endl;
+  }
  
-  //stl100<<theMaterials[100]->getStrain()<<" "<<theMaterials[100]->getStress()<<" "<<theMaterials[100]->getTangent()<<endl;
-  //stl108<<theMaterials[108]->getStrain()<<" "<<theMaterials[108]->getStress()<<" "<<theMaterials[108]->getTangent()<<endl;
+  stl100<<theMaterials[100]->getStrain()<<" "<<theMaterials[100]->getStress()<<" "<<theMaterials[100]->getTangent()<<endl;
+  stl108<<theMaterials[108]->getStrain()<<" "<<theMaterials[108]->getStress()<<" "<<theMaterials[108]->getTangent()<<endl;
 
-  //conc0<<theMaterials[0]->getStrain()<<" "<<theMaterials[0]->getStress()<<" "<<theMaterials[0]->getTangent()<<endl;
-  //conc2<<theMaterials[2]->getStrain()<<" "<<theMaterials[2]->getStress()<<" "<<theMaterials[2]->getTangent()<<endl;
+  conc0<<theMaterials[0]->getStrain()<<" "<<theMaterials[0]->getStress()<<" "<<theMaterials[0]->getTangent()<<endl;
+  conc2<<theMaterials[2]->getStrain()<<" "<<theMaterials[2]->getStress()<<" "<<theMaterials[2]->getTangent()<<endl;
+#endif
 
   eCommit = e;
 

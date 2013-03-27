@@ -324,12 +324,14 @@ RCFTSTLMFBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLMFBeamColumn3D::commitState()
 {
-   //ofstream dunhat;
-   //dunhat.open("dunhat.dat",ios::app); 
+#ifdef COMPOSITE_DEBUG
+   ofstream dunhat;
+   dunhat.open("dunhat.dat",ios::app); 
 
-   //ofstream output;
-   //output.open("stlcon.dat",ios::app);
-   
+   ofstream output;
+   output.open("stlcon.dat",ios::app);
+#endif
+
    int err = 0;
    int i = 0;
    int j = 0;
@@ -430,14 +432,16 @@ int RCFTSTLMFBeamColumn3D::revertToStart()
 const Matrix &
 RCFTSTLMFBeamColumn3D::getInitialStiff(void)
 {
-  //ofstream newton; 
-  //newton.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream newton; 
+  newton.open("newton.dat",ios::app);
 
-  //ofstream lstiff;
-  //lstiff.open("lstiff.dat",ios::app);
+  ofstream lstiff;
+  lstiff.open("lstiff.dat",ios::app);
  
-  //lstiff<<"\n inside getInitialStiff"<<endl;
-  
+  lstiff<<"\n inside getInitialStiff"<<endl;
+#endif
+
   if (Ki != 0)
     return *Ki;
 
@@ -446,8 +450,9 @@ RCFTSTLMFBeamColumn3D::getInitialStiff(void)
   double L = crdTransf->getInitialLength();
   double oneOverL  = 1.0/L;
 
-  //lstiff<<L<<endl;
-
+#ifdef COMPOSITE_DEBUG
+  lstiff<<L<<endl;
+#endif
   /********************************************************/
   /*   GET CROSS-SECTION STIFFNESS AND FORCES FOR THE     */
   /*			  I-END AND J-END	   	  */
@@ -548,10 +553,12 @@ RCFTSTLMFBeamColumn3D::getInitialStiff(void)
   deizz  = kcrsj(1,1) - kcrsi(1,1);
   deiyz  = kcrsj(1,2) - kcrsi(1,2);
 
-  //lstiff<<"\nea "<<ea<<" eqy "<<eqy<<" eqz "<<eqz<<" eiyy "<<eiyy<<" eizz "
-  //      <<eizz<<" eiyz "<<eiyz<<endl;
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"\nea "<<ea<<" eqy "<<eqy<<" eqz "<<eqz<<" eiyy "<<eiyy<<" eizz "
+        <<eizz<<" eiyz "<<eiyz<<endl;
 
-  //lstiff<<"\np "<<p<<" pa "<<pa<<" pb "<<pb<<endl;
+  lstiff<<"\np "<<p<<" pa "<<pa<<" pb "<<pb<<endl;
+#endif
 
   /*****************************************************************************************/
   /* INITIALIZE THE NATURAL ELEMENT STIFFNESS MATRIX AND THE MATRICES USED IN CONDENSATION */
@@ -708,18 +715,20 @@ RCFTSTLMFBeamColumn3D::getInitialStiff(void)
           }
   }
 
-  //lstiff<<"\nreduced stiffness matrix"<<endl;
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"\nreduced stiffness matrix"<<endl;
 
-  //lstiff>>kvInit;
+  lstiff>>kvInit;
   
-  //Ki = new Matrix(crdTransf->getInitialGlobalStiffMatrix(kvInit));
+  Ki = new Matrix(crdTransf->getInitialGlobalStiffMatrix(kvInit));
 
-  //lstiff<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
+  lstiff<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
   
-  //lstiff>>(*Ki);
+  lstiff>>(*Ki);
 
-  //lstiff<<"\n THE END \n"<<endl;
-  
+  lstiff<<"\n THE END \n"<<endl;
+#endif
+
   return *Ki;
 
 }
@@ -730,16 +739,18 @@ RCFTSTLMFBeamColumn3D::getTangentStiff(void)
 //  int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
-  //ofstream output;
-  //output.open("tangentstiff.dat", ios::app);
-  //output<<"\n number of element"<<Tagg<<endl;
+#ifdef COMPOSITE_DEBUG
+  ofstream output;
+  output.open("tangentstiff.dat", ios::app);
+  output<<"\n number of element"<<Tagg<<endl;
 
-  //for(i=0; i<12; i++){
-  //  output<<kv(i,0)<<"  "<<kv(i,1)<<"  "<<kv(i,2)<<"  "<<kv(i,3)<<"  "<<kv(i,4)<<"   "
-  //        <<kv(i,5)<<"  "<<kv(i,6)<<"  "<<kv(i,7)<<"  "<<kv(i,8)<<"  "<<kv(i,9)<<"   "
-  //        <<kv(i,10)<<"  "<<kv(i,11)<<endl;
-  //}
-	
+  for(i=0; i<12; i++){
+    output<<kv(i,0)<<"  "<<kv(i,1)<<"  "<<kv(i,2)<<"  "<<kv(i,3)<<"  "<<kv(i,4)<<"   "
+          <<kv(i,5)<<"  "<<kv(i,6)<<"  "<<kv(i,7)<<"  "<<kv(i,8)<<"  "<<kv(i,9)<<"   "
+          <<kv(i,10)<<"  "<<kv(i,11)<<endl;
+  }
+#endif
+
   return KV;
 }
 
@@ -761,15 +772,19 @@ RCFTSTLMFBeamColumn3D::getResistingForce(void)
 
 void RCFTSTLMFBeamColumn3D::calcResistingForce(void)
 {
-  //ofstream unbal;
-  //unbal.open("mpls.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("mpls.dat",ios::app);
+#endif
   crdTransf->update();
   Vector p0(12);
   p0.Zero();
   Sg = crdTransf->getGlobalResistingForce(df_i, p0);
   Sglobal  = Sglobal + Sg;
-  //unbal<<"\n accumulated "<<endl;
-  //unbal>>Sglobal;
+#ifdef COMPOSITE_DEBUG
+  unbal<<"\n accumulated "<<endl;
+  unbal>>Sglobal;
+#endif
 }
 
 void
@@ -792,17 +807,19 @@ RCFTSTLMFBeamColumn3D::initializeSectionHistoryVariables (void)
 /********* NEWTON , SUBDIVIDE AND INITIAL ITERATIONS *********************/
 int RCFTSTLMFBeamColumn3D::update()
 {
-  //ofstream geom;
-  //geom.open("geom.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream geom;
+  geom.open("geom.dat",ios::app);
   
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
   
-  //ofstream mpls;
-  //mpls.open("mpls.dat",ios::app);
+  ofstream mpls;
+  mpls.open("mpls.dat",ios::app);
   
-  //ofstream lstiff;
-  //lstiff.open("lstiff.dat",ios::app);
+  ofstream lstiff;
+  lstiff.open("lstiff.dat",ios::app);
+#endif
 
   int i,j,k;
 
@@ -810,9 +827,11 @@ int RCFTSTLMFBeamColumn3D::update()
 
   double L = getDeformedLength();
 
-  //mpls<<"\n length "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n length "<<endl;
 
-  //mpls<<L<<endl;
+  mpls<<L<<endl;
+#endif
 
   double oneOverL  = 1.0/L;
 
@@ -821,37 +840,43 @@ int RCFTSTLMFBeamColumn3D::update()
 
   const Vector &dub = getBasicIncrDeltaDisp();
   
-  //geom<<"\n incremental dub"<<endl;
+#ifdef COMPOSITE_DEBUG
+  geom<<"\n incremental dub"<<endl;
 
-  //geom>>dub;
+  geom>>dub;
 
-  //geom<<"\n step ub"<<endl; 
+  geom<<"\n step ub"<<endl; 
+#endif
 
   ub = ub + dub;
 
-  //geom>>ub;
+#ifdef COMPOSITE_DEBUG
+  geom>>ub;
+#endif
 
   const Vector du = getLocalIncrDeltaDisp();
 
-  //geom<<"\n incremental local"<<endl;
+#ifdef COMPOSITE_DEBUG
+  geom<<"\n incremental local"<<endl;
 
-  //geom>>du;
+  geom>>du;
 
-  //unbal<<"\n incremental local"<<endl;
+  unbal<<"\n incremental local"<<endl;
 
-  //unbal>>du;
+  unbal>>du;
 
-  //mpls<<"\n incremental local"<<endl;
+  mpls<<"\n incremental local"<<endl;
 
-  //mpls>>du;
+  mpls>>du;
 
-  //mpls<<"\n incremental dub"<<endl;
+  mpls<<"\n incremental dub"<<endl;
 
-  //mpls>>dub;
+  mpls>>dub;
 
-  //mpls<<"\n step ub"<<endl;
+  mpls<<"\n step ub"<<endl;
 
-  //mpls>>ub;
+  mpls>>ub;
+#endif
 
   double xi[maxNumSections];
   beamIntegr->getSectionLocations(numSections, L, xi);
@@ -865,14 +890,18 @@ int RCFTSTLMFBeamColumn3D::update()
   
   for ( i = 0; i < numSections; i++ ){
      nldhat[i] = this->getNld_hat(i, ub);
-     //mpls<<"\n dhat before"<<endl;
-     //mpls>>dhat[i];
-     dhat[i] = getd_hat(i,ub);
+#ifdef COMPOSITE_DEBUG
+	 mpls<<"\n dhat before"<<endl;
+     mpls>>dhat[i];
+#endif
+	 dhat[i] = getd_hat(i,ub);
      nd1[i] = this->getNd1(i, ub);
-     //mpls<<"\n nldhat "<<endl;
-     //mpls>>nldhat[i];
-     //mpls<<"\n dhat "<<endl;
-     //mpls>>dhat[i];
+#ifdef COMPOSITE_DEBUG
+	 mpls<<"\n nldhat "<<endl;
+     mpls>>nldhat[i];
+     mpls<<"\n dhat "<<endl;
+     mpls>>dhat[i];
+#endif
      for( j = 0; j < 3; j++ ){
          for( k = 0; k < 5; k++ ){
                nd1T[i](k,j) = nd1[i](j,k);
@@ -887,28 +916,34 @@ int RCFTSTLMFBeamColumn3D::update()
          ks[i](j,k) = ksa[i](j,k);
        }
      }
-     //mpls<<"\n nd1"<<endl;
-     //mpls>>nd1[i];
-     //mpls<<"\n nd1T"<<endl;
-     //mpls>>nd1T[i];
+#ifdef COMPOSITE_DEBUG
+	 mpls<<"\n nd1"<<endl;
+     mpls>>nd1[i];
+     mpls<<"\n nd1T"<<endl;
+     mpls>>nd1T[i];
+#endif
   }
 
   H.Zero();
 
-  //mpls<<"\n length "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n length "<<endl;
 
-  //mpls<<L;
+  mpls<<L;
+#endif
 
   for( i = 0; i < numSections; i++ ){
      nd1Tf[i] = nd1T[i] * fs[i];
      nd1Tfnd1[i] = nd1Tf[i] * nd1[i];
-     //mpls<<"\n stiffness"<<endl;
-     //mpls>>ks[i];
-     //mpls<<"\n flexibility"<<endl;
-     //mpls>>fs[i];
-     //mpls<<"\n nd1Tf"<<endl;
-     //mpls>>nd1Tf[i];
-     /************************************************************************/
+#ifdef COMPOSITE_DEBUG
+	 mpls<<"\n stiffness"<<endl;
+     mpls>>ks[i];
+     mpls<<"\n flexibility"<<endl;
+     mpls>>fs[i];
+     mpls<<"\n nd1Tf"<<endl;
+     mpls>>nd1Tf[i];
+#endif
+	 /************************************************************************/
      /* CALCULATE THE GAUSSIAN INTEGRATION FOR THE UNBALANCE OF COMPATIBILITY*/
      /************************************************************************/
      for( j = 0; j < 5; j++ ){
@@ -918,15 +953,19 @@ int RCFTSTLMFBeamColumn3D::update()
      }
   }
 
-  //mpls<<"\n H VECTOR "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n H VECTOR "<<endl;
 
-  //mpls>>H;
+  mpls>>H;
+#endif
 
   invertMatrix(5, H, Hinv);
 
-  //mpls<<"\n H inv VECTOR "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n H inv VECTOR "<<endl;
 
-  //mpls>>Hinv;
+  mpls>>Hinv;
+#endif
 
   Matrix temp_G(5,6);
   Vector temp_T(5);
@@ -944,13 +983,15 @@ int RCFTSTLMFBeamColumn3D::update()
          G = G + L * wt[i]*temp_G;
   }
 
-  //mpls<<"\nT vector "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\nT vector "<<endl;
 
-  //mpls>>T;
+  mpls>>T;
 
-  //mpls<<"\nG vector "<<endl;
+  mpls<<"\nG vector "<<endl;
 
-  //mpls>>G;
+  mpls>>G;
+#endif
 
   double tempfnat2[5];
 
@@ -960,9 +1001,11 @@ int RCFTSTLMFBeamColumn3D::update()
 
   fnat2  =  Hinv * T;
 
-  //mpls<<"\n fnat2 "<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n fnat2 "<<endl;
 
-  //mpls>>fnat2;
+  mpls>>fnat2;
+#endif
 
   Vector dfnat(5);
 
@@ -993,13 +1036,15 @@ int RCFTSTLMFBeamColumn3D::update()
        Se(i) = Se(i) + dfint(i);
   }
 
-  //geom<<"\n dfint"<<endl;
+#ifdef COMPOSITE_DEBUG
+  geom<<"\n dfint"<<endl;
 
-  //geom>>dfint;
+  geom>>dfint;
 
-  //mpls<<"\n fint2"<<endl;
+  mpls<<"\n fint2"<<endl;
 
-  //mpls>>fint2;
+  mpls>>fint2;
+#endif
 
   df_i(0) = - dfint(0);
   df_i(1) = ( dfint(1) + dfint(3) - fk(0) * (du(7) - du(1)) ) / L;
@@ -1014,18 +1059,20 @@ int RCFTSTLMFBeamColumn3D::update()
   df_i(10) = - dfint(4);
   df_i(11) = dfint(3);
 
-  //mpls<<"\n local force"<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"\n local force"<<endl;
 
-  //mpls>>df_i;
+  mpls>>df_i;
 
-  //for(i = 0; i < 12; i++){
-  //  Sg(i) = Sg(i) + df_i(i);
-  //}
+  for(i = 0; i < 12; i++){
+    Sg(i) = Sg(i) + df_i(i);
+  }
 
-  //mpls<<"\n total force"<<endl;
+  mpls<<"\n total force"<<endl;
 
-  //mpls>>Sg;
- 
+  mpls>>Sg;
+#endif
+
   /*****************************************/
   /*fk(0)  = p_i			   */
   /*fk(1)  = my_i			   */
@@ -1177,10 +1224,12 @@ int RCFTSTLMFBeamColumn3D::update()
   deizz  = kcrsj(1,1) - kcrsi(1,1);
   deiyz  = kcrsj(1,2) - kcrsi(1,2);
 
-  //lstiff<<"\nea "<<ea<<" eqy "<<eqy<<" eqz "<<eqz<<" eiyy "<<eiyy<<" eizz "
-  //      <<eizz<<" eiyz "<<eiyz<<endl;
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"\nea "<<ea<<" eqy "<<eqy<<" eqz "<<eqz<<" eiyy "<<eiyy<<" eizz "
+        <<eizz<<" eiyz "<<eiyz<<endl;
 
-  //lstiff<<"\np "<<p<<" pa "<<pa<<" pb "<<pb<<endl;
+  lstiff<<"\np "<<p<<" pa "<<pa<<" pb "<<pb<<endl;
+#endif
 
   /*****************************************************************************************/
   /* INITIALIZE THE NATURAL ELEMENT STIFFNESS MATRIX AND THE MATRICES USED IN CONDENSATION */
@@ -1264,9 +1313,11 @@ int RCFTSTLMFBeamColumn3D::update()
 	}
   }
 
-  //lstiff<<"\n update unreduced stiffness matrix"<<endl;
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"\n update unreduced stiffness matrix"<<endl;
   
-  //lstiff>>kt;
+  lstiff>>kt;
+#endif
 
   /************************************************************************/
   /*									  */
@@ -1331,9 +1382,10 @@ int RCFTSTLMFBeamColumn3D::update()
                 kv(i,k) = kt(i,k) - temp_rr(i,k);
           }
   }
-  
-  //lstiff>>kv;
 
+#ifdef COMPOSITE_DEBUG  
+  lstiff>>kv;
+#endif
   return 0;
 }
 
@@ -1650,10 +1702,11 @@ RCFTSTLMFBeamColumn3D::setSectionPointers(int numSec, RCFTSTLFiberSection3D **se
 Vector
 RCFTSTLMFBeamColumn3D::getLocalIncrDeltaDisp(void)
 {
+#ifdef COMPOSITE_DEBUG
+    ofstream newton;
+    newton.open("newton.dat",ios::app);
+#endif
 
-    //ofstream newton;
-    //newton.open("newton.dat",ios::app);
-	
     const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();
     const Vector &disp2 = theNodes[1]->getIncrDeltaDisp();
 
@@ -1663,12 +1716,14 @@ RCFTSTLMFBeamColumn3D::getLocalIncrDeltaDisp(void)
         ug[i+6] = disp2(i);
     }
 
-    //newton<<"\n global displ. \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+    newton<<"\n global displ. \n"<<endl;
     
-    //for(int i = 0; i < 12; i++) {
-    //    newton<<ug[i]<<endl;
-    //}
-     
+    for(int i = 0; i < 12; i++) {
+        newton<<ug[i]<<endl;
+    }
+#endif
+
     //double L = crdTransf->getInitialLength();
   
     double L = getDeformedLength();
@@ -1677,11 +1732,13 @@ RCFTSTLMFBeamColumn3D::getLocalIncrDeltaDisp(void)
 
     Vector ul(12);
 
-    //newton<<"\n rotation matrix \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+	newton<<"\n rotation matrix \n"<<endl;
     
-    //for(int i = 0; i < 3; i++) {
-	// newton<<R[i][0]<<"   "<<R[i][1]<<"   "<<R[i][2]<<endl;
-    //}
+    for(int i = 0; i < 3; i++) {
+	 newton<<R[i][0]<<"   "<<R[i][1]<<"   "<<R[i][2]<<endl;
+    }
+#endif
 
     ul(0)  = R[0][0]*ug[0] + R[0][1]*ug[1] + R[0][2]*ug[2];
     ul(1)  = R[1][0]*ug[0] + R[1][1]*ug[1] + R[1][2]*ug[2];
@@ -1699,9 +1756,11 @@ RCFTSTLMFBeamColumn3D::getLocalIncrDeltaDisp(void)
     ul(10) = R[1][0]*ug[9] + R[1][1]*ug[10] + R[1][2]*ug[11];
     ul(11) = R[2][0]*ug[9] + R[2][1]*ug[10] + R[2][2]*ug[11];
 
-    //newton<<"\n local displacement \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+	newton<<"\n local displacement \n"<<endl;
 
-    //newton>>ul;
+    newton>>ul;
+#endif
 
     return ul;
 }
@@ -1716,44 +1775,52 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDisp(void)
 Vector
 RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
 {
-   //ofstream output;
-   //output.open("localaxes.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream output;
+   output.open("localaxes.dat",ios::app);
    
-   //ofstream newton;
-   //newton.open("newton101.dat",ios::app);
+   ofstream newton;
+   newton.open("newton101.dat",ios::app);
    
-   //ofstream basic;
-   //basic.open("basic.dat",ios::app);
+   ofstream basic;
+   basic.open("basic.dat",ios::app);
    
-   //ofstream mpls;
-   //mpls.open("mpls.dat",ios::app);
-	
+   ofstream mpls;
+   mpls.open("mpls.dat",ios::app);
+#endif
+
    const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();
    const Vector &disp2 = theNodes[1]->getIncrDeltaDisp();
 
-   //output<<"\nnode 1 incredeltadisp\n";
-   //output>>disp1;
+#ifdef COMPOSITE_DEBUG
+   output<<"\nnode 1 incredeltadisp\n";
+   output>>disp1;
 
-   //output<<"\nnode 2 incredeltadisp\n";
-   //output>>disp2;
+   output<<"\nnode 2 incredeltadisp\n";
+   output>>disp2;
+#endif
 
    const Vector &disp3 = theNodes[0]->getIncrDisp();
    const Vector &disp4 = theNodes[1]->getIncrDisp();
 
-   //output<<"\nnode 1 incrdisp\n";
-   //output>>disp3;
+#ifdef COMPOSITE_DEBUG
+   output<<"\nnode 1 incrdisp\n";
+   output>>disp3;
 
-   //output<<"\nnode 2 incrdisp\n";
-   //output>>disp4;
+   output<<"\nnode 2 incrdisp\n";
+   output>>disp4;
+#endif
 
    const Vector &disp5 = theNodes[0]->getTrialDisp();
    const Vector &disp6 = theNodes[1]->getTrialDisp();
 
-   //output<<"\nnode 1 trialdisp\n";
-   //output>>disp5;
+#ifdef COMPOSITE_DEBUG
+   output<<"\nnode 1 trialdisp\n";
+   output>>disp5;
 
-   //output<<"\nnode 2 trialdisp\n";
-   //output>>disp6;
+   output<<"\nnode 2 trialdisp\n";
+   output>>disp6;
+#endif
 
    double ug[12];
    for (int i = 0; i < 6; i++) {
@@ -1761,9 +1828,11 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
        ug[i+6] = disp2(i);
    }
 
-   //mpls<<"\n global disp"<<endl;
-   //mpls<<ug[0]<<"  "<<ug[1]<<"   "<<ug[2]<<"   "<<ug[3]<<"   "<<ug[4]<<"   "<<ug[5]<<"   "<<ug[6]
-   //    <<"  "<<ug[7]<<"   "<<ug[8]<<"   "<<ug[9]<<"   "<<ug[10]<<"   "<<ug[11]<<endl;
+#ifdef COMPOSITE_DEBUG
+   mpls<<"\n global disp"<<endl;
+   mpls<<ug[0]<<"  "<<ug[1]<<"   "<<ug[2]<<"   "<<ug[3]<<"   "<<ug[4]<<"   "<<ug[5]<<"   "<<ug[6]
+       <<"  "<<ug[7]<<"   "<<ug[8]<<"   "<<ug[9]<<"   "<<ug[10]<<"   "<<ug[11]<<endl;
+#endif
 
    double L = getDeformedLength();
 
@@ -1773,9 +1842,11 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
 
    double ul[12];
 
-   //basic<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
-   //basic<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
-   //basic<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;
+#ifdef COMPOSITE_DEBUG
+   basic<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
+   basic<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
+   basic<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;
+#endif
 
    ul[0]  = R[0][0]*ug[0] + R[0][1]*ug[1] + R[0][2]*ug[2];
    ul[1]  = R[1][0]*ug[0] + R[1][1]*ug[1] + R[1][2]*ug[2];
@@ -1793,9 +1864,11 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
    ul[10] = R[1][0]*ug[9] + R[1][1]*ug[10] + R[1][2]*ug[11];
    ul[11] = R[2][0]*ug[9] + R[2][1]*ug[10] + R[2][2]*ug[11];
 
-   //mpls<<"\n local disp"<<endl;
-   //mpls<<ul[0]<<"  "<<ul[1]<<"   "<<ul[2]<<"   "<<ul[3]<<"   "<<ul[4]<<"   "<<ul[5]<<"   "<<ul[6]
-   //    <<"  "<<ul[7]<<"   "<<ul[8]<<"   "<<ul[9]<<"   "<<ul[10]<<"   "<<ul[11]<<endl;
+#ifdef COMPOSITE_DEBUG
+   mpls<<"\n local disp"<<endl;
+   mpls<<ul[0]<<"  "<<ul[1]<<"   "<<ul[2]<<"   "<<ul[3]<<"   "<<ul[4]<<"   "<<ul[5]<<"   "<<ul[6]
+       <<"  "<<ul[7]<<"   "<<ul[8]<<"   "<<ul[9]<<"   "<<ul[10]<<"   "<<ul[11]<<endl;
+#endif
 
    /************************************************************************/
    /* THIS SECTION COMPUTES THE ELONGATION OF THE STEEL (NATURAL DOF 7)    */
@@ -1843,12 +1916,14 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
 
    dub(6) = 0.0;
 
-   //mpls<<"\n $$$$$$$$ sr $$$$$$$$"<<endl;
+#ifdef COMPOSITE_DEBUG
+   mpls<<"\n $$$$$$$$ sr $$$$$$$$"<<endl;
 
-   //mpls>>sr;
+   mpls>>sr;
 
-   //mpls>>ss;
-   
+   mpls>>ss;
+#endif
+
    for ( int i = 0; i < 6; i++ ){
        dub(6) -= sr(0,i) * dub(i) * ss(0,0);
    }
@@ -1862,9 +1937,11 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
    dub2(4) = dub(4);
    dub2(5) = dub(6);
  
-   //mpls<<"\n incremental natural disp"<<endl;
+#ifdef COMPOSITE_DEBUG
+   mpls<<"\n incremental natural disp"<<endl;
 
-   //mpls>>dub2;
+   mpls>>dub2;
+#endif
 
    return dub2;									    
 }
@@ -1872,8 +1949,10 @@ RCFTSTLMFBeamColumn3D::getBasicIncrDeltaDisp(void)
 Vector
 RCFTSTLMFBeamColumn3D::getd_hat(int sec, const Vector &v)
 {
-   //ofstream newton;
-   //newton.open("dhat.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream newton;
+   newton.open("dhat.dat",ios::app);
+#endif
 
    //double L = crdTransf->getInitialLength();
 
@@ -1904,9 +1983,11 @@ RCFTSTLMFBeamColumn3D::getd_hat(int sec, const Vector &v)
 
    D_hat(2) =  temp_E * v(2) + temp_F * v(4);
 
-   //newton<<"\n D_hat values"<<endl;
+#ifdef COMPOSITE_DEBUG
+   newton<<"\n D_hat values"<<endl;
 
-   //newton>>D_hat;
+   newton>>D_hat;
+#endif
 
    return D_hat;
 }
@@ -1914,8 +1995,10 @@ RCFTSTLMFBeamColumn3D::getd_hat(int sec, const Vector &v)
 Matrix
 RCFTSTLMFBeamColumn3D::getNld_hat(int sec, const Vector &v)
 {
-   //ofstream newton;
-   //newton.open("mpls.dat",ios::app);
+#ifdef COMPOSITE_DEBUG   
+   ofstream newton;
+   newton.open("mpls.dat",ios::app);
+#endif
 
    int i,j;
 
@@ -1964,8 +2047,10 @@ RCFTSTLMFBeamColumn3D::getNld_hat(int sec, const Vector &v)
 Matrix
 RCFTSTLMFBeamColumn3D::getNd1(int sec, const Vector &v)
 {
-    //ofstream newton;
-    //newton.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+	ofstream newton;
+    newton.open("newton.dat",ios::app);
+#endif
 
     double L = getDeformedLength();
     double oneOverL  = 1.0/L;
@@ -2011,9 +2096,10 @@ RCFTSTLMFBeamColumn3D::getNd1(int sec, const Vector &v)
 	
 void RCFTSTLMFBeamColumn3D::calcDeformedLength(void)
 {
-
-   //ofstream uiuc;
-   //uiuc.open("uiuc.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream uiuc;
+   uiuc.open("uiuc.dat",ios::app);
+#endif
 
    const Vector &dispi = theNodes[0]->getTrialDisp();
    const Vector &dispj = theNodes[1]->getTrialDisp();
@@ -2028,12 +2114,14 @@ void RCFTSTLMFBeamColumn3D::calcDeformedLength(void)
    double jy = crdj(1) + dispj(1);
    double jz = crdj(2) + dispj(2);
  
-   //uiuc<<"\n inside deformed length "<<endl;
+#ifdef COMPOSITE_DEBUG
+   uiuc<<"\n inside deformed length "<<endl;
    
-   //uiuc>>dispi;
-   //uiuc>>dispj;
-   //uiuc>>crdi;
-   //uiuc>>crdj;
+   uiuc>>dispi;
+   uiuc>>dispj;
+   uiuc>>crdi;
+   uiuc>>crdj;
+#endif
 
    deflength = sqrt((ix-jx)*(ix-jx)+(iy-jy)*(iy-jy)+(iz-jz)*(iz-jz));
 }

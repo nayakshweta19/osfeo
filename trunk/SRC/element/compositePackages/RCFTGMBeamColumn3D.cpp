@@ -461,98 +461,100 @@ RCFTGMBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTGMBeamColumn3D::commitState()
 {
-   //ofstream dunhat;
-   //dunhat.open("dunhat.dat",ios::app); 
-   //
-   //ofstream output;
-   //output.open("stlcon.dat",ios::app);
-   //
-   //ofstream cont;
-   //cont.open("cont.dat",ios::app);
-   //
-   //ofstream cont1;
-   //cont1.open("cont1.dat",ios::app);
-   //
-   //ofstream cont2;
-   //cont2.open("cont2.dat",ios::app);
-   //
-   //ofstream CDQ;
-   //CDQ.open("CDQ.dat",ios::app);
-   //
-   //ofstream crv11;
-   //crv11.open("crrv11.dat",ios::app);
-   //
-   //ofstream crv12;
-   //crv12.open("crrv12.dat",ios::app);
-   //
-   //ofstream crv13;
-   //crv13.open("crrv13.dat",ios::app);
-   //
-   //ofstream crv14;
-   //crv14.open("crrv14.dat",ios::app);
-   //
-   //ofstream crv21;
-   //crv21.open("crrv21.dat",ios::app);
-   //
-   //ofstream crv22;
-   //crv22.open("crrv22.dat",ios::app);
-   //
-   //ofstream crv23;
-   //crv23.open("crrv23.dat",ios::app);
-   //
-   //ofstream crv24;
-   //crv24.open("crrv24.dat",ios::app);
-   //
-   //ofstream crv31;
-   //crv31.open("crrv31.dat",ios::app);
-   //
-   //ofstream crv32;
-   //crv32.open("crrv32.dat",ios::app);
-   //
-   //ofstream crv33;
-   //crv33.open("crrv33.dat",ios::app);
-   //
-   //ofstream crv34;
-   //crv34.open("crrv34.dat",ios::app);
-   //
-   //ofstream crv41;
-   //crv41.open("crrv41.dat",ios::app);
-   //
-   //ofstream crv42;
-   //crv42.open("crrv42.dat",ios::app);
-   //
-   //ofstream crv43;
-   //crv43.open("crrv43.dat",ios::app);
-   //
-   //ofstream crv44;
-   //crv44.open("crrv44.dat",ios::app);
-   //
-   //ofstream crv51;
-   //crv51.open("crrv51.dat",ios::app);
-   //
-   //ofstream crv52;
-   //crv52.open("crrv52.dat",ios::app);
-   //
-   //ofstream crv53;
-   //crv53.open("crrv53.dat",ios::app);
-   //
-   //ofstream crv54;
-   //crv54.open("crrv54.dat",ios::app);
-   //
-   //ofstream crv61;
-   //crv61.open("crrv61.dat",ios::app);
-   //
-   //ofstream crv62;
-   //crv62.open("crrv62.dat",ios::app);
-   //
-   //ofstream crv63;
-   //crv63.open("crrv63.dat",ios::app);
-   //
-   //ofstream crv64;
-   //crv64.open("crrv64.dat",ios::app);
-   //
-   //ofstream mdc;
-   //mdc.open("mdc.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream dunhat;
+   dunhat.open("dunhat.dat",ios::app); 
+   
+   ofstream output;
+   output.open("stlcon.dat",ios::app);
+   
+   ofstream cont;
+   cont.open("cont.dat",ios::app);
+   
+   ofstream cont1;
+   cont1.open("cont1.dat",ios::app);
+   
+   ofstream cont2;
+   cont2.open("cont2.dat",ios::app);
+   
+   ofstream CDQ;
+   CDQ.open("CDQ.dat",ios::app);
+   
+   ofstream crv11;
+   crv11.open("crrv11.dat",ios::app);
+   
+   ofstream crv12;
+   crv12.open("crrv12.dat",ios::app);
+   
+   ofstream crv13;
+   crv13.open("crrv13.dat",ios::app);
+   
+   ofstream crv14;
+   crv14.open("crrv14.dat",ios::app);
+   
+   ofstream crv21;
+   crv21.open("crrv21.dat",ios::app);
+   
+   ofstream crv22;
+   crv22.open("crrv22.dat",ios::app);
+   
+   ofstream crv23;
+   crv23.open("crrv23.dat",ios::app);
+   
+   ofstream crv24;
+   crv24.open("crrv24.dat",ios::app);
+   
+   ofstream crv31;
+   crv31.open("crrv31.dat",ios::app);
+   
+   ofstream crv32;
+   crv32.open("crrv32.dat",ios::app);
+   
+   ofstream crv33;
+   crv33.open("crrv33.dat",ios::app);
+   
+   ofstream crv34;
+   crv34.open("crrv34.dat",ios::app);
+   
+   ofstream crv41;
+   crv41.open("crrv41.dat",ios::app);
+   
+   ofstream crv42;
+   crv42.open("crrv42.dat",ios::app);
+   
+   ofstream crv43;
+   crv43.open("crrv43.dat",ios::app);
+   
+   ofstream crv44;
+   crv44.open("crrv44.dat",ios::app);
+   
+   ofstream crv51;
+   crv51.open("crrv51.dat",ios::app);
+   
+   ofstream crv52;
+   crv52.open("crrv52.dat",ios::app);
+   
+   ofstream crv53;
+   crv53.open("crrv53.dat",ios::app);
+   
+   ofstream crv54;
+   crv54.open("crrv54.dat",ios::app);
+   
+   ofstream crv61;
+   crv61.open("crrv61.dat",ios::app);
+   
+   ofstream crv62;
+   crv62.open("crrv62.dat",ios::app);
+   
+   ofstream crv63;
+   crv63.open("crrv63.dat",ios::app);
+   
+   ofstream crv64;
+   crv64.open("crrv64.dat",ios::app);
+   
+   ofstream mdc;
+   mdc.open("mdc.dat",ios::app);
+#endif
 
    int err = 0;
    int i = 0;
@@ -608,9 +610,11 @@ RCFTGMBeamColumn3D::commitState()
    //flag = 0;
    
    for( i = 0; i < numSections; i++){
-        //CDQ<<"section "<<i<<" th"<<endl;
-        //CDQ>>ks[i];
-        //CDQ>>DSQa[i];
+#ifdef COMPOSITE_DEBUG
+        CDQ<<"section "<<i<<" th"<<endl;
+        CDQ>>ks[i];
+        CDQ>>DSQa[i];
+#endif
         sduhat[i] = sduhat[i] + dhat[i];
         duhatcommit[i] = duhat[i];
 		duhat[i].Zero();
@@ -622,138 +626,140 @@ RCFTGMBeamColumn3D::commitState()
         d4[i].Zero(); 
 		CDSQa[i] = DSQa[i];
    }
-   //if( Tagg == 1 ){
-   //crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 2 ){
-   //crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 3 ){
-   //crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 4 ){
-   //crv41<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv42<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv43<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv44<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 5 ){
-   //crv51<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv52<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv53<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv54<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 6 ){
-   //crv61<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv62<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv63<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv64<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //
-   //if( Tagg == 1 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
-   //}
-   //if( Tagg == 2 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
-   //}
-   //if( Tagg == 3 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
-   //}
-   //if( Tagg == 4 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
-   //}
-   //if( Tagg == 5 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
-   //}
-   //if( Tagg == 6 ){
-   // cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<endl;
-   //}
-   //if( Tagg == 7 ){
-   // cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
-   //}
-   //if( Tagg == 8 ){
-   // cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
-   //}
-   //if( Tagg == 9 ){
-   // cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
-   //}
-   //if( Tagg == 10 ){
-   // cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
-   //}
-   //if( Tagg == 11 ){
-   // cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<endl;
-   //}
-   //
-   //if( Tagg == 1 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 2 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 3 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 4 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 5 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 6 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 7 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<endl;
-   //}
-   //if( Tagg == 8 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 9 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
-   //}
-   //if( Tagg == 10 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<endl;
-   //}
+#ifdef COMPOSITE_DEBUG
+   if( Tagg == 1 ){
+   crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 2 ){
+   crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 3 ){
+   crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 4 ){
+   crv41<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv42<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv43<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv44<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 5 ){
+   crv51<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv52<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv53<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv54<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 6 ){
+   crv61<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv62<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv63<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv64<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   
+   if( Tagg == 1 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
+   }
+   if( Tagg == 2 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
+   }
+   if( Tagg == 3 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
+   }
+   if( Tagg == 4 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
+   }
+   if( Tagg == 5 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<"  ";
+   }
+   if( Tagg == 6 ){
+    cont<<sduhat[0](1)<<"  "<<sduhat[1](1)<<"  "<<sduhat[2](1)<<"  "<<sduhat[3](1)<<endl;
+   }
+   if( Tagg == 7 ){
+    cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
+   }
+   if( Tagg == 8 ){
+    cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
+   }
+   if( Tagg == 9 ){
+    cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
+   }
+   if( Tagg == 10 ){
+    cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<"  ";
+   }
+   if( Tagg == 11 ){
+    cont<<sduhat[0](0)<<"  "<<sduhat[1](0)<<"  "<<sduhat[2](0)<<"  "<<sduhat[3](0)<<endl;
+   }
+   
+   if( Tagg == 1 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 2 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 3 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 4 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 5 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 6 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 7 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<endl;
+   }
+   if( Tagg == 8 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 9 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<"  ";
+   }
+   if( Tagg == 10 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  "<<DSQa[2](0)<<"  "<<DSQa[3](0)<<endl;
+   }
 
-   //if( Tagg == 1 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 2 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 3 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 4 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 5 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 6 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 7 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<endl;
-   //}
-   //if( Tagg == 8 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 9 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
-   //}
-   //if( Tagg == 10 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<endl;
-   //}
+   if( Tagg == 1 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 2 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 3 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 4 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 5 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 6 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 7 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<endl;
+   }
+   if( Tagg == 8 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 9 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<"  ";
+   }
+   if( Tagg == 10 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  "<<DSQa[2](6)<<"  "<<DSQa[3](6)<<endl;
+   }
+#endif
 
    itr = 0;
    return err;
@@ -762,14 +768,16 @@ RCFTGMBeamColumn3D::commitState()
 
 int RCFTGMBeamColumn3D::revertToLastCommit()
 {
-   //ofstream DU;
-   //DU.open("DU.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream DU;
+   DU.open("DU.dat",ios::app);
 
-   //ofstream FS;
-   //FS.open("integrator.dat",ios::app);
+   ofstream FS;
+   FS.open("integrator.dat",ios::app);
 
-   //ofstream mdc;
-   //mdc.open("mdc.dat",ios::app);
+   ofstream mdc;
+   mdc.open("mdc.dat",ios::app);
+#endif
 
    int err;
    int i = 0;
@@ -879,8 +887,10 @@ int RCFTGMBeamColumn3D::revertToStart()
 const Matrix &
 RCFTGMBeamColumn3D::getInitialStiff(void)
 {
-  //ofstream newton; 
-  //newton.open("newton125.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream newton; 
+  newton.open("newton125.dat",ios::app);
+#endif
 
   if (Ki != 0)
     return *Ki;
@@ -1064,10 +1074,12 @@ RCFTGMBeamColumn3D::getInitialStiff(void)
 
   Ki = new Matrix(crdTransf->getInitialGlobalStiffMatrix(kvInit));
 
-  //newton<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
+#ifdef COMPOSITE_DEBUG
+  newton<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
   
-  //newton>>(*Ki);
-  
+  newton>>(*Ki);
+#endif
+
   return *Ki;
 
 }
@@ -1075,17 +1087,21 @@ RCFTGMBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTGMBeamColumn3D::getTangentStiff(void)
 {
-  //ofstream unbal;
-  //unbal.open("integrator.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("integrator.dat",ios::app);
 
-  //ofstream gstf;
-  //gstf.open("gstf2.dat",ios::app);
+  ofstream gstf;
+  gstf.open("gstf2.dat",ios::app);
+#endif
 
   //int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
 
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
-  //unbal>>KV; 
+#ifdef COMPOSITE_DEBUG
+  unbal>>KV; 
+#endif
   return KV;
 }
 
@@ -1097,17 +1113,23 @@ RCFTGMBeamColumn3D::getResistingForce(void)
 
 void RCFTGMBeamColumn3D::calcResistingForce(void)
 {
-  //ofstream unbal;
-  //unbal.open("iforce.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("iforce.dat",ios::app);
+#endif
   crdTransf->update();
   Vector p0(18);
   p0.Zero();
   Sgb = Sgb + df_i;
   Sg = crdTransf->getGlobalResistingForce(f_i, p0);
-  //Sglobal  = Sglobal + Sg;
+#ifdef COMPOSITE_DEBUG
+  Sglobal  = Sglobal + Sg;
+#endif
   Sglobal = Sg;
-  //unbal>>Sg;
-  //unbal>>Sglobal;
+#ifdef COMPOSITE_DEBUG
+  unbal>>Sg;
+  unbal>>Sglobal;
+#endif
 }
 
 void
@@ -1115,12 +1137,12 @@ RCFTGMBeamColumn3D::initializeSectionHistoryVariables (void)
 {
     for (int i = 0; i < numSections; i++)
     {
-	fs[i]       = Matrix(6,6);
-	ks[i]       = Matrix(6,6);
+        fs[i]       = Matrix(6,6);
+        ks[i]       = Matrix(6,6);
         fsa[i]      = Matrix(12,12);
         ksa[i]      = Matrix(12,12);
-	dhat[i]     = Vector(6);
-	nldhat[i]   = Matrix(6,13);
+        dhat[i]     = Vector(6);
+        nldhat[i]   = Matrix(6,13);
         nldhatT[i]  = Matrix(13,6);
         nldhatsc[i] = Matrix(1,13);
         nldhatscT[i]= Matrix(13,1);
@@ -1154,47 +1176,49 @@ RCFTGMBeamColumn3D::initializeSectionHistoryVariables (void)
 /********* NEWTON , SUBDIVIDE AND INITIAL ITERATIONS *********************/
 int RCFTGMBeamColumn3D::update()
 {
-  //ofstream geom;
-  //geom.open("geom.dat",ios::app);
-  //
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
-  //
-  //ofstream mpls;
-  //mpls.open("mpls.dat",ios::app);
-  //
-  //ofstream lstiff;
-  //lstiff.open("lstiff.dat",ios::app);
-  //
-  //ofstream newton19;
-  //newton19.open("newton19.dat",ios::app);
-  //
-  //ofstream FS;
-  //FS.open("FS.dat",ios::app);
-  //
-  //ofstream FN;
-  //FN.open("FN.dat",ios::app);
-  // 
-  //ofstream VV;
-  //VV.open("VV.dat",ios::app);
-  //
-  //ofstream dq;
-  //dq.open("DQ.dat",ios::app);
-  //
-  //ofstream DH;
-  //DH.open("DH.dat",ios::app);
-  //
-  //ofstream DU;
-  //DU.open("DU.dat",ios::app);
-  //
-  //ofstream check3;
-  //check3.open("check3.dat",ios::app);
-  //
-  //ofstream integrator;
-  //integrator.open("integrator.dat",ios::app);
-  //
-  //ofstream eig;
-  //eig.open("eig.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream geom;
+  geom.open("geom.dat",ios::app);
+  
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
+  
+  ofstream mpls;
+  mpls.open("mpls.dat",ios::app);
+  
+  ofstream lstiff;
+  lstiff.open("lstiff.dat",ios::app);
+  
+  ofstream newton19;
+  newton19.open("newton19.dat",ios::app);
+  
+  ofstream FS;
+  FS.open("FS.dat",ios::app);
+  
+  ofstream FN;
+  FN.open("FN.dat",ios::app);
+   
+  ofstream VV;
+  VV.open("VV.dat",ios::app);
+  
+  ofstream dq;
+  dq.open("DQ.dat",ios::app);
+  
+  ofstream DH;
+  DH.open("DH.dat",ios::app);
+  
+  ofstream DU;
+  DU.open("DU.dat",ios::app);
+  
+  ofstream check3;
+  check3.open("check3.dat",ios::app);
+  
+  ofstream integrator;
+  integrator.open("integrator.dat",ios::app);
+  
+  ofstream eig;
+  eig.open("eig.dat",ios::app);
+#endif
 
   if( cnvg == 1 ){
     cnvg = 0;
@@ -1209,20 +1233,24 @@ int RCFTGMBeamColumn3D::update()
 
   intgr = 0;
 
-  //mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
-  //dq<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+  dq<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
-  //FS<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+  FS<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
-  //DH<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+  DH<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+#endif
 
   this->calcDeformedLength();
 
   double L = getDeformedLength();
 
-  //mpls<<"Length"<<endl;
-  //mpls<<L<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"Length"<<endl;
+  mpls<<L<<endl;
+#endif
 
   double oneOverL  = 1.0/L;
 
@@ -1254,32 +1282,40 @@ int RCFTGMBeamColumn3D::update()
   dubf(10) = dub(9);
   dubf(11) = dub(10);
    
-  //mpls<<"ub"<<endl;
-  //mpls>>ub;
-  
+#ifdef COMPOSITE_DEBUG
+  mpls<<"ub"<<endl;
+  mpls>>ub;
+#endif
+
   ub = ub + dub;
 
-  //mpls<<"dub"<<endl;
-  //mpls>>dub;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"dub"<<endl;
+  mpls>>dub;
 
-  //mpls<<"ub"<<endl;
-  //mpls>>ub;
+  mpls<<"ub"<<endl;
+  mpls>>ub;
 
-  //mpls<<"ubf"<<endl;
-  //mpls>>ubf;
-  
+  mpls<<"ubf"<<endl;
+  mpls>>ubf;
+#endif
+
   ubf = ubf + dubf;
 
-  //mpls<<"ubf"<<endl;
-  //mpls>>ubf;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"ubf"<<endl;
+  mpls>>ubf;
 
-  //mpls<<"dubf"<<endl;
-  //mpls>>dubf;
-  
+  mpls<<"dubf"<<endl;
+  mpls>>dubf;
+#endif
+
   const Vector du = getLocalIncrDeltaDisp();
 
-  //mpls<<"du"<<endl;
-  //mpls>>du;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"du"<<endl;
+  mpls>>du;
+#endif
 
   double xi[maxNumSections];
   beamIntegr->getSectionLocations(numSections, L, xi);
@@ -1745,7 +1781,9 @@ int RCFTGMBeamColumn3D::update()
       nldhat[i] = this->getNld_hat(i, ub);
       nldhatsc[i] = this->getNld_hatsc(i, ub);
       dhat[i] = this->getd_hat(i, ub);
-      //mpls>>dhat[i];
+#ifdef COMPOSITE_DEBUG
+	  mpls>>dhat[i];
+#endif
       for( j = 0; j < 6; j++ ){
           for( k = 0; k < 13; k++ ){
                 nldhatT[i](k,j) = nldhat[i](j,k);
@@ -1803,8 +1841,10 @@ int RCFTGMBeamColumn3D::update()
       Z = Z + L * wt[i] * nldhatT[i] * DSQ[i];
   }
 
-  //mpls<<"Z"<<endl;
-  //mpls>>Z;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"Z"<<endl;
+  mpls>>Z;
+#endif
 
   Gsc.Zero();
 
@@ -1991,8 +2031,10 @@ int RCFTGMBeamColumn3D::update()
   df_i(16) = - df_i(7);
   df_i(17) = - df_i(8);
 
-  //mpls<<"df_i"<<endl;
-  //mpls>>df_i;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"df_i"<<endl;
+  mpls>>df_i;
+#endif
 
   f_i(0)  =  f_i(0) + df_i(0);
   f_i(1)  =  f_i(1) + df_i(1);
@@ -2502,10 +2544,11 @@ RCFTGMBeamColumn3D::setSectionPointers(int numSec, RCFTAggregator **secPtrs)
 Vector
 RCFTGMBeamColumn3D::getLocalIncrDeltaDisp(void)
 {
+#ifdef COMPOSITE_DEBUG
+    ofstream newton;
+    newton.open("newton.dat",ios::app);
+#endif
 
-    //ofstream newton;
-    //newton.open("newton.dat",ios::app);
-	
     const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();
     const Vector &disp2 = theNodes[1]->getIncrDeltaDisp();
 
@@ -2515,12 +2558,14 @@ RCFTGMBeamColumn3D::getLocalIncrDeltaDisp(void)
         ug[i+9] = disp2(i);
     }
 
-    //newton<<"\n global displ. \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+	newton<<"\n global displ. \n"<<endl;
     
-    //for(int i = 0; i < 18; i++) {
-    //    newton<<ug[i]<<endl;
-    //}
-     
+    for(int i = 0; i < 18; i++) {
+        newton<<ug[i]<<endl;
+    }
+#endif
+
     //double L = crdTransf->getInitialLength();
   
     double L = getDeformedLength();
@@ -2529,11 +2574,13 @@ RCFTGMBeamColumn3D::getLocalIncrDeltaDisp(void)
 
     Vector ul(18);
 
-    //newton<<"\n rotation matrix \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+	newton<<"\n rotation matrix \n"<<endl;
     
-    //for(int i = 0; i < 3; i++) {
-	// newton<<R[i][0]<<"   "<<R[i][1]<<"   "<<R[i][2]<<endl;
-    //}
+    for(int i = 0; i < 3; i++) {
+	 newton<<R[i][0]<<"   "<<R[i][1]<<"   "<<R[i][2]<<endl;
+    }
+#endif
 
     ul(0)  = R[0][0]*ug[0] + R[0][1]*ug[1] + R[0][2]*ug[2];
     ul(1)  = R[1][0]*ug[0] + R[1][1]*ug[1] + R[1][2]*ug[2];
@@ -2559,9 +2606,11 @@ RCFTGMBeamColumn3D::getLocalIncrDeltaDisp(void)
     ul(16) = R[1][0]*ug[15] + R[1][1]*ug[16] + R[1][2]*ug[17];
     ul(17) = R[2][0]*ug[15] + R[2][1]*ug[16] + R[2][2]*ug[17];
 
-    //newton<<"\n local displacement \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+	newton<<"\n local displacement \n"<<endl;
 
-    //newton>>ul;
+    newton>>ul;
+#endif
 
     return ul;
 }
@@ -2576,14 +2625,19 @@ RCFTGMBeamColumn3D::getBasicIncrDisp(void)
 Vector
 RCFTGMBeamColumn3D::getBasicIncrDeltaDisp(void)
 {
-   //ofstream FS;
-   //FS.open("FS.dat",ios::app);
- 
+#ifdef COMPOSITE_DEBUG
+   ofstream FS;
+   FS.open("FS.dat",ios::app);
+#endif
+
+
    const Vector &disp1 = theNodes[0]->getIncrDeltaDisp();
    const Vector &disp2 = theNodes[1]->getIncrDeltaDisp();
 
-   //FS>>disp1;
-   //FS>>disp2;
+#ifdef COMPOSITE_DEBUG
+   FS>>disp1;
+   FS>>disp2;
+#endif
 
    double ug[18];
    for (int i = 0; i < 9; i++) {
@@ -2725,9 +2779,11 @@ RCFTGMBeamColumn3D::getBasicIncrDeltaDisp(void)
 Vector 
 RCFTGMBeamColumn3D::getd_hat(int sec, const Vector &v)
 {
-    //ofstream newton;
-    //newton.open("dhat.dat",ios::app);
- 
+#ifdef COMPOSITE_DEBUG
+	ofstream newton;
+    newton.open("dhat.dat",ios::app);
+#endif
+
     double L = getDeformedLength();
     double oneOverL  = 1.0/L;
 
@@ -2994,8 +3050,10 @@ RCFTGMBeamColumn3D::getKg(int sec)
 Matrix
 RCFTGMBeamColumn3D::getNd1(int sec, const Vector &v)
 {
-    //ofstream newton;
-    //newton.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+	ofstream newton;
+    newton.open("newton.dat",ios::app);
+#endif
 
     double L = getDeformedLength();
     double oneOverL  = 1.0/L;
@@ -3052,15 +3110,18 @@ RCFTGMBeamColumn3D::getNd1(int sec, const Vector &v)
 
 void RCFTGMBeamColumn3D::calcDeformedLength(void)
 {
-
-   //ofstream DQ;
-   //DQ.open("DQ1.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream DQ;
+   DQ.open("DQ1.dat",ios::app);
+#endif
 
    const Vector &dispi = theNodes[0]->getTrialDisp();
    const Vector &dispj = theNodes[1]->getTrialDisp();
 
-   //DQ>>dispi;
-   //DQ>>dispj;
+#ifdef COMPOSITE_DEBUG
+   DQ>>dispi;
+   DQ>>dispj;
+#endif
 
    const Vector &crdi = theNodes[0]->getCrds();
    const Vector &crdj = theNodes[1]->getCrds();

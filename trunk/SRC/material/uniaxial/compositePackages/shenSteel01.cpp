@@ -1104,10 +1104,12 @@ int shenSteel01::revertToLastCommit(void) {
   firstExcursionStress = commitedFirstExcursionStress;
 
   // Open file for debugging if needed
-//  ofstream shenSteel01debug;
-//  shenSteel01debug.open("shenSteel01debug.dat2",ios::app);
-//  shenSteel01debug << Tls_p << " " << Tls_n << " " << Tbs_p << " " << Tbs_n << " " << W << " " << Epoi / ( 1 + w * W ) << "\n";
-//  shenSteel01debug.close();
+#ifdef COMPOSITE_DEBUG
+  ofstream shenSteel01debug;
+  shenSteel01debug.open("shenSteel01debug.dat2",ios::app);
+  shenSteel01debug << Tls_p << " " << Tls_n << " " << Tbs_p << " " << Tbs_n << " " << W << " " << Epoi / ( 1 + w * W ) << "\n";
+  shenSteel01debug.close();
+#endif
 
   return 0;
 }

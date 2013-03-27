@@ -212,8 +212,10 @@ CCFT_stlMaterial::~CCFT_stlMaterial()
 int 
 CCFT_stlMaterial::setTrialStrain(double strain, double strainRate)
 { 
+#ifdef COMPOSITE_DEBUG
    ofstream output;
    output.open("pldata.dat",ios::app);
+#endif
    /* INITIALIZE STATE VARIBALES TO THEIR VALUES AT THE MOST CONVERGED CONFIGURATION */	
    backtocommitStatevar();	
    /************************************************************************/
@@ -930,8 +932,10 @@ CCFT_stlMaterial::getStrain(void)
 int 
 CCFT_stlMaterial::commitState(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream output;
   output.open("pldata.dat",ios::app);
+#endif
   Cstrain = Tstrain;
   Cstress = Tstress;
   Ctangent = Ttangent;
@@ -946,8 +950,10 @@ CCFT_stlMaterial::commitState(void)
 int 
 CCFT_stlMaterial::revertToLastCommit(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream output;
   output.open("pldata.dat",ios::app);
+#endif
   Tstrain = Cstrain;
   Tstress = Cstress;
   Ttangent = Ctangent;

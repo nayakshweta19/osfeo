@@ -561,10 +561,12 @@ RCFTMCrdLinTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 const Matrix &
 RCFTMCrdLinTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 {
-   //ofstream check4;
-   //check4.open("check4.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream check4;
+   check4.open("check4.dat",ios::app);
 
-   //check4>>KB;
+   check4>>KB;
+#endif
 
    static Matrix kg(18,18);     // Global stiffness for return
    static double kb[11][11];

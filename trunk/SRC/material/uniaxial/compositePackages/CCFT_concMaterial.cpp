@@ -112,16 +112,16 @@ CCFT_concMaterial::CCFT_concMaterial( int tag, double i1, double i2, double i3, 
 	tsaiEquation(xcr, r_p, n_p, ycr, zcr);
 	ecrk_p = ecr_p - (Fc_p * ycr)/(Ec * zcr);
 	
-	#ifdef _HAJJAR_COMPOSITE_DEBUG
-		// Print some data to a file
-		ofstream initConcData;
-		initConcData.open("initConcData.dat",ios::app);
-		initConcData<<endl<<endl<<"Inital Concrete Data:"<<endl;
-		initConcData<<"Ec: "<<Ec<<" Fc: "<<Fc<<endl;
-		initConcData<<"ec_unconf: "<<ec_unconf<<" k2: "<<k2<<" x: "<<x<<endl;
-		initConcData<<"Fc_n: "<<Fc_n<<" ec_n: "<<ec_n<<" Fc_res_n: "<<Fc_res_n<<" Ec_sft: "<<Ec_sft<<endl; 
-		initConcData<<"Fc_p: "<<Fc_p<<" ec_p: "<<ec_p<<" ecr_p: "<<ecr_p<<" ecrk_p: "<<ecrk_p<<endl; 
-	#endif
+#ifdef COMPOSITE_DEBUG
+	// Print some data to a file
+	ofstream initConcData;
+	initConcData.open("initConcData.dat",ios::app);
+	initConcData<<endl<<endl<<"Inital Concrete Data:"<<endl;
+	initConcData<<"Ec: "<<Ec<<" Fc: "<<Fc<<endl;
+	initConcData<<"ec_unconf: "<<ec_unconf<<" k2: "<<k2<<" x: "<<x<<endl;
+	initConcData<<"Fc_n: "<<Fc_n<<" ec_n: "<<ec_n<<" Fc_res_n: "<<Fc_res_n<<" Ec_sft: "<<Ec_sft<<endl; 
+	initConcData<<"Fc_p: "<<Fc_p<<" ec_p: "<<ec_p<<" ecr_p: "<<ecr_p<<" ecrk_p: "<<ecrk_p<<endl; 
+#endif
 	
 	// Initilize Parameters
 	isCracked = false;	CisCracked = false;
@@ -188,10 +188,10 @@ CCFT_concMaterial::setTrialStrain(double strain, double strainRate)
 {
 	double strain_incr;
 
-	#ifdef _HAJJAR_COMPOSITE_DEBUG
-		ofstream trialConcData;
-		trialConcData.open("trialConcData.dat",ios::app);
-	#endif
+#ifdef COMPOSITE_DEBUG
+	ofstream trialConcData;
+	trialConcData.open("trialConcData.dat",ios::app);
+#endif
 
 	// Return state variables to last commited values
 	backToCommitStateVar();		
@@ -1111,11 +1111,11 @@ CCFT_concMaterial::getStrain(void)
 int 
 CCFT_concMaterial::commitState(void)
 {
-	#ifdef _HAJJAR_COMPOSITE_DEBUG
-		ofstream commitConcData;
-		commitConcData.open("commitConcData.dat",ios::app);  
-		commitConcData<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<endl;
-	#endif
+#ifdef COMPOSITE_DEBUG
+	ofstream commitConcData;
+	commitConcData.open("commitConcData.dat",ios::app);  
+	commitConcData<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<endl;
+#endif
 
 	this->commitStateVar();
 	return 0;
@@ -1139,10 +1139,10 @@ CCFT_concMaterial::revertToStart(void)
 void 
 CCFT_concMaterial::negativeEnvelope(double strain, double &stress, double &tangent)
 {
-	#ifdef _HAJJAR_COMPOSITE_DEBUG
-		//ofstream trialConcData;
-		//trialConcData.open("trialConcData.dat",ios::app);
-	#endif
+#ifdef COMPOSITE_DEBUG
+	ofstream trialConcData;
+	trialConcData.open("trialConcData.dat",ios::app);
+#endif
 
 	if( strain <= ec_res_n ) {
 		// constant post-peak branch
@@ -1224,10 +1224,10 @@ CCFT_concMaterial::positiveEnvelope(double strain, double &stress, double &tange
 void 
 CCFT_concMaterial::transitionCurve(double Tstrain, double &Tstress, double &Ttangent, double ei, double fi, double Ei, double ef, double ff, double Ef)
 {
-	#ifdef _HAJJAR_COMPOSITE_DEBUG
-		ofstream trialConcData;
-		trialConcData.open("trialConcData.dat",ios::app);
-	#endif	
+#ifdef COMPOSITE_DEBUG
+	ofstream trialConcData;
+	trialConcData.open("trialConcData.dat",ios::app);
+#endif	
 	//trialConcData<<"Start of Transition Curv  ff: "<<ff<<" fi: "<<fi<<" ef: "<<ef<<" ei: "<<ei<<endl;
 
 	double R, A, Esec;

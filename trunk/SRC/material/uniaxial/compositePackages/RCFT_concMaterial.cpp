@@ -153,10 +153,12 @@ RCFT_concMaterial::setTrialStrain(double strain, double strainRate)
 { 	
   double strain_incr, stress_incr;
   const double SMALL = 0.00000000000000000001;
+#ifdef COMPOSITE_DEBUG
   ofstream concrete;
   concrete.open("concrete.dat",ios::app);
-  //ofstream conc;
-  //conc.open("conc.dat",ios::app);
+  ofstream conc;
+  conc.open("conc.dat",ios::app);
+#endif
 
   Tstrain = Cstrain + strain;
   //Tstrain = strain;
@@ -1520,7 +1522,9 @@ RCFT_concMaterial::setTrialStrain(double strain, double strainRate)
    }
    cp = 1;
    if( ( Tstress < Fc_n ) | ( Tstress > Fc_p ) ) {
-   //concrete<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<"  "<<"eunld_n "<<eunld_n<<"   "<<"funld_n "<<funld_n<<"   "<<"fnew_str_n "<<fnew_str_n<<"   "<<"ere_str_n "<<ere_str_n<<" fre_str_n "<<fre_str_n<<"   "<<"epl_n "<<epl_n<<"   "<<"er  "<<er<<"  "<<"fr  "<<fr<<"  "<<"ere_n "<<ere_n<<"  "<<"fre_n "<<fre_n<<"  "<<"ea "<<ea<<"  "<<"fa "<<fa<<"  "<<"epl_p "<<epl_p<<"  "<<" Ere_n "<<Ere_n<<"Epl_p "<<Epl_p<<"   "<<"eb"<<eb<<"  "<<"fb "<<fb<<"  "<<"fnew_n "<<fnew_n<<"  "<<" crack "<<crack<<" eunld_p "<<eunld_p<<" funld_p "<<funld_p<<" de_n "<<de_n<<"  df_n "<<df_n<<" ec_n "<<ec_n<<" Ec "<<Ec<<"  "<<"Enew_n"<<"  "<<Enew_n<<"  "<<"Enew_p"<<"  "<<Enew_p<<"  "<<"Eb"<<"  "<<Eb<<"  "<<"Ea"<<"  "<<Ea<<"  "<<"Epl_n"<<"  "<<Epl_n<<" ere_p "<<ere_p<<" fre_p "<<fre_p<<" Ere_p "<<Ere_p<<"  "<<" ere_str_p "<<ere_str_p<<"  "<<" fre_str_p "<<fre_str_p<<"  "<<" Ere_str_p "<<Ere_str_p<<" fnew_str_p "<<fnew_str_p<<" Esec_n "<<Esec_n<<" ea1 "<<ea1<<" fa1 "<<fa1<<" fb1 "<<fb1<<" eb1 "<<eb1<<" fnew_p "<<fnew_p<<" Frule "<<Frule<<" er1 "<<er1<<" fr1 "<<fr1<<endl;
+#ifdef COMPOSITE_DEBUG
+	 concrete<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<"  "<<"eunld_n "<<eunld_n<<"   "<<"funld_n "<<funld_n<<"   "<<"fnew_str_n "<<fnew_str_n<<"   "<<"ere_str_n "<<ere_str_n<<" fre_str_n "<<fre_str_n<<"   "<<"epl_n "<<epl_n<<"   "<<"er  "<<er<<"  "<<"fr  "<<fr<<"  "<<"ere_n "<<ere_n<<"  "<<"fre_n "<<fre_n<<"  "<<"ea "<<ea<<"  "<<"fa "<<fa<<"  "<<"epl_p "<<epl_p<<"  "<<" Ere_n "<<Ere_n<<"Epl_p "<<Epl_p<<"   "<<"eb"<<eb<<"  "<<"fb "<<fb<<"  "<<"fnew_n "<<fnew_n<<"  "<<" crack "<<crack<<" eunld_p "<<eunld_p<<" funld_p "<<funld_p<<" de_n "<<de_n<<"  df_n "<<df_n<<" ec_n "<<ec_n<<" Ec "<<Ec<<"  "<<"Enew_n"<<"  "<<Enew_n<<"  "<<"Enew_p"<<"  "<<Enew_p<<"  "<<"Eb"<<"  "<<Eb<<"  "<<"Ea"<<"  "<<Ea<<"  "<<"Epl_n"<<"  "<<Epl_n<<" ere_p "<<ere_p<<" fre_p "<<fre_p<<" Ere_p "<<Ere_p<<"  "<<" ere_str_p "<<ere_str_p<<"  "<<" fre_str_p "<<fre_str_p<<"  "<<" Ere_str_p "<<Ere_str_p<<" fnew_str_p "<<fnew_str_p<<" Esec_n "<<Esec_n<<" ea1 "<<ea1<<" fa1 "<<fa1<<" fb1 "<<fb1<<" eb1 "<<eb1<<" fnew_p "<<fnew_p<<" Frule "<<Frule<<" er1 "<<er1<<" fr1 "<<fr1<<endl;
+#endif
    }
   return 0;
 }
@@ -1551,14 +1555,16 @@ RCFT_concMaterial::getStrain(void)
 int 
 RCFT_concMaterial::commitState(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream conc;
   conc.open("conc.dat",ios::app);  
-  //conc<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<endl;
-  //conc<<eunld_p8<<"  "<<funld_p8<<"   "<<Eunld_p8<<"   "<<ere_p<<"   "<<fre_p<<"   "<<Ere_p<<endl;
-  //conc<<Ec_sft<<"  "<<Fc_res_n<<endl;
-  //if( ( Tstress < Fc_n ) | ( Tstress > Fc_p ) ) {
-  //conc<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<"  "<<"eunld_n "<<eunld_n<<"   "<<"funld_n "<<funld_n<<"   "<<"fnew_str_n "<<fnew_str_n<<"   "<<"ere_str_n "<<"ere_str_n"<<" fre_str_n "<<fre_str_n<<"   "<<"epl_n "<<epl_n<<"   "<<"er  "<<er<<"  "<<"fr  "<<fr<<"  "<<"ere_n "<<ere_n<<"  "<<"fre_n "<<fre_n<<"  "<<"ea "<<ea<<"  "<<"fa "<<fa<<"  "<<"epl_p "<<epl_p<<"  "<<" Ere_n "<<Ere_n<<"Epl_p "<<Epl_p<<"   "<<"eb"<<eb<<"  "<<"fb "<<fb<<"  "<<"fnew_n "<<fnew_n<<"  "<<" crack "<<crack<<" eunld_p "<<eunld_p<<" funld_p "<<funld_p<<" de_n "<<de_n<<"  df_n "<<df_n<<" ec_n "<<ec_n<<" Ec "<<Ec<<"  "<<"Enew_n"<<"  "<<Enew_n<<"  "<<"Enew_p"<<"  "<<Enew_p<<"  "<<"Eb"<<"  "<<Eb<<"  "<<"Ea"<<"  "<<Ea<<"  "<<"Epl_n"<<"  "<<Epl_n<<" ere_p "<<ere_p<<" fre_p "<<fre_p<<" Ere_p "<<Ere_p<<"  "<<" ere_str_p "<<ere_str_p<<"  "<<" fre_str_p "<<fre_str_p<<"  "<<" Ere_str_p "<<Ere_str_p<<" fnew_str_p "<<fnew_str_p<<" Esec_n "<<Esec_n<<" ea1 "<<ea1<<" fa1 "<<fa1<<" fb1 "<<fb1<<" eb1 "<<eb1<<" fnew_p "<<fnew_p<<" Frule "<<Frule<<" er1 "<<er1<<" fr1 "<<fr1<<" eunld_n7 "<<eunld_n7<<" funld_n7 "<<funld_n7<<"Ec_sft "<<Ec_sft<<" ec_re_n "<<ec_res_n<<" Fc_res_n "<<Fc_res_n<<" ecr "<<ecr<<" Fc_p "<<Fc_p<<"  "<<"ec_p"<<"  "<<ec_p<<"  "<<"r_p"<<"  "<<r_p<<endl;
-  //}
+  conc<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<endl;
+  conc<<eunld_p8<<"  "<<funld_p8<<"   "<<Eunld_p8<<"   "<<ere_p<<"   "<<fre_p<<"   "<<Ere_p<<endl;
+  conc<<Ec_sft<<"  "<<Fc_res_n<<endl;
+  if( ( Tstress < Fc_n ) | ( Tstress > Fc_p ) ) {
+    conc<<Tstrain<<"   "<<Tstress<<"    "<<Ttangent<<"    "<<Trule<<"   "<<Cstrain<<"  "<<Cstress<<"  "<<Ctangent<<"  "<<Crule<<"  "<<"eunld_n "<<eunld_n<<"   "<<"funld_n "<<funld_n<<"   "<<"fnew_str_n "<<fnew_str_n<<"   "<<"ere_str_n "<<"ere_str_n"<<" fre_str_n "<<fre_str_n<<"   "<<"epl_n "<<epl_n<<"   "<<"er  "<<er<<"  "<<"fr  "<<fr<<"  "<<"ere_n "<<ere_n<<"  "<<"fre_n "<<fre_n<<"  "<<"ea "<<ea<<"  "<<"fa "<<fa<<"  "<<"epl_p "<<epl_p<<"  "<<" Ere_n "<<Ere_n<<"Epl_p "<<Epl_p<<"   "<<"eb"<<eb<<"  "<<"fb "<<fb<<"  "<<"fnew_n "<<fnew_n<<"  "<<" crack "<<crack<<" eunld_p "<<eunld_p<<" funld_p "<<funld_p<<" de_n "<<de_n<<"  df_n "<<df_n<<" ec_n "<<ec_n<<" Ec "<<Ec<<"  "<<"Enew_n"<<"  "<<Enew_n<<"  "<<"Enew_p"<<"  "<<Enew_p<<"  "<<"Eb"<<"  "<<Eb<<"  "<<"Ea"<<"  "<<Ea<<"  "<<"Epl_n"<<"  "<<Epl_n<<" ere_p "<<ere_p<<" fre_p "<<fre_p<<" Ere_p "<<Ere_p<<"  "<<" ere_str_p "<<ere_str_p<<"  "<<" fre_str_p "<<fre_str_p<<"  "<<" Ere_str_p "<<Ere_str_p<<" fnew_str_p "<<fnew_str_p<<" Esec_n "<<Esec_n<<" ea1 "<<ea1<<" fa1 "<<fa1<<" fb1 "<<fb1<<" eb1 "<<eb1<<" fnew_p "<<fnew_p<<" Frule "<<Frule<<" er1 "<<er1<<" fr1 "<<fr1<<" eunld_n7 "<<eunld_n7<<" funld_n7 "<<funld_n7<<"Ec_sft "<<Ec_sft<<" ec_re_n "<<ec_res_n<<" Fc_res_n "<<Fc_res_n<<" ecr "<<ecr<<" Fc_p "<<Fc_p<<"  "<<"ec_p"<<"  "<<ec_p<<"  "<<"r_p"<<"  "<<r_p<<endl;
+  }
+#endif
   Cstrain = Tstrain;
   Cstress = Tstress;
   Ctangent = Ttangent;
@@ -1762,68 +1768,74 @@ RCFT_concMaterial::tangent_envlp_p(double strn)
 double 
 RCFT_concMaterial::stress_tran(double strn, double ei, double fi, double Ei, double ef, double ff, double Ef)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream concrete;
   concrete.open("values.dat",ios::app);
+#endif
   double R, A, Esec, strs;
   const double SMALL = 1.0e-30;
   Esec = ( ff - fi ) / ( ef - ei );
   if( (Trule == 3) | (Trule == 5) | (Trule == 4 ) | ( Trule == 6 ) ){
-        if( Ei < 1.2*Esec ){
-            Ei = 1.2*Esec;
-        }
-        if( Ef > Esec){
-            Ef = Esec;
-        }
+	  if( Ei < 1.2*Esec ){
+		  Ei = 1.2*Esec;
+	  }
+	  if( Ef > Esec){
+		  Ef = Esec;
+	  }
   }
   if( (Trule == 7) | (Trule == 55) | ( Trule == 65 ) ){
-	if( Ei < 1.2*Esec ){
-	    Ei = 1.2*Esec;
-	}
-	if( Ef > Esec){
-	    Ef = Esec;
-	}
+	  if( Ei < 1.2*Esec ){
+		  Ei = 1.2*Esec;
+	  }
+	  if( Ef > Esec){
+		  Ef = Esec;
+	  }
   }
   if( Trule == 8 ){
-  	if( Ei > 0 ){
-           if( Ei < 1.2*Esec ){
-  	      Ei = 1.2*Esec;
-           }
-  	   if( Ef > Esec){
-  	      Ef = Esec;
-  	   }
-  	}
-  	else if( Ei < 0 ){
-  	   if( Ei > 0.8*Esec ){
-  	      Ei = 0.8*Esec;
-  	   }
-  	   if( Ef > Esec){
-  	      Ef = Esec;
-  	   }
-  	}
+	  if( Ei > 0 ){
+		  if( Ei < 1.2*Esec ){
+			  Ei = 1.2*Esec;
+		  }
+		  if( Ef > Esec){
+			  Ef = Esec;
+		  }
+	  }
+	  else if( Ei < 0 ){
+		  if( Ei > 0.8*Esec ){
+			  Ei = 0.8*Esec;
+		  }
+		  if( Ef > Esec){
+			  Ef = Esec;
+		  }
+	  }
   } 
   if( (Trule == 13) | (Trule == 10) ){
-        if( (Ei > 0.8*Esec) && (Esec>0.0000001) ){
-            Ei = 0.8*Esec;
-        }
-        if( (Ef < Esec) && (Esec>0.0000001) ){
-            Ef = Esec;
-        }
-	if( (Ef > 2.0*Esec) && (Esec>0.0000001) ){
-	    Ef = 2.0*Esec;
-	}
+	  if( (Ei > 0.8*Esec) && (Esec>0.0000001) ){
+		  Ei = 0.8*Esec;
+	  }
+	  if( (Ef < Esec) && (Esec>0.0000001) ){
+		  Ef = Esec;
+	  }
+	  if( (Ef > 2.0*Esec) && (Esec>0.0000001) ){
+		  Ef = 2.0*Esec;
+	  }
   }
   R = ( Ef - Esec ) / ( Esec - Ei );
   //concrete<<strn<<"   "<<R<<"  "<<scientific<<pow(fabs(ef-ei),R)<<endl;
   if( ( Ef / Esec < 0.0 ) | ( Trule == 8 ) | ( Trule == 5 ) )
   {	 
-     strs = fi + Esec* ( strn - ei ); 
-     //concrete<<"linear"<<strs<<endl;
+	  strs = fi + Esec* ( strn - ei ); 
+#ifdef COMPOSITE_DEBUG
+	  concrete<<"linear"<<strs<<endl;
+#endif
   }
   else 
   { 
-     A = ( Esec - Ei ) / pow( fabs(ef - ei), R );
-     strs = fi + ( strn - ei ) * ( Ei + A * pow( fabs( strn - ei ), R ) );
-     //concrete<<"non-linear"<<strs<<endl;
+	  A = ( Esec - Ei ) / pow( fabs(ef - ei), R );
+	  strs = fi + ( strn - ei ) * ( Ei + A * pow( fabs( strn - ei ), R ) );
+#ifdef COMPOSITE_DEBUG
+	  concrete<<"non-linear"<<strs<<endl;
+#endif
   }
   //A = ( Esec - Ei ) / pow( fabs(ef - ei), R );
   //strs = fi + ( strn - ei ) * ( Ei + A * pow( fabs( strn - ei ), R ) );
@@ -1857,10 +1869,12 @@ RCFT_concMaterial::tangent_tran3(double strn, double ei, double fi, double Ei, d
 double
 RCFT_concMaterial::tangent_tran(double strn, double ei, double fi, double Ei, double ef, double ff, double Ef)
 { 
+#ifdef COMPOSITE_DEBUG
   ofstream output;
   output.open("infi.dat",ios::app);  
   ofstream conc;
   conc.open("conc.dat",ios::app);
+#endif
   double R, A, Esec, tgnt;
   const double SMALL = 1.0e-30;
   Esec = ( ff - fi ) / ( ef - ei );
@@ -1910,8 +1924,10 @@ RCFT_concMaterial::tangent_tran(double strn, double ei, double fi, double Ei, do
      }
   }
   R = ( Ef - Esec ) / ( Esec - Ei );
-  //conc<<"___________________________"<<endl;
-  //conc<<strn<<"  "<<R<<"  "<<pow(fabs(ef-ei),R )<<"   "<<( Esec - Ei ) / pow( fabs(ef - ei), R )<<endl;
+#ifdef COMPOSITE_DEBUG
+  conc<<"___________________________"<<endl;
+  conc<<strn<<"  "<<R<<"  "<<pow(fabs(ef-ei),R )<<"   "<<( Esec - Ei ) / pow( fabs(ef - ei), R )<<endl;
+#endif
   if ( (Ef / Esec < 0.0) | ( Trule == 8) | ( Trule == 5 ) )
   {
      tgnt = Esec;
@@ -1922,7 +1938,9 @@ RCFT_concMaterial::tangent_tran(double strn, double ei, double fi, double Ei, do
      tgnt = Ei + A * ( R + 1 ) * pow ( fabs( strn - ei ), R );
   }
   //A = ( Esec - Ei ) / pow( fabs(ef - ei), R );
-  //output<<strn<<"  "<<R<<"  "<<A<<"   "<<Esec<<"  "<<Ei<<"  "<<Ef<<endl;
+#ifdef COMPOSITE_DEBUG
+  output<<strn<<"  "<<R<<"  "<<A<<"   "<<Esec<<"  "<<Ei<<"  "<<Ef<<endl;
+#endif
   //tgnt = Ei + A * ( R + 1 ) * pow ( fabs( strn - ei ), R );
   return tgnt;
 }

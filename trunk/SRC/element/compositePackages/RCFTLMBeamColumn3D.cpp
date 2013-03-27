@@ -403,50 +403,52 @@ RCFTLMBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTLMBeamColumn3D::commitState()
 {
-   //ofstream dunhat;
-   //dunhat.open("dunhat.dat",ios::app); 
-   //
-   //ofstream output;
-   //output.open("stlcon.dat",ios::app);
-   //
-   //ofstream CDQ;
-   //CDQ.open("CDQ.dat",ios::app);
-   //
-   //ofstream crv11;
-   //crv11.open("crrv11.dat",ios::app);
-   //
-   //ofstream crv12;
-   //crv12.open("crrv12.dat",ios::app);
-   //
-   //ofstream crv13;
-   //crv13.open("crrv13.dat",ios::app);
-   //
-   //ofstream crv14;
-   //crv14.open("crrv14.dat",ios::app);
-   //
-   //ofstream crv21;
-   //crv21.open("crrv21.dat",ios::app);
-   //
-   //ofstream crv22;
-   //crv22.open("crrv22.dat",ios::app);
-   //
-   //ofstream crv23;
-   //crv23.open("crrv23.dat",ios::app);
-   //
-   //ofstream crv24;
-   //crv24.open("crrv24.dat",ios::app);
-   //
-   //ofstream crv31;
-   //crv31.open("crrv31.dat",ios::app);
-   //
-   //ofstream crv32;
-   //crv32.open("crrv32.dat",ios::app);
-   //
-   //ofstream crv33;
-   //crv33.open("crrv33.dat",ios::app);
-   //
-   //ofstream crv34;
-   //crv34.open("crrv34.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream dunhat;
+   dunhat.open("dunhat.dat",ios::app); 
+   
+   ofstream output;
+   output.open("stlcon.dat",ios::app);
+   
+   ofstream CDQ;
+   CDQ.open("CDQ.dat",ios::app);
+   
+   ofstream crv11;
+   crv11.open("crrv11.dat",ios::app);
+   
+   ofstream crv12;
+   crv12.open("crrv12.dat",ios::app);
+   
+   ofstream crv13;
+   crv13.open("crrv13.dat",ios::app);
+   
+   ofstream crv14;
+   crv14.open("crrv14.dat",ios::app);
+   
+   ofstream crv21;
+   crv21.open("crrv21.dat",ios::app);
+   
+   ofstream crv22;
+   crv22.open("crrv22.dat",ios::app);
+   
+   ofstream crv23;
+   crv23.open("crrv23.dat",ios::app);
+   
+   ofstream crv24;
+   crv24.open("crrv24.dat",ios::app);
+   
+   ofstream crv31;
+   crv31.open("crrv31.dat",ios::app);
+   
+   ofstream crv32;
+   crv32.open("crrv32.dat",ios::app);
+   
+   ofstream crv33;
+   crv33.open("crrv33.dat",ios::app);
+   
+   ofstream crv34;
+   crv34.open("crrv34.dat",ios::app);
+#endif
 
    int err = 0;
    int i = 0;
@@ -459,9 +461,10 @@ RCFTLMBeamColumn3D::commitState()
    }
 
    do {
-      //output<<"section #"<<i<<endl;	   
-      err = sections[i++]->commitState();
-
+#ifdef COMPOSITE_DEBUG
+      output<<"section #"<<i<<endl;	   
+#endif
+	  err = sections[i++]->commitState();
    } while (err == 0 && i < numSections);
 
    if (err)
@@ -480,10 +483,12 @@ RCFTLMBeamColumn3D::commitState()
    ub.Zero();
    
    for( i = 0; i < numSections; i++){
-        //CDQ<<"section "<<i<<" th"<<endl;
-        //CDQ>>DQ[i];
-        //CDQ>>DSQ[i];
-        //CDQ<<(DQ[i]-DSQ[i]).Norm()<<endl;
+#ifdef COMPOSITE_DEBUG
+        CDQ<<"section "<<i<<" th"<<endl;
+        CDQ>>DQ[i];
+        CDQ>>DSQ[i];
+        CDQ<<(DQ[i]-DSQ[i]).Norm()<<endl;
+#endif
         sduhat[i] = sduhat[i] + duhat[i];
 		duhat[i].Zero();
         dhat[i].Zero();
@@ -494,24 +499,27 @@ RCFTLMBeamColumn3D::commitState()
         d4[i].Zero(); 
 		CDSQa[i] = DSQa[i];
    }
-   //if( Tagg == 1 ){
-   //crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl; 
-   //crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 2 ){
-   //crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
-   //if( Tagg == 3 ){
-   //crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
-   //crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
-   //crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
-   //crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
-   //}
+#ifdef COMPOSITE_DEBUG
+   if( Tagg == 1 ){
+   crv11<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv12<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv13<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl; 
+   crv14<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 2 ){
+   crv21<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv22<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv23<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv24<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+   if( Tagg == 3 ){
+   crv31<<sduhat[0](1)<<"  "<<DSQa[0](1)<<"   "<<sduhat[0](4)<<"  "<<DSQa[0](7)<<"  "<<ks[0](1,1)<<endl;
+   crv32<<sduhat[1](1)<<"  "<<DSQa[1](1)<<"   "<<sduhat[1](4)<<"  "<<DSQa[1](7)<<"  "<<ks[1](1,1)<<endl;
+   crv33<<sduhat[2](1)<<"  "<<DSQa[2](1)<<"   "<<sduhat[2](4)<<"  "<<DSQa[2](7)<<"  "<<ks[2](1,1)<<endl;
+   crv34<<sduhat[3](1)<<"  "<<DSQa[3](1)<<"   "<<sduhat[3](4)<<"  "<<DSQa[3](7)<<"  "<<ks[3](1,1)<<endl;
+   }
+#endif
+
    itr = 0;
    return err;
 }
@@ -583,8 +591,10 @@ int RCFTLMBeamColumn3D::revertToStart()
 const Matrix &
 RCFTLMBeamColumn3D::getInitialStiff(void)
 {
-  //ofstream newton; 
-  //newton.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream newton; 
+  newton.open("newton.dat",ios::app);
+#endif
 
   if (Ki != 0)
     return *Ki;
@@ -841,10 +851,12 @@ RCFTLMBeamColumn3D::getInitialStiff(void)
 
   Ki = new Matrix(crdTransf->getInitialGlobalStiffMatrix(kvInit));
 
-  //newton<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
+#ifdef COMPOSITE_DEBUG
+  newton<<"\n INITIAL GLOBAL STIFFNESS MATRIX"<<Tagg<<endl;
   
-  //newton>>(*Ki);
-  
+  newton>>(*Ki);
+#endif
+
   return *Ki;
 
 }
@@ -852,13 +864,16 @@ RCFTLMBeamColumn3D::getInitialStiff(void)
 const Matrix &
 RCFTLMBeamColumn3D::getTangentStiff(void)
 {
-  //ofstream mpls;
-  //mpls.open("mpls.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream mpls;
+  mpls.open("mpls.dat",ios::app);
+#endif
   int i;  
   crdTransf->update();  // Will remove once we clean up the corotational 2d transformation -- MHS
   const Matrix &KV = crdTransf->getGlobalStiffMatrix(kv,fk);
-	
-  //mpls>>kv;
+#ifdef COMPOSITE_DEBUG	
+  mpls>>kv;
+#endif
   return KV;
 }
 
@@ -870,27 +885,31 @@ RCFTLMBeamColumn3D::getResistingForce(void)
 
 void RCFTLMBeamColumn3D::calcResistingForce(void)
 {
-  //ofstream unbal;
-  //unbal.open("iforce.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("iforce.dat",ios::app);
+#endif
   crdTransf->update();
   Vector p0(18);
   p0.Zero();
   Sgb = Sgb + df_i;
   Sg = crdTransf->getGlobalResistingForce(df_i, p0);
   Sglobal  = Sglobal + Sg;
-  //unbal>>Sg;
-  //unbal>>Sglobal;
+#ifdef COMPOSITE_DEBUG
+  unbal>>Sg;
+  unbal>>Sglobal;
+#endif
 }
 
 void
 RCFTLMBeamColumn3D::initializeSectionHistoryVariables (void){
     for (int i = 0; i < numSections; i++){
-	fs[i]       = Matrix(6,6);
-	ks[i]       = Matrix(6,6);
+	    fs[i]       = Matrix(6,6);
+	    ks[i]       = Matrix(6,6);
         fsa[i]      = Matrix(12,12);
         ksa[i]      = Matrix(12,12);
-	dhat[i]     = Vector(6);
-	nldhat[i]   = Matrix(6,12);
+	    dhat[i]     = Vector(6);
+	    nldhat[i]   = Matrix(6,12);
         nldhatT[i]   = Matrix(12,6);
         dhat[i]     = Vector(6);
         duhat[i]    = Vector(6);
@@ -918,49 +937,53 @@ RCFTLMBeamColumn3D::initializeSectionHistoryVariables (void){
 
 /********* NEWTON , SUBDIVIDE AND INITIAL ITERATIONS *********************/
 int RCFTLMBeamColumn3D::update(){
-  //ofstream geom;
-  //geom.open("geom.dat",ios::app);
-  //
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
-  //
-  //ofstream mpls;
-  //mpls.open("mpls.dat",ios::app);
-  //
-  //ofstream lstiff;
-  //lstiff.open("lstiff.dat",ios::app);
-  //
-  //ofstream newton19;
-  //newton19.open("newton19.dat",ios::app);
-  //
-  //ofstream FS;
-  //FS.open("FS.dat",ios::app);
-  //
-  //ofstream FN;
-  //FN.open("FN.dat",ios::app);
-  // 
-  //ofstream VV;
-  //VV.open("VV.dat",ios::app);
-  //
-  //ofstream dq;
-  //dq.open("DQ.dat",ios::app);
-  //
-  //ofstream DH;
-  //DH.open("DH.dat",ios::app);
-  //
-  //ofstream DU;
-  //DU.open("DU.dat",ios::app);
-  //
-  //ofstream check3;
-  //check3.open("check3.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream geom;
+  geom.open("geom.dat",ios::app);
+  
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
+  
+  ofstream mpls;
+  mpls.open("mpls.dat",ios::app);
+  
+  ofstream lstiff;
+  lstiff.open("lstiff.dat",ios::app);
+  
+  ofstream newton19;
+  newton19.open("newton19.dat",ios::app);
+  
+  ofstream FS;
+  FS.open("FS.dat",ios::app);
+  
+  ofstream FN;
+  FN.open("FN.dat",ios::app);
+   
+  ofstream VV;
+  VV.open("VV.dat",ios::app);
+  
+  ofstream dq;
+  dq.open("DQ.dat",ios::app);
+  
+  ofstream DH;
+  DH.open("DH.dat",ios::app);
+  
+  ofstream DU;
+  DU.open("DU.dat",ios::app);
+  
+  ofstream check3;
+  check3.open("check3.dat",ios::app);
+#endif
 
   int i,j,k;
 
   itr = itr + 1;
 
-  //mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"ELEMENT NUMBER "<<Tagg<<" ITERATION "<<itr<<endl;
 
-  //dq<<"ELEMENT NUMBER "<<Tagg<<endl;
+  dq<<"ELEMENT NUMBER "<<Tagg<<endl;
+#endif
 
   double L = crdTransf->getInitialLength();
 
@@ -973,7 +996,9 @@ int RCFTLMBeamColumn3D::update(){
   
   ub = ub + dub;
 
-  //DH>>ub;
+#ifdef COMPOSITE_DEBUG
+  DH>>ub;
+#endif
 
   const Vector du = getLocalIncrDeltaDisp();
 
@@ -1145,10 +1170,12 @@ int RCFTLMBeamColumn3D::update(){
  
      DSQ[i] = ks[i]*duhat[i];
 
-     //dq<<"DQ[i]"<<endl;
-     //dq>>DQ[i];
-     //dq<<"DSQ[i]"<<endl;
-     //dq>>DSQ[i];
+#ifdef COMPOSITE_DEBUG
+	 dq<<"DQ[i]"<<endl;
+     dq>>DQ[i];
+     dq<<"DSQ[i]"<<endl;
+     dq>>DSQ[i];
+#endif
 
      sf4[i](0) = DSQ[i](0);
      sf4[i](1) = DSQ[i](3);
@@ -1265,7 +1292,9 @@ int RCFTLMBeamColumn3D::update(){
             }
          }
          DSQ[i] = ks[i] * dhat[i]; 
-         //dq>>DSQ[i];
+#ifdef COMPOSITE_DEBUG
+		 dq>>DSQ[i];
+#endif
      }
 
      Vector Z(12);
@@ -1306,7 +1335,9 @@ int RCFTLMBeamColumn3D::update(){
          }
       }
       fint2 = Z;// + GscT * ub;
-     // dq>>fint2;   
+#ifdef COMPOSITE_DEBUG
+	   dq>>fint2;   
+#endif
   }
   
   /***********************************************/
@@ -1596,7 +1627,9 @@ int RCFTLMBeamColumn3D::update(){
 	}
   }
 
-  //DH>>kt;
+#ifdef COMPOSITE_DEBUG
+  DH>>kt;
+#endif
 
   /************************************************************************/
   /*									  */

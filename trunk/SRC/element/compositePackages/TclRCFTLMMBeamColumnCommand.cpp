@@ -155,8 +155,10 @@ TclModelBuilder_addRCFTLMMBeamColumn(ClientData clientData, Tcl_Interp *interp,
     
     //SectionForceDeformation **sections = new SectionForceDeformation *[nIP];
 
-    //ofstream output;
-    //output.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+	ofstream output;
+    output.open("newton.dat",ios::app);
+#endif
 
     RCFTAggregator **sections = new RCFTAggregator *[nIP];
     

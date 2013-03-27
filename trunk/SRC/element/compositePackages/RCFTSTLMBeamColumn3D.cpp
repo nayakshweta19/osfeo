@@ -394,26 +394,27 @@ RCFTSTLMBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSTLMBeamColumn3D::commitState()
 {
-   //ofstream crvs11;
-   //ofstream crvs12;
-   //ofstream crvs13;
-   //ofstream crvs14;
-   //ofstream crvs15;
-   //ofstream crvs16;
-   //ofstream crvs17;
-   //ofstream fkk;
-   //ofstream Sglobaldata;
+#ifdef COMPOSITE_DEBUG
+   ofstream crvs11;
+   ofstream crvs12;
+   ofstream crvs13;
+   ofstream crvs14;
+   ofstream crvs15;
+   ofstream crvs16;
+   ofstream crvs17;
+   ofstream fkk;
+   ofstream Sglobaldata;
    
-   //crvs11.open("crvs11.dat",ios::app);
-   //crvs12.open("crvs12.dat",ios::app);
-   //crvs13.open("crvs13.dat",ios::app);
-   //crvs14.open("crvs14.dat",ios::app);
-   //crvs15.open("crvs15.dat",ios::app);
-   //crvs16.open("crvs16.dat",ios::app);
-   //crvs17.open("crvs17.dat",ios::app);
-   //fkk.open("fkk.dat",ios::app);
-   //Sglobaldata.open("Sglobal.dat",ios::app);
-
+   crvs11.open("crvs11.dat",ios::app);
+   crvs12.open("crvs12.dat",ios::app);
+   crvs13.open("crvs13.dat",ios::app);
+   crvs14.open("crvs14.dat",ios::app);
+   crvs15.open("crvs15.dat",ios::app);
+   crvs16.open("crvs16.dat",ios::app);
+   crvs17.open("crvs17.dat",ios::app);
+   fkk.open("fkk.dat",ios::app);
+   Sglobaldata.open("Sglobal.dat",ios::app);
+#endif
 
    int err = 0;
    int i = 0;
@@ -443,10 +444,12 @@ RCFTSTLMBeamColumn3D::commitState()
    Secommit = Se;
    CSglobal = Sglobal;
 
-   //if( Tagg == 1 ){
-   //fkk>>fk;
-   //Sglobaldata>>Sglobal;
-   //}
+#ifdef COMPOSITE_DEBUG
+   if( Tagg == 1 ){
+   fkk>>fk;
+   Sglobaldata>>Sglobal;
+   }
+#endif
 
    Cf_i = f_i;
    Cfk = fk;
@@ -460,27 +463,29 @@ RCFTSTLMBeamColumn3D::commitState()
         DSQ[i].Zero();
         DQ[i].Zero();
         CDSQa[i] = DSQa[i];
-        //if( (Tagg == 1) && ( i == 0 ) ){
-        //   crvs11<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 1 ) ){
-        //   crvs12<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 2 ) ){
-        //   crvs13<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 3 ) ){
-        //   crvs14<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 4 ) ){
-        //   crvs15<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 5 ) ){
-        //   crvs16<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
-        //if( (Tagg == 1) && ( i == 6 ) ){
-        //   crvs17<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
-        //}
+#ifdef COMPOSITE_DEBUG
+		if( (Tagg == 1) && ( i == 0 ) ){
+           crvs11<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 1 ) ){
+           crvs12<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 2 ) ){
+           crvs13<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 3 ) ){
+           crvs14<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 4 ) ){
+           crvs15<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 5 ) ){
+           crvs16<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+        if( (Tagg == 1) && ( i == 6 ) ){
+           crvs17<<sduhat[i](0)<<"  "<<DSQa[i](0)<<"  "<<sduhat[i](1)<<"  "<<DSQa[i](1)<<"  "<<sduhat[i](2)<<"  "<<DSQa[i](2)<<endl;
+        }
+#endif
    }
  
    //this->calcDeformedLength();

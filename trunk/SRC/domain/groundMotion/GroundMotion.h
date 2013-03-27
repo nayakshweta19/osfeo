@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2008/03/05 20:21:37 $
+// $Date: 2008-03-05 20:21:37 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/groundMotion/GroundMotion.h,v $
                                                                         
                                                                         
@@ -51,7 +51,7 @@ class GroundMotion : public MovableObject
 		 TimeSeries *velSeries, 
 		 TimeSeries *accelSeries,
 		 TimeSeriesIntegrator *theIntegrator = 0,
-		 double dTintegration = 0.01);
+		 double dTintegration = 0.01, double fact = 1.0);
     
     GroundMotion(int classTag);
     virtual ~GroundMotion();
@@ -93,7 +93,7 @@ class GroundMotion : public MovableObject
     
     Vector data;
     double delta;
+    double fact;
 };
 
 #endif
-
