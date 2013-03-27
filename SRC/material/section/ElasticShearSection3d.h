@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.3 $
-// $Date: 2008/08/26 16:49:19 $
+// $Date: 2008-08-26 16:49:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/ElasticShearSection3d.h,v $
 
 #ifndef ElasticShearSection3d_h
@@ -38,7 +38,7 @@ class ElasticShearSection3d : public SectionForceDeformation
 {
  public:
   ElasticShearSection3d(int tag, double E, double A, double Iz, 
-			double Iy, double G, double J, double alpha);
+			double Iy, double G, double J, double alphaY, double alphaZ);
   ElasticShearSection3d(void);
   ~ElasticShearSection3d(void);
   
@@ -78,7 +78,7 @@ class ElasticShearSection3d : public SectionForceDeformation
   
  private:
   
-  double E, A, Iz, Iy, G, J, alpha;
+  double E, A, Iz, Iy, G, J, alphaY, alphaZ;
   
   Vector e;			// section trial deformations
   Vector eCommit;

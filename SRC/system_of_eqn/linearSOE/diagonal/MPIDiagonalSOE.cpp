@@ -13,7 +13,7 @@
  *
  */
 
-
+#include <mpi.h>
 
 #include <MPIDiagonalSOE.h>
 #include <MPIDiagonalSolver.h>
@@ -23,7 +23,7 @@
 #include <VertexIter.h>
 #include <f2c.h>
 #include <math.h>
-#include <mpi.h>
+
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
 
@@ -32,6 +32,7 @@
 #include <FE_Element.h>
 #include <FE_EleIter.h>
 #include <DOF_GrpIter.h>
+
 
 
 MPIDiagonalSOE::MPIDiagonalSOE(MPIDiagonalSolver &the_Solver)
@@ -244,7 +245,7 @@ MPIDiagonalSOE::setSize(Graph &theGraph)
     exit(-1);
   }
   
-  fprintf(stderr, "MAX-SHARED  %d \n", maxShared);
+ // fprintf(stderr, "MAX-SHARED  %d \n", maxShared);
   
   //  cached neighbors 
   actualNeighbors =0;
@@ -374,7 +375,7 @@ MPIDiagonalSOE::setSize(Graph &theGraph)
  
  
   te = MPI_Wtime();
-  fprintf(stderr, "SetSize TIME  %g \n", te-ts);
+  //fprintf(stderr, "SetSize TIME  %g \n", te-ts);
 
   return result;
 }

@@ -197,8 +197,10 @@ RCFTMCrdTransf3D::initialize(Node *nodeIPointer, Node *nodeJPointer)
 int
 RCFTMCrdTransf3D::update(void)
 {
-   //ofstream crd;
-   //crd.open("crdupdate.dat");
+#ifdef COMPOSITE_DEBUG
+   ofstream crd;
+   crd.open("crdupdate.dat");
+#endif
 
    Vector dx(3);
    const Vector &dispi = nodeIPtr->getTrialDisp();
@@ -385,14 +387,17 @@ RCFTMCrdTransf3D::getBasicTrialAccel(void)
 const Vector&
 RCFTMCrdTransf3D::getGlobalResistingForce(const Vector &sg, const Vector &p0)
 {
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
 
-  //ofstream check4;
-  //check4.open("check4.dat",ios::app);
+  ofstream check4;
+  check4.open("check4.dat",ios::app);
 
-  //unbal<<"\n RCFTCrdTrnsf3D::getGlobalResistingForce"<<endl;
-  //unbal>>sg;
+  unbal<<"\n RCFTCrdTrnsf3D::getGlobalResistingForce"<<endl;
+  unbal>>sg;
+#endif
+
   pg(0) = sg(0)*R[0][0] + sg(1)*R[1][0]  + sg(2)*R[2][0];
   pg(1) = sg(0)*R[0][1] + sg(1)*R[1][1]  + sg(2)*R[2][1];
   pg(2) = sg(0)*R[0][2] + sg(1)*R[1][2]  + sg(2)*R[2][2];
@@ -417,8 +422,10 @@ RCFTMCrdTransf3D::getGlobalResistingForce(const Vector &sg, const Vector &p0)
   pg(16) = sg(15)*R[0][1] + sg(16)*R[1][1] + sg(17)*R[2][1];
   pg(17) = sg(15)*R[0][2] + sg(16)*R[1][2] + sg(17)*R[2][2];
 
-  //unbal<<"\n RCFTCrdTrbsf3D::after transformation "<<endl;
-  //unbal>>pg;
+#ifdef COMPOSITE_DEBUG
+  unbal<<"\n RCFTCrdTrbsf3D::after transformation "<<endl;
+  unbal>>pg;
+#endif
 
   return pg;
 }
@@ -572,16 +579,17 @@ RCFTMCrdTransf3D::getInitialGlobalStiffMatrix (const Matrix &KB)
 const Matrix &
 RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 {
+#ifdef COMPOSITE_DEBUG
+   ofstream output;
+   output.open("crdlocal.dat",ios::app);
 
-   //ofstream output;
-   //output.open("crdlocal.dat",ios::app);
+   ofstream lstiff;
+   lstiff.open("lstiff.dat",ios::app);
 
-   //ofstream lstiff;
-   //lstiff.open("lstiff.dat",ios::app);
+   ofstream lstiff2;
+   lstiff2.open("lstiff2.dat",ios::app);
+#endif
 
-   //ofstream lstiff2;
-   //lstiff2.open("lstiff2.dat",ios::app);
-	
    static Matrix kg(18,18);	// Global stiffness for return
    static double kb[12][12];
    
@@ -608,14 +616,16 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 	for (j = 0; j < 12; j++)
 	    kb[i][j] = KB(i,j);
 
-   //output<<"\n ########## KB ########## \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########## KB ########## \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //	output<<KB(i,0)<<"   "<<KB(i,1)<<"   "<<KB(i,2)<<"   "<<KB(i,3)<<"   "<<KB(i,4)<<"   "<<KB(i,5)<<
-   //		"   "<<KB(i,6)<<"   "<<KB(i,7)<<"  "<<KB(i,8)<<"   "<<KB(i,9)<<"   "<<
-   //		KB(i,10)<<"  "<<KB(i,11)<<endl;
-   // }
-	 
+   for(i=0;i<12;i++){
+	   output<<KB(i,0)<<"   "<<KB(i,1)<<"   "<<KB(i,2)<<"   "<<KB(i,3)<<"   "<<KB(i,4)<<"   "<<KB(i,5)<<
+		   "   "<<KB(i,6)<<"   "<<KB(i,7)<<"  "<<KB(i,8)<<"   "<<KB(i,9)<<"   "<<
+		   KB(i,10)<<"  "<<KB(i,11)<<endl;
+   }
+#endif
+
    /************************************************************************/
    /* CALCULATE THE NATURAL-TO-LOCAL TRANSFORMATION MATRIX 		   */
    /************************************************************************/
@@ -653,16 +663,18 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
    nat_to_local[11][3]    = - 1.0;
    nat_to_local[11][12]   = 1.0;
 
-   //output<<"\n ########### nat_to_local ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### nat_to_local ########### \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //	output<<nat_to_local[i][0]<<"   "<<nat_to_local[i][1]<<"   "<<nat_to_local[i][2]<<"   "<<
-   //		nat_to_local[i][3]<<"   "<<nat_to_local[i][4]<<"   "<<nat_to_local[i][5]<<"   "<<
-   //		nat_to_local[i][6]<<"   "<<nat_to_local[i][7]<<"   "<<nat_to_local[i][8]<<"   "<<
-   //		nat_to_local[i][9]<<"   "<<nat_to_local[i][10]<<"   "<<nat_to_local[i][11]<<"   "<<
-   //		nat_to_local[i][12]<<"   "<<nat_to_local[i][13]<<"    "<<nat_to_local[i][14]<<"   "<<
-   //		nat_to_local[i][15]<<"   "<<nat_to_local[i][16]<<"    "<<nat_to_local[i][17]<<"   "<<nat_to_local[i][18]<<endl;
-   // }
+   for(i=0;i<12;i++){
+   	output<<nat_to_local[i][0]<<"   "<<nat_to_local[i][1]<<"   "<<nat_to_local[i][2]<<"   "<<
+   		nat_to_local[i][3]<<"   "<<nat_to_local[i][4]<<"   "<<nat_to_local[i][5]<<"   "<<
+   		nat_to_local[i][6]<<"   "<<nat_to_local[i][7]<<"   "<<nat_to_local[i][8]<<"   "<<
+   		nat_to_local[i][9]<<"   "<<nat_to_local[i][10]<<"   "<<nat_to_local[i][11]<<"   "<<
+   		nat_to_local[i][12]<<"   "<<nat_to_local[i][13]<<"    "<<nat_to_local[i][14]<<"   "<<
+   		nat_to_local[i][15]<<"   "<<nat_to_local[i][16]<<"    "<<nat_to_local[i][17]<<"   "<<nat_to_local[i][18]<<endl;
+    }
+#endif
 
    /************************************************************************/
    /* AND ITS TRANSPOSE [nat_to_local](T)				   */
@@ -673,15 +685,17 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //output<<"\n ########### nat_to_localT ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### nat_to_localT ########### \n"<<endl;
 
-   //for(i=0;i<18;i++){
-   //    output<<nat_to_local_T[i][0]<<"   "<<nat_to_local_T[i][1]<<"   "<<nat_to_local_T[i][2]<<"   "<<
-   //            nat_to_local_T[i][3]<<"   "<<nat_to_local_T[i][4]<<"   "<<nat_to_local_T[i][5]<<"   "<<
-   //            nat_to_local_T[i][6]<<"   "<<nat_to_local_T[i][7]<<"   "<<nat_to_local_T[i][8]<<"   "<<
-   //            nat_to_local_T[i][9]<<"   "<<nat_to_local_T[i][10]<<"   "<<nat_to_local_T[i][11]<<endl;
-   //}
-      
+   for(i=0;i<18;i++){
+       output<<nat_to_local_T[i][0]<<"   "<<nat_to_local_T[i][1]<<"   "<<nat_to_local_T[i][2]<<"   "<<
+               nat_to_local_T[i][3]<<"   "<<nat_to_local_T[i][4]<<"   "<<nat_to_local_T[i][5]<<"   "<<
+               nat_to_local_T[i][6]<<"   "<<nat_to_local_T[i][7]<<"   "<<nat_to_local_T[i][8]<<"   "<<
+               nat_to_local_T[i][9]<<"   "<<nat_to_local_T[i][10]<<"   "<<nat_to_local_T[i][11]<<endl;
+   }
+#endif
+
    /************************************************************************/
    /* MATRIX MULTIPLICATION  [k] * [nat_to_local](T)		       	   */
    /************************************************************************/
@@ -693,17 +707,19 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //lstiff<<"\n ########### temp_rt ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   lstiff<<"\n ########### temp_rt ########### \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //    lstiff<<temp_rt[i][0]<<"   "<<temp_rt[i][1]<<"   "<<temp_rt[i][2]<<"   "<<
-   //            temp_rt[i][3]<<"   "<<temp_rt[i][4]<<"   "<<temp_rt[i][5]<<"   "<<
-   //            temp_rt[i][6]<<"   "<<temp_rt[i][7]<<"   "<<temp_rt[i][8]<<"   "<<
-   //            temp_rt[i][9]<<"   "<<temp_rt[i][10]<<"   "<<temp_rt[i][11]<<"   "<<
-   //            temp_rt[i][12]<<"  "<<temp_rt[i][13]<<"   "<<temp_rt[i][14]<<"   "<<
-   //            temp_rt[i][15]<<"  "<<temp_rt[i][16]<<"   "<<temp_rt[i][17]<<endl;
-   //}
-      
+   for(i=0;i<12;i++){
+       lstiff<<temp_rt[i][0]<<"   "<<temp_rt[i][1]<<"   "<<temp_rt[i][2]<<"   "<<
+               temp_rt[i][3]<<"   "<<temp_rt[i][4]<<"   "<<temp_rt[i][5]<<"   "<<
+               temp_rt[i][6]<<"   "<<temp_rt[i][7]<<"   "<<temp_rt[i][8]<<"   "<<
+               temp_rt[i][9]<<"   "<<temp_rt[i][10]<<"   "<<temp_rt[i][11]<<"   "<<
+               temp_rt[i][12]<<"  "<<temp_rt[i][13]<<"   "<<temp_rt[i][14]<<"   "<<
+               temp_rt[i][15]<<"  "<<temp_rt[i][16]<<"   "<<temp_rt[i][17]<<endl;
+   }
+#endif
+
    /*************************************************************************/
    /* MATRIX MULTIPLICATION  [nat_to_local] * [k] * [nat_to_local](T)	    */
    /*************************************************************************/
@@ -715,17 +731,19 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //output<<"\n ########### kl ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### kl ########### \n"<<endl;
 
-   //for(i=0;i<18;i++){
-   //     output<<kl(i,0)<<"   "<<kl(i,1)<<"   "<<kl(i,2)<<"   "<<
-    //            kl(i,3)<<"   "<<kl(i,4)<<"   "<<kl(i,5)<<"   "<<
-   //             kl(i,6)<<"   "<<kl(i,7)<<"   "<<kl(i,8)<<"   "<<
-   //             kl(i,9)<<"   "<<kl(i,10)<<"   "<<kl(i,11)<<"   "<<
-   //             kl(i,12)<<"  "<<kl(i,13)<<"   "<<kl(i,14)<<"   "<<
-   //             kl(i,15)<<"  "<<kl(i,16)<<"   "<<kl(i,17)<<endl;
-   //}
-      
+   for(i=0;i<18;i++){
+        output<<kl(i,0)<<"   "<<kl(i,1)<<"   "<<kl(i,2)<<"   "<<
+                kl(i,3)<<"   "<<kl(i,4)<<"   "<<kl(i,5)<<"   "<<
+                kl(i,6)<<"   "<<kl(i,7)<<"   "<<kl(i,8)<<"   "<<
+                kl(i,9)<<"   "<<kl(i,10)<<"   "<<kl(i,11)<<"   "<<
+                kl(i,12)<<"  "<<kl(i,13)<<"   "<<kl(i,14)<<"   "<<
+                kl(i,15)<<"  "<<kl(i,16)<<"   "<<kl(i,17)<<endl;
+   }
+#endif
+
    /* CALCULATE THE DIFFERENCE IN AXIAL FORCE BETWEEN ENDS		*/
 
    double p_s, p_c;
@@ -765,16 +783,17 @@ RCFTMCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 const Matrix &
 RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 {
+#ifdef COMPOSITE_DEBUG
+   ofstream output;
+   output.open("crdlocal.dat",ios::app);
 
-   //ofstream output;
-   //output.open("crdlocal.dat",ios::app);
+   ofstream lstiff;
+   lstiff.open("lstiff.dat",ios::app);
 
-   //ofstream lstiff;
-   //lstiff.open("lstiff.dat",ios::app);
+   ofstream lstiff2;
+   lstiff2.open("lstiff2.dat",ios::app);
+#endif
 
-   //ofstream lstiff2;
-   //lstiff2.open("lstiff2.dat",ios::app);
-	
    static Matrix kg(18,18);	// Global stiffness for return
    static double kb[12][12];
    
@@ -801,14 +820,16 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	for (j = 0; j < 12; j++)
 	    kb[i][j] = KB(i,j);
 
-   //output<<"\n ########## KB ########## \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########## KB ########## \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //	output<<KB(i,0)<<"   "<<KB(i,1)<<"   "<<KB(i,2)<<"   "<<KB(i,3)<<"   "<<KB(i,4)<<"   "<<KB(i,5)<<
-   //	"   "<<KB(i,6)<<"   "<<KB(i,7)<<"  "<<KB(i,8)<<"   "<<KB(i,9)<<"   "<<
-   //	KB(i,10)<<"  "<<KB(i,11)<<endl;
-   //}
-	 
+   for(i=0;i<12;i++){
+   	output<<KB(i,0)<<"   "<<KB(i,1)<<"   "<<KB(i,2)<<"   "<<KB(i,3)<<"   "<<KB(i,4)<<"   "<<KB(i,5)<<
+   	"   "<<KB(i,6)<<"   "<<KB(i,7)<<"  "<<KB(i,8)<<"   "<<KB(i,9)<<"   "<<
+   	KB(i,10)<<"  "<<KB(i,11)<<endl;
+   }
+#endif
+
    /************************************************************************/
    /* CALCULATE THE NATURAL-TO-LOCAL TRANSFORMATION MATRIX 		   */
    /************************************************************************/
@@ -845,16 +866,18 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
    nat_to_local[11][3]    = - 1.0;
    nat_to_local[11][12]   = 1.0;
 
-   //output<<"\n ########### nat_to_local ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### nat_to_local ########### \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //	output<<nat_to_local[i][0]<<"   "<<nat_to_local[i][1]<<"   "<<nat_to_local[i][2]<<"   "<<
-   //		nat_to_local[i][3]<<"   "<<nat_to_local[i][4]<<"   "<<nat_to_local[i][5]<<"   "<<
-   //		nat_to_local[i][6]<<"   "<<nat_to_local[i][7]<<"   "<<nat_to_local[i][8]<<"   "<<
-   //		nat_to_local[i][9]<<"   "<<nat_to_local[i][10]<<"   "<<nat_to_local[i][11]<<"   "<<
-   //		nat_to_local[i][12]<<"   "<<nat_to_local[i][13]<<"    "<<nat_to_local[i][14]<<"   "<<
-   //		nat_to_local[i][15]<<"   "<<nat_to_local[i][16]<<"    "<<nat_to_local[i][17]<<"   "<<nat_to_local[i][18]<<endl;
-   // }
+   for(i=0;i<12;i++){
+   	output<<nat_to_local[i][0]<<"   "<<nat_to_local[i][1]<<"   "<<nat_to_local[i][2]<<"   "<<
+   		nat_to_local[i][3]<<"   "<<nat_to_local[i][4]<<"   "<<nat_to_local[i][5]<<"   "<<
+   		nat_to_local[i][6]<<"   "<<nat_to_local[i][7]<<"   "<<nat_to_local[i][8]<<"   "<<
+   		nat_to_local[i][9]<<"   "<<nat_to_local[i][10]<<"   "<<nat_to_local[i][11]<<"   "<<
+   		nat_to_local[i][12]<<"   "<<nat_to_local[i][13]<<"    "<<nat_to_local[i][14]<<"   "<<
+   		nat_to_local[i][15]<<"   "<<nat_to_local[i][16]<<"    "<<nat_to_local[i][17]<<"   "<<nat_to_local[i][18]<<endl;
+    }
+#endif
 
    /************************************************************************/
    /* AND ITS TRANSPOSE [nat_to_local](T)				   */
@@ -865,15 +888,17 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //output<<"\n ########### nat_to_localT ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### nat_to_localT ########### \n"<<endl;
 
-   //for(i=0;i<18;i++){
-   //    output<<nat_to_local_T[i][0]<<"   "<<nat_to_local_T[i][1]<<"   "<<nat_to_local_T[i][2]<<"   "<<
-   //            nat_to_local_T[i][3]<<"   "<<nat_to_local_T[i][4]<<"   "<<nat_to_local_T[i][5]<<"   "<<
-   //            nat_to_local_T[i][6]<<"   "<<nat_to_local_T[i][7]<<"   "<<nat_to_local_T[i][8]<<"   "<<
-   //            nat_to_local_T[i][9]<<"   "<<nat_to_local_T[i][10]<<"   "<<nat_to_local_T[i][11]<<endl;
-   //}
-      
+   for(i=0;i<18;i++){
+       output<<nat_to_local_T[i][0]<<"   "<<nat_to_local_T[i][1]<<"   "<<nat_to_local_T[i][2]<<"   "<<
+               nat_to_local_T[i][3]<<"   "<<nat_to_local_T[i][4]<<"   "<<nat_to_local_T[i][5]<<"   "<<
+               nat_to_local_T[i][6]<<"   "<<nat_to_local_T[i][7]<<"   "<<nat_to_local_T[i][8]<<"   "<<
+               nat_to_local_T[i][9]<<"   "<<nat_to_local_T[i][10]<<"   "<<nat_to_local_T[i][11]<<endl;
+   }
+#endif
+
    /************************************************************************/
    /* MATRIX MULTIPLICATION  [k] * [nat_to_local](T)		       	   */
    /************************************************************************/
@@ -885,17 +910,19 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //lstiff<<"\n ########### temp_rt ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   lstiff<<"\n ########### temp_rt ########### \n"<<endl;
 
-   //for(i=0;i<12;i++){
-   //    lstiff<<temp_rt[i][0]<<"   "<<temp_rt[i][1]<<"   "<<temp_rt[i][2]<<"   "<<
-   //            temp_rt[i][3]<<"   "<<temp_rt[i][4]<<"   "<<temp_rt[i][5]<<"   "<<
-   //            temp_rt[i][6]<<"   "<<temp_rt[i][7]<<"   "<<temp_rt[i][8]<<"   "<<
-   //            temp_rt[i][9]<<"   "<<temp_rt[i][10]<<"   "<<temp_rt[i][11]<<"   "<<
-   //            temp_rt[i][12]<<"  "<<temp_rt[i][13]<<"   "<<temp_rt[i][14]<<"   "<<
-   //            temp_rt[i][15]<<"  "<<temp_rt[i][16]<<"   "<<temp_rt[i][17]<<endl;
-   //}
-      
+   for(i=0;i<12;i++){
+       lstiff<<temp_rt[i][0]<<"   "<<temp_rt[i][1]<<"   "<<temp_rt[i][2]<<"   "<<
+               temp_rt[i][3]<<"   "<<temp_rt[i][4]<<"   "<<temp_rt[i][5]<<"   "<<
+               temp_rt[i][6]<<"   "<<temp_rt[i][7]<<"   "<<temp_rt[i][8]<<"   "<<
+               temp_rt[i][9]<<"   "<<temp_rt[i][10]<<"   "<<temp_rt[i][11]<<"   "<<
+               temp_rt[i][12]<<"  "<<temp_rt[i][13]<<"   "<<temp_rt[i][14]<<"   "<<
+               temp_rt[i][15]<<"  "<<temp_rt[i][16]<<"   "<<temp_rt[i][17]<<endl;
+   }
+#endif
+
    /*************************************************************************/
    /* MATRIX MULTIPLICATION  [nat_to_local] * [k] * [nat_to_local](T)	    */
    /*************************************************************************/
@@ -907,17 +934,19 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	}
    }
 
-   //output<<"\n ########### kl ########### \n"<<endl;
+#ifdef COMPOSITE_DEBUG
+   output<<"\n ########### kl ########### \n"<<endl;
 
-   //for(i=0;i<18;i++){
-   //     output<<kl(i,0)<<"   "<<kl(i,1)<<"   "<<kl(i,2)<<"   "<<
-    //            kl(i,3)<<"   "<<kl(i,4)<<"   "<<kl(i,5)<<"   "<<
-   //             kl(i,6)<<"   "<<kl(i,7)<<"   "<<kl(i,8)<<"   "<<
-   //             kl(i,9)<<"   "<<kl(i,10)<<"   "<<kl(i,11)<<"   "<<
-   //             kl(i,12)<<"  "<<kl(i,13)<<"   "<<kl(i,14)<<"   "<<
-   //             kl(i,15)<<"  "<<kl(i,16)<<"   "<<kl(i,17)<<endl;
-   //}
-      
+   for(i=0;i<18;i++){
+        output<<kl(i,0)<<"   "<<kl(i,1)<<"   "<<kl(i,2)<<"   "<<
+                kl(i,3)<<"   "<<kl(i,4)<<"   "<<kl(i,5)<<"   "<<
+                kl(i,6)<<"   "<<kl(i,7)<<"   "<<kl(i,8)<<"   "<<
+                kl(i,9)<<"   "<<kl(i,10)<<"   "<<kl(i,11)<<"   "<<
+                kl(i,12)<<"  "<<kl(i,13)<<"   "<<kl(i,14)<<"   "<<
+                kl(i,15)<<"  "<<kl(i,16)<<"   "<<kl(i,17)<<endl;
+   }
+#endif
+
    double p_s, p_c;
 
    p_s = fk(1);
@@ -1002,13 +1031,16 @@ RCFTMCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	kg(17,i) = R[0][2]*tmp[15][i] + R[1][2]*tmp[16][i] + R[2][2]*tmp[17][i];
 
    }
-   //lstiff<<"\n ########### RRR ########## "<<endl;
-   //lstiff<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
-   //lstiff<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
-   //lstiff<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;   
+#ifdef COMPOSITE_DEBUG
+   lstiff<<"\n ########### RRR ########## "<<endl;
+   lstiff<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
+   lstiff<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
+   lstiff<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;   
   
-   //lstiff<<"\n ########### kg ########### \n"<<endl;
-   //lstiff>>kg;
+   lstiff<<"\n ########### kg ########### \n"<<endl;
+   lstiff>>kg;
+#endif
+
    return kg;
 }
 

@@ -597,8 +597,10 @@ RCFTAggregator::getOrder () const
 int
 RCFTAggregator::commitState(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream slip;
   slip.open("slip.dat",ios::app);
+#endif
   int err = 0;
 
   if (theSection)
@@ -606,7 +608,9 @@ RCFTAggregator::commitState(void)
 
   for (int i = 0; i < numMats; i++){
     err += theAdditions[i]->commitState();
-    slip<<theAdditions[i]->getStrain()<<"  "<<theAdditions[i]->getStress()<<"  "<<theAdditions[i]->getTangent()<<"  "<<0<<endl;
+#ifdef COMPOSITE_DEBUG
+	slip<<theAdditions[i]->getStrain()<<"  "<<theAdditions[i]->getStress()<<"  "<<theAdditions[i]->getTangent()<<"  "<<0<<endl;
+#endif
   }
 
   return err;

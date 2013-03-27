@@ -70,9 +70,11 @@ RCFTSlipMaterial::~RCFTSlipMaterial()
 int 
 RCFTSlipMaterial::setTrialStrain(double strain, double strainRate)
 {
+#ifdef COMPOSITE_DEBUG
     ofstream output;
     output.open("setslip.dat",ios::app);
-	
+#endif
+
     trialStrain = commitStrain + strain;
 
     double ey_t = ( commitX + fyp - commitStress ) / E;
@@ -130,10 +132,12 @@ RCFTSlipMaterial::getCommitTangent(void)
 int 
 RCFTSlipMaterial::commitState(void)
 {
-    ofstream RCFTslip;
+#ifdef COMPOSITE_DEBUG
+	ofstream RCFTslip;
     RCFTslip.open("RCFTslip.dat",ios::app);
     RCFTslip<<trialStrain<<"  "<<trialStress<<"  "<<trialTangent<<"  "<<commitStrain<<"  "<<commitStress<<"  "<<commitTangent<<"  "<<E<<endl;
-    commitTangent = trialTangent; 
+#endif
+	commitTangent = trialTangent; 
     commitStrain  = trialStrain;
     commitStress  = trialStress;
     commitX = trialX;

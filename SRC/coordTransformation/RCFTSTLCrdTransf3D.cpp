@@ -196,8 +196,10 @@ RCFTSTLCrdTransf3D::initialize(Node *nodeIPointer, Node *nodeJPointer)
 int
 RCFTSTLCrdTransf3D::update(void)
 {
-   //ofstream crd;
-   //crd.open("crdupdate.dat");
+#ifdef COMPOSITE_DEBUG
+   ofstream crd;
+   crd.open("crdupdate.dat");
+#endif
 
    Vector dx(3);
    const Vector &dispi = nodeIPtr->getTrialDisp();
@@ -384,14 +386,16 @@ RCFTSTLCrdTransf3D::getBasicTrialAccel(void)
 const Vector&
 RCFTSTLCrdTransf3D::getGlobalResistingForce(const Vector &sg, const Vector &p0)
 {
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
-  //unbal<<"\n RCFTCrdTrnsf3D::getGlobalResistingForce"<<endl;
-  //unbal>>sg;
-  //unbal<<"\n R vectors"<<endl;
-  //unbal<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
-  //unbal<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
-  //unbal<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;
+#ifdef COMPOSITE_DEBUG
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
+  unbal<<"\n RCFTCrdTrnsf3D::getGlobalResistingForce"<<endl;
+  unbal>>sg;
+  unbal<<"\n R vectors"<<endl;
+  unbal<<R[0][0]<<"   "<<R[0][1]<<"   "<<R[0][2]<<endl;
+  unbal<<R[1][0]<<"   "<<R[1][1]<<"   "<<R[1][2]<<endl;
+  unbal<<R[2][0]<<"   "<<R[2][1]<<"   "<<R[2][2]<<endl;
+#endif
 
   pg(0) = sg(0)*R[0][0] + sg(1)*R[1][0]  + sg(2)*R[2][0];
   pg(1) = sg(0)*R[0][1] + sg(1)*R[1][1]  + sg(2)*R[2][1];
@@ -409,8 +413,10 @@ RCFTSTLCrdTransf3D::getGlobalResistingForce(const Vector &sg, const Vector &p0)
   pg(10) = sg(9)*R[0][1] + sg(10)*R[1][1] + sg(11)*R[2][1];
   pg(11) = sg(9)*R[0][2] + sg(10)*R[1][2] + sg(11)*R[2][2];
 
-  //unbal<<"\n RCFTCrdTrbsf3D::after transformation "<<endl;
-  //unbal>>pg;
+#ifdef COMPOSITE_DEBUG
+  unbal<<"\n RCFTCrdTrbsf3D::after transformation "<<endl;
+  unbal>>pg;
+#endif
 
   return pg;
 }
@@ -654,16 +660,17 @@ RCFTSTLCrdTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 const Matrix &
 RCFTSTLCrdTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 {
+#ifdef COMPOSITE_DEBUG
+   ofstream output;
+   output.open("crdlocal.dat",ios::app);
 
-   //ofstream output;
-   //output.open("crdlocal.dat",ios::app);
+   ofstream lstiff;
+   lstiff.open("lstiff.dat",ios::app);
 
-   //ofstream lstiff;
-   //lstiff.open("lstiff.dat",ios::app);
+   ofstream lstiff2;
+   lstiff2.open("lstiff2.dat",ios::app);
+#endif
 
-   //ofstream lstiff2;
-   //lstiff2.open("lstiff2.dat",ios::app);
-	
    static Matrix kg(12,12);	// Global stiffness for return
    static double kb[6][6];
    

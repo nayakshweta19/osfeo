@@ -467,32 +467,34 @@ RCFTMMBeamColumn3D::commitState()
 
    cnvg = 0;
 
-   //ofstream crv11;
-   //crv11.open("crv11.dat",ios::app);
-   //
-   //ofstream crv12;
-   //crv12.open("crv12.dat",ios::app);
-   //
-   //ofstream crv13;
-   //crv13.open("crv13.dat",ios::app);
-   //
-   //ofstream crv21;
-   //crv21.open("crv21.dat",ios::app);
-   //
-   //ofstream crv22;
-   //crv22.open("crv22.dat",ios::app);
-   // 
-   //ofstream crv23;
-   //crv23.open("crv23.dat",ios::app);
-   //
-   //ofstream crv31;
-   //crv31.open("crv31.dat",ios::app);
-   //
-   //ofstream crv32;
-   //crv32.open("crv32.dat",ios::app);
-   //
-   //ofstream crv33;
-   //crv33.open("crv33.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+   ofstream crv11;
+   crv11.open("crv11.dat",ios::app);
+   
+   ofstream crv12;
+   crv12.open("crv12.dat",ios::app);
+   
+   ofstream crv13;
+   crv13.open("crv13.dat",ios::app);
+   
+   ofstream crv21;
+   crv21.open("crv21.dat",ios::app);
+   
+   ofstream crv22;
+   crv22.open("crv22.dat",ios::app);
+    
+   ofstream crv23;
+   crv23.open("crv23.dat",ios::app);
+   
+   ofstream crv31;
+   crv31.open("crv31.dat",ios::app);
+   
+   ofstream crv32;
+   crv32.open("crv32.dat",ios::app);
+   
+   ofstream crv33;
+   crv33.open("crv33.dat",ios::app);
+#endif
 
    // call element commitState to do any base class stuff
    if ((err = this->Element::commitState()) != 0) {
@@ -552,33 +554,35 @@ RCFTMMBeamColumn3D::commitState()
         sf4[i].Zero();
         d4[i].Zero(); 
 	    CDSQa[i] = DSQa[i];
-        //if( ( Tagg == 1 ) && ( i == 0 ) ){
-        //   crv11<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //} 
-        //if( ( Tagg == 1 ) && ( i == 1 ) ){
-        //   crv12<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 1 ) && ( i == 2 ) ){
-        //   crv13<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 2 ) && ( i == 0 ) ){
-        //   crv21<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 2 ) && ( i == 1 ) ){
-        //   crv22<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 2 ) && ( i == 2 ) ){
-        //   crv23<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 3 ) && ( i == 0 ) ){
-        //   crv31<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 3 ) && ( i == 1 ) ){
-        //   crv32<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
-        //if( ( Tagg == 3 ) && ( i == 2 ) ){
-        //   crv33<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
-        //}
+#ifdef COMPOSITE_DEBUG
+		if( ( Tagg == 1 ) && ( i == 0 ) ){
+           crv11<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        } 
+        if( ( Tagg == 1 ) && ( i == 1 ) ){
+           crv12<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 1 ) && ( i == 2 ) ){
+           crv13<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 2 ) && ( i == 0 ) ){
+           crv21<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 2 ) && ( i == 1 ) ){
+           crv22<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 2 ) && ( i == 2 ) ){
+           crv23<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 3 ) && ( i == 0 ) ){
+           crv31<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 3 ) && ( i == 1 ) ){
+           crv32<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+        if( ( Tagg == 3 ) && ( i == 2 ) ){
+           crv33<<sduhat[i](4)<<"  "<<DSQa[i](1)+DSQa[i](7)<<"  "<<sduhat[i](5)<<"  "<<DSQa[i](2)+DSQa[i](8)<<endl;
+        }
+#endif
    }
 
    itr = 0;

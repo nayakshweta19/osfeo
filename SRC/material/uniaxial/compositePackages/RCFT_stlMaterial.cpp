@@ -208,9 +208,11 @@ RCFT_stlMaterial::~RCFT_stlMaterial()
 
 int 
 RCFT_stlMaterial::setTrialStrain(double strain, double strainRate)
-{ 
+{
+#ifdef COMPOSITE_DEBUG
    ofstream output;
    output.open("pldata.dat",ios::app);
+#endif
    /* INITIALIZE STATE VARIBALES TO THEIR VALUES AT THE MOST CONVERGED CONFIGURATION */	
    backtocommitStatevar();	
    /************************************************************************/
@@ -227,676 +229,676 @@ RCFT_stlMaterial::setTrialStrain(double strain, double strainRate)
    Pstress = Cstress + Ctangent * strain_inc;
    /* CHECK WHETHER THE STRESS POINT IS INSIDE THE LOADING SURFACE ( ELASTIC LOADING ) */
    if( ( Pstress - Tls_p < 0.0 ) && ( Pstress - Tls_n > 0.0 ) ){
-	  /* ELASTIC LOADING */  
-	  elastic = 1;
-	  plastic = 0;
-	  Trule = 1;
-          /* LOADING IN THE SOFTENING REGION IS PLASTIC */ 
-          if( ( lb == 1 ) && ( strain_inc <= 0.0 ) ){
-                    plastic = 1;
-                    elastic = 0;
-                    Trule = 2;
-          }
+	   /* ELASTIC LOADING */  
+	   elastic = 1;
+	   plastic = 0;
+	   Trule = 1;
+	   /* LOADING IN THE SOFTENING REGION IS PLASTIC */ 
+	   if( ( lb == 1 ) && ( strain_inc <= 0.0 ) ){
+		   plastic = 1;
+		   elastic = 0;
+		   Trule = 2;
+	   }
    }
    else{
-	  /* PLASTIC LOADING */ 
-          elastic = 0;
-          plastic = 1;
-          Trule = 2;
-          /* REVERSE LOADING IN THE SOFTENING REGION IS ELASTIC */
-          if( ( lb == 1 ) && ( strain_inc >= 0.0 ) ){
-                    elastic = 1;
-                    plastic = 0;
-                    Trule = 1;
-          }
+	   /* PLASTIC LOADING */ 
+	   elastic = 0;
+	   plastic = 1;
+	   Trule = 2;
+	   /* REVERSE LOADING IN THE SOFTENING REGION IS ELASTIC */
+	   if( ( lb == 1 ) && ( strain_inc >= 0.0 ) ){
+		   elastic = 1;
+		   plastic = 0;
+		   Trule = 1;
+	   }
    }
    /* ELASTIC LOADING ( Stress point is within loading surfaces ) */
    if ( elastic == 1 ){
-          /* RESET LOCAL BUCKLING IN THE CASE OF ELASTIC LOADING */
-	  lb = 0;
-          /* MAKE SURE REFERENCE PLASTIC STRAIN TO DETECT LOCAL BUCKLING REMAINS CORRECT DURING ELASTIC LOADING */
-	  if( Cld != ld ){
-	    ep_ref = ep;
-          }
-	  else{
-            ep_ref = Cep_ref;
-	  }	 
-          Ttangent = Ee;
-	  stress_inc = strain_inc * Ttangent;
-	  Tstress = Cstress + stress_inc;
-          if ( Tstress <=   Epo * ep + Tbs_n ){
-               Tstress =   Epo * ep + Tbs_n;
-          } 
-	  if ( Tstress >=   Epo * ep + Tbs_p ){
-               Tstress =  Epo * ep + Tbs_p;
-          }   
-	  /* IF ELASTIC LOADING TAKES PLACE RIGHT AFTER PLASTIC LOADING UPDATE STATE VARIABLES */
-          if( Crule == 2 ){
-	      /* IF STRESS LEVEL DOES NOT REACH MEMORY LINE CALCULATE delta_y */	  
-              if( ( strain_inc < 0.0 ) && ( Cstress < Epo * ep + Tmem_p ) ){
-                  delta_y = fabs( -Epo * ep - Tmem_p + Tls_p );
-		  /* MEMORY SURFACE IS NOT BREACHED */
-                  memory = 1;
-              }
-	      /* IF STRESS LEVEL REACHES MEMORY LINE UPDATE MEMORY LINES */
-              else if( ( strain_inc < 0.0 ) && ( Cstress >= Epo * ep + Tmem_p ) ){
-                  //Tmem_p =  - Epo * ep + Tls_p;
-                  //Tmem_n = Tmem_p - 2 * ( Tmem_p - cbs );
-                  Tmem_p = Epo * ep + Cmax_strs;
-                  Tmem_n = - Tmem_p; 
-		  /* MEMORY SURFACE IS BREACHED */
-		  memory = 0;
-              }
-	      /* IF STRESS LEVEL DOES NOT REACH MEMORY LINE CALCULATE delta_y */
-              if( ( strain_inc > 0.0 ) && ( Cstress > Epo * ep + Tmem_n ) ){
-		  delta_y = fabs( -Epo * ep - Tmem_n + Tls_n );
-                  /* MEMORY SURFACE IS NOT BREACHED */
-                  memory = 1;
-              }
-	      /* IF STRESS LEVEL REACHES MEMORY LINE UPDATE MEMORY LINES */
-              else if( ( strain_inc > 0.0 ) && ( Cstress <=  Epo * ep + Tmem_n ) ){
-                  //Tmem_n = - Epo * ep + Tls_n;
-                  //Tmem_p = Tmem_n - 2 * ( Tmem_n - cbs );
-                  Tmem_n = -Epoi * ep - Cmax_strs;
-                  Tmem_p = -Tmem_n; 
-		  /* MEMORY SURFACE IS BREACHED */
-		  memory = 0;
-              }
-	      /* IF MEMORY SURFACE IS BREACHED DETERMINE BOUNDING SURFACES */
-              if ( ( strain_inc < 0.0 ) && ( memory == 0 ) ){
-                  Tbs_n = - ( fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi  * pow ( 0.5 * ebar_p, 2 ) ) );
-                  if( buckled == 1 ){
-                       Tbs_n = lbstrs;
-                       if( lbstrs <  - ( -lbW * W + 1.0 ) * Rbso ){
-                           Tbs_n = - ( -lbW * W + 1.0 ) * Rbso;
-                       }
-                       if( Tbs_n > -0.50 * Rbso ){
-                           Tbs_n = -0.50 * Rbso;
-                       }
-                  }
-                  if( Tbs_n <= -fu ){
-                        Tbs_n = -fu;
-                  }
-                  cbs = Tbs_n + ( ( fabs( Tbs_n ) + fabs( Tbs_p ) ) / 2 );
-                  cbs = 0.0; 
-              }
-	      /* IF MEMORY SURFACE IS NOT BREACHED DETERMINE VIRTUAL BOUNDING SURFACES */
-              if ( ( strain_inc < 0.0 ) && ( memory == 1 ) ){
-                  Tbs_n = - ( fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) ) );
-                  if( buckled == 1 ){
-                      Tbs_n = lbstrs;
-                      if( lbstrs < - ( -lbW * W + 1.0 ) * Rbso ){
-                          Tbs_n = - ( -lbW * W + 1.0 ) * Rbso;
-                      }
-                      if( Tbs_n > -0.50 * Rbso ){
-                          Tbs_n = -0.50 * Rbso;
-                      }
-                  }
-                  if( Tbs_n <= -fu ){
-                        Tbs_n = -fu;
-                  }
-                  Tvbs_n = Tbs_n - delta_y;
-                  cbs = Tvbs_n + ( ( fabs( Tvbs_n ) + fabs( Tbs_p ) ) / 2 );
-                  cbs = 0.0;
-              }
-	      /* IF MEMORY SURFACE IS BREACHED DETERMINE BOUNDING SURFACES */
-              if ( ( strain_inc > 0.0 ) && ( memory == 0 ) ){
-                  Tbs_p = fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) );
-                  if( buckled == 1 ){
-                        Tbs_p = ( -lbW * W + 1.0 ) * Rbso; 
-                  } 
-                  if( Tbs_p < 0.50 * Rbso ){
-                        Tbs_p = 0.50 * Rbso;
-                  }
-                  if( Tbs_p >= fu ){
-                        Tbs_p = fu;
-                  }
-                  cbs = Tbs_p - ( ( fabs( Tbs_n ) + fabs( Tbs_p ) ) / 2 );
-                  cbs = 0.0;
-	      }
-	      /* IF MEMORY SURFACE IS NOT BREACHED DETERMINE VIRTUAL BOUNDING SURFACES */ 
-              if ( ( strain_inc > 0.0 ) && ( memory == 1 ) ){
-                  Tbs_p = fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) );
-                  if( buckled == 1 ){
-                        Tbs_p = ( -lbW * W + 1.0 ) * Rbso; 
-                  }
-                  if( Tbs_p < 0.50 * Rbso ){
-                        Tbs_p = 0.50 * Rbso;
-                  }
-                  if( Tbs_p >= fu ){
-                        Tbs_p = fu;
-                  }
-                  Tvbs_p = Tbs_p + delta_y;
-                  cbs = Tbs_n + ( ( fabs( Tbs_n ) + fabs( Tvbs_p ) ) / 2 );
-                  cbs = 0.0;
-              }
-	      /* UPDATE UNLOADING STRESS AND STRAIN */
-	      funld = Cstress;
-	      eunld = Cstrain;
-          }
+	   /* RESET LOCAL BUCKLING IN THE CASE OF ELASTIC LOADING */
+	   lb = 0;
+	   /* MAKE SURE REFERENCE PLASTIC STRAIN TO DETECT LOCAL BUCKLING REMAINS CORRECT DURING ELASTIC LOADING */
+	   if( Cld != ld ){
+		   ep_ref = ep;
+	   }
+	   else{
+		   ep_ref = Cep_ref;
+	   }	 
+	   Ttangent = Ee;
+	   stress_inc = strain_inc * Ttangent;
+	   Tstress = Cstress + stress_inc;
+	   if ( Tstress <=   Epo * ep + Tbs_n ){
+		   Tstress =   Epo * ep + Tbs_n;
+	   } 
+	   if ( Tstress >=   Epo * ep + Tbs_p ){
+		   Tstress =  Epo * ep + Tbs_p;
+	   }   
+	   /* IF ELASTIC LOADING TAKES PLACE RIGHT AFTER PLASTIC LOADING UPDATE STATE VARIABLES */
+	   if( Crule == 2 ){
+		   /* IF STRESS LEVEL DOES NOT REACH MEMORY LINE CALCULATE delta_y */	  
+		   if( ( strain_inc < 0.0 ) && ( Cstress < Epo * ep + Tmem_p ) ){
+			   delta_y = fabs( -Epo * ep - Tmem_p + Tls_p );
+			   /* MEMORY SURFACE IS NOT BREACHED */
+			   memory = 1;
+		   }
+		   /* IF STRESS LEVEL REACHES MEMORY LINE UPDATE MEMORY LINES */
+		   else if( ( strain_inc < 0.0 ) && ( Cstress >= Epo * ep + Tmem_p ) ){
+			   //Tmem_p =  - Epo * ep + Tls_p;
+			   //Tmem_n = Tmem_p - 2 * ( Tmem_p - cbs );
+			   Tmem_p = Epo * ep + Cmax_strs;
+			   Tmem_n = - Tmem_p; 
+			   /* MEMORY SURFACE IS BREACHED */
+			   memory = 0;
+		   }
+		   /* IF STRESS LEVEL DOES NOT REACH MEMORY LINE CALCULATE delta_y */
+		   if( ( strain_inc > 0.0 ) && ( Cstress > Epo * ep + Tmem_n ) ){
+			   delta_y = fabs( -Epo * ep - Tmem_n + Tls_n );
+			   /* MEMORY SURFACE IS NOT BREACHED */
+			   memory = 1;
+		   }
+		   /* IF STRESS LEVEL REACHES MEMORY LINE UPDATE MEMORY LINES */
+		   else if( ( strain_inc > 0.0 ) && ( Cstress <=  Epo * ep + Tmem_n ) ){
+			   //Tmem_n = - Epo * ep + Tls_n;
+			   //Tmem_p = Tmem_n - 2 * ( Tmem_n - cbs );
+			   Tmem_n = -Epoi * ep - Cmax_strs;
+			   Tmem_p = -Tmem_n; 
+			   /* MEMORY SURFACE IS BREACHED */
+			   memory = 0;
+		   }
+		   /* IF MEMORY SURFACE IS BREACHED DETERMINE BOUNDING SURFACES */
+		   if ( ( strain_inc < 0.0 ) && ( memory == 0 ) ){
+			   Tbs_n = - ( fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi  * pow ( 0.5 * ebar_p, 2 ) ) );
+			   if( buckled == 1 ){
+				   Tbs_n = lbstrs;
+				   if( lbstrs <  - ( -lbW * W + 1.0 ) * Rbso ){
+					   Tbs_n = - ( -lbW * W + 1.0 ) * Rbso;
+				   }
+				   if( Tbs_n > -0.50 * Rbso ){
+					   Tbs_n = -0.50 * Rbso;
+				   }
+			   }
+			   if( Tbs_n <= -fu ){
+				   Tbs_n = -fu;
+			   }
+			   cbs = Tbs_n + ( ( fabs( Tbs_n ) + fabs( Tbs_p ) ) / 2 );
+			   cbs = 0.0; 
+		   }
+		   /* IF MEMORY SURFACE IS NOT BREACHED DETERMINE VIRTUAL BOUNDING SURFACES */
+		   if ( ( strain_inc < 0.0 ) && ( memory == 1 ) ){
+			   Tbs_n = - ( fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) ) );
+			   if( buckled == 1 ){
+				   Tbs_n = lbstrs;
+				   if( lbstrs < - ( -lbW * W + 1.0 ) * Rbso ){
+					   Tbs_n = - ( -lbW * W + 1.0 ) * Rbso;
+				   }
+				   if( Tbs_n > -0.50 * Rbso ){
+					   Tbs_n = -0.50 * Rbso;
+				   }
+			   }
+			   if( Tbs_n <= -fu ){
+				   Tbs_n = -fu;
+			   }
+			   Tvbs_n = Tbs_n - delta_y;
+			   cbs = Tvbs_n + ( ( fabs( Tvbs_n ) + fabs( Tbs_p ) ) / 2 );
+			   cbs = 0.0;
+		   }
+		   /* IF MEMORY SURFACE IS BREACHED DETERMINE BOUNDING SURFACES */
+		   if ( ( strain_inc > 0.0 ) && ( memory == 0 ) ){
+			   Tbs_p = fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) );
+			   if( buckled == 1 ){
+				   Tbs_p = ( -lbW * W + 1.0 ) * Rbso; 
+			   } 
+			   if( Tbs_p < 0.50 * Rbso ){
+				   Tbs_p = 0.50 * Rbso;
+			   }
+			   if( Tbs_p >= fu ){
+				   Tbs_p = fu;
+			   }
+			   cbs = Tbs_p - ( ( fabs( Tbs_n ) + fabs( Tbs_p ) ) / 2 );
+			   cbs = 0.0;
+		   }
+		   /* IF MEMORY SURFACE IS NOT BREACHED DETERMINE VIRTUAL BOUNDING SURFACES */ 
+		   if ( ( strain_inc > 0.0 ) && ( memory == 1 ) ){
+			   Tbs_p = fu + ( Rbso - fu ) * exp ( - pow( fy / Ee, -2 )* ksi * pow ( 0.5 * ebar_p, 2 ) );
+			   if( buckled == 1 ){
+				   Tbs_p = ( -lbW * W + 1.0 ) * Rbso; 
+			   }
+			   if( Tbs_p < 0.50 * Rbso ){
+				   Tbs_p = 0.50 * Rbso;
+			   }
+			   if( Tbs_p >= fu ){
+				   Tbs_p = fu;
+			   }
+			   Tvbs_p = Tbs_p + delta_y;
+			   cbs = Tbs_n + ( ( fabs( Tbs_n ) + fabs( Tvbs_p ) ) / 2 );
+			   cbs = 0.0;
+		   }
+		   /* UPDATE UNLOADING STRESS AND STRAIN */
+		   funld = Cstress;
+		   eunld = Cstrain;
+	   }
    }
    /* PLASCTIC LOADING ( Stress point is outside of loading surfaces ) */
    if ( plastic == 1 ){
-	  /* IMMEDIATELY AFTER PLASTIC LOADING, MEMORY SURFACE IS BREACHED, NO LOCAL BUCKLING OCCURED */  
-          if( ( Crule == 1 ) && ( memory == 0 ) && ( lb == 0 ) ){
-               if( strain_inc <= 0.0 ){
-                  Epo = Epoi / ( 1 + w * W );
-                  delta_in = fabs( Epo * ep + Tbs_n - Tls_n);
-                  h = e * delta_in + fE * Ee;
-                  Ep = Epo + h * ( delta_in ) / 0.000000000001;
-                  Ttangent = Ee * Ep / ( Ee + Ep );
-		  /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
-                  Tstress = Tls_n + ( ( Pstress - Tls_n ) / Ee ) * Ttangent;
-		  /* MAKE SURE THAT LOADING POINT DOES NOT BREACH BOUNDING SURFACE */
-                  if ( Tstress <= Epo * ep + Tbs_n ){
-                       Tstress = Epo * ep + Tbs_n;
-                  } 
-		  /* CALCULATE INCREMENTAL PLASTIC STRAIN */ 
-                  dep = ( ( Pstress - Tls_n ) / Ee ) * Ttangent / Ep;
-		  /* DETECT DIRECTION OF LOADING */
-                  if(dep > 0.0){
-                    ld = 1;
-                  }
-                  else if(dep < 0.0){
-                    ld = -1;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
-                  if( ld == Cld ){
-                    delta_in = Cdelta_in;
-                    h = Ch;
-		    delta = fabs( Epo * (ep+dep) + Tbs_n - Tls_n);
-                    Ep = Epo + h * ( delta ) / (delta_in-delta);
-                    Ttangent = Ee * Ep / ( Ee + Ep );
-                    stress_inc = (Tstrain - eunld) * Ttangent;
-		    Tstress = funld + stress_inc;
-                    dep = stress_inc / Ep;
-                    ep_ref = Cep_ref;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
-		  if( ld != Cld ){
-		     ep_ref = ep;
-                     //Tls_n = Tstress;
-                     //Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                     //  - ( alfa - a - 1 ) * exp( -c * ebar_p * 100 ) );
-                     //Tls_p = Tstress + 2 * Rls;
-		  }
-		  ep = ep + dep;
-		  /* CHECK LOCAL BUCKLING */
-                  //if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < -fy  ) && ( ep < 0.0 )  ){
-                  //if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstress < -fy  ) | ( Tstress < Tls_n ) ) ){
-                  //     lb = 1;
-                  //     buckled = 1;
-                  //     Tbs_n = - fy;
-                  //}
-                  /* CHECK LOCAL BUCKLING */
-                  if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
-                       lb = 1;
-                       //buckled = 1;
-                  }
-                  if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
-                       lb = 1;
-                       buckled = 1;
-                  }
-		  /* UPDATE AND CALCULATE STATE VARIABLES */
-                  if( ep >= epmax ){
-                       epmax = ep;
-                  }
-                  if( ep <= epmin ){ 
-                       epmin = ep;
-                  }
-                  ebar_p = fabs( epmin ) + fabs ( epmax );
-                  Tls_n = Tstress;
-                  Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                       - ( alfa - a - 1 ) * exp( -c * ebar_p * 100 ) );
-                  Tls_p = Tstress + 2 * Rls;
-                  W = W + Tstress * dep;
-               } 
-               if( strain_inc >= 0.0 ){
-                  Epo = Epoi / ( 1 + w * W );
-                  delta_in = fabs( Epo * ep + Tbs_p - Tls_p) ;
-                  h = e * delta_in + fE * Ee;
-                  Ep = Epo + h * ( delta_in ) / 0.000000000001;
-                  Ttangent = Ee * Ep / ( Ee + Ep );
-		  /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
-                  Tstress = Tls_p + ( ( Pstress - Tls_p ) / Ee ) * Ttangent;
-		  /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
-                  if ( Tstress >= Epo * ep + Tbs_p ){
-                       Tstress = Epo * ep + Tbs_p;
-                  }
-		  /* CALCULATE INCREMENTAL PLASTIC STRAIN */
-                  dep = ( ( Pstress - Tls_p ) / Ee ) * Ttangent / Ep;
-		  /* DETECT DIRECTION OF LOADING */
-                  if(dep > 0.0){
-                    ld = 1;
-                  }
-                  else if(dep < 0.0){
-                    ld = -1;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
-                  if( ld == Cld ){
-                    delta_in = Cdelta_in;
-                    h = Ch;
-		    delta = fabs( Epo * (ep+dep) + Tbs_p - Tls_p);
-                    Ep = Epo + h * ( delta ) / (delta_in-delta);
-                    Ttangent = Ee * Ep / ( Ee + Ep );
-                    stress_inc = (Tstrain - eunld) * Ttangent;
-		    Tstress = funld + stress_inc;
-                    dep = stress_inc / Ep;
-                    ep_ref = Cep_ref;                   
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
-		  if( ld != Cld ){
-	              ep_ref = ep;
-                      //Tls_p = Tstress;
-                      //Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                      // - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                      //Tls_n = Tstress - 2 * Rls;
-	          }
-		  ep = ep + dep;
-		  /* UPDATE AND CALCULATE STATE VARIABLES */
-                  if( ep >= epmax ){
-                       epmax = ep;
-                  }
-                  if( ep <= epmin ){
-                       epmin = ep;
-                  }
-                  ebar_p = fabs( epmin ) + fabs ( epmax );
-                  Tls_p = Tstress;
-                  Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                       - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                  Tls_n = Tstress - 2 * Rls;
-                  W = W + Tstress * dep;
-               } 
-          } /* if( (Crule == 1 ) && ( memory == 0 ) ) 		   */
-	  /* IMMEDIATELY AFTER PLASTIC LOADING, MEMORY SURFACE IS NOT BREACHED, NO LOCAL BUCKLING OCCURED */
-          else if ( ( Crule == 1 ) && ( memory == 1 ) && ( lb == 0 ) ){
-               if( strain_inc <= -0.0 ){
-                  Epo = Epoi / ( 1 + w * W );
-		  /* CALCULATE delta_in with respect to VIRTUAL BOUNDING SURFACE */
-                  deltap_in = fabs( Epo * ep + Tvbs_n - Tls_n);
-                  delta_in = fabs ( Epo * ep + Tbs_n - Tls_n);
-                  h = e * deltap_in + fE * Ee;
-                  Ep = Epo + h * ( delta_in ) / 1.0E-30;
-                  Ttangent = Ee * Ep / ( Ee + Ep );
-		  /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
-                  //Tstress = Tls_n + ( ( Pstress - Tls_n ) / Ee )* Ttangent;
-                  Tstress = Cstress + Ttangent * strain_inc;
-		  /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
-                  if ( Tstress <= Epo * ep + Tbs_n ){
-                      Tstress = Epo * ep + Tbs_n;
-                  }
-		  /* CALCULATE INCREMENTAL PLASTIC STRAIN */
-                  dep = ( ( Pstress - Tls_n ) / Ee ) * Ttangent / Ep;
-		   /* DETECT DIRECTION OF LOADING */
-                  if(dep > 0.0){
-                      ld = 1;
-                  }
-                  else if(dep < 0.0){
-                      ld = -1;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
-                  if( ld == Cld ){
-                      deltap_in = Cdeltap_in;
-                      delta_in = Cdelta_in;
-                      h = Ch;
-		      delta = fabs( Epo * (ep+dep) + Tbs_n - Tls_n);
-		      memory = Cmemory;
-                      if( fabs( delta_in-delta ) < 1.0E-30 ){
-                         Ep =  Epo + h * ( delta ) / 1.0E-30;
-                      }
-                      else{
-                         Ep = Epo + h * ( delta ) / (delta_in-delta);
-                      }
-                      Ttangent = Ee * Ep / ( Ee + Ep );
-                      stress_inc = ( Tstrain - eunld ) * Ttangent;
-		      Tstress = funld + stress_inc;
-                      dep = stress_inc / Ep;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
-		  if( ld == Cld ){
-		     ep_ref = Cep_ref;
-		  }
-		  else{
-		     ep_ref = ep;
-		  }
-		  ep = ep + dep;
-		  ///* CHECK LOCAL BUCKLING */
-                  //if ( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 )){
-                  //if ( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
-                  //   lb = 1;
-                  //   buckled = 1; 
-                  //   Tbs_n = -fy;
-                  //}
-                  /* CHECK LOCAL BUCKLING */
-                  if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
-                       lb = 1;
-                       //buckled = 1;
-                  }
-                  if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
-                       lb = 1;
-                       buckled = 1;
-                  }
-		  /* UPDATE AND CALCULATE STATE VARIABLES */
-                  if( ep >= epmax ){
-                     epmax = ep;
-                  }
-                  if( ep <= epmin ){
-                     epmin = ep;
-                  }
-                  ebar_p = fabs( epmin ) + fabs ( epmax );
-                  Tls_n = Tstress;
-                  Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                  - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                  Tls_p = Tstress + 2 * Rls;
-                  W = W + Tstress * dep;
-               } 
-               if( strain_inc >= 0.0 ){
-                  Epo = Epoi / ( 1 + w * W );
-		  /* CALCULATE delta_in with respect to VIRTUAL BOUNDING SURFACE */
-                  deltap_in = fabs( Epo * ep + Tvbs_p - Tls_p) ;
-                  delta_in = fabs( Epo * ep + Tbs_p - Tls_p) ;
-                  h = e * deltap_in + fE * Ee;
-                  Ep = Epo + h * ( deltap_in ) / 1.0E-30;
-                  Ttangent = Ee * Ep / ( Ee + Ep );
-		  /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
-                  //Tstress = Tls_p + ( ( Pstress - Tls_p ) / Ee )* Ttangent;
-                  Tstress = Cstress + Ttangent * strain_inc;
-		  /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
-                  if ( Tstress >= Epo * ep + Tbs_p ){
-                      Tstress = Epo * ep + Tbs_p;
-                  }
-		  /* CALCULATE INCREMENTAL PLASTIC STRAIN */
-                  dep = ( ( Pstress - Tls_p ) / Ee ) * Ttangent / Ep;
-		  /* DETECT DIRECTION OF LOADING */
-                  if(dep > 0.0){
-                      ld = 1;
-                  }
-                  else if(dep < 0.0){
-                      ld = -1;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VARIABLES */
-                  if( ld == Cld ){
-                      deltap_in = Cdeltap_in;
-                      delta_in = Cdelta_in;
-                      h = Ch;
-		      delta = fabs( Epo * (ep+dep) + Tbs_p - Tls_p);
-		      memory = Cmemory;
-                      if( fabs( delta_in-delta ) < 1.0E-30 ){
-                         Ep =  Epo + h * ( delta ) / 1.0E-30;
-                      }
-                      else{
-                         Ep = Epo + h * ( delta ) / (delta_in-delta);
-                      }
-                      Ttangent = Ee * Ep / ( Ee + Ep );
-                      stress_inc = ( Tstrain - eunld) * Ttangent;
-		      Tstress = funld + stress_inc;
-                      dep = stress_inc / Ep;
-                  }
-		  /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
-		  if( ld == Cld ){
-		      ep_ref = Cep_ref;
-		  }
-		  else{
-		      ep_ref = ep;
-		  }
-		  /* UPDATE AND CALCULATE STATE VARIABLES */
-		  ep = ep + dep;
-                  if( ep >= epmax ){
-                      epmax = ep;
-                  }
-                  if( ep <= epmin ){
-                      epmin = ep;
-                  }
-                  ebar_p = fabs( epmin ) + fabs ( epmax );
-                  Tls_p = Tstress;
-                  Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                  - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                  Tls_n = Tstress - 2 * Rls;
-                  W = W + Tstress * dep;
-               } 
-          } /* else if ( ( Crule == 1 ) && ( memory == 1 ) )*/   
-	  /* COUNTINUED PLASTIC LOADING, MEMORY SURFACE BREACHED, NO LOCAL BUCKLING */ 
-          else if  ( ( Crule == 2 ) && ( memory == 0 ) && ( lb == 0 ) ){
-               if( Cstress <= Tls_n ){
-                       delta = fabs( Epo * ep + Tbs_n - Cstress) ;
-                       if( ( Epo * ep + Tbs_n - Cstress ) > 0.0 ){ 
-                         delta = 0.0;
-                       }
-               } 
-               if( Cstress >= Tls_p ){
-                       delta = fabs( Epo * ep + Tbs_p - Cstress);
-                       if( ( Epo * ep + Tbs_p - Cstress ) < 0.0 ){
-                         delta = 0.0;
-                       }
-               } 
-               h = e * delta + fE * Ee;
-               Ep = Epo + h * ( delta ) / ( delta_in - delta );
-               Ttangent = Ee * Ep / ( Ee + Ep );
-               stress_inc = strain_inc * Ttangent;
-               Tstress = Cstress + stress_inc;
-               if ( Tstress >=  Epo * ep + Tbs_p ){
-		      Tstress =  Epo * ep + Tbs_p;
-	       }
-	       if ( Tstress <=  Epo * ep + Tbs_n ){
-                      Tstress = Epo * ep + Tbs_n;
-	       }
-               dep = stress_inc / Ep;
-               ep = ep + dep;
-               if( strain_inc < 0 ){
-                      //if ( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 ) ){
-                      //if ( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ) {
-                      //   lb = 1;
-                      //   buckled = 1;
-                      //   Tbs_n = -fy;
-                      //}
-                      if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
-                       lb = 1;
-                       //buckled = 1;
-                      }
-                      if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n )){
-                       lb = 1;
-                       buckled = 1;
-                      }
-               }
-               if( ep >= epmax ){
-                      epmax = ep;
-               } 
-               if( ep <= epmin ){
-                      epmin = ep;
-               } 
-               ebar_p = fabs( epmin ) + fabs ( epmax );
-               if( strain_inc > 1.0E-30 ){
-                      Tls_p = Tstress;
-                      Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                      - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                      Tls_n = Tstress - 2 * Rls;
-               } 
-               if( strain_inc < -1.0E-30 ){
-                      Tls_n = Tstress;
-                      Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                      - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                      Tls_p = Tstress + 2 * Rls;
-               } 
-               W =W + Tstress * dep;
-               elb_ref = Tstrain;
-          } /* else if ( Crule == 2 ) && ( memory == 0 ) */
-          else if ( ( Crule == 2 ) && ( memory == 1 ) && ( lb == 0 ) ){
-               if( ( Cstress >=  Epo * ep + Tmem_p ) | ( Cstress <= Epo * ep + Tmem_n ) )
-               {
-                       memory = 0;
-                       if( Cstress <= Tls_n ){
-                          delta = fabs( Epo * ep + Tbs_n - Cstress) ;
-                          if( ( Epo * ep + Tbs_n - Cstress ) > 0.0 ){ 
-                             delta = 0.0;
-                          }
-                       }
-                       if( Cstress >= Tls_p ){
-                          delta = fabs( Epo * ep + Tbs_p - Cstress);
-                          if( ( Epo * ep + Tbs_p - Cstress ) < 0.0 ){
-                             delta = 0.0;
-                          }
-                       }
-                       h = e * delta + fE * Ee;
-                       Ep = Epo + h * ( delta ) / ( delta_in - delta );
-                       Ttangent = Ee * Ep / ( Ee + Ep );
-                       stress_inc = strain_inc * Ttangent;
-                       Tstress = Cstress + stress_inc;
-                       if ( Tstress >=  Epo * ep + Tbs_p ){
+	   /* IMMEDIATELY AFTER PLASTIC LOADING, MEMORY SURFACE IS BREACHED, NO LOCAL BUCKLING OCCURED */  
+	   if( ( Crule == 1 ) && ( memory == 0 ) && ( lb == 0 ) ){
+		   if( strain_inc <= 0.0 ){
+			   Epo = Epoi / ( 1 + w * W );
+			   delta_in = fabs( Epo * ep + Tbs_n - Tls_n);
+			   h = e * delta_in + fE * Ee;
+			   Ep = Epo + h * ( delta_in ) / 0.000000000001;
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
+			   Tstress = Tls_n + ( ( Pstress - Tls_n ) / Ee ) * Ttangent;
+			   /* MAKE SURE THAT LOADING POINT DOES NOT BREACH BOUNDING SURFACE */
+			   if ( Tstress <= Epo * ep + Tbs_n ){
+				   Tstress = Epo * ep + Tbs_n;
+			   } 
+			   /* CALCULATE INCREMENTAL PLASTIC STRAIN */ 
+			   dep = ( ( Pstress - Tls_n ) / Ee ) * Ttangent / Ep;
+			   /* DETECT DIRECTION OF LOADING */
+			   if(dep > 0.0){
+				   ld = 1;
+			   }
+			   else if(dep < 0.0){
+				   ld = -1;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
+			   if( ld == Cld ){
+				   delta_in = Cdelta_in;
+				   h = Ch;
+				   delta = fabs( Epo * (ep+dep) + Tbs_n - Tls_n);
+				   Ep = Epo + h * ( delta ) / (delta_in-delta);
+				   Ttangent = Ee * Ep / ( Ee + Ep );
+				   stress_inc = (Tstrain - eunld) * Ttangent;
+				   Tstress = funld + stress_inc;
+				   dep = stress_inc / Ep;
+				   ep_ref = Cep_ref;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
+			   if( ld != Cld ){
+				   ep_ref = ep;
+				   //Tls_n = Tstress;
+				   //Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   //  - ( alfa - a - 1 ) * exp( -c * ebar_p * 100 ) );
+				   //Tls_p = Tstress + 2 * Rls;
+			   }
+			   ep = ep + dep;
+			   /* CHECK LOCAL BUCKLING */
+			   //if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < -fy  ) && ( ep < 0.0 )  ){
+			   //if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstress < -fy  ) | ( Tstress < Tls_n ) ) ){
+			   //     lb = 1;
+			   //     buckled = 1;
+			   //     Tbs_n = - fy;
+			   //}
+			   /* CHECK LOCAL BUCKLING */
+			   if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
+				   lb = 1;
+				   //buckled = 1;
+			   }
+			   if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
+				   lb = 1;
+				   buckled = 1;
+			   }
+			   /* UPDATE AND CALCULATE STATE VARIABLES */
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){ 
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   Tls_n = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a - 1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_p = Tstress + 2 * Rls;
+			   W = W + Tstress * dep;
+		   } 
+		   if( strain_inc >= 0.0 ){
+			   Epo = Epoi / ( 1 + w * W );
+			   delta_in = fabs( Epo * ep + Tbs_p - Tls_p) ;
+			   h = e * delta_in + fE * Ee;
+			   Ep = Epo + h * ( delta_in ) / 0.000000000001;
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
+			   Tstress = Tls_p + ( ( Pstress - Tls_p ) / Ee ) * Ttangent;
+			   /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
+			   if ( Tstress >= Epo * ep + Tbs_p ){
+				   Tstress = Epo * ep + Tbs_p;
+			   }
+			   /* CALCULATE INCREMENTAL PLASTIC STRAIN */
+			   dep = ( ( Pstress - Tls_p ) / Ee ) * Ttangent / Ep;
+			   /* DETECT DIRECTION OF LOADING */
+			   if(dep > 0.0){
+				   ld = 1;
+			   }
+			   else if(dep < 0.0){
+				   ld = -1;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
+			   if( ld == Cld ){
+				   delta_in = Cdelta_in;
+				   h = Ch;
+				   delta = fabs( Epo * (ep+dep) + Tbs_p - Tls_p);
+				   Ep = Epo + h * ( delta ) / (delta_in-delta);
+				   Ttangent = Ee * Ep / ( Ee + Ep );
+				   stress_inc = (Tstrain - eunld) * Ttangent;
+				   Tstress = funld + stress_inc;
+				   dep = stress_inc / Ep;
+				   ep_ref = Cep_ref;                   
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
+			   if( ld != Cld ){
+				   ep_ref = ep;
+				   //Tls_p = Tstress;
+				   //Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   // - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+				   //Tls_n = Tstress - 2 * Rls;
+			   }
+			   ep = ep + dep;
+			   /* UPDATE AND CALCULATE STATE VARIABLES */
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   Tls_p = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_n = Tstress - 2 * Rls;
+			   W = W + Tstress * dep;
+		   } 
+	   } /* if( (Crule == 1 ) && ( memory == 0 ) ) 		   */
+	   /* IMMEDIATELY AFTER PLASTIC LOADING, MEMORY SURFACE IS NOT BREACHED, NO LOCAL BUCKLING OCCURED */
+	   else if ( ( Crule == 1 ) && ( memory == 1 ) && ( lb == 0 ) ){
+		   if( strain_inc <= -0.0 ){
+			   Epo = Epoi / ( 1 + w * W );
+			   /* CALCULATE delta_in with respect to VIRTUAL BOUNDING SURFACE */
+			   deltap_in = fabs( Epo * ep + Tvbs_n - Tls_n);
+			   delta_in = fabs ( Epo * ep + Tbs_n - Tls_n);
+			   h = e * deltap_in + fE * Ee;
+			   Ep = Epo + h * ( delta_in ) / 1.0E-30;
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
+			   //Tstress = Tls_n + ( ( Pstress - Tls_n ) / Ee )* Ttangent;
+			   Tstress = Cstress + Ttangent * strain_inc;
+			   /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
+			   if ( Tstress <= Epo * ep + Tbs_n ){
+				   Tstress = Epo * ep + Tbs_n;
+			   }
+			   /* CALCULATE INCREMENTAL PLASTIC STRAIN */
+			   dep = ( ( Pstress - Tls_n ) / Ee ) * Ttangent / Ep;
+			   /* DETECT DIRECTION OF LOADING */
+			   if(dep > 0.0){
+				   ld = 1;
+			   }
+			   else if(dep < 0.0){
+				   ld = -1;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VRAIABLES */
+			   if( ld == Cld ){
+				   deltap_in = Cdeltap_in;
+				   delta_in = Cdelta_in;
+				   h = Ch;
+				   delta = fabs( Epo * (ep+dep) + Tbs_n - Tls_n);
+				   memory = Cmemory;
+				   if( fabs( delta_in-delta ) < 1.0E-30 ){
+					   Ep =  Epo + h * ( delta ) / 1.0E-30;
+				   }
+				   else{
+					   Ep = Epo + h * ( delta ) / (delta_in-delta);
+				   }
+				   Ttangent = Ee * Ep / ( Ee + Ep );
+				   stress_inc = ( Tstrain - eunld ) * Ttangent;
+				   Tstress = funld + stress_inc;
+				   dep = stress_inc / Ep;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
+			   if( ld == Cld ){
+				   ep_ref = Cep_ref;
+			   }
+			   else{
+				   ep_ref = ep;
+			   }
+			   ep = ep + dep;
+			   ///* CHECK LOCAL BUCKLING */
+			   //if ( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 )){
+			   //if ( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
+			   //   lb = 1;
+			   //   buckled = 1; 
+			   //   Tbs_n = -fy;
+			   //}
+			   /* CHECK LOCAL BUCKLING */
+			   if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
+				   lb = 1;
+				   //buckled = 1;
+			   }
+			   if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
+				   lb = 1;
+				   buckled = 1;
+			   }
+			   /* UPDATE AND CALCULATE STATE VARIABLES */
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   Tls_n = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_p = Tstress + 2 * Rls;
+			   W = W + Tstress * dep;
+		   } 
+		   if( strain_inc >= 0.0 ){
+			   Epo = Epoi / ( 1 + w * W );
+			   /* CALCULATE delta_in with respect to VIRTUAL BOUNDING SURFACE */
+			   deltap_in = fabs( Epo * ep + Tvbs_p - Tls_p) ;
+			   delta_in = fabs( Epo * ep + Tbs_p - Tls_p) ;
+			   h = e * deltap_in + fE * Ee;
+			   Ep = Epo + h * ( deltap_in ) / 1.0E-30;
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   /* CORRECT THE OVERSHOOTING OF THE YIELD SURFACE RATHER THAN HAVING Tstress = Cstress + Ttangent * strain_incr */
+			   //Tstress = Tls_p + ( ( Pstress - Tls_p ) / Ee )* Ttangent;
+			   Tstress = Cstress + Ttangent * strain_inc;
+			   /* MAKE SURE THAT LOADING POINT DOES BREACH BOUNDING SURFACE */
+			   if ( Tstress >= Epo * ep + Tbs_p ){
+				   Tstress = Epo * ep + Tbs_p;
+			   }
+			   /* CALCULATE INCREMENTAL PLASTIC STRAIN */
+			   dep = ( ( Pstress - Tls_p ) / Ee ) * Ttangent / Ep;
+			   /* DETECT DIRECTION OF LOADING */
+			   if(dep > 0.0){
+				   ld = 1;
+			   }
+			   else if(dep < 0.0){
+				   ld = -1;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE STATE VARIABLES */
+			   if( ld == Cld ){
+				   deltap_in = Cdeltap_in;
+				   delta_in = Cdelta_in;
+				   h = Ch;
+				   delta = fabs( Epo * (ep+dep) + Tbs_p - Tls_p);
+				   memory = Cmemory;
+				   if( fabs( delta_in-delta ) < 1.0E-30 ){
+					   Ep =  Epo + h * ( delta ) / 1.0E-30;
+				   }
+				   else{
+					   Ep = Epo + h * ( delta ) / (delta_in-delta);
+				   }
+				   Ttangent = Ee * Ep / ( Ee + Ep );
+				   stress_inc = ( Tstrain - eunld) * Ttangent;
+				   Tstress = funld + stress_inc;
+				   dep = stress_inc / Ep;
+			   }
+			   /* IF LOADING DIRECTION IS NOT REVERSED DO NOT UPDATE THE REFERENCE PLASTIC STRAIN FOR LOCAL BUCKLING*/
+			   if( ld == Cld ){
+				   ep_ref = Cep_ref;
+			   }
+			   else{
+				   ep_ref = ep;
+			   }
+			   /* UPDATE AND CALCULATE STATE VARIABLES */
+			   ep = ep + dep;
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   Tls_p = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_n = Tstress - 2 * Rls;
+			   W = W + Tstress * dep;
+		   } 
+	   } /* else if ( ( Crule == 1 ) && ( memory == 1 ) )*/   
+	   /* COUNTINUED PLASTIC LOADING, MEMORY SURFACE BREACHED, NO LOCAL BUCKLING */ 
+	   else if  ( ( Crule == 2 ) && ( memory == 0 ) && ( lb == 0 ) ){
+		   if( Cstress <= Tls_n ){
+			   delta = fabs( Epo * ep + Tbs_n - Cstress) ;
+			   if( ( Epo * ep + Tbs_n - Cstress ) > 0.0 ){ 
+				   delta = 0.0;
+			   }
+		   } 
+		   if( Cstress >= Tls_p ){
+			   delta = fabs( Epo * ep + Tbs_p - Cstress);
+			   if( ( Epo * ep + Tbs_p - Cstress ) < 0.0 ){
+				   delta = 0.0;
+			   }
+		   } 
+		   h = e * delta + fE * Ee;
+		   Ep = Epo + h * ( delta ) / ( delta_in - delta );
+		   Ttangent = Ee * Ep / ( Ee + Ep );
+		   stress_inc = strain_inc * Ttangent;
+		   Tstress = Cstress + stress_inc;
+		   if ( Tstress >=  Epo * ep + Tbs_p ){
 			   Tstress =  Epo * ep + Tbs_p;
-		       }
-		       if ( Tstress <=  Epo * ep + Tbs_n ){
-		  	   Tstress =  Epo * ep + Tbs_n;
-		       } 
-                       dep = stress_inc / Ep;
-                       ep = ep + dep;
-                       if( strain_inc < 0.0 ){
-                           //if ( ( ep <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 )){
-                           //if ( ( ep <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
-                           //   lb = 1;
-                           //   buckled = 1;
-                           //   Tbs_n = -fy;
-                           //}
-                           if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
-                                lb = 1;
-                                //buckled = 1;
-                           }
-                           if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
-                                lb = 1;
-                                buckled = 1;
-                           }
-                       }
-                       if( ep >= epmax ){
-                          epmax = ep;
-                       }
-                       if( ep <= epmin ){
-                          epmin = ep;
-                       }
-                       ebar_p = fabs( epmin ) + fabs ( epmax );
-                       if( strain_inc > 1.0E-20 ){
-                          Tls_p = Tstress;
-                          Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                          - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                          Tls_n = Tstress - 2 * Rls;
-                       }
-                       if( strain_inc < -1.0E-20 ){
-                          Tls_n = Tstress;
-                          Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                          - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                          Tls_p = Tstress + 2 * Rls;
-                       }
-                       W = W + Tstress * dep;
-          	} /* if( ( Cstress <= Tmem_p ) && ( Cstress >= Tmem_n ) ) */
-          	else if( ( Cstress < Epo * ep + Tmem_p ) && ( Cstress > Epo * ep + Tmem_n ) ){
-                       if( Cstress <= Tls_n ){
-                           delta = fabs( Epo * ep + Tbs_n - Cstress) ;
-                           delta_p = fabs( Epo * ep + Tvbs_n - Cstress) ;
-                           if( ( Epo * ep + Tvbs_n - Tstress ) > 0.0 ){
-                               delta = 0.0;
-                           }
-                       }
-                       if( Cstress >= Tls_p ){
-                           delta = fabs( Epo * ep + Tbs_p - Cstress);
-                           delta_p = fabs( Epo * ep + Tvbs_p - Cstress) ;
-                           if( ( Epo * ep + Tvbs_p - Cstress ) < 0.0 ){
-                              delta = 0.0;
-                           }
-                        }
-                        h = e * delta + fE * Ee;
-                        Ep = Epo + h * ( delta + delta_y ) / ( delta_in - delta );
-                        Ttangent = Ee * Ep / ( Ee + Ep );
-                        stress_inc = strain_inc * Ttangent;
-                        Tstress = Cstress + stress_inc;
-                        if ( Tstress >=  Epo * ep + Tbs_p ){
-			   Tstress =  Epo * ep + Tbs_p;
-			}
-			if ( Tstress <=  Epo * ep + Tbs_n ){
-			   Tstress =  Epo * ep + Tbs_n;
-			}
-                        dep = stress_inc / Ep;
-                        ep = ep + dep;
-                        if( strain_inc < 0.0 ){
-                           //if( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 ) ){
-                           //if( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
-                           //  lb = 1;
-                           //  buckled = 1;
-                           //  Tbs_n = -fy;
-                           //}
-                           if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
-                               lb = 1;
-                               //buckled = 1;
-                           }
-                           if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n  ) ){
-                               lb = 1;
-                               buckled = 1;
-                           }
-                        }
-                        if( ep >= epmax ){
-                           epmax = ep;
-                        }
-                        if( ep <= epmin ){
-                           epmin = ep;
-                        }
-                        ebar_p = fabs( epmin ) + fabs ( epmax );
-                        if( strain_inc > 1.0E-20 ){
-                           Tls_p = Tstress;
-                           Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                           - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                           Tls_n = Tstress - 2 * Rls;
-                        }
-                        if( strain_inc < -1.0E-20 ){
-                           Tls_n = Tstress;
-                           Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                           - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                           Tls_p = Tstress + 2 * Rls;
-                        }
-                        W = W + Tstress * dep;
-                        elb_ref = Tstrain;
-                 } /* else if( ( Cstress <= Tmem_p ) && ( Cstress >= Tmem_n ) ) */
-          } /* else if ( ( Crule == 2 ) && ( memory == 1 ) ) */
-          else if ( lb == 1 ){
-		 if( ep - ep_ref > -eresp_n ){
-                 Ttangent = -Ksft;
-                 Ep = Ksft * Ee / ( Ee + Ksft );
-                 stress_inc = strain_inc * Ttangent;
-                 Tstress = Cstress + stress_inc;
-                 if ( Tstrain < lbstrn ){
-                     lbstrn = Tstrain;
-                     lbstrs = Tstress;
-                 }
-                 dep = -(stress_inc / Ep);
-                 ep = ep + dep;
-                 }
-                 else if( ep - ep_ref < -eresp_n ){
-                 Ttangent = 0.1;
-                 Ep = 0.1;
-                 Tstress = Cstress;
-                 if ( Tstrain < lbstrn ){
-                     lbstrn = Tstrain;
-                     lbstrs = Tstress;
-                 }
-                 dep = strain_inc;
-                 ep = ep + dep;
-                 }
-                 if( ep >= epmax ){
-                    epmax = ep;
-                 }
-                 if( ep <= epmin ){
-                    epmin = ep;
-                 }
-                 W = W + Tstress * dep;
-                 ebar_p = fabs( epmin ) + fabs ( epmax );
-                 if( strain_inc < 0.0 ){
-                    Tls_n = Tstress;
-                    Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
-                          - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
-                    Tls_p = Tstress + 2 * Rls;
-                 }
-          } /* else if ( lb == 1) */
+		   }
+		   if ( Tstress <=  Epo * ep + Tbs_n ){
+			   Tstress = Epo * ep + Tbs_n;
+		   }
+		   dep = stress_inc / Ep;
+		   ep = ep + dep;
+		   if( strain_inc < 0 ){
+			   //if ( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 ) ){
+			   //if ( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ) {
+			   //   lb = 1;
+			   //   buckled = 1;
+			   //   Tbs_n = -fy;
+			   //}
+			   if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
+				   lb = 1;
+				   //buckled = 1;
+			   }
+			   if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n )){
+				   lb = 1;
+				   buckled = 1;
+			   }
+		   }
+		   if( ep >= epmax ){
+			   epmax = ep;
+		   } 
+		   if( ep <= epmin ){
+			   epmin = ep;
+		   } 
+		   ebar_p = fabs( epmin ) + fabs ( epmax );
+		   if( strain_inc > 1.0E-30 ){
+			   Tls_p = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_n = Tstress - 2 * Rls;
+		   } 
+		   if( strain_inc < -1.0E-30 ){
+			   Tls_n = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_p = Tstress + 2 * Rls;
+		   } 
+		   W =W + Tstress * dep;
+		   elb_ref = Tstrain;
+	   } /* else if ( Crule == 2 ) && ( memory == 0 ) */
+	   else if ( ( Crule == 2 ) && ( memory == 1 ) && ( lb == 0 ) ){
+		   if( ( Cstress >=  Epo * ep + Tmem_p ) | ( Cstress <= Epo * ep + Tmem_n ) )
+		   {
+			   memory = 0;
+			   if( Cstress <= Tls_n ){
+				   delta = fabs( Epo * ep + Tbs_n - Cstress) ;
+				   if( ( Epo * ep + Tbs_n - Cstress ) > 0.0 ){ 
+					   delta = 0.0;
+				   }
+			   }
+			   if( Cstress >= Tls_p ){
+				   delta = fabs( Epo * ep + Tbs_p - Cstress);
+				   if( ( Epo * ep + Tbs_p - Cstress ) < 0.0 ){
+					   delta = 0.0;
+				   }
+			   }
+			   h = e * delta + fE * Ee;
+			   Ep = Epo + h * ( delta ) / ( delta_in - delta );
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   stress_inc = strain_inc * Ttangent;
+			   Tstress = Cstress + stress_inc;
+			   if ( Tstress >=  Epo * ep + Tbs_p ){
+				   Tstress =  Epo * ep + Tbs_p;
+			   }
+			   if ( Tstress <=  Epo * ep + Tbs_n ){
+				   Tstress =  Epo * ep + Tbs_n;
+			   } 
+			   dep = stress_inc / Ep;
+			   ep = ep + dep;
+			   if( strain_inc < 0.0 ){
+				   //if ( ( ep <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 )){
+				   //if ( ( ep <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
+				   //   lb = 1;
+				   //   buckled = 1;
+				   //   Tbs_n = -fy;
+				   //}
+				   if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
+					   lb = 1;
+					   //buckled = 1;
+				   }
+				   if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n ) ){
+					   lb = 1;
+					   buckled = 1;
+				   }
+			   }
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   if( strain_inc > 1.0E-20 ){
+				   Tls_p = Tstress;
+				   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+					   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+				   Tls_n = Tstress - 2 * Rls;
+			   }
+			   if( strain_inc < -1.0E-20 ){
+				   Tls_n = Tstress;
+				   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+					   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+				   Tls_p = Tstress + 2 * Rls;
+			   }
+			   W = W + Tstress * dep;
+		   } /* if( ( Cstress <= Tmem_p ) && ( Cstress >= Tmem_n ) ) */
+		   else if( ( Cstress < Epo * ep + Tmem_p ) && ( Cstress > Epo * ep + Tmem_n ) ){
+			   if( Cstress <= Tls_n ){
+				   delta = fabs( Epo * ep + Tbs_n - Cstress) ;
+				   delta_p = fabs( Epo * ep + Tvbs_n - Cstress) ;
+				   if( ( Epo * ep + Tvbs_n - Tstress ) > 0.0 ){
+					   delta = 0.0;
+				   }
+			   }
+			   if( Cstress >= Tls_p ){
+				   delta = fabs( Epo * ep + Tbs_p - Cstress);
+				   delta_p = fabs( Epo * ep + Tvbs_p - Cstress) ;
+				   if( ( Epo * ep + Tvbs_p - Cstress ) < 0.0 ){
+					   delta = 0.0;
+				   }
+			   }
+			   h = e * delta + fE * Ee;
+			   Ep = Epo + h * ( delta + delta_y ) / ( delta_in - delta );
+			   Ttangent = Ee * Ep / ( Ee + Ep );
+			   stress_inc = strain_inc * Ttangent;
+			   Tstress = Cstress + stress_inc;
+			   if ( Tstress >=  Epo * ep + Tbs_p ){
+				   Tstress =  Epo * ep + Tbs_p;
+			   }
+			   if ( Tstress <=  Epo * ep + Tbs_n ){
+				   Tstress =  Epo * ep + Tbs_n;
+			   }
+			   dep = stress_inc / Ep;
+			   ep = ep + dep;
+			   if( strain_inc < 0.0 ){
+				   //if( ( ep - ep_ref <= -eplbf ) && ( Tstress < -fy ) && ( Tstrain < 0.0 ) ){
+				   //if( ( ep - ep_ref <= -eplbf ) && ( ( Tstress < -fy ) | ( Tstress < Tbs_n ) ) ){
+				   //  lb = 1;
+				   //  buckled = 1;
+				   //  Tbs_n = -fy;
+				   //}
+				   if ( ( ep - ep_ref <= - eplbf ) && ( ( Tstrain < lbstrn ) && ( Tstress < 0.99 * lbstrs ) ) && ( buckled == 1 ) ){
+					   lb = 1;
+					   //buckled = 1;
+				   }
+				   if ( ( ep - ep_ref <= - eplbf ) && ( Tstress < Tls_n ) && ( buckled == 0 ) && ( Tstress < -fres_n  ) ){
+					   lb = 1;
+					   buckled = 1;
+				   }
+			   }
+			   if( ep >= epmax ){
+				   epmax = ep;
+			   }
+			   if( ep <= epmin ){
+				   epmin = ep;
+			   }
+			   ebar_p = fabs( epmin ) + fabs ( epmax );
+			   if( strain_inc > 1.0E-20 ){
+				   Tls_p = Tstress;
+				   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+					   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+				   Tls_n = Tstress - 2 * Rls;
+			   }
+			   if( strain_inc < -1.0E-20 ){
+				   Tls_n = Tstress;
+				   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+					   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+				   Tls_p = Tstress + 2 * Rls;
+			   }
+			   W = W + Tstress * dep;
+			   elb_ref = Tstrain;
+		   } /* else if( ( Cstress <= Tmem_p ) && ( Cstress >= Tmem_n ) ) */
+	   } /* else if ( ( Crule == 2 ) && ( memory == 1 ) ) */
+	   else if ( lb == 1 ){
+		   if( ep - ep_ref > -eresp_n ){
+			   Ttangent = -Ksft;
+			   Ep = Ksft * Ee / ( Ee + Ksft );
+			   stress_inc = strain_inc * Ttangent;
+			   Tstress = Cstress + stress_inc;
+			   if ( Tstrain < lbstrn ){
+				   lbstrn = Tstrain;
+				   lbstrs = Tstress;
+			   }
+			   dep = -(stress_inc / Ep);
+			   ep = ep + dep;
+		   }
+		   else if( ep - ep_ref < -eresp_n ){
+			   Ttangent = 0.1;
+			   Ep = 0.1;
+			   Tstress = Cstress;
+			   if ( Tstrain < lbstrn ){
+				   lbstrn = Tstrain;
+				   lbstrs = Tstress;
+			   }
+			   dep = strain_inc;
+			   ep = ep + dep;
+		   }
+		   if( ep >= epmax ){
+			   epmax = ep;
+		   }
+		   if( ep <= epmin ){
+			   epmin = ep;
+		   }
+		   W = W + Tstress * dep;
+		   ebar_p = fabs( epmin ) + fabs ( epmax );
+		   if( strain_inc < 0.0 ){
+			   Tls_n = Tstress;
+			   Rls = Rlso * ( alfa - a * exp( -bb * ebar_p * 100 )
+				   - ( alfa - a -1 ) * exp( -c * ebar_p * 100 ) );
+			   Tls_p = Tstress + 2 * Rls;
+		   }
+	   } /* else if ( lb == 1) */
    } /* if ( plastic == 1 ) */
    strs = Tstress;
    tgnt = Ttangent;
    if( Tstress > Cmax_strs ){
-      Tmax_strs = Tstress;
+	   Tmax_strs = Tstress;
    }
    return 0;
 }
@@ -927,8 +929,10 @@ RCFT_stlMaterial::getStrain(void)
 int 
 RCFT_stlMaterial::commitState(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream output;
   output.open("pldata.dat",ios::app);
+#endif
   Cstrain = Tstrain;
   Cstress = Tstress;
   Ctangent = Ttangent;
@@ -943,15 +947,19 @@ RCFT_stlMaterial::commitState(void)
 int 
 RCFT_stlMaterial::revertToLastCommit(void)
 {
+#ifdef COMPOSITE_DEBUG
   ofstream output;
   output.open("pldata.dat",ios::app);
+#endif
   Tstrain = Cstrain;
   Tstress = Cstress;
   Ttangent = Ctangent;
   Trule = Crule;
   strs = Cstrs;
   tgnt = Ctgnt;
-  //output<<Tstrain<<"   "<<Tstress<<"   "<<Ttangent<<"   "<<Cstrain<<"   "<<Cstress<<"   "<<Ctangent<<"  "<<Ksft<<"  "<<(D/t) * (fy/Ee)<<"  "<<fres_n<<endl;
+#ifdef COMPOSITE_DEBUG
+  output<<Tstrain<<"   "<<Tstress<<"   "<<Ttangent<<"   "<<Cstrain<<"   "<<Cstress<<"   "<<Ctangent<<"  "<<Ksft<<"  "<<(D/t) * (fy/Ee)<<"  "<<fres_n<<endl;
+#endif
   this->backtocommitStatevar();
   return 0;
 }

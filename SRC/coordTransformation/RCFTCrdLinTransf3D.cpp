@@ -558,11 +558,12 @@ RCFTCrdLinTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 const Matrix &
 RCFTCrdLinTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 {
+#ifdef COMPOSITE_DEBUG
+   ofstream check4;
+   check4.open("check4.dat",ios::app);
 
-   //ofstream check4;
-   //check4.open("check4.dat",ios::app);
-
-   //check4>>KB;
+   check4>>KB;
+#endif
 
    static Matrix kg(18,18);	// Global stiffness for return
    static double kb[12][12];
@@ -711,9 +712,11 @@ RCFTCrdLinTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
 	kg(17,i) = R[0][2]*tmp[15][i] + R[1][2]*tmp[16][i] + R[2][2]*tmp[17][i];
    }
 
-   //check4<<R[0][0]<<"   "<<R[1][0]<<"   "<<R[2][0]<<endl;
-   //check4<<R[0][1]<<"   "<<R[1][1]<<"   "<<R[2][1]<<endl;
-   //check4<<R[0][2]<<"   "<<R[1][2]<<"   "<<R[2][2]<<endl;
+#ifdef COMPOSITE_DEBUG
+   check4<<R[0][0]<<"   "<<R[1][0]<<"   "<<R[2][0]<<endl;
+   check4<<R[0][1]<<"   "<<R[1][1]<<"   "<<R[2][1]<<endl;
+   check4<<R[0][2]<<"   "<<R[1][2]<<"   "<<R[2][2]<<endl;
+#endif
 
    return kg;
 }

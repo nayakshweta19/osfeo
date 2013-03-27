@@ -155,10 +155,12 @@ TclModelBuilder_addRCFTSTLLMBeamColumn(ClientData clientData, Tcl_Interp *interp
     
     //SectionForceDeformation **sections = new SectionForceDeformation *[nIP];
 
-    //ofstream output;
-    //output.open("newton.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+	ofstream output;
+    output.open("newton.dat",ios::app);
 
-    //output<<"\n TclRCFTSTLLMBeamColumn \n"<<endl;
+    output<<"\n TclRCFTSTLLMBeamColumn \n"<<endl;
+#endif
 
     RCFTSTLFiberSection3D **sections = new RCFTSTLFiberSection3D *[nIP];
     

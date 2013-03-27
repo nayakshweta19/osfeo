@@ -333,18 +333,20 @@ RCFTSCHBeamColumn3D::setDomain(Domain *theDomain)
 int
 RCFTSCHBeamColumn3D::commitState()
 {
-   //ofstream dunhat;
-   //dunhat.open("dunhat.dat",ios::app); 
+#ifdef COMPOSITE_DEBUG
+   ofstream dunhat;
+   dunhat.open("dunhat.dat",ios::app); 
 
-   //ofstream output;
-   //output.open("stlcon.dat",ios::app);
+   ofstream output;
+   output.open("stlcon.dat",ios::app);
 
-   //ofstream cont1;
-   //cont1.open("cont1.dat",ios::app);
+   ofstream cont1;
+   cont1.open("cont1.dat",ios::app);
 
-   //ofstream cont2;
-   //cont2.open("cont2.dat",ios::app);
-   
+   ofstream cont2;
+   cont2.open("cont2.dat",ios::app);
+#endif
+
    int err = 0;
    int i = 0;
    int j = 0;
@@ -356,7 +358,9 @@ RCFTSCHBeamColumn3D::commitState()
    }
 
    do {
-      //output<<"section #"<<i<<endl;	   
+#ifdef COMPOSITE_DEBUG
+      output<<"section #"<<i<<endl;	   
+#endif
       err = sections[i++]->commitState();
 
    } while (err == 0 && i < numSections);
@@ -377,67 +381,69 @@ RCFTSCHBeamColumn3D::commitState()
    }
    slp_strn = 0.0;
 
-   //if( Tagg == 1 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 2 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 3 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 4 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 5 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 6 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 7 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 8 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 9 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
-   //}
-   //if( Tagg == 10 ){
-   // cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<endl;
-   //}
-   //
-   //if( Tagg == 1 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 2 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 3 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 4 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 5 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 6 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 7 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 8 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 9 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
-   //}
-   //if( Tagg == 10 ){
-   // cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<endl;
-   //}
+#ifdef COMPOSITE_DEBUG
+   if( Tagg == 1 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 2 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 3 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 4 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 5 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 6 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 7 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 8 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 9 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<"  ";
+   }
+   if( Tagg == 10 ){
+    cont1<<DSQa[0](0)<<"  "<<DSQa[1](0)<<endl;
+   }
+   
+   if( Tagg == 1 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 2 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 3 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 4 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 5 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 6 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 7 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 8 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 9 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<"  ";
+   }
+   if( Tagg == 10 ){
+    cont2<<DSQa[0](6)<<"  "<<DSQa[1](6)<<endl;
+   }
+#endif
 
    return err;
 }
@@ -793,22 +799,25 @@ RCFTSCHBeamColumn3D::initializeSectionHistoryVariables (void)
 /********* NEWTON , SUBDIVIDE AND INITIAL ITERATIONS *********************/
 int RCFTSCHBeamColumn3D::update()
 {
-  //ofstream geom;
-  //geom.open("geom.dat",ios::app);
-  //ofstream unbal;
-  //unbal.open("unbal.dat",ios::app);
-  //ofstream mpls;
-  //mpls.open("mpls.dat",ios::app);
-  //ofstream lstiff;
-  //lstiff.open("lstiff.dat",ios::app);
-  //ofstream newton19;
-  //newton19.open("newton19.dat",ios::app);
-  //ofstream mpls1;
-  //mpls1.open("mpls1.dat",ios::app);
-  //ofstream mpls2;
-  //mpls2.open("mpls2.dat",ios::app);
-  //ofstream FS;
-  //FS.open("FS.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+  ofstream geom;
+  geom.open("geom.dat",ios::app);
+  ofstream unbal;
+  unbal.open("unbal.dat",ios::app);
+  ofstream mpls;
+  mpls.open("mpls.dat",ios::app);
+  ofstream lstiff;
+  lstiff.open("lstiff.dat",ios::app);
+  ofstream newton19;
+  newton19.open("newton19.dat",ios::app);
+  ofstream mpls1;
+  mpls1.open("mpls1.dat",ios::app);
+  ofstream mpls2;
+  mpls2.open("mpls2.dat",ios::app);
+  ofstream FS;
+  FS.open("FS.dat",ios::app);
+#endif
+
   int i,j,k;
   this->calcDeformedLength();
   double L = crdTransf->getInitialLength();
@@ -816,8 +825,10 @@ int RCFTSCHBeamColumn3D::update()
   if( initialFlag == 2 )
   this->revertToLastCommit();
   const Vector du = getLocalIncrDeltaDisp();
-  //mpls<<"incremental local displacement"<<endl;
-  //mpls>>du;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"incremental local displacement"<<endl;
+  mpls>>du;
+#endif
   const Matrix &KL = crdTransf->getLocalStiffMatrix(kv,fk);
   df_i = KL * du; 
   Vector df_nat(12);
@@ -981,8 +992,10 @@ int RCFTSCHBeamColumn3D::update()
          dub(13) -= ss(1,ctr1) * temp_ab[ctr1];
   }
 
-  //mpls<<"incremental natural displacement"<<endl;
-  //mpls>>dub;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"incremental natural displacement"<<endl;
+  mpls>>dub;
+#endif
 
   df_i(1) = ( df_nat(7) + df_nat(9) ) / L - ( fk(1) + fk(13) ) / 2.0 * theta_rigid_z;
   df_i(2) = ( df_nat(8) + df_nat(10) ) / L - ( fk(1) + fk(13) ) / 2.0 * theta_rigid_y;
@@ -1001,11 +1014,17 @@ int RCFTSCHBeamColumn3D::update()
   df_i(16) = - df_i(7);
   df_i(17) = - df_i(8);
 
-  //FS<<"new Element"<<endl;
+#ifdef COMPOSITE_DEBUG
+  FS<<"new Element"<<endl;
+#endif
   for ( i = 0; i < numSections; i++){
-    //FS<<"cross_section stiffness"<<endl;
-    ksa[i] = sections[i]->getSectionTangent();
-    //FS>>ksa[i];
+#ifdef COMPOSITE_DEBUG
+	FS<<"cross_section stiffness"<<endl;
+#endif
+	ksa[i] = sections[i]->getSectionTangent();
+#ifdef COMPOSITE_DEBUG    
+	FS>>ksa[i];
+#endif
     str_f4[i](0,0) = ksa[i](0,0);
     str_f4[i](0,1) = 0.0;
     str_f4[i](0,2) = ksa[i](0,1);
@@ -1025,7 +1044,9 @@ int RCFTSCHBeamColumn3D::update()
     str_f4[i](3,1) = ksa[i](3,5);
     str_f4[i](3,2) = ksa[i](4,5) + ksa[i](1,2);
     str_f4[i](3,3) = ksa[i](5,5) + ksa[i](2,2);
-    //mpls>>str_f4[i];
+#ifdef COMPOSITE_DEBUG
+	mpls>>str_f4[i];
+#endif
     invertMatrix(3,str_f4[i],str_f4inv[i]);
     if( i == 0 ){
     f4[i](0) = - df_i(6);
@@ -1039,11 +1060,15 @@ int RCFTSCHBeamColumn3D::update()
     f4[i](2) =  df_i(14);
     f4[i](3) = - df_i(13);
     }
-    //mpls<<"force"<<endl;
-    //mpls>>f4[i];
-    d4[i] = str_f4inv[i] * f4[i];
-    //mpls<<"strain"<<endl;
-    //mpls>>d4[i];
+#ifdef COMPOSITE_DEBUG
+	mpls<<"force"<<endl;
+    mpls>>f4[i];
+#endif
+	d4[i] = str_f4inv[i] * f4[i];
+#ifdef COMPOSITE_DEBUG
+	mpls<<"strain"<<endl;
+    mpls>>d4[i];
+#endif
     dhat[i](0) = dhat[i](0) + d4[i](0);
     dhat[i](1) = dhat[i](1) + d4[i](2);
     dhat[i](2) = dhat[i](2) + d4[i](3);
@@ -1063,14 +1088,16 @@ int RCFTSCHBeamColumn3D::update()
     aggdhat(12) = slp_strn;
     int res = sections[i]->setTrialSectionDeformation(aggdhat);
     DSQa[i] = sections[i]->getStressResultant();    
-    //mpls<<"DSQa[i]"<<endl;
-    //mpls>>DSQa[i];
-    //if( i == 0 ){
-    //  mpls1>>DSQa[i];
-    //}
-    //if( i == 1 ){
-    //  mpls2>>DSQa[i];
-    //}
+#ifdef COMPOSITE_DEBUG
+	mpls<<"DSQa[i]"<<endl;
+    mpls>>DSQa[i];
+    if( i == 0 ){
+      mpls1>>DSQa[i];
+    }
+    if( i == 1 ){
+      mpls2>>DSQa[i];
+    }
+#endif
   }
 
   this->calcResistingForce();
@@ -1091,10 +1118,12 @@ int RCFTSCHBeamColumn3D::update()
   R[2][1]   = ZAxis(1);
   R[2][2]   = ZAxis(2);
 
-  //mpls<<"transformation vectors"<<endl;
-  //mpls>>XAxis;
-  //mpls>>YAxis;
-  //mpls>>ZAxis;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"transformation vectors"<<endl;
+  mpls>>XAxis;
+  mpls>>YAxis;
+  mpls>>ZAxis;
+#endif
 
   fk(0) = DSQa[0](0);
   fk(1) = DSQa[0](6);
@@ -1121,8 +1150,10 @@ int RCFTSCHBeamColumn3D::update()
   fk(22)= DSQa[1](10);
   fk(23)= DSQa[1](11);
 
-  //mpls<<"incremental nodal forces"<<endl;
-  //mpls>>df_i;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"incremental nodal forces"<<endl;
+  mpls>>df_i;
+#endif
 
   /********************************************************/
   /*   GET CROSS-SECTION STIFFNESS AND FORCES FOR THE     */
@@ -1282,19 +1313,19 @@ int RCFTSCHBeamColumn3D::update()
   deizz_s= kcrsj(4,4) - kcrsi(4,4);
   deiyz_s= (kcrsj(4,5) - kcrsi(4,5));
 
-  //lstiff<<"concrete"<<endl;
-  //
-  //lstiff<<"\nea_c "<<ea_c<<" eqy_c "<<eqy_c<<" eqz_c "<<eqz_c<<" eiyy_c "<<eiyy_c<<" eizz_c "
-  //      <<eizz_c<<" eiyz_c "<<eiyz_c<<" dea_c "<<dea_c<<" deqy_c "<<deqy_c<<" deqz_c "<<deqz_c<<" deiyy_c "<<deiyy_c<<" deizz_c "<<
-  //      deizz_c<<" deiyz_c "<<deiyz_c<<"  "<<kcrsj(1,0)<<"  "<<kcrsi(1,0)<<endl;
-  //
-  //lstiff<<"steel"<<endl;
-  //
-  //lstiff<<"\nea_s "<<ea_s<<" eqy_s "<<eqy_s<<" eqz_s "<<eqz_s<<" eiyy_s "<<eiyy_s<<" eizz_s "
-  //      <<eizz_s<<" eiyz_s "<<eiyz_s<<" dea_s "<<dea_s<<" deqy_s "<<deqy_s<<" deqz_s "<<deqz_s<<" deiyy_s "<<deiyy_s<<" deizz_s "<<
-  //      deizz_s<<" deiyz_s "<<deiyz_s<<endl;
-
-
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"concrete"<<endl;
+  
+  lstiff<<"\nea_c "<<ea_c<<" eqy_c "<<eqy_c<<" eqz_c "<<eqz_c<<" eiyy_c "<<eiyy_c<<" eizz_c "
+        <<eizz_c<<" eiyz_c "<<eiyz_c<<" dea_c "<<dea_c<<" deqy_c "<<deqy_c<<" deqz_c "<<deqz_c<<" deiyy_c "<<deiyy_c<<" deizz_c "<<
+        deizz_c<<" deiyz_c "<<deiyz_c<<"  "<<kcrsj(1,0)<<"  "<<kcrsi(1,0)<<endl;
+  
+  lstiff<<"steel"<<endl;
+  
+  lstiff<<"\nea_s "<<ea_s<<" eqy_s "<<eqy_s<<" eqz_s "<<eqz_s<<" eiyy_s "<<eiyy_s<<" eizz_s "
+        <<eizz_s<<" eiyz_s "<<eiyz_s<<" dea_s "<<dea_s<<" deqy_s "<<deqy_s<<" deqz_s "<<deqz_s<<" deiyy_s "<<deiyy_s<<" deizz_s "<<
+        deizz_s<<" deiyz_s "<<deiyz_s<<endl;
+#endif
 
   /*****************************************************************************************/
   /* INITIALIZE THE NATURAL ELEMENT STIFFNESS MATRIX AND THE MATRICES USED IN CONDENSATION */
@@ -1392,14 +1423,16 @@ int RCFTSCHBeamColumn3D::update()
   kt(9,9)       += ( 3.0 * pb_s + pa_s ) * ( L / 30.0 );
   kt(10,10)     += ( 3.0 * pb_s + pa_s ) * ( L / 30.0 );
 
-  //mpls<<"pa_c "<<pa_c<<" pb_c "<<pb_c<<" pa_s "<<pa_s<<" pb_s "<<pb_s<<endl;
+#ifdef COMPOSITE_DEBUG
+  mpls<<"pa_c "<<pa_c<<" pb_c "<<pb_c<<" pa_s "<<pa_s<<" pb_s "<<pb_s<<endl;
   
-  //mpls<<( 3.0 * pa_c + pb_c ) * ( L / 30.0 )<<"  "<<- ( pa_c + pb_c ) * ( L / 60.0 )<<"   "<<
-  //    ( 3.0 * pa_c + pb_c ) * ( L / 30.0 )<<"   "<<- ( pa_c + pb_c ) * ( L / 60.0 )<<"   "<<
-  //    ( 3.0 * pb_c + pa_c ) * ( L / 30.0 )<<"   "<<( 3.0 * pb_c + pa_c ) * ( L / 30.0 )<<"   "<<
-  //    ( 3.0 * pa_s + pb_s ) * ( L / 30.0 )<<"   "<<- ( pa_s + pb_s ) * ( L / 60.0 )<<"   "<<
-  //    ( 3.0 * pa_s + pb_s ) * ( L / 30.0 )<<"   "<<- ( pa_s + pb_s ) * ( L / 30.0 )<<"   "<<
-  //    ( 3.0 * pb_s + pa_s ) * ( L / 30.0 )<<"   "<< ( 3.0 * pb_s + pa_s ) * ( L / 30.0 )<<endl; 
+  mpls<<( 3.0 * pa_c + pb_c ) * ( L / 30.0 )<<"  "<<- ( pa_c + pb_c ) * ( L / 60.0 )<<"   "<<
+      ( 3.0 * pa_c + pb_c ) * ( L / 30.0 )<<"   "<<- ( pa_c + pb_c ) * ( L / 60.0 )<<"   "<<
+      ( 3.0 * pb_c + pa_c ) * ( L / 30.0 )<<"   "<<( 3.0 * pb_c + pa_c ) * ( L / 30.0 )<<"   "<<
+      ( 3.0 * pa_s + pb_s ) * ( L / 30.0 )<<"   "<<- ( pa_s + pb_s ) * ( L / 60.0 )<<"   "<<
+      ( 3.0 * pa_s + pb_s ) * ( L / 30.0 )<<"   "<<- ( pa_s + pb_s ) * ( L / 30.0 )<<"   "<<
+      ( 3.0 * pb_s + pa_s ) * ( L / 30.0 )<<"   "<< ( 3.0 * pb_s + pa_s ) * ( L / 30.0 )<<endl; 
+#endif
 
   /* HIGHER ORDER GEOMETRIC STIFFNESS TERMS */
   /* CONCRETE TERMS							*/
@@ -1467,8 +1500,10 @@ int RCFTSCHBeamColumn3D::update()
 	}
   }
 
-  //lstiff<<"natural stiffness matrix"<<endl;
-  //lstiff>>kt;
+#ifdef COMPOSITE_DEBUG
+  lstiff<<"natural stiffness matrix"<<endl;
+  lstiff>>kt;
+#endif
 
   /************************************************************************/
   /*									  */

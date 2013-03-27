@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.14 $
-// $Date: 2008/02/29 20:45:56 $
+// $Date: 2008-02-29 20:45:56 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/pattern/LoadPattern.h,v $
                                                                         
                                                                         
@@ -56,9 +56,9 @@ class LoadPattern : public DomainComponent
 {
   public:
     // constructors
-    LoadPattern(int tag);    
-    LoadPattern();                      // for FEM_ObjectBroker
-    LoadPattern(int tag, int classTag); // for subclasses
+    LoadPattern(int tag, double fact = 1.0);    
+    LoadPattern();                                         // for FEM_ObjectBroker
+    LoadPattern(int tag, int classTag, double fact = 1.0); // for subclasses
     
     // destructor
     virtual ~LoadPattern();
@@ -112,6 +112,7 @@ class LoadPattern : public DomainComponent
 	
   private:
     double loadFactor;     // current load factor
+    double scaleFactor;    // factor to scale load factor from time series
 
     TimeSeries *theSeries; // pointer to associated TimeSeries
 

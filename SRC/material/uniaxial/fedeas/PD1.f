@@ -67,12 +67,12 @@ c  retrieve history variables ---------------------------------------
       cohn(2) = hstvp(6)
       deg = hstvp(7)
       vdeg = hstvp(8)
+
       dplas = hstvp(9)
       oldeps = hstvp(10)
       phibound = hstvp(11)
   
 c  ------------------------------------------------------------------
-
       crmode = 0
 
 c      if (delt .le. 0.d0) then
@@ -310,6 +310,7 @@ c   check the convergence of the damage evolution eqn
           write(*,*) 'kp =',kp
           error = error/0.d0
 c          stop 'VEPD_2D: exceed the maximum iteration (iter)!'
+          return
         endif
 
         q_lam = sign*fstr/fenergy

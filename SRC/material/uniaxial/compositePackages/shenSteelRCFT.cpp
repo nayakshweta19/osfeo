@@ -140,9 +140,11 @@ shenSteelRCFT::~shenSteelRCFT()
 int 
 shenSteelRCFT::setTrialStrain(double strain, double strainRate)
 {
-//    // Open file for debugging if needed
-//    ofstream shenSteelRCFTdebug;
-//    shenSteelRCFTdebug.open("shenSteelRCFTdebug.dat",ios::app);
+#ifdef COMPOSITE_DEBUG
+    // Open file for debugging if needed
+    ofstream shenSteelRCFTdebug;
+    shenSteelRCFTdebug.open("shenSteelRCFTdebug.dat",ios::app);
+#endif
 
 	// Return state variables to their latest committed value
 	this->revertToLastCommit();	
