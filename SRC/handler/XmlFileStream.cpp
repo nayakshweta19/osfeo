@@ -41,7 +41,7 @@ using std::getline;
 
 XmlFileStream::XmlFileStream(int indent)
   :OPS_Stream(OPS_STREAM_TAGS_XmlFileStream), 
-   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1),
+   fileOpen(0), fileName(0), filePrecision(6), indentSize(indent), numIndent(-1),
    attributeMode(false), numTag(0), sizeTags(0), tags(0), sendSelfCount(0), theChannels(0), numDataRows(0),
    mapping(0), maxCount(0), sizeColumns(0), theColumns(0), theData(0), theRemoteData(0), 
    xmlOrderProcessed(0), xmlString(0), xmlStringLength(0), numXMLTags(0), xmlColumns(0)
@@ -54,7 +54,7 @@ XmlFileStream::XmlFileStream(int indent)
 
 XmlFileStream::XmlFileStream(const char *name, openMode mode, int indent)
   :OPS_Stream(OPS_STREAM_TAGS_XmlFileStream), 
-   fileOpen(0), fileName(0), indentSize(indent), numIndent(-1),
+   fileOpen(0), fileName(0), filePrecision(6), indentSize(indent), numIndent(-1),
    attributeMode(false), numTag(0), sizeTags(0), tags(0), sendSelfCount(0), theChannels(0), numDataRows(0),
    mapping(0), maxCount(0), sizeColumns(0), theColumns(0), theData(0), theRemoteData(0), 
    xmlOrderProcessed(0), xmlString(0), xmlStringLength(0), numXMLTags(0), xmlColumns(0)
@@ -210,6 +210,7 @@ XmlFileStream::open(void)
 
   } 
 
+  theFile << std::setprecision(filePrecision);
 
   //  theFile << setiosflags(ios::fixed);
 
@@ -236,8 +237,9 @@ XmlFileStream::close(void)
 int 
 XmlFileStream::setPrecision(int prec)
 {
-  if (fileOpen == 0)
-    this->open();
+  //  if (fileOpen == 0)
+  //      this->open();
+  filePrecision = prec;
 
   if (fileOpen != 0)
     theFile << std::setprecision(prec);
@@ -711,7 +713,33 @@ XmlFileStream::write(Vector &data)
   return 0;
 }
 
+int 
+XmlFileStream::write(int data)
+{
+  if (fileOpen == 0)
+    this->open();
 
+  if (attributeMode == true) {
+    theFile << "/>\n";
+    attributeMode = false;
+  }
+  theFile << data << "\t";
+  return 0;
+}
+
+int 
+XmlFileStream::write(double data)
+{
+  if (fileOpen == 0)
+    this->open();
+
+  if (attributeMode == true) {
+    theFile << "/>\n";
+    attributeMode = false;
+  }
+  theFile << data << "\t";
+  return 0;
+}
 
 OPS_Stream& 
 XmlFileStream::write(const char *s,int n)
@@ -1232,7 +1260,7 @@ XmlFileStream::setOrder(const ID &orderData)
 	return -1;
       }
 
-      numColumns = numColumnID(0);
+      int numColumns = numColumnID(0);
 
       (*sizeColumns)(i+1) = numColumns;
       if (numColumns != 0) {
@@ -1373,7 +1401,7 @@ XmlFileStream::mergeXML()
 
       theFile0.open(fileName, ios::in);
 
-      //int fileNameLength = strlen(fileName);
+      int fileNameLength = strlen(fileName);
       sprintf(&fileName[fileNameLength-2],"");
       
       theFile.open(fileName, ios::out);
