@@ -9,7 +9,7 @@
  * See Tcl/TK License Terms for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tclMain.cpp,v 1.50 2010/04/23 23:01:14 fmk Exp $
+ * RCS: @(#) $Id: tclMain.cpp,v 1.50 2010-04-23 23:01:14 fmk Exp $
 
 Tcl/Tk License Terms
 This software is copyrighted by the Regents of the University of
@@ -235,7 +235,9 @@ g3TclMain(int argc, char **argv, Tcl_AppInitProc * appInitProc, int rank, int np
     }
 #endif
 
+
     Tcl_FindExecutable(argv[0]);
+
     interp = Tcl_CreateInterp();
 
     numParam = OpenSeesParseArgv(argc, argv);

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.5 $
-// $Date: 2007/04/25 23:47:22 $
+// $Date: 2007-04-25 23:47:22 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/FileStream.h,v $
 
 #ifndef _FileStream
@@ -56,7 +56,7 @@ class FileStream : public OPS_Stream
   int attr(const char *name, const char *value);
   int write(Vector &data);
   int write(int data);
-  int write(double data) {return 0;};
+  int write(double data);
 
   // regular stuff
   OPS_Stream& write(const char *s, int n);
@@ -89,7 +89,8 @@ class FileStream : public OPS_Stream
   int fileOpen;
   openMode theOpenMode;
   char *fileName;
-
+  int filePrecision;
+  
   void indent(void);
   int indentSize;
   int numIndent;

@@ -42,6 +42,7 @@
 #include <ElasticIsotropicMaterial.h>
 #include <PressureDependentElastic3D.h>
 #include <J2Plasticity.h>
+#include <BoucWen3DMaterial.h>
 
 #include <MultiaxialCyclicPlasticity.h> //Gang Wang
 
@@ -89,7 +90,8 @@ extern  void *OPS_NewCSMMRCPlateFiberMaterial(void);
 extern  void *OPS_NewNonlinearBSMaterial(void);
 extern  void *OPS_NewCSMMRCPlaneStressFiberMaterial(void);
 extern  void *OPS_NewRARCPlaneStressFiberMaterial(void);
-extern  void *OPS_NewConcreteMcftNonlinear7Material();
+extern  void *OPS_NewConcreteMcftNonlinear7Material(void);
+extern  void *OPS_NewBoucWen3DMaterial(void);
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -330,6 +332,15 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
     else if ((strcmp(argv[1],"Mcft07") == 0)) {
 
       void *theMat = OPS_NewConcreteMcftNonlinear7Material();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else 
+        return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1],"BoucWen3D") == 0)) {
+
+      void *theMat = OPS_NewBoucWen3DMaterial();
       if (theMat != 0)
         theMaterial = (NDMaterial *)theMat;
       else 
