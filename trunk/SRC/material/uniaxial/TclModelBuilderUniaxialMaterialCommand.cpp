@@ -99,7 +99,7 @@ extern void *OPS_NewSteel02(void);
 extern void *OPS_RambergOsgoodSteel(void);
 extern void *OPS_NewConcrete01(void);
 extern void *OPS_NewConcrete02(void);
-
+extern void *OPS_PinchingLimitStateMaterial(void);
 extern void *OPS_NewSAWSMaterial(void);
 extern void *OPS_NewSecantConcreteMaterial(void); //
 extern void *OPS_changManderConcrete01(void);          //   for CompositePackage
@@ -331,6 +331,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
     } else if (strcmp(argv[1],"HookGap") == 0) {
       void *theMat = OPS_NewHookGap();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if ((strcmp(argv[1],"PinchingLimitState") == 0) || (strcmp(argv[1],"PinchingLimitStateMaterial") == 0)) {
+      void *theMat = OPS_PinchingLimitStateMaterial();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 

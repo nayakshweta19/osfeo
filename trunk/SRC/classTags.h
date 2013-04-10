@@ -171,6 +171,7 @@
 #define MAT_TAG_ModIMKPeakOriented              67
 #define MAT_TAG_RambergOsgoodSteel              68
 #define MAT_TAG_PinchingLimitStateMaterial      69	
+#define MAT_TAG_BraceMaterial                   70
 
 #define MAT_TAG_WrapperUniaxialMaterial      101
 #define MAT_TAG_UniaxialJ2Plasticity         102
@@ -185,6 +186,8 @@
 #define MAT_TAG_MCFTConcrete02      65
 #define MAT_TAG_MCFTSteel03         66
 #define MAT_TAG_MCFTConcrete03      67
+#define MAT_TAG_BoucWen3D           68
+#define MAT_TAG_BoucWen2D           69
 // neallee ended
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
