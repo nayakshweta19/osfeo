@@ -10,6 +10,7 @@ include ../../../Makefile.def
 	Neoprene.o \
 	Maxwell.o \
 	Cast.o \
+	PinchingLimitStateMaterial.o \
         HardeningMaterial.o \
 	Concrete01.o \
 	Concrete02Thermal.o \

@@ -28,14 +28,6 @@
 
 #include <OPS_Globals.h>
 
-#ifdef _USRDLL
-#define OPS_Export extern "C" _declspec(dllexport)
-#elif _MACOSX
-#define OPS_Export extern "C" __attribute__((visibility("default")))
-#else
-#define OPS_Export extern "C"
-#endif
-
 static int numBilinMaterials = 0;
 
 void *

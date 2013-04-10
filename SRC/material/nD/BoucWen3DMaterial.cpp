@@ -39,8 +39,6 @@
 #include <DummyStream.h>
 #include <elementAPI.h>
 
-#define MAT_TAG_BoucWen3D 1842914
-
 #define OPS_Export 
 
 static int numBoucWen3DMaterials = 0;
