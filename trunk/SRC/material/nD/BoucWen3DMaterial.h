@@ -66,7 +66,7 @@ class BoucWen3DMaterial : public NDMaterial
     const Vector& getStrain(void);          
     const Vector& getStress(void);
     const Matrix& getTangent(void);
-    const Tensor& getTangentTensor(void);
+    //const Tensor& getTangentTensor(void);
     double        signum(double);
 
     int           commitState(void);
@@ -94,10 +94,10 @@ class BoucWen3DMaterial : public NDMaterial
 	// AddingSensitivity:BEGIN //////////////////////////////////////////
     const Vector & getStressSensitivity     (int gradIndex, bool conditional);
     const Vector & getStrainSensitivity     (int gradIndex);
-    const Matrix & getTangentSensitivity    (int gradIndex);
+    //const Matrix & getTangentSensitivity    (int gradIndex);
     const Matrix & getInitialTangentSensitivity    (int gradIndex);
-    const Matrix & getDampTangentSensitivity(int gradIndex);
-    double         getRhoSensitivity        (int gradIndex);
+    //const Matrix & getDampTangentSensitivity(int gradIndex);
+    //double         getRhoSensitivity        (int gradIndex);
     int            commitSensitivity        (Vector & strainGradient, int gradIndex, int numGrads);
     // AddingSensitivity:END ///////////////////////////////////////////
 

@@ -40,6 +40,8 @@
 #include <packages.h>
 
 #include <ElasticIsotropicMaterial.h>
+#include <ElasticIsotropic3DThermal.h>//J.Jiang
+//#include <ElasticIsotropic3DThermalSteel.h>//J.Jiang
 #include <PressureDependentElastic3D.h>
 #include <J2Plasticity.h>
 #include <BoucWen3DMaterial.h>
@@ -49,6 +51,7 @@
 #include <PlaneStressMaterial.h>
 #include <PlaneStrainMaterial.h>  // Antonios Vytiniotis:
 #include <PlateFiberMaterial.h>
+#include <PlateFiberMaterialThermal.h>//J.Jiang
 #include <BeamFiberMaterial.h>
 #include <BeamFiberMaterial2d.h> //neallee@tju.edu.cn
 #include <PlaneStressFiberMaterial.h> //neallee@tju.edu.cn
@@ -96,6 +99,7 @@ extern  void *OPS_NewBoucWen3DMaterial(void);
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
 extern  void *OPS_NewDruckerPragerMaterial(void);
+extern  void *OPS_NewDruckerPragerThermalMaterial(void);//J.Jiang add
 extern  void *OPS_NewBoundingCamClayMaterial(void);
 extern  void *OPS_NewContactMaterial2DMaterial(void);
 extern  void *OPS_NewContactMaterial3DMaterial(void);
@@ -356,6 +360,28 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	return TCL_ERROR;
     }
 
+	//----------------Begining---------------
+	//J.Jiang 04.2012
+	else if ((strcmp(argv[1],"DruckerPragerThermal") == 0)){
+
+      void *theMat = OPS_NewDruckerPragerThermalMaterial();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }
+
+	 /*J.Jiang  04.2012
+	else if ((strcmp(argv[1],"DruckerPragerSteelThermal") == 0)){
+
+      void *theMat = OPS_NewDruckerPragerSteelThermalMaterial();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }*/
+    //---------------- End-----------------
+
     else if ((strcmp(argv[1],"CycLiqCP") == 0)){
 
       void *theMat = OPS_CycLiqCPMaterial();
@@ -418,6 +444,53 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
       else
 	return TCL_ERROR;
     }
+
+		//Aug. 09, 2011 J.Jiang, U.Edinburgh
+    // Temperature dependent linear elastic material (non-pressure dependent)
+    else if ( strcmp(argv[1],"ElasticIsotropic3DThermal") == 0 )
+    {
+	if (argc < 6) {
+	    opserr << "WARNING insufficient arguments\n";
+	    printCommand(argc,argv);
+	    opserr << "Want: nDMaterial ElasticIsotropic3DThermal tag? E? v? <rho?>" << endln;
+	    return TCL_ERROR;
+	}
+
+	int tag = 0;
+	double E = 0.0;
+	double v = 0.0;
+	double rho = 0.0;
+
+	if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
+	    opserr << "WARNING invalid ElasticIsotropic3DThermal tag" << endln;
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[3], &E) != TCL_OK) {
+	    opserr << "WARNING invalid E\n";
+	    opserr << "nDMaterial ElasticIsotropic3DThermal: " << tag << endln;
+	    return TCL_ERROR;
+	}
+
+	if (Tcl_GetDouble(interp, argv[4], &v) != TCL_OK) {
+	    opserr << "WARNING invalid v\n";
+	    opserr << "nDMaterial ElasticIsotropic3DThermal: " << tag << endln;
+	    return TCL_ERROR;
+	}
+
+
+      if (argc > 5 && Tcl_GetDouble(interp, argv[5], &rho) != TCL_OK) {
+        opserr << "WARNING invalid rho\n";
+        opserr << "nDMaterial ElasticIsotropic: " << tag << endln;
+        return TCL_ERROR;
+      }
+
+	  theMaterial = new ElasticIsotropic3DThermal (tag, E, v, rho);
+
+    }
+    //Aug. 09, 2011 J.Jiang, U.Edinburgh
+
+
 
     //Jul. 07, 2001 Boris Jeremic & ZHaohui Yang jeremic|zhyang@ucdavis.edu
     // Pressure dependent elastic material

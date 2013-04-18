@@ -39,6 +39,7 @@
 #include <DispBeamColumn2d.h>
 #include <DispBeamColumn3d.h>
 #include <DispBeamColumn2dThermal.h>
+#include <DispBeamColumn3dThermal.h>
 #include <CrdTransf.h>
 
  
@@ -357,6 +358,8 @@ TclModelBuilder_addForceBeamColumn(ClientData clientData, Tcl_Interp *interp,
 	theElement = new ElasticForceBeamColumn3d(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf3d);
       else if (strcmp(argv[1],"dispBeamColumn") == 0)
 	theElement = new DispBeamColumn3d(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf3d, mass);
+	  else if (strcmp(argv[1],"dispBeamColumnThermal") == 0)
+	theElement = new DispBeamColumn3dThermal(eleTag, iNode, jNode, nIP, sections, *beamIntegr, *theTransf3d, mass);
 	  else if (strcmp(argv[1],"dispBeamColumnWithSensitivity") == 0)
 	theElement = new DispBeamColumn3dWithSensitivity(eleTag, iNode, jNode, nIP, sections, *beamIntegr,*theTransf3d,mass);
 	                                               

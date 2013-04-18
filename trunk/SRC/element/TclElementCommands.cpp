@@ -115,6 +115,7 @@ extern void *OPS_SSPbrickUP(void);
 extern void *OPS_NewShellMITC4(void);
 extern void *OPS_NewShell02(void);
 extern void *OPS_NewShellNL(void);
+extern void *OPS_NewShellMITC4Thermal(void);
 extern void *OPS_Quad4FiberOverlay(void);
 extern void *OPS_Brick8FiberOverlay(void);
 extern void *OPS_TripleFrictionPendulum(void);
@@ -827,6 +828,17 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
       return TCL_ERROR;
     }    
 
+  	//Added by Liming,UoE for ShellMITC4Thermal
+  } else if ((strcmp(argv[1],"shellMITC4Thermal") == 0) ||(strcmp(argv[1],"ShellMITC4Thermal") == 0)) {
+    
+    void *theEle = OPS_NewShellMITC4Thermal();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    } 
+  
   } else if ((strcmp(argv[1],"Quad4FiberOverlay") == 0)) { 	//////////////////////// mmc
     
     void *theEle = OPS_Quad4FiberOverlay();
