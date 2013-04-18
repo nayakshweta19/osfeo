@@ -280,6 +280,7 @@
 #define SEC_TAG_ElasticShear3d                  24
 #define SEC_TAG_FiberSection2dInt		25
 #define SEC_TAG_FiberSection2dThermal		26
+#define SEC_TAG_FiberSection3dThermal   27
 
 #define SEC_TAG_McftSection2dfiber 7601
 
@@ -382,6 +383,11 @@
 #define ND_TAG_MCFTRCPlateFiber   117
 #define ND_TAG_MCFTRCPlaneStress02  118
 #define ND_TAG_DSFMRCPlaneStress    119
+#define ND_TAG_DruckerPragerThermal    120
+#define ND_TAG_DruckerPrager3DThermal    121
+#define ND_TAG_DruckerPragerSteelThermal    122
+#define ND_TAG_ElasticIsotropic3DThermal    123
+#define ND_TAG_ElasticIsotropic3DThermalSteel    124
 //end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang
@@ -444,7 +450,9 @@
 #define LOAD_TAG_Beam2dTempLoad           8
 #define LOAD_TAG_SurfaceLoader            9 // C.McGann, U.W.
 #define LOAD_TAG_SelfWeight              10 // C.McGann, U.W.
-#define LOAD_TAG_Beam2dThermalAction      11
+#define LOAD_TAG_Beam2dThermalAction     11
+#define LOAD_TAG_Beam3dThermalAction     12
+#define LOAD_TAG_ShellThermalAction      13
 
 #define MAT_TAG_IsotropicLinElastic         1001
 #define MAT_TAG_IsotropicLinElasticPoint    1002
@@ -514,6 +522,8 @@
 #define ELE_TAG_ShellMITC4      2024
 #define ELE_TAG_ShellNL         2025 //Tesser
 #define ELE_TAG_Shell02         2026
+#define ELE_TAG_ShellMITC4GeoNonlinearThermal         2027
+#define ELE_TAG_ShellMITC4Thermal         2028
 #define ELE_TAG_Plate1          2022
 #define ELE_TAG_Brick                      3458
 #define ELE_TAG_BbarBrick                  3457
@@ -610,6 +620,7 @@
 #define ELE_TAG_Quad4FiberOverlay 27
 #define ELE_TAG_Brick8FiberOverlay 28
 #define ELE_TAG_DispBeamColumn2dThermal 29
+#define ELE_TAG_DispBeamColumn3dThermal 30
 
 #define ELE_TAG_TPB1D 17
 #define ELE_TAG_TFP_Bearing 20

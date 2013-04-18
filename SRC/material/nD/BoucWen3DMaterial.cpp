@@ -163,7 +163,7 @@ int
 BoucWen3DMaterial::setTrialStrain (const Vector &strain_from_element)
 {
 	// Set trial strain and compute strain increment
-	Tstrain = strain_from_element;
+	/*Tstrain = strain_from_element;
 	Vector dStrain = Tstrain - Cstrain;
 
 	// Initial declarations (make sure not to declare class variables here!)
@@ -258,7 +258,7 @@ BoucWen3DMaterial::setTrialStrain (const Vector &strain_from_element)
 			Ttangent = alpha*ko + (1-alpha)*ko;
 		}
 	}
-
+	*/
     return 0;
 }
 
@@ -284,7 +284,7 @@ BoucWen3DMaterial::setTrialStrain(const Tensor &v, const Tensor &r)
 
 int
 BoucWen3DMaterial::setTrialStrainIncr(const Vector &v) 
-{
+{/*
   static Vector newStrain(6);
   newStrain(0) = Cstrain(0,0) + v(0);
   newStrain(1) = strain(1,1) + v(1);
@@ -293,7 +293,8 @@ BoucWen3DMaterial::setTrialStrainIncr(const Vector &v)
   newStrain(4) = 2.0*strain(1,2) + v(4);
   newStrain(5) = 2.0*strain(2,0) + v(5);
   
-  return this->setTrialStrain(newStrain);
+  return this->setTrialStrain(newStrain);*/
+  return 0;
 }
 
 int
@@ -311,7 +312,8 @@ BoucWen3DMaterial::getStress(void)
 const Matrix& 
 BoucWen3DMaterial::getInitialTangent(void)
 {
-    return ( alpha*ko + (1-alpha)*ko*Ao );
+    //return ( alpha*ko + (1-alpha)*ko*Ao );
+	return Ttangent;
 }
 
 const Matrix& 
@@ -609,11 +611,12 @@ BoucWen3DMaterial::getInitialTangentSensitivity(int gradIndex)
 {
 	// For now, assume that this is only called for initial stiffness 
 	if (parameterID == 2) {
-		return 1.0; 
+		//return 1.0; 
 	}
 	else {
-		return 0.0;
+		//return 0.0;
 	}
+	return Ttangent;
 }
 
 int
