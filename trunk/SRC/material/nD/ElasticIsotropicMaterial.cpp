@@ -236,6 +236,70 @@ ElasticIsotropicMaterial::getStrain (void)
 }
 
 int
+ElasticIsotropicMaterial::setTrialStrain (const Tensor &v)
+{ 
+	opserr << "ElasticIsotropicMaterial::setTrialStrain -- subclass responsibility\n"; 
+	exit(-1); 
+	
+	return -1; 
+} 
+
+int
+ElasticIsotropicMaterial::setTrialStrain (const Tensor &v, const Tensor &r)
+{
+	opserr << "ElasticIsotropicMaterial::setTrialStrain -- subclass responsibility\n";
+	exit(-1);
+	
+	return -1;
+} 
+ 
+int
+ElasticIsotropicMaterial::setTrialStrainIncr (const Tensor &v)
+{
+	opserr << "ElasticIsotropicMaterial::setTrialStrainIncr -- subclass responsibility\n";
+	exit(-1);
+
+	return -1;
+} 
+
+int
+ElasticIsotropicMaterial::setTrialStrainIncr (const Tensor &v, const Tensor &r)
+{
+	opserr << "ElasticIsotropicMaterial::setTrialStrainIncr -- subclass responsibility\n";
+	
+	return -1;
+} 
+
+const Tensor&
+ElasticIsotropicMaterial::getTangentTensor (void)
+{
+	opserr << "ElasticIsotropicMaterial::getTangentTensor -- subclass responsibility\n";
+	exit(-1);
+	// Just to make it compile
+	Tensor *t = new Tensor;
+	
+	return *t;
+} 
+
+const stresstensor& ElasticIsotropicMaterial::getStressTensor (void)
+{
+	opserr << "ElasticIsotropicMaterial::getStressTensor -- subclass responsibility\n";
+	exit(-1);
+} 
+
+const straintensor& ElasticIsotropicMaterial::getStrainTensor (void)
+{
+	opserr << "ElasticIsotropicMaterial::getStrainTensor -- subclass responsibility\n";
+	exit(-1);
+}
+
+const straintensor& ElasticIsotropicMaterial::getPlasticStrainTensor (void)
+{
+	opserr << "ElasticIsotropicMaterial::getPlasticStrainTensor -- subclass responsibility\n";
+	exit(-1);
+}
+
+int
 ElasticIsotropicMaterial::commitState (void)
 {
   opserr << "ElasticIsotropicMaterial::commitState -- subclass responsibility\n";
