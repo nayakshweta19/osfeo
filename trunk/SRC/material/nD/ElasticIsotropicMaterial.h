@@ -43,10 +43,6 @@
 #include <Vector.h>
 #include <ID.h>
 
-#include <Tensor.h>
-#include <stresst.h>
-#include <straint.h>
-
 class ElasticIsotropicMaterial : public NDMaterial
 {
   public:
@@ -74,15 +70,6 @@ class ElasticIsotropicMaterial : public NDMaterial
     virtual const Vector &getStress (void);
     virtual const Vector &getStrain (void);
 
-	int setTrialStrain (const Tensor &v);
-	int setTrialStrain (const Tensor &v, const Tensor &r);
-	int setTrialStrainIncr (const Tensor &v);
-	int setTrialStrainIncr (const Tensor &v, const Tensor &r);
-	const Tensor &getTangentTensor (void);
-	const stresstensor& getStressTensor (void);
-	const straintensor& getStrainTensor (void);
-	const straintensor& getPlasticStrainTensor (void);
-
     virtual int commitState (void);
     virtual int revertToLastCommit (void);
     virtual int revertToStart (void);
@@ -108,15 +95,16 @@ class ElasticIsotropicMaterial : public NDMaterial
 
     virtual int setParameter(const char **argv, int argc, Parameter &param);
     virtual int updateParameter(int parameterID, Information &info);
+    virtual int activateParameter(int paramID);
 
   protected:
     double E;	// Elastic modulus
     double v;	// Poisson ratio
     double rho ; //mass per unit 3D volume
 
+    int parameterID;
   private:
-    // Uncomment when this material model is "sensitized"
-    //int parameterID;
+
 };
 
 

@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -91,14 +91,14 @@ OPS_NewElasticIsotropicMaterial(void)
 
 ElasticIsotropicMaterial::ElasticIsotropicMaterial
 (int tag, int classTag, double e, double nu, double r)
-  :NDMaterial(tag, classTag), E(e), v(nu), rho(r)
+  :NDMaterial(tag, classTag), E(e), v(nu), rho(r), parameterID(0)
 {
 
 }
 
 ElasticIsotropicMaterial::ElasticIsotropicMaterial
 (int tag, double e, double nu, double r)
-  :NDMaterial(tag, ND_TAG_ElasticIsotropic), E(e), v(nu), rho(r)
+  :NDMaterial(tag, ND_TAG_ElasticIsotropic), E(e), v(nu), rho(r), parameterID(0)
 {
 
 }
@@ -146,7 +146,7 @@ ElasticIsotropicMaterial::getCopy (const char *type)
     theModel = new ElasticIsotropicPlateFiber(this->getTag(), E, v, rho);
     return theModel;
   }
-  
+
   else if (strcmp(type,"BeamFiber") == 0) {
     ElasticIsotropicBeamFiber *theModel;
     theModel = new ElasticIsotropicBeamFiber(this->getTag(), E, v, rho);
@@ -234,73 +234,6 @@ ElasticIsotropicMaterial::getStrain (void)
   Vector *ret = new Vector();
   return *ret;
 }
-
-int
-ElasticIsotropicMaterial::setTrialStrain (const Tensor &v)
-{
-    opserr << "ElasticIsotropicMaterial::setTrialStrain -- subclass responsibility\n";
-    exit(-1);
-
-    return -1;
-}
-
-int
-ElasticIsotropicMaterial::setTrialStrain (const Tensor &v, const Tensor &r)
-{
-    opserr << "ElasticIsotropicMaterial::setTrialStrain -- subclass responsibility\n";
-    exit(-1);
-
-    return -1;
-}
-
-int
-ElasticIsotropicMaterial::setTrialStrainIncr (const Tensor &v)
-{
-    opserr << "ElasticIsotropicMaterial::setTrialStrainIncr -- subclass responsibility\n";
-    exit(-1);
-
-    return -1;
-}
-
-int
-ElasticIsotropicMaterial::setTrialStrainIncr (const Tensor &v, const Tensor &r)
-{
-    opserr << "ElasticIsotropicMaterial::setTrialStrainIncr -- subclass responsibility\n";
-
-    return -1;
-}
-
-const Tensor&
-ElasticIsotropicMaterial::getTangentTensor (void)
-{
-  opserr << "ElasticIsotropicMaterial::getTangentTensor -- subclass responsibility\n";
-  exit(-1);
-  
-  // Just to make it compile
-  Tensor *t = new Tensor;
-  return *t;
-}
-
-const stresstensor& ElasticIsotropicMaterial::getStressTensor (void)
-{
-  opserr << "ElasticIsotropicMaterial::getStressTensor -- subclass responsibility\n";
-  exit(-1);
-
-}
-
-const straintensor& ElasticIsotropicMaterial::getStrainTensor (void)
-{
-  opserr << "ElasticIsotropicMaterial::getStrainTensor -- subclass responsibility\n";
-  exit(-1);
-}
-
-const straintensor& ElasticIsotropicMaterial::getPlasticStrainTensor (void)
-{
-  opserr << "ElasticIsotropicMaterial::getPlasticStrainTensor -- subclass responsibility\n";
-  exit(-1);
-}
-
-
 
 int
 ElasticIsotropicMaterial::commitState (void)
@@ -410,14 +343,18 @@ int
 ElasticIsotropicMaterial::setParameter(const char **argv, int argc,
 				      Parameter &param)
 {
-  if (strcmp(argv[0],"E") == 0)
+  if (strcmp(argv[0],"E") == 0) {
+    param.setValue(E);
     return param.addObject(1, this);
-  
-  else if (strcmp(argv[0],"nu") == 0 || strcmp(argv[0],"v") == 0)
+  }
+  else if (strcmp(argv[0],"nu") == 0 || strcmp(argv[0],"v") == 0) {
+    param.setValue(v);
     return param.addObject(2, this);
-  
-  else if (strcmp(argv[0],"rho") == 0)
+  }
+  else if (strcmp(argv[0],"rho") == 0) {
+    param.setValue(rho);
     return param.addObject(3, this);
+  }
 
   return -1;
 }
@@ -438,4 +375,12 @@ ElasticIsotropicMaterial::updateParameter(int parameterID, Information &info)
   default:
     return -1;
   }
+}
+
+int
+ElasticIsotropicMaterial::activateParameter(int paramID)
+{
+  parameterID = paramID;
+
+  return 0;
 }
