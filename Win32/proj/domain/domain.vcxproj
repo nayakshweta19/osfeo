@@ -20,13 +20,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -54,17 +54,17 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\tcl\include;..\..\..\src\reliability\domain\component;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\Program Files\Tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\..\src\domain\loadBalancer;..\..\..\src\domain\domain\partitioned;..\..\..\src\graph\partitioner;..\..\..\src\domain\partitioner;..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\tcl\include;..\..\..\src\reliability\domain\component;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\Program Files\Tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -90,7 +90,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\Program Files\tcl\include;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\program files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\domain\loadBalancer;..\..\..\src\domain\domain\partitioned;..\..\..\src\graph\partitioner;..\..\..\src\domain\partitioner;..\..\..\src\reliability\domain\performanceFunction;..\..\..\src\optimization\domain\component;..\..\..\src\optimization\domain;..\..\..\src\element\elasticBeamColumn;..\..\..\src\material\section;..\..\..\src\material\uniaxial;..\..\..\src\element\zeroLength;..\..\..\src\actor\shadow;..\..\..\src\material\nD;..\..\..\src\material;..\..\..\src\element\brick;..\..\..\src\element;..\..\..\src\domain\pattern\drm;..\..\..\src\coordTransformation;..\..\..\src\api;..\..\..\src\reliability\optimization;..\..\..\src\reliability\analysis\telm;..\..\..\src\actor\message;c:\Program Files\tcl\include;..\..\..\src\reliability\domain\filter;..\..\..\src\handler;..\..\..\src\domain\groundMotion;..\..\..\src\analysis\fe_ele;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\database;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\graph\graph;..\..\..\src\modelbuilder;..\..\..\src\domain\domain\single;..\..\..\src\modelbuilder\tcl;..\..\..\src\tagged\storage;..\..\..\src\domain\constraints;..\..\..\src\domain\pattern;..\..\..\src\matrix;..\..\..\src\analysis\dof_grp;..\..\..\src\domain\domain;..\..\..\src\actor\channel;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\objectBroker;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\renderer;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\integrator;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn;c:\program files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <AssemblerListingLocation>.\..\..\obj\domain\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\domain\debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\domain\debug/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -114,9 +114,12 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\domain\component\ElementParameter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\constraints\MD_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\constraints\Pressure_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\load\Beam3dThermalAction.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\load\ShellThermalAction.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\node\NodalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\node\Node.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\Domain.cpp" />
@@ -126,6 +129,7 @@
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomNodIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomParamIter.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomSP_Iter.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\partitioner\DomainPartitioner.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\pattern\PBowlLoading.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\subdomain\Subdomain.cpp" />
     <ClCompile Include="..\..\..\SRC\domain\subdomain\SubdomainNodIter.cpp" />
@@ -197,10 +201,13 @@
     <ClCompile Include="..\..\..\SRC\domain\region\TclRegionCommands.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\domain\component\ElementParameter.h" />
     <ClInclude Include="..\..\..\SRC\domain\constraints\MD_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\domain\constraints\Pressure_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\Pressure_ConstraintIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\load\Beam3dThermalAction.h" />
+    <ClInclude Include="..\..\..\SRC\domain\load\ShellThermalAction.h" />
     <ClInclude Include="..\..\..\SRC\domain\node\NodalLoad.h" />
     <ClInclude Include="..\..\..\SRC\domain\node\Node.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\Domain.h" />
@@ -214,6 +221,7 @@
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomNodIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomParamIter.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomSP_Iter.h" />
+    <ClInclude Include="..\..\..\SRC\domain\partitioner\DomainPartitioner.h" />
     <ClInclude Include="..\..\..\SRC\domain\pattern\PBowlLoading.h" />
     <ClInclude Include="..\..\..\SRC\domain\subdomain\Subdomain.h" />
     <ClInclude Include="..\..\..\SRC\domain\domain\SubdomainIter.h" />

@@ -19,13 +19,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -55,13 +55,13 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\src\domain\load;..\..\..\src\api;..\..\..\src\package;..\..\..\src\utility;..\..\..\SRC\actor\message;..\..\..\SRC\actor\objectBroker;..\..\..\src\modelbuilder\tcl;..\..\..\src\damage;..\..\..\src\domain\pattern;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\integrator;..\..\..\src\material\section\fiber;..\..\..\src\material;..\..\..\src\recorder\response;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\handler;..\..\..\src\renderer;..\..\..\src\tcl;..\..\..\src\actor\channel;..\..\..\src\modelbuilder;..\..\..\src\database;..\..\..\src\tagged;..\..\..\src\actor\actor;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src;..\..\..\src\recorder;..\..\..\src\domain\node;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\domain\constraints;..\..\..\src\element\updatedlagrangianbeamcolumn;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldsurface\yieldSurfaceBC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_WGL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -75,6 +75,8 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -96,7 +98,7 @@
       <AssemblerListingLocation>.\..\..\obj\recorder\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\recorder\debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\recorder\debug/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -126,6 +128,8 @@
     <ClCompile Include="..\..\..\SRC\recorder\MaxNodeDispRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\NodeGiDRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\NodeRecorder.cpp" />
+    <ClCompile Include="..\..\..\SRC\recorder\NormElementRecorder.cpp" />
+    <ClCompile Include="..\..\..\SRC\recorder\NormEnvelopeElementRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\PatternRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\Recorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\RemoveRecorder.cpp" />
@@ -151,6 +155,8 @@
     <ClInclude Include="..\..\..\SRC\recorder\MaxNodeDispRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\NodeGiDRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\NodeRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\NormElementRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\NormEnvelopeElementRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\PatternRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\Recorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\RemoveRecorder.h" />

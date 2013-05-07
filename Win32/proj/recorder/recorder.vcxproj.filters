@@ -83,6 +83,12 @@
     <ClCompile Include="..\..\..\SRC\recorder\NodeGiDRecorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\recorder\NormElementRecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\recorder\NormEnvelopeElementRecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\recorder\DamageRecorder.h">
@@ -152,6 +158,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\recorder\YsVisual.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\recorder\NormEnvelopeElementRecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\recorder\NormElementRecorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

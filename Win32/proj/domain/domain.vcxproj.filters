@@ -37,6 +37,9 @@
     <Filter Include="region">
       <UniqueIdentifier>{1c41734a-b635-4a6c-ab62-684f93c4f7fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="partitioner">
+      <UniqueIdentifier>{52218f00-4bc3-47d1-a70d-64113623f1d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\domain\node\NodalLoad.cpp">
@@ -282,6 +285,18 @@
     <ClCompile Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.cpp">
       <Filter>domain</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\domain\component\ElementParameter.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\domain\partitioner\DomainPartitioner.cpp">
+      <Filter>partitioner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\domain\load\Beam3dThermalAction.cpp">
+      <Filter>load</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\domain\load\ShellThermalAction.cpp">
+      <Filter>load</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\domain\node\NodalLoad.h">
@@ -523,6 +538,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\domain\domain\single\SingleDomPC_Iter.h">
       <Filter>domain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\domain\component\ElementParameter.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\domain\partitioner\DomainPartitioner.h">
+      <Filter>partitioner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\domain\load\Beam3dThermalAction.h">
+      <Filter>load</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\domain\load\ShellThermalAction.h">
+      <Filter>load</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -21,14 +21,14 @@
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>false</CLRSupport>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>false</CLRSupport>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -55,8 +55,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,7 +71,7 @@
       <PrecompiledHeaderOutputFile>.\..\..\obj\csparse\debug/csparse.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\..\..\obj\csparse\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\csparse\debug/</ObjectFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -88,12 +88,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL84;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
