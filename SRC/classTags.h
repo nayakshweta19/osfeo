@@ -316,6 +316,15 @@
 #define ND_TAG_Template3Dep 			31
 #define ND_TAG_NewTemplate3Dep 			32
 
+#define ND_TAG_ElasticOrthotropic                 200
+#define ND_TAG_ElasticOrthotropicPlaneStrain2d  211
+#define ND_TAG_ElasticOrthotropicPlaneStress2d  212
+#define ND_TAG_ElasticOrthotropicAxiSymm          213
+#define ND_TAG_ElasticOrthotropicPlateFiber     214
+#define ND_TAG_ElasticOrthotropicBeamFiber      215
+#define ND_TAG_ElasticOrthotropicThreeDimensional 216
+#define ND_TAG_ElasticOrthotropicBeamFiber2d    218
+
 #define ND_TAG_J2PlaneStrain                  3005
 #define ND_TAG_J2PlaneStress                  3006
 #define ND_TAG_J2AxiSymm                      3007
@@ -533,6 +542,8 @@
 #define ELE_TAG_EnhancedQuad               3459
 #define ELE_TAG_ConstantPressureVolumeQuad 3456
 #define ELE_TAG_NineNodeMixedQuad          3359
+#define ELE_TAG_TimoshenkoBeamColumn2d 98701
+#define ELE_TAG_TimoshenkoBeamColumn3d 98702
 #define ELE_TAG_DispBeamColumn2d 9870
 #define ELE_TAG_DispBeamColumn3d 9871
 #define ELE_TAG_HingedBeam2d     9872
@@ -682,6 +693,8 @@
 #define CRDTR_TAG_PDeltaCrdTransf3d 5
 #define CRDTR_TAG_CorotCrdTransf3d  6
 #define CRDTR_TAG_LinearCrdTransf2dInt 7
+#define CRDTR_TAG_ModerateDispCrdTransf2d 8
+#define CRDTR_TAG_ModerateDispCrdTransf3d 9
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define CRDTR_TAG_RCFTCrdTransf3D   8
