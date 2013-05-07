@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_1.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_2.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_aat.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_control.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_defaults.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_dump.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_global.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_info.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_order.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_post_tree.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_postorder.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_preprocess.c" />
+    <ClCompile Include="..\..\..\OTHER\AMD\amd_valid.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\OTHER\AMD\amd.h" />
+    <ClInclude Include="..\..\..\OTHER\AMD\amd_internal.h" />
+    <ClInclude Include="..\..\..\OTHER\AMD\UFconfig.h" />
+  </ItemGroup>
+</Project>
