@@ -19,13 +19,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -51,30 +51,32 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\SRC\material\nD\UWmaterials;..\..\..\src\element\UWelements\simpleContact;..\..\..\src\element\UWelements;..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\element\compositePackages;..\..\..\src\tagged\storage;..\..\..\src\actor\message;..\..\..\src\element\Timoshenko;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\adapter;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\src\package;..\..\..\src\damage;..\..\..\src\element\material\nd\template3dep;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\coordTransformation;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\api;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\domain\load;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SRC\utility;..\..\..\SRC\element\PFEMelement;..\..\..\OTHER\Triangle;..\..\..\SRC\tagged\storage;..\..\..\SRC\material\uniaxial\compositePackages;..\..\..\SRC\element\UWelements;..\..\..\src\coordTransformation;..\..\..\SRC\material\nD\UWmaterials;..\..\..\SRC\element\compositePackages;..\..\..\src\domain\load;..\..\..\src\element\Timoshenko;..\..\..\src\actor\message;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\adapter;c:\tcl\include;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\SRC\package;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_WGL;_COROTATIONAL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderOutputFile>.\..\..\obj\element\debug/element.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\..\..\obj\element\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\element\debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\element\debug/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -87,10 +89,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\SRC\tagged\storage;..\..\..\SRC\material\uniaxial\compositePackages;..\..\..\SRC\element\UWelements;..\..\..\src\coordTransformation;..\..\..\SRC\material\nD\UWmaterials;..\..\..\SRC\element\compositePackages;..\..\..\src\domain\load;..\..\..\src\element\Timoshenko;..\..\..\src\actor\message;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\adapter;c:\tcl\include;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\SRC\package;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SRC\utility;..\..\..\SRC\element\PFEMelement;..\..\..\OTHER\Triangle;..\..\..\SRC\tagged\storage;..\..\..\SRC\material\uniaxial\compositePackages;..\..\..\SRC\element\UWelements;..\..\..\src\coordTransformation;..\..\..\SRC\material\nD\UWmaterials;..\..\..\SRC\element\compositePackages;..\..\..\src\domain\load;..\..\..\src\element\Timoshenko;..\..\..\src\actor\message;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\element\adapter;c:\tcl\include;..\..\..\src\element\elastomericBearing;..\..\..\src\element\twoNodeLink;..\..\..\src\element\generic;..\..\..\src\material\section\fiber;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\element\UP_ucdavis;..\..\..\src\element\UP-ucsd;..\..\..\SRC\package;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\element\TotalLagrangianFD20NodeBrick;..\..\..\src\element\27nbrick;..\..\..\src\element\upU;..\..\..\src\element\dispBeamColumn;..\..\..\src\element\brick;..\..\..\src\element\shell;..\..\..\src\element\8nbrick;..\..\..\src\recorder\response;..\..\..\src\element\nonlinearBeamColumn\quadRule;..\..\..\src\material\nD;..\..\..\src\element\fourNodeQuad;..\..\..\src\element\damper;..\..\..\src\element\beamWithHinges;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\element\zeroLength;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\element\feap;..\..\..\src\handler;..\..\..\src\element;..\..\..\src\element\truss;..\..\..\src\material\section;..\..\..\src\element\beam3d;..\..\..\src\element\beam2d;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src\renderer;..\..\..\src\actor\channel;..\..\..\src\domain\node;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\domain\component;..\..\..\src;..\..\..\src\domain\domain;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\element\20nbrick;..\..\..\src\element\elasticBeamColumn;..\..\..\src\element\joint;..\..\..\src\domain\constraints;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\element\forceBeamColumn;..\..\..\src\element\nonlinearBeamColumn\element;..\..\..\src\element\nonlinearBeamColumn\matrixUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_WGL;_COROTATIONAL;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -103,6 +105,8 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -150,7 +154,14 @@
     <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMBeamColumnCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\compositePackages\TclRCFTSTLMFBeamColumnCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dThermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dThermal.cpp" />
     <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingBoucWenCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingPlasticityCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\Element.cpp" />
     <ClCompile Include="..\..\..\SRC\element\ElementalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\element\feap\fElmt01.cpp" />
@@ -166,12 +177,16 @@
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TripleFrictionPendulum.cpp" />
     <ClCompile Include="..\..\..\SRC\element\Information.cpp" />
     <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement2D.cpp" />
-    <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMMesher2D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMMesher3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclPFEMCommands.cpp" />
     <ClCompile Include="..\..\..\SRC\element\pipe\Pipe3.cpp" />
     <ClCompile Include="..\..\..\SRC\element\pipe\Pipelin2.cpp" />
     <ClCompile Include="..\..\..\SRC\element\pipe\TclPipe3Command.cpp" />
     <ClCompile Include="..\..\..\SRC\element\pipe\TclPipelin2Command.cpp" />
     <ClCompile Include="..\..\..\SRC\element\shell\Shell02.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4GeoNonlinearThermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.cpp" />
     <ClCompile Include="..\..\..\SRC\element\shell\ShellNL.cpp" />
     <ClCompile Include="..\..\..\SRC\element\surfaceLoad\SurfaceLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\element\TclElementCommands.cpp" />
@@ -216,6 +231,7 @@
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthContactNTS2D.cpp" />
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthInterface2D.cpp" />
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthND.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthRocking.cpp" />
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthSection.cpp" />
     <ClCompile Include="..\..\..\SRC\element\beamWithHinges\TclBeamWithHingesBuilder.cpp" />
     <ClCompile Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.cpp" />
@@ -326,8 +342,6 @@
     <ClCompile Include="..\..\..\SRC\element\generic\TclGenericCopyCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TclTwoNodeLinkCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.cpp" />
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.cpp" />
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.cpp" />
     <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\adapter\Actuator.cpp" />
     <ClCompile Include="..\..\..\SRC\element\adapter\ActuatorCorot.cpp" />
@@ -383,7 +397,12 @@
     <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMBeamColumn3D.h" />
     <ClInclude Include="..\..\..\SRC\element\compositePackages\RCFTSTLMFBeamColumn3D.h" />
     <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dThermal.h" />
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dThermal.h" />
     <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen3d.h" />
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity3d.h" />
     <ClInclude Include="..\..\..\SRC\element\Element.h" />
     <ClInclude Include="..\..\..\SRC\element\ElementalLoad.h" />
     <ClInclude Include="..\..\..\SRC\element\feap\fElmt01.h" />
@@ -399,10 +418,13 @@
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\TripleFrictionPendulum.h" />
     <ClInclude Include="..\..\..\SRC\element\Information.h" />
     <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement2D.h" />
-    <ClInclude Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.h" />
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMMesher2D.h" />
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMMesher3D.h" />
     <ClInclude Include="..\..\..\SRC\element\pipe\Pipe3.h" />
     <ClInclude Include="..\..\..\SRC\element\pipe\Pipelin2.h" />
     <ClInclude Include="..\..\..\SRC\element\shell\Shell02.h" />
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4GeoNonlinearThermal.h" />
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.h" />
     <ClInclude Include="..\..\..\SRC\element\shell\ShellNL.h" />
     <ClInclude Include="..\..\..\SRC\element\surfaceLoad\SurfaceLoad.h" />
     <ClInclude Include="..\..\..\SRC\element\Timoshenko\Timoshenko2d.h" />
@@ -442,6 +464,7 @@
     <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthContactNTS2D.h" />
     <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthInterface2D.h" />
     <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthND.h" />
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthRocking.h" />
     <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthSection.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf2d.h" />
     <ClInclude Include="..\..\..\SRC\coordTransformation\CorotCrdTransf3d.h" />
@@ -522,8 +545,6 @@
     <ClInclude Include="..\..\..\SRC\element\generic\GenericClient.h" />
     <ClInclude Include="..\..\..\SRC\element\generic\GenericCopy.h" />
     <ClInclude Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.h" />
-    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.h" />
-    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.h" />
     <ClInclude Include="..\..\..\SRC\element\adapter\Actuator.h" />
     <ClInclude Include="..\..\..\SRC\element\adapter\ActuatorCorot.h" />
     <ClInclude Include="..\..\..\SRC\element\adapter\Adapter.h" />

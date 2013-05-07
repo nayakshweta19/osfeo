@@ -19,13 +19,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -55,8 +55,8 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -70,7 +70,7 @@
       <AssemblerListingLocation>.\..\..\obj\material\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\material\debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\material\debug/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -87,8 +87,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\SRC\element\UWelements;..\..\..\SRC\domain\pattern;..\..\..\SRC\material\uniaxial\compositePackages;..\..\..\SRC\material\nD\reinforcedConcretePlaneStress;..\..\..\SRC\material\nD\UWmaterials;..\..\..\SRC\material\section\repres\2dLayer;..\..\..\src\element\Timoshenko;..\..\..\src\element\dispBeamColumnInt;..\..\..\src\material\section\integration;..\..\..\SRC\material\nD\NewTemplate3Dep;..\..\..\SRC\tagged\storage;..\..\..\SRC\domain\node;..\..\..\SRC\material\uniaxial\limitState\limitCurve;..\..\..\SRC\material\uniaxial\limitState;..\..\..\SRC\package;..\..\..\src\material\nd\cyclicSoil;..\..\..\src\damage;..\..\..\src\material\nd\FiniteDeformation\fdEvolution;..\..\..\src\material\nd\FiniteDeformation\fdFlow;..\..\..\src\material\nd\FiniteDeformation\fdYield;..\..\..\src\material\nd\finitedeformation;..\..\..\src\element\fournodequad;..\..\..\src\material\uniaxial\fedeas;..\..\..\src\material\uniaxial\drain;..\..\..\src\domain\domain;..\..\..\src\renderer;..\..\..\src\material\nD\soil;..\..\..\src\material\nD\template3dep;..\..\..\src\recorder\response;..\..\..\src\material\backbone;..\..\..\src\material\state;..\..\..\src\material\state\strength;..\..\..\src\material\state\deformation;..\..\..\src\material\state\stiffness;..\..\..\src\material\section\repres\section;..\..\..\src\material\section\repres\cell;..\..\..\src\material\section\repres\patch;..\..\..\src\material\section\repres\reinfBar;..\..\..\src\material\section\repres\reinfLayer;..\..\..\src\material\section\fiber;..\..\..\src\element\nonlinearBeamColumn\fiber;..\..\..\src\element\nonlinearBeamColumn\matrixutil;..\..\..\src\material\section;..\..\..\src\handler;..\..\..\src\material\uniaxial;..\..\..\src\material\uniaxial\backbone;..\..\..\src\material\nD;..\..\..\src\element;..\..\..\src\element\up-ucsd;..\..\..\src\actor\channel;..\..\..\src\actor\objectBroker;..\..\..\src\matrix;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\tagged;..\..\..\src\modelbuilder;..\..\..\src\domain\component;..\..\..\src\material;..\..\..\src\modelbuilder\tcl;..\..\..\src\material\nd\template3dep;..\..\..\src\nDarray;..\..\..\src\material\uniaxial\py;..\..\..\src\material\uniaxial\snap;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\material\section\yieldSurface;..\..\..\src\material\nd\feap;c:\Program Files\tcl\include;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_TCL85;_LIMITSTATEMATERIAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -103,6 +103,8 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -115,10 +117,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\material\nD\BeamFiberMaterial2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear5.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\DruckerPrager3DThermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\DruckerPragerSteelThermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\Druckerpragerthermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\ElasticIsotropic3DThermal.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\ElasticIsotropic3DThermalSteel.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticIsotropicBeamFiber2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticIsotropicThreeDimensional.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\ElasticOrthotropicMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\J2ThreeDimensional.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_alpha_Eij.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_Elastic.cpp" />
@@ -207,6 +217,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Bond_SP01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\BraceMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\CableMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Cast.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.cpp" />
@@ -252,6 +263,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ImpactMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Maxwell.cpp" />
     <ClCompile Include="..\..\..\Src\material\uniaxial\MinMaxMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ModIMKPeakOriented.cpp" />
@@ -261,11 +273,12 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\NewUniaxialMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ParallelMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\PathIndependentMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\fedeas\PD1.c" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Pinching4Material.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\fedeas\PlasticDamageMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\PrestressedSteelMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\pyUCLA.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\RambergOsgoodSteel.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ReinforcingSteel.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\SAWSMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\SecantConcrete.cpp" />
@@ -542,10 +555,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\nD\BeamFiberMaterial2d.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear5.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\DruckerPrager3DThermal.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\DruckerPragerSteelThermal.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\DruckerPragerThermal.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\ElasticIsotropic3DThermal.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\ElasticIsotropic3DThermalSteel.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticIsotropicBeamFiber2d.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticIsotropicThreeDimensional.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\ElasticOrthotropicMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\J2ThreeDimensional.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_alpha_Eij.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_Elastic.h" />
@@ -634,6 +655,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Bond_SP01.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\BraceMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\CableMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Cast.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.h" />
@@ -679,6 +701,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ImpactMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Maxwell.h" />
     <ClInclude Include="..\..\..\Src\material\uniaxial\MinMaxMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ModIMKPeakOriented.h" />
@@ -690,8 +713,10 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\PathIndependentMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Pinching4Material.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\fedeas\PlasticDamageMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\PrestressedSteelMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\pyUCLA.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\RambergOsgoodSteel.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ReinforcingSteel.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\SAWSMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\SecantConcrete.h" />

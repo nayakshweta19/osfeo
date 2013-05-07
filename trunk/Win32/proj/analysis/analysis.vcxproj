@@ -19,13 +19,13 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -55,8 +55,8 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\Tcl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -69,7 +69,7 @@
       <AssemblerListingLocation>.\..\..\obj\analysis\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\analysis\debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\analysis\debug/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -86,12 +86,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>..\..\..\src\api;..\..\..\src\analysis\algorithm\ritzAlgo;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
@@ -119,14 +119,22 @@
     <ClCompile Include="..\..\..\SRC\analysis\analysis\DirectIntegrationAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\DomainDecompositionAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\EigenAnalysis.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\analysis\PFEMAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\RitzAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\StaticAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\TransientAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\VariableTimeStepDirectIntegrationAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\ArcLengthw.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\ArcLengthy.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\BackwardEuler.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\Houbolt.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\ParkLMS3.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\TRBDF3.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\model\AnalysisModel.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\model\DOF_GrpIter.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\model\FE_EleIter.cpp" />
@@ -217,14 +225,22 @@
     <ClInclude Include="..\..\..\SRC\analysis\analysis\DirectIntegrationAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\DomainDecompositionAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\EigenAnalysis.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\analysis\PFEMAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\RitzAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\StaticAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\TransientAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\VariableTimeStepDirectIntegrationAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\analysis\fe_ele\penalty\PenaltyMD_FE.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\ArcLengthw.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\ArcLengthy.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\BackwardEuler.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\Houbolt.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\ParkLMS3.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\TRBDF3.h" />
     <ClInclude Include="..\..\..\SRC\analysis\model\AnalysisModel.h" />
     <ClInclude Include="..\..\..\SRC\analysis\model\DOF_GrpIter.h" />
     <ClInclude Include="..\..\..\SRC\analysis\model\FE_EleIter.h" />

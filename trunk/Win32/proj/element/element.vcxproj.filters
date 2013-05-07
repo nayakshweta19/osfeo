@@ -506,12 +506,6 @@
     <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.cpp">
       <Filter>twoNodeLink</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.cpp">
-      <Filter>elastomericBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.cpp">
-      <Filter>elastomericBearing</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingCommand.cpp">
       <Filter>elastomericBearing</Filter>
     </ClCompile>
@@ -845,8 +839,44 @@
     <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement2D.cpp">
       <Filter>PFEMElement</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.cpp">
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthRocking.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen2d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen3d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity2d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity3d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingBoucWenCommand.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingPlasticityCommand.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMMesher2D.cpp">
       <Filter>PFEMElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMMesher3D.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclPFEMCommands.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dThermal.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4GeoNonlinearThermal.cpp">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.cpp">
+      <Filter>shell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1135,12 +1165,6 @@
     <ClInclude Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.h">
       <Filter>twoNodeLink</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing2d.h">
-      <Filter>elastomericBearing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearing3d.h">
-      <Filter>elastomericBearing</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\adapter\Actuator.h">
       <Filter>adapter</Filter>
     </ClInclude>
@@ -1399,8 +1423,35 @@
     <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement2D.h">
       <Filter>PFEMElement</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.h">
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthRocking.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen2d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen3d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity2d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingPlasticity3d.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMMesher2D.h">
       <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMMesher3D.h">
+      <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn3dThermal.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4GeoNonlinearThermal.h">
+      <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.h">
+      <Filter>shell</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
