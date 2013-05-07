@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.5 $
-// $Date: 2009/08/03 20:18:18 $
+// $Date: 2009-08-03 20:18:18 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/elasticBeamColumn/TclElasticBeamCommand.cpp,v $
                                                                         
 // Written: fmk 
@@ -37,6 +37,7 @@
 #include <ElasticBeam3d.h>
 #include <SectionForceDeformation.h>
 
+#include <CrdTransf.h>
 #include <CrdTransf.h>
 
 #include <TclModelBuilder.h>
@@ -110,7 +111,8 @@ TclModelBuilder_addElasticBeam(ClientData clientData, Tcl_Interp *interp, int ar
     double mass = 0.0;
     int argi = 0;
 
-    if ((argc-eleArgStart) == 10) {    
+    if ( ((argc-eleArgStart) == 10) && (strcmp(argv[eleArgStart+8],"-mass") != 0)){    
+
       if (Tcl_GetDouble(interp, argv[7+eleArgStart], &alpha) != TCL_OK) {
 	opserr << "WARNING invalid alpha - elasticBeamColumn " << beamId << " iNode jNode A E I alpha d \n";
 	return TCL_ERROR;
