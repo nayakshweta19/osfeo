@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.3 $
-// $Date: 2008/08/26 16:49:19 $
+// $Date: 2008-08-26 16:49:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/ElasticShearSection2d.h,v $
 
 #ifndef ElasticShearSection2d_h
@@ -71,8 +71,11 @@ class ElasticShearSection2d: public SectionForceDeformation
   int activateParameter(int parameterID);
   const Vector& getStressResultantSensitivity(int gradIndex,
 					      bool conditional);
+  const Matrix& getSectionTangentSensitivity(int gradIndex);
   const Matrix& getInitialTangentSensitivity(int gradIndex);
-  
+  const Matrix& getSectionFlexibilitySensitivity(int gradIndex);  
+  const Matrix& getInitialFlexibilitySensitivity(int gradIndex);  
+
  protected:
   
  private:

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2007/02/02 01:18:13 $
+// $Date: 2007-02-02 01:18:13 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/FiberSectionGJ.h,v $
                                                                         
 // Written: fmk
@@ -90,7 +90,6 @@ class FiberSectionGJ : public SectionForceDeformation
   double zBar;
   
   Vector e;          // trial section deformations 
-  Vector eCommit;    // committed section deformations 
   
   static ID code;
   static Vector s;         // section resisting forces

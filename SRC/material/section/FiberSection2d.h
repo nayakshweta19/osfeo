@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.14 $
-// $Date: 2008/08/26 16:47:26 $
+// $Date: 2008-08-26 16:47:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/FiberSection2d.h,v $
                                                                         
 // Written: fmk
@@ -105,7 +105,6 @@ class FiberSection2d : public SectionForceDeformation
     static ID code;
 
     Vector e;          // trial section deformations 
-    Vector eCommit;    // committed section deformations 
     Vector *s;         // section resisting forces  (axial force, bending moment)
     Matrix *ks;        // section stiffness
 
