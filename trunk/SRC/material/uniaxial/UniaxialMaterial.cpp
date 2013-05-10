@@ -294,6 +294,12 @@ UniaxialMaterial::getStrainSensitivity(int gradIndex)
 }
 
 double
+UniaxialMaterial::getTangentSensitivity(int gradIndex)
+{
+    return 0.0;
+}
+
+double
 UniaxialMaterial::getInitialTangentSensitivity(int gradIndex)
 {
     return 0.0;

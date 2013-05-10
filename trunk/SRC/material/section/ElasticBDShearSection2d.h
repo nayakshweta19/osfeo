@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2008/08/26 16:46:09 $
+// $Date: 2008-08-26 16:46:09 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/ElasticBDShearSection2d.h,v $
 
 #ifndef ElasticBDShearSection2d_h
@@ -82,7 +82,6 @@ class ElasticBDShearSection2d: public SectionForceDeformation
   double E, b, d, G, alpha;
   
   Vector e;			// section trial deformations
-  Vector eCommit;
   
   static Vector s;
   static Matrix ks;

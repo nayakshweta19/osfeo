@@ -50,7 +50,7 @@ ID FiberSection2dThermal::code(2);
 FiberSection2dThermal::FiberSection2dThermal(int tag, int num, Fiber **fibers): 
   SectionForceDeformation(tag, SEC_TAG_FiberSection2dThermal),
   numFibers(num), theMaterials(0), matData(0),
-  yBar(0.0), sectionIntegr(0), e(2), eCommit(2), s(0), ks(0), dedh(2), sT(0)//,theTemperatures(temperatures),theTemperatureFactor(0)
+  yBar(0.0), sectionIntegr(0), e(2), s(0), ks(0), dedh(2), sT(0)//,theTemperatures(temperatures),theTemperatureFactor(0)
 {
   if (numFibers != 0) {
     theMaterials = new UniaxialMaterial *[numFibers];
@@ -129,7 +129,7 @@ FiberSection2dThermal::FiberSection2dThermal(int tag, int num, UniaxialMaterial 
 			       SectionIntegration &si):
   SectionForceDeformation(tag, SEC_TAG_FiberSection2dThermal),
   numFibers(num), theMaterials(0), matData(0),
-  yBar(0.0), sectionIntegr(0), e(2), eCommit(2), s(0), ks(0), dedh(2)//,theTemperature(0)
+  yBar(0.0), sectionIntegr(0), e(2), s(0), ks(0), dedh(2)//,theTemperature(0)
 {
   if (numFibers != 0) {
     theMaterials = new UniaxialMaterial *[numFibers];
@@ -213,7 +213,7 @@ FiberSection2dThermal::FiberSection2dThermal(int tag, int num, UniaxialMaterial 
 FiberSection2dThermal::FiberSection2dThermal():
   SectionForceDeformation(0, SEC_TAG_FiberSection2dThermal),
   numFibers(0), theMaterials(0), matData(0),
-  yBar(0.0), sectionIntegr(0), e(2), eCommit(2), s(0), ks(0), dedh(2)//, theTemperatures(0),theTemperatureFactor(0)
+  yBar(0.0), sectionIntegr(0), e(2), s(0), ks(0), dedh(2)//, theTemperatures(0),theTemperatureFactor(0)
 {
   s = new Vector(sData, 2);
   ks = new Matrix(kData, 2, 2);
@@ -483,7 +483,9 @@ FiberSection2dThermal::setTrialSectionDeformation(const Vector &deforms, const V
     
     // determine material strain and set it
     double strain = d0 - y*d1;
-    double tangent, stress, ThermalElongation;
+    double tangent =0.0;
+	double stress = 0.0; 
+	double ThermalElongation = 0.0;
     //double tangent, stress, ThermalElongation;
     //  res += theMat->setTrialTemperature(strain, FiberTemperature, stress, tangent, ThermalElongation);//***JZ
     
@@ -495,6 +497,8 @@ FiberSection2dThermal::setTrialSectionDeformation(const Vector &deforms, const V
     static Vector tData(4);
     static Information iData(tData);
     tData(0) = FiberTemperature;
+	tData(1) = tangent;
+	tData(2) = ThermalElongation;
     tData(3) = FiberTempMax;
     iData.setVector(tData);
     theMat->getVariable("ElongTangent", iData);
@@ -784,7 +788,8 @@ FiberSection2dThermal::getTemperatureStress(const Vector &dataMixed)
     
     
     // determine material strain and set it
-    double tangent, stress, ThermalElongation;
+    double tangent =0.0;
+	double ThermalElongation =0.0;
     
     //opserr << "get temp stresses1 " << FiberTempMax << endln;
     
@@ -792,12 +797,16 @@ FiberSection2dThermal::getTemperatureStress(const Vector &dataMixed)
     static Vector tData(4);
     static Information iData(tData);
     tData(0) = FiberTemperature;
+	tData(1) = tangent;
+	tData(2) = ThermalElongation;
     tData(3) = FiberTempMax;
     iData.setVector(tData);
     theMat->getVariable("ElongTangent", iData);
-    tData = iData.getData();	
+    tData = iData.getData();
+	FiberTemperature = tData(0);
     tangent = tData(1);
     ThermalElongation = tData(2);
+	FiberTempMax = tData(3);
     
     //  double strain = -ThermalElongation;
     //  theMat->setTrialTemperature(strain, FiberTemperature, stress, tangent, ThermalElongation);
@@ -893,8 +902,8 @@ FiberSection2dThermal::getTemperatureStress(const Vector &dataMixed)
 
     // determine material strain and set it
     //double strain = d0 - y*d1;
-    double strain = 0;
-    double tangent, stress, ThermalElongation;
+    double tangent =0.0;
+	double ThermalElongation = 0.0;
   //  res += theMat->setTrialTemperature(strain, FiberTemperature, stress, tangent, ThermalElongation);//***JZ
 
    //theMat->setTrialTemperature(strain, FiberTemperature, stress, tangent, ThermalElongation);//***JZ
@@ -905,10 +914,12 @@ FiberSection2dThermal::getTemperatureStress(const Vector &dataMixed)
     static Vector tData(4);
     static Information iData(tData);
     tData(0) = FiberTemperature;
+	tData(1) = tangent;
+	tData(2) = ThermalElongation;
     tData(3) = FiberTempMax;
     iData.setVector(tData);
     theMat->getVariable("ElongTangent", iData);
-    tData = iData.getData();	
+    tData = iData.getData();
     tangent = tData(1);
     ThermalElongation = tData(2);
     
@@ -983,7 +994,6 @@ FiberSection2dThermal::getCopy(void)
 
   theCopy->theTemperatureFactor = 0;
 
-  theCopy->eCommit = eCommit;
   theCopy->e = e;
   theCopy->yBar = yBar;
 
@@ -1023,8 +1033,6 @@ FiberSection2dThermal::commitState(void)
   for (int i = 0; i < numFibers; i++)
     err += theMaterials[i]->commitState();
 
-  eCommit = e;
-
   return err;
 }
 
@@ -1032,10 +1040,6 @@ int
 FiberSection2dThermal::revertToLastCommit(void)
 {
   int err = 0;
-
-  // Last committed section deformations
-  e = eCommit;
-
 
   kData[0] = 0.0; kData[1] = 0.0; kData[2] = 0.0; kData[3] = 0.0;
   sData[0] = 0.0; sData[1] = 0.0;
