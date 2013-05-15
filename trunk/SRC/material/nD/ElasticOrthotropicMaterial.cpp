@@ -35,7 +35,7 @@
 //#include <ElasticOrthotropicPlaneStress2D.h>
 //#include <ElasticOrthotropicPlaneStrain2D.h>
 //#include <ElasticOrthotropicAxiSymm.h>
-//#include <ElasticOrthotropicThreeDimensional.h>
+#include <ElasticOrthotropicThreeDimensional.h>
 //#include <ElasticOrthotropicPlateFiber.h>
 //#include <ElasticOrthotropicBeamFiber.h>
 //#include <ElasticOrthotropicBeamFiber2d.h>
