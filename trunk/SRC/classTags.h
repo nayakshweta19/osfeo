@@ -249,6 +249,8 @@
 #define MAT_TAG_ECC01 3010
 #define MAT_TAG_Concrete01WithSITC 3011
 
+#define MAT_TAG_KikuchiAikenHDR 6102
+
 #define MAT_TAG_Clough1	201
 #define MAT_TAG_Clough2	202
 #define MAT_TAG_Pinch1	203
