@@ -119,6 +119,9 @@ extern void *OPS_NewShellMITC4Thermal(void);
 extern void *OPS_Quad4FiberOverlay(void);
 extern void *OPS_Brick8FiberOverlay(void);
 extern void *OPS_TripleFrictionPendulum(void);
+extern void *OPS_Truss2(void);
+extern void *OPS_CorotTruss2(void);
+extern void *OPS_ZeroLengthImpact3D(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
@@ -214,9 +217,9 @@ TclModelBuilder_addBeamWithHinges(ClientData, Tcl_Interp *, int, TCL_Char **,
 				  Domain*, TclModelBuilder *);
 
 // Minjie Zhu
-extern int
-TclModelBuilder_addPFEMElement2D(ClientData clientData, Tcl_Interp *interp,  int argc,
-                                 TCL_Char **argv, Domain*, TclModelBuilder *);
+//extern int
+//TclModelBuilder_addPFEMElement2D(ClientData clientData, Tcl_Interp *interp,  int argc,
+//                                 TCL_Char **argv, Domain*, TclModelBuilder *);
 
 // Quan
 extern int
@@ -392,6 +395,10 @@ TclModelBuilder_addElastomericBearingBoucWen(ClientData clientData, Tcl_Interp *
 extern int
 TclModelBuilder_addTwoNodeLink(ClientData clientData, Tcl_Interp *interp,  int argc,
 			       TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
+
+extern int
+TclModelBuilder_addMultipleShearSpring(ClientData clientData, Tcl_Interp *interp,  int argc,
+			               TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
 TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp,  int argc, 
@@ -582,6 +589,15 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
     Element *theEle = OPS_NewZeroLengthInterface2D();
     if (theEle != 0) 
       theElement = theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+
+  } else if (strcmp(argv[1],"zeroLengthImpact3D") == 0) {
+    void *theEle = OPS_ZeroLengthImpact3D();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
     else {
       opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
       return TCL_ERROR;
@@ -857,9 +873,26 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
       opserr << "tclelementcommand -- unable to create element of type : " << argv[1] << endln;
       return TCL_ERROR;
     }																									
-  }
+  } else if ((strcmp(argv[1],"Truss2") == 0)) { 	//////////////////////// mmc
+    
+    void *theEle = OPS_Truss2();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "tclelementcommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }																								
+  } else if ((strcmp(argv[1],"CorotTruss2") == 0)) { 	//////////////////////// mmc
+    
+    void *theEle = OPS_CorotTruss2();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "tclelementcommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }	
   ////////////////////////////////////////////////////////////////////////////////////////////////////
-  else if ((strcmp(argv[1],"shell02") == 0) || (strcmp(argv[1],"Shell02") == 0)) {
+  } else if ((strcmp(argv[1],"shell02") == 0) || (strcmp(argv[1],"Shell02") == 0)) {
     
     void *theEle = OPS_NewShell02();
     if (theEle != 0) 
@@ -1327,11 +1360,18 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     return result;
   }
 
-  //else if (strcmp(argv[1],"PFEMElement2D") == 0) {
-  //  int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
-  //    theTclDomain, theTclBuilder);
-  //  return result;
-  //}
+//  else if (strcmp(argv[1],"PFEMElement2D") == 0) {
+//    int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
+//      theTclDomain, theTclBuilder);
+//    return result;
+//  }
+
+  else if ((strcmp(argv[1],"multipleShearSpring") == 0) ||
+	   (strcmp(argv[1],"MSS") == 0)) {
+    int result = TclModelBuilder_addMultipleShearSpring(clientData, interp, argc, argv,
+							theTclDomain, theTclBuilder);
+    return result;
+  }
 
   //////////////////////////////////////////////////////////////////////////
   else if (strcmp(argv[1],"Timoshenko2d01") == 0) {
