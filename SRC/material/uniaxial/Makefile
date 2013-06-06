@@ -7,6 +7,7 @@ include ../../../Makefile.def
         ElasticPPMaterial.o \
         ElasticBilin.o \
 	ParallelMaterial.o \
+	AxialSpHD.o \
 	Neoprene.o \
 	Maxwell.o \
 	Cast.o \
@@ -63,6 +64,8 @@ include ../../../Makefile.def
 	WrappedMaterial.o \
 	SecantMaterial.o \
 	Concrete01WithSITC.o \
+	ConcretewBeta.o \
+	KikuchiAikenHDR.o \
 	Concrete05.o \
 	ECC01.o \
 	PrestressedSteelMaterial.o \

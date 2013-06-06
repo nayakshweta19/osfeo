@@ -196,6 +196,9 @@ TclCommand_ReinforcingSteel(ClientData clientData, Tcl_Interp *interp, int argc,
 int
 TclCommand_KikuchiAikenHDR(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
+int
+TclCommand_AxialSpHD(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
 UniaxialMaterial *
 TclModelBuilder_addFedeasMaterial(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
@@ -3579,7 +3582,9 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	else if (strcmp(argv[1],"KikuchiAikenHDR") == 0) { 
       return TclCommand_KikuchiAikenHDR(clientData, interp, argc, argv);
     }
-
+	else if (strcmp(argv[1],"AxialSpHD") == 0) { 
+      return TclCommand_AxialSpHD(clientData, interp, argc, argv);
+    }
     else {
       // Fedeas
       theMaterial = TclModelBuilder_addFedeasMaterial(clientData, interp, argc, argv);
