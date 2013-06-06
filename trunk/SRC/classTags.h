@@ -250,6 +250,7 @@
 #define MAT_TAG_Concrete01WithSITC 3011
 
 #define MAT_TAG_KikuchiAikenHDR 6102
+#define MAT_TAG_AxialSpHD 6112
 
 #define MAT_TAG_Clough1	201
 #define MAT_TAG_Clough2	202
@@ -619,7 +620,8 @@
 #define ELE_Tag_ZeroLengthImpact3D     140
 
 #define ELE_TAG_MultipleShearSpring 6201
-
+#define ELE_TAG_MultipleNormalSpring 6202
+#define ELE_TAG_MSSWithMNS 6203
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define ELE_TAG_RCFTMBeamColumn3D 9880

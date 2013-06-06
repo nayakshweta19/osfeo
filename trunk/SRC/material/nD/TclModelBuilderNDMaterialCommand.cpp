@@ -108,6 +108,10 @@ extern  void *OPS_NewInitialStateAnalysisWrapperMaterial(void);
 extern  void *OPS_NewManzariDafaliasMaterial(void);
 extern  void *OPS_CycLiqCPMaterial(void);
 
+#ifdef _DAMAGE2P
+extern  void *OPS_Damage2p(void);
+#endif
+
 Template3Dep *
 TclModelBuilder_addTemplate3Dep(ClientData clientData, Tcl_Interp *interp,  int argc,
 				TCL_Char **argv, TclModelBuilder *theTclBuilder, int eleArgStart);
@@ -352,7 +356,19 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
         return TCL_ERROR;
     }
 	// added by neallee@tju.edu.cn
-    else if ((strcmp(argv[1],"DruckerPrager") == 0)){
+    
+#ifdef _DAMAGE2P
+	else if ((strcmp(argv[1],"Damage2p") == 0)){
+
+      void *theMat = OPS_Damage2p();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }
+#endif
+
+	else if ((strcmp(argv[1],"DruckerPrager") == 0)){
 
       void *theMat = OPS_NewDruckerPragerMaterial();
       if (theMat != 0) 
