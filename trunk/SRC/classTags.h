@@ -956,7 +956,8 @@
 
 #define CORRELATION_COEFFICIENT           1
 
-#define LIMIT_STATE_FUNCTION			  1
+#define LIMIT_STATE_FUNCTION		  1
+#define LIMCRV_TAG_WrapperLimitCurve      2
 
 #define CUTSET			  1
 

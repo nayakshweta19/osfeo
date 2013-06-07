@@ -20,7 +20,7 @@
                                                                         
 
 // $Revision: 1.2 $
-// $Date: 2006/09/05 22:32:43 $
+// $Date: 2006-09-05 22:32:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/limitState/limitCurve/LimitCurve.cpp,v $
 
 // Written: kje 
@@ -35,6 +35,36 @@
 #include <LimitCurve.h>
 #include <string.h>
 #include <Information.h>
+
+
+#include <TaggedObject.h>
+#include <MapOfTaggedObjects.h>
+
+static MapOfTaggedObjects theLimitCurveObjects;
+
+
+bool OPS_addLimitCurve(LimitCurve *newComponent) {
+  return theLimitCurveObjects.addComponent(newComponent);
+}
+
+LimitCurve *OPS_getLimitCurve(int tag) {
+
+  TaggedObject *theResult = theLimitCurveObjects.getComponentPtr(tag);
+  if (theResult == 0) {
+    opserr << "LimitCurve *getLimitCurve(int tag) - none found with tag: " << tag << endln;
+    return 0;
+  }
+  LimitCurve *theMat = (LimitCurve *)theResult;
+
+  return theMat;
+}
+
+void OPS_clearAllLimitCurve(void) {
+  theLimitCurveObjects.clearAll();
+}
+
+
+
 
 
 LimitCurve::LimitCurve(int tag, int clasTag)

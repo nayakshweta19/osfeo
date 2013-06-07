@@ -5,6 +5,8 @@ include ../Makefile.def
 
 endif
 
+
+
 ifeq ($(RELIABILITY), YES_RELIABILITY)
 
 all:
@@ -137,6 +139,8 @@ KJE_LIBS = $(FE)/material/uniaxial/limitState/LimitStateMaterial.o \
 	$(FE)/material/uniaxial/limitState/TclLimitState.o \
 	$(FE)/material/uniaxial/limitState/limitCurve/LimitCurve.o \
 	$(FE)/material/uniaxial/limitState/limitCurve/AxialCurve.o \
+	$(FE)/material/uniaxial/limitState/limitCurve/WrapperLimitCurve.o \
+	$(FE)/material/uniaxial/limitState/limitCurve/RotationShearCurve.o \
 	$(FE)/material/uniaxial/limitState/limitCurve/ShearCurve.o \
 	$(FE)/material/uniaxial/limitState/limitCurve/ThreePointCurve.o 
 
@@ -145,6 +149,7 @@ GLF_LIBS = $(FE)/element/zeroLength/ZeroLength.o \
 	$(FE)/element/zeroLength/ZeroLengthSection.o \
 	$(FE)/element/zeroLength/CoupledZeroLength.o \
 	$(FE)/element/zeroLength/ZeroLengthND.o \
+	$(FE)/element/zeroLength/ZeroLengthImpact3D.o \
 	$(FE)/element/zeroLength/TclZeroLength.o
 
 REMO_LIBS = $(FE)/element/nonlinearBeamColumn/matrixutil/MatrixUtil.o \
@@ -405,11 +410,13 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/truss/TrussSection.o \
 	$(FE)/element/truss/CorotTruss.o \
 	$(FE)/element/truss/CorotTrussSection.o \
+	$(FE)/element/truss/Truss2.o \
+	$(FE)/element/truss/CorotTruss2.o \
 	$(FE)/element/zeroLength/ZeroLengthContact2D.o \
 	$(FE)/element/zeroLength/ZeroLengthContact3D.o \
 	$(FE)/element/zeroLength/ZeroLengthContactNTS2D.o \
 	$(FE)/element/zeroLength/ZeroLengthInterface2D.o \
-    $(FE)/element/zeroLength/ZeroLengthRocking.o \
+	$(FE)/element/zeroLength/ZeroLengthRocking.o \
 	$(FE)/element/surfaceLoad/SurfaceLoad.o \
 	$(FE)/element/UWelements/SimpleContact2D.o \
 	$(FE)/element/UWelements/SimpleContact3D.o \
@@ -419,6 +426,11 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/UWelements/BeamContact3Dp.o \
 	$(FE)/element/UWelements/BeamEndContact3D.o \
 	$(FE)/element/UWelements/BeamEndContact3Dp.o \
+	$(FE)/element/HUelements/MultipleShearSpring.o \
+	$(FE)/element/HUelements/MultipleNormalSpring.o \
+	$(FE)/element/HUelements/MSSWithMNS.o \
+	$(FE)/element/HUelements/DBESI0.o \
+	$(FE)/element/HUelements/DBESI1.o \
 	$(FE)/element/feap/elmt01.o \
 	$(FE)/element/feap/elmt02.o \
 	$(FE)/element/feap/elmt03.o \
@@ -517,6 +529,13 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 #	$(FE)/material/nD/Damage2ppstress.o \
 
 
+ifdef DAMAGE2P_FLAG
+	DAMAGE_2P = $(FE)/material/nD/Damage2p.o $(FE)/material/nD/Damage2p3D.o $(FE)/material/nD/Damage2ppstress.o
+else
+	DAMAGE_2P =
+endif
+
+
 MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/UniaxialMaterial.o \
 	$(FE)/material/uniaxial/UniaxialJ2Plasticity.o \
@@ -547,10 +566,14 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Steel01Thermal.o \
 	$(FE)/material/uniaxial/Steel02Thermal.o \
 	$(FE)/material/uniaxial/Concrete02Thermal.o \
+	$(FE)/material/uniaxial/limitState/PinchingLimitStateMaterial.o \
 	$(FE)/material/uniaxial/ModIMKPinching.o \
 	$(FE)/material/uniaxial/ModIMKPeakOriented.o \
 	$(FE)/material/uniaxial/SmoothPSConcrete.o \
 	$(FE)/material/uniaxial/Concrete01WithSITC.o \
+	$(FE)/material/uniaxial/ConcretewBeta.o \
+	$(FE)/material/uniaxial/KikuchiAikenHDR.o \
+	$(FE)/material/uniaxial/AxialSpHD.o \
 	$(FE)/material/uniaxial/ECC01.o \
 	$(FE)/material/uniaxial/HystereticMaterial.o \
 	$(FE)/material/uniaxial/EPPGapMaterial.o \
@@ -590,7 +613,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/backbone/RaynorBackbone.o \
 	$(FE)/material/uniaxial/backbone/TclModelBuilderBackboneCommand.o \
 	$(FE)/material/nD/NDMaterial.o \
-	$(FE)/material/nD/WrapperNDMaterial.o \
+	$(DAMAGE_2P) $(FE)/material/nD/WrapperNDMaterial.o \
 	$(FE)/material/nD/J2Plasticity.o \
 	$(FE)/material/nD/J2PlaneStress.o \
 	$(FE)/material/nD/J2PlaneStrain.o \
@@ -632,6 +655,8 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/ElasticIsotropicPlateFiber.o \
 	$(FE)/material/nD/ElasticIsotropicBeamFiber.o \
 	$(FE)/material/nD/ElasticIsotropicBeamFiber2d.o \
+	$(FE)/material/nD/ElasticOrthotropicMaterial.o \
+	$(FE)/material/nD/ElasticOrthotropicThreeDimensional.o \
 	$(FE)/material/nD/PlaneStressMaterial.o \
 	$(FE)/material/nD/PlaneStrainMaterial.o \
 	$(FE)/material/nD/PlateFiberMaterial.o \

@@ -74,6 +74,7 @@
 #include <SectionRepres.h>
 
 #include <UniaxialMaterial.h>
+#include <LimitCurve.h>
 #include <NDMaterial.h>
 #include <TclModelBuilder.h>
 #include <ImposedMotionSP.h>
@@ -156,6 +157,8 @@ TclCommand_addElement(ClientData clientData, Tcl_Interp *interp,  int argc,
 int
 TclCommand_addUniaxialMaterial(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
+int
+TclCommand_addLimitCurve(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int
 TclCommand_addNDMaterial(ClientData clientData, Tcl_Interp *interp, int argc,   
@@ -455,11 +458,11 @@ TclCommand_addGeomTransf(ClientData, Tcl_Interp *, int, TCL_Char **,
 			 Domain*, TclModelBuilder *);   
 
 
-extern int
-Tcl_AddLimitCurveCommand(Tcl_Interp *interp, Domain *theDomain);
+//extern int
+//Tcl_AddLimitCurveCommand(Tcl_Interp *interp, Domain *theDomain);
 
-extern int
-Tcl_RemoveLimitCurveCommand(Tcl_Interp *interp);
+//extern int
+//Tcl_RemoveLimitCurveCommand(Tcl_Interp *interp);
 
 
 int
@@ -523,6 +526,9 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   Tcl_CreateCommand(interp, "uniaxialMaterial", TclCommand_addUniaxialMaterial,
 		    (ClientData)NULL, NULL);
   
+  Tcl_CreateCommand(interp, "limitCurve", TclCommand_addLimitCurve,
+		    (ClientData)NULL, NULL);
+
   Tcl_CreateCommand(interp, "nDMaterial", TclCommand_addNDMaterial,
 		    (ClientData)NULL, NULL);
 
@@ -685,8 +691,8 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   //		    TclCommand_UpdateParameter,
   //	    (ClientData)NULL, NULL);
 
-  ///new command for LimitCurve
-  Tcl_AddLimitCurveCommand(interp, &theDomain);
+//  //new command for LimitCurve
+//  Tcl_AddLimitCurveCommand(interp, &theDomain);
 
   Tcl_CreateCommand(interp, "loadPackage", TclCommand_Package,
 		    (ClientData)NULL, NULL);
@@ -713,6 +719,7 @@ TclModelBuilder::~TclModelBuilder()
   OPS_clearAllTimeSeries();
   OPS_ClearAllCrdTransf();
   OPS_clearAllUniaxialMaterial();
+  OPS_clearAllLimitCurve();
   OPS_clearAllDamageModel();
   OPS_clearAllFrictionModel();
   OPS_clearAllHystereticBackbone();
@@ -817,8 +824,6 @@ TclModelBuilder::~TclModelBuilder()
   Tcl_DeleteCommand(theInterp, "damageModel");
 
   Tcl_DeleteCommand(theInterp, "loadPackage");
-
-  Tcl_RemoveLimitCurveCommand(theInterp);
 }
 
 
@@ -1425,6 +1430,17 @@ TclCommand_addUniaxialMaterial(ClientData clientData, Tcl_Interp *interp, int ar
 {
   return TclModelBuilderUniaxialMaterialCommand(clientData, interp, argc, argv, theTclDomain);
 }
+
+
+extern int
+Tcl_AddLimitCurveCommand (ClientData clienData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain *theDomain);
+
+int
+TclCommand_addLimitCurve(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  return Tcl_AddLimitCurveCommand(clientData, interp, argc, argv, theTclDomain);
+}
+
 
 extern int
 TclModelBuilderNDMaterialCommand (ClientData clienData, Tcl_Interp *interp, int argc,

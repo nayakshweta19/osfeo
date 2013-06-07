@@ -43,7 +43,7 @@
 
 class SectionForceDeformation;
 class SectionRepres;
-class UniaxialMaterial;
+//class UniaxialMaterial;
 class NDMaterial;
 class TaggedObjectStorage;
 class YieldSurface_BC;
@@ -128,6 +128,7 @@ class TclModelBuilder : public ModelBuilder
     TaggedObjectStorage *theCycModels; //!!
     //    TaggedObjectStorage *theDamageModels; //!!
     //    TaggedObjectStorage *theFrictionModels;
+	TaggedObjectStorage *theLimitCurves;	//MRL
 
 #ifdef OO_HYSTERETIC
     TaggedObjectStorage *theStiffnessDegradations;

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2007/02/02 01:19:30 $
+// $Date: 2007-02-02 01:19:30 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/limitState/limitCurve/ThreePointCurve.cpp,v $                                                                        
 // Written: KJE
 // Created: Aug 2001
