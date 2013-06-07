@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2006/09/05 22:32:43 $
+// $Date: 2006-09-05 22:32:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/limitState/limitCurve/LimitCurve.h,v $
 
 //
@@ -72,6 +72,9 @@ class LimitCurve : public TaggedObject, public MovableObject
 
 };
 
+extern bool OPS_addLimitCurve(LimitCurve *newComponent);
+extern LimitCurve *OPS_getLimitCurve(int tag);
+extern void OPS_clearAllLimitCurve(void);
 
 #endif
 
