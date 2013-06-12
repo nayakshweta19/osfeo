@@ -621,7 +621,7 @@
 
 #define ELE_TAG_MultipleShearSpring 6201
 #define ELE_TAG_MultipleNormalSpring 6202
-#define ELE_TAG_MSSWithMNS 6203
+#define ELE_TAG_KikuchiBearing 6203
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define ELE_TAG_RCFTMBeamColumn3D 9880
