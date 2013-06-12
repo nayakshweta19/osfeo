@@ -400,13 +400,14 @@ extern int
 TclModelBuilder_addMultipleShearSpring(ClientData clientData, Tcl_Interp *interp,  int argc,
 			               TCL_Char **argv, Domain*, TclModelBuilder *);
 
-//extern int
-//TclModelBuilder_addMultipleNormalSpring(ClientData clientData, Tcl_Interp *interp,  int argc,
-//				        TCL_Char **argv, Domain*, TclModelBuilder *);
+extern int
+TclModelBuilder_addMultipleNormalSpring(ClientData clientData, Tcl_Interp *interp,  int argc,
+				        TCL_Char **argv, Domain*, TclModelBuilder *);
 
 extern int
-TclModelBuilder_addMSSWithMNS(ClientData clientData, Tcl_Interp *interp,  int argc,
-			      TCL_Char **argv, Domain*, TclModelBuilder *);
+TclModelBuilder_addKikuchiBearing(ClientData clientData, Tcl_Interp *interp,  int argc,
+				  TCL_Char **argv, Domain*, TclModelBuilder *);
+
 
 extern int
 TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp,  int argc, 
@@ -1384,18 +1385,20 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
 							theTclDomain, theTclBuilder);
     return result;
   }
+
   else if ((strcmp(argv[1],"multipleNormalSpring") == 0) ||
 	   (strcmp(argv[1],"MNS") == 0)) {
-    //int result = TclModelBuilder_addMultipleNormalSpring(clientData, interp, argc, argv,
-	//						 theTclDomain, theTclBuilder);
-    //return result;
+    int result = TclModelBuilder_addMultipleNormalSpring(clientData, interp, argc, argv,
+    theTclDomain, theTclBuilder);
+    return result;
   }
 
- else if (strcmp(argv[1],"MSSWithMNS") == 0) {
-   int result = TclModelBuilder_addMSSWithMNS(clientData, interp, argc, argv,
-					      theTclDomain, theTclBuilder);
-   return result;
- }
+  else if (strcmp(argv[1],"KikuchiBearing") == 0) {
+    int result = TclModelBuilder_addKikuchiBearing(clientData, interp, argc, argv,
+						   theTclDomain, theTclBuilder);
+    return result;
+  }
+
 
   //////////////////////////////////////////////////////////////////////////
   else if (strcmp(argv[1],"Timoshenko2d01") == 0) {
