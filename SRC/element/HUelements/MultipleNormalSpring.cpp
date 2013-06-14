@@ -59,13 +59,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <DBESI0.C> // Bessel function I0, Copyright(C) 1996 Takuya OOURA
-#include <DBESI1.C> // Bessel function I1
-
-
 extern void printCommand(int argc, TCL_Char **argv);
+extern "C" double dbesi0(double x);
+extern "C" double dbesi1(double x);
 
-bool errDetected(bool ifNoError,char *msg){
+
+
+static bool errDetected(bool ifNoError,char *msg){
   if (ifNoError){
     opserr << "" << endln;
     opserr << "========================================" << endln;
@@ -75,7 +75,6 @@ bool errDetected(bool ifNoError,char *msg){
   opserr << "  " << msg << endln;
   return false;
 };
-
 
 int TclModelBuilder_addMultipleNormalSpring(ClientData clientData,
     Tcl_Interp *interp, int argc, TCL_Char **argv, Domain *theTclDomain,
@@ -274,38 +273,38 @@ int TclModelBuilder_addMultipleNormalSpring(ClientData clientData,
   // necessary arguments
   if (recvMat != 1)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -mat inputs (got %d inputs, but want 1 input)",recvMat);
+    sprintf(buf,"wrong number of -mat inputs (got %d inputs, but want 1 input)",recvMat);
     ifNoError = errDetected(ifNoError,buf);
   }
 
   if (recvShape != 1)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -shape inputs (got %d inputs, but want 1 input)",recvShape);
+    sprintf(buf,"wrong number of -shape inputs (got %d inputs, but want 1 input)",recvShape);
     ifNoError = errDetected(ifNoError,buf);
   }
 
   if (recvSize != 1)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -size inputs (got %d inputs, but want 1 input)",recvSize);
+    sprintf(buf,"wrong number of -size inputs (got %d inputs, but want 1 input)",recvSize);
     ifNoError = errDetected(ifNoError,buf);
   }
 
   // optional arguments
   if (recvLambda >= 2)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -lambda inputs (got %d inputs, but want 1 input)",recvLambda);
+    sprintf(buf,"wrong number of -lambda inputs (got %d inputs, but want 1 input)",recvLambda);
     ifNoError = errDetected(ifNoError,buf);
   }
 
   if (recvOrient >= 2)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -ori inputs (got %d inputs, but want 1 input)",recvOrient);
+    sprintf(buf,"wrong number of -ori inputs (got %d inputs, but want 1 input)",recvOrient);
     ifNoError = errDetected(ifNoError,buf);
   }
 
   if (recvMass >= 2)  {
     char buf[100];
-    sprintf_s(buf,100,"wrong number of -mass inputs (got %d inputs, but want 1 input)",recvMass);
+    sprintf(buf,"wrong number of -mass inputs (got %d inputs, but want 1 input)",recvMass);
     ifNoError = errDetected(ifNoError,buf);
   }
 
@@ -325,7 +324,7 @@ int TclModelBuilder_addMultipleNormalSpring(ClientData clientData,
   
 
   // now create the multipleNormalSpring
-  theElement = new MultipleNormalSpring(eleTag, iNode, jNode, nDivide, material, shape, size, lambda, oriYp, oriX, mass);
+  //theElement = new MultipleNormalSpring(eleTag, iNode, jNode, nDivide, material, shape, size, lambda, oriYp, oriX, mass);
 
   if (theElement == 0)  {
     opserr << "WARNING ran out of memory creating element\n";

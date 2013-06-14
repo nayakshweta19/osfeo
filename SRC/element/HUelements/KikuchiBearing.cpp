@@ -60,14 +60,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <DBESI0.C> // Bessel function I0, Copyright(C) 1996 Takuya OOURA
-#include <DBESI1.C> // Bessel function I1
-
-
 extern void printCommand(int argc, TCL_Char **argv);
+extern "C" double dbesi0(double x);
+extern "C" double dbesi1(double x);
 
-
-bool errDetected(bool ifNoError,char *msg){
+static bool errDetected(bool ifNoError,char *msg){
   if (ifNoError){
     opserr << "" << endln;
     opserr << "========================================" << endln;
