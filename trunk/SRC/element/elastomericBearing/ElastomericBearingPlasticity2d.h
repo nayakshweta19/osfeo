@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5187 $
-// $Date: 2013-01-25 10:54:02 +0800 (星期五, 25 一月 2013) $
+// $Revision: 5356 $
+// $Date: 2013-06-13 06:47:51 +0800 (星期四, 13 六月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingPlasticity2d.h $
 
 #ifndef ElastomericBearingPlasticity2d_h
@@ -137,9 +137,9 @@ private:
     // initial stiffness matrix in basic system
     Matrix kbInit;
     
-    static Matrix theMatrix;
-    static Vector theVector;
-    static Vector theLoad;
+    static Matrix theMatrix;  // a class wide Matrix
+    static Vector theVector;  // a class wide Vector
+    Vector theLoad;
 };
 
 #endif
