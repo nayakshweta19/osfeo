@@ -126,6 +126,9 @@
     <Filter Include="PFEMElement">
       <UniqueIdentifier>{81b886bd-80cf-4c56-8cbb-6460ebed8403}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HUelements">
+      <UniqueIdentifier>{83ce6bb6-b646-4b39-a4c5-d7ee137c2c56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\element\Element.cpp">
@@ -878,6 +881,30 @@
     <ClCompile Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.cpp">
       <Filter>shell</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthImpact3D.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\MultipleShearSpring.cpp">
+      <Filter>HUelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\CorotTruss2.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\truss\Truss2.cpp">
+      <Filter>truss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\DBESI0.C">
+      <Filter>HUelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\DBESI1.C">
+      <Filter>HUelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\MultipleNormalSpring.cpp">
+      <Filter>HUelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\KikuchiBearing.cpp">
+      <Filter>HUelements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1452,6 +1479,24 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\shell\ShellMITC4Thermal.h">
       <Filter>shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\zeroLength\ZeroLengthImpact3D.h">
+      <Filter>zeroLength</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\HUelements\MultipleShearSpring.h">
+      <Filter>HUelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\truss\Truss2.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\truss\CorotTruss2.h">
+      <Filter>truss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\HUelements\MultipleNormalSpring.h">
+      <Filter>HUelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\HUelements\KikuchiBearing.h">
+      <Filter>HUelements</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
