@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -26,6 +34,12 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -213,6 +227,7 @@
     <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubePatch.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\TimoshenkoSection2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\WSection2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\AxialSpHD.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Bond_SP01.cpp" />
@@ -241,6 +256,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete05.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete06.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Concrete07.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ConcretewBeta.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ConfinedConcrete01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ContinuumUniaxial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Dodd_Restrepo.cpp" />
@@ -263,7 +279,15 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ImpactMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\WrapperLimitCurve.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\PinchingLimitStateMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Maxwell.cpp" />
     <ClCompile Include="..\..\..\Src\material\uniaxial\MinMaxMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ModIMKPeakOriented.cpp" />
@@ -275,7 +299,6 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\PathIndependentMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Pinching4Material.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\fedeas\PlasticDamageMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\PrestressedSteelMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\pyUCLA.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\RambergOsgoodSteel.cpp" />
@@ -338,12 +361,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\snap\Pinching.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\snap\PinchingDamage.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\snap\TclSnapMaterialCommand.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\TclLimitState.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\backbone\ArctangentBackbone.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\backbone\HystereticBackbone.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\backbone\ManderBackbone.cpp" />
@@ -651,6 +669,7 @@
     <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubePatch.h" />
     <ClInclude Include="..\..\..\SRC\material\section\TimoshenkoSection2d.h" />
     <ClInclude Include="..\..\..\SRC\material\section\WSection2d.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\AxialSpHD.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Bond_SP01.h" />
@@ -679,6 +698,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete05.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete06.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Concrete07.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ConcretewBeta.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ConfinedConcrete01.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ContinuumUniaxial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Dodd_Restrepo.h" />
@@ -701,7 +721,15 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ImpactMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\WrapperLimitCurve.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\PinchingLimitStateMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Maxwell.h" />
     <ClInclude Include="..\..\..\Src\material\uniaxial\MinMaxMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ModIMKPeakOriented.h" />
@@ -713,7 +741,6 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\PathIndependentMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Pinching4Material.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\fedeas\PlasticDamageMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\PrestressedSteelMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\pyUCLA.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\RambergOsgoodSteel.h" />
@@ -768,11 +795,6 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\snap\CloughDamage.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\snap\Pinching.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\snap\PinchingDamage.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.h" />
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\backbone\ArctangentBackbone.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\backbone\HystereticBackbone.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\backbone\ManderBackbone.h" />

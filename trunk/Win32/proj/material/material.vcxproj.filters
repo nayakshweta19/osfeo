@@ -116,6 +116,9 @@
     <Filter Include="nD\elasticOrthotropic">
       <UniqueIdentifier>{fc98b663-3a25-4176-bf90-0b95da664d68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="uniaxial\LimitState\limiteCurve">
+      <UniqueIdentifier>{a9d51040-78db-45c8-8386-638a54a7e1f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp">
@@ -373,22 +376,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\snap\TclSnapMaterialCommand.cpp">
       <Filter>uniaxial\snap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\TclLimitState.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.cpp">
       <Filter>uniaxial\LimitState</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\backbone\ArctangentBackbone.cpp">
@@ -1388,13 +1376,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.cpp">
       <Filter>nD</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.cpp">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BraceMaterial.cpp">
-      <Filter>uniaxial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\DruckerPragerSteelThermal.cpp">
@@ -1423,6 +1405,39 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.cpp">
       <Filter>nD\elasticOrthotropic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ConcretewBeta.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\AxialSpHD.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\WrapperLimitCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.cpp">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\PinchingLimitStateMaterial.cpp">
+      <Filter>uniaxial\LimitState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.cpp">
+      <Filter>uniaxial\LimitState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1656,21 +1671,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\snap\PinchingDamage.h">
       <Filter>uniaxial\snap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.h">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.h">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.h">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.h">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.h">
-      <Filter>uniaxial\LimitState</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\backbone\ArctangentBackbone.h">
       <Filter>uniaxial\backbone</Filter>
@@ -2630,13 +2630,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.h">
       <Filter>nD</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.h">
-      <Filter>uniaxial\LimitState</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BraceMaterial.h">
-      <Filter>uniaxial</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\uniaxial\PinchingLimitStateMaterial.h">
       <Filter>uniaxial</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\DruckerPrager3DThermal.h">
@@ -2665,6 +2659,39 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.h">
       <Filter>nD\elasticOrthotropic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ConcretewBeta.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\AxialSpHD.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\WrapperLimitCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ShearCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\ThreePointCurve.h">
+      <Filter>uniaxial\LimitState\limiteCurve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\PinchingLimitStateMaterial.h">
+      <Filter>uniaxial\LimitState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\LimitStateMaterial.h">
+      <Filter>uniaxial\LimitState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

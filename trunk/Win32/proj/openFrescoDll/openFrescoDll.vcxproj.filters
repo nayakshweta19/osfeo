@@ -1,0 +1,1124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ab115d59-c2e0-4f51-9b8c-2943f06140fc}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6a6f74a6-9afa-4b68-8e18-ff19b4d38733}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="experimentalControl">
+      <UniqueIdentifier>{f460065e-6dd7-4af2-a25b-319e772d1736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSignalFilter">
+      <UniqueIdentifier>{1efa8c79-28bd-473f-b3ed-c0535b04c369}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSite">
+      <UniqueIdentifier>{55e013ec-96e8-4033-852f-be4b4b5d7b2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tcl">
+      <UniqueIdentifier>{d0d99a71-e11f-47c5-82f9-ec3ff94b14be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{2392e3b8-2a42-410b-a330-a32b9ae52cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalElement">
+      <UniqueIdentifier>{e4e418b8-8e59-4b97-be8c-d1def78952b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalRecorder">
+      <UniqueIdentifier>{408b5aef-5823-4249-9c14-11c0092e4818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalRecorder\response">
+      <UniqueIdentifier>{0ce06b40-d484-4ce0-8714-b914ea76cf09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="openseesCore">
+      <UniqueIdentifier>{84166ba4-24f8-4129-bb53-e5a5d0ff177b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSetup">
+      <UniqueIdentifier>{060485f5-4fd9-425a-9dd7-e4ef3494f397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="openseesExtra">
+      <UniqueIdentifier>{99ed70cf-1522-450c-ac56-6ca0e4be9107}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimulation.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimUniaxialMaterials.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECxPCtarget.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\TclExpControlCommand.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETrussCorot.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETwoNodeLink.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEBeamColumnCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEGenericCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEInvertedVBraceCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEETrussCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEETwoNodeLinkCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclExpElementCommands.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSetupRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSignalFilterRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSiteRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\TclExpRecorderCommands.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESFourActuators3d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBrace2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBraceJntOff2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESNoTransformation.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESOneActuator.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuators2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuatorsJntOff2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESTwoActuators2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ExperimentalSetup.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\TclExpSetupCommand.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimRandomGauss.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimulation.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimUndershoot.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ExperimentalSignalFilter.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\TclExpSignalFilterCommand.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ActorExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ExperimentalSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\TclExpSiteCommand.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\ExpControlSP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\ExperimentalCP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\TclExpCPCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\xPCtarget\xpcinitfree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\OpenFrescoPackage.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartLabServer.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartSimAppElemServer.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartSimAppSiteServer.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\Actor.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinLapackSolver.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinSOE.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinSolver.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\ConvergenceTest.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\CTestNormDispIncr.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\DatabaseStream.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\DOF_Numberer.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\DummyStream.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\EquiSolnAlgo.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\LinearSeries.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\LineSearch.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\LoadControl.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\LoadPattern.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\NewtonLineSearch.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\NewtonRaphson.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\PenaltyConstraintHandler.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\PenaltyMP_FE.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\PenaltySP_FE.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\PlainNumberer.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\RegulaFalsiLineSearch.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\Shadow.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\Socket.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Socket.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_SocketSSL.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeries.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\UDP_Socket.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Analysis.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Channel.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ConstraintHandler.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DOF_Group.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DOF_GrpIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Domain.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DomainComponent.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Element.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ElementalLoad.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ElementalLoadIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ElementResponse.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FE_Datastore.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FE_EleIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FE_Element.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FEM_ObjectBroker.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FiberResponse.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\File.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\FileIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Graph.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ID.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\IncrementalIntegrator.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Information.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Integrator.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\LinearSOE.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\LinearSOESolver.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Load.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\LoadPatternIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MapOfTaggedObjects.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MapOfTaggedObjectsIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Material.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MaterialResponse.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Matrix.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Message.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MovableObject.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Node.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ObjectBroker.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\OPS_Stream.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Parameter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlaneStrainMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlaneStressMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlateFiberMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Pressure_Constraint.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Recorder.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Renderer.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Response.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomAllSP_Iter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomEleIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomMP_Iter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomNodIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomParamIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomPC_Iter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomSP_Iter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SolutionAlgorithm.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SP_Constraint.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StandardStream.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StaticIntegrator.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StringContainer.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Subdomain.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SubdomainNodIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\TaggedObject.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\TransientIntegrator.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\UniaxialMaterial.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Vector.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Vertex.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\VertexIter.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\win32Functions.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimulation.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimUniaxialMaterials.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECxPCtarget.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETrussCorot.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETwoNodeLink.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSetupRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSignalFilterRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSiteRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESFourActuators3d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBrace2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBraceJntOff2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESNoTransformation.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESOneActuator.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuators2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuatorsJntOff2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESTwoActuators2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ExperimentalSetup.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimRandomGauss.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimulation.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimUndershoot.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ExperimentalSignalFilter.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ActorExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ExperimentalSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\utility\ExpControlSP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\utility\ExperimentalCP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\FrescoGlobals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Actor.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinLapackSolver.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinSOE.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\BandGenLinSolver.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\bool.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\ChannelAddress.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\ConvergenceTest.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\CTestNormDispIncr.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\DatabaseStream.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\DOF_Numberer.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\DummyStream.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\EigenSOE.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\EquiSolnAlgo.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\GraphNumberer.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\GroundMotion.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\LinearSeries.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\LineSearch.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\LoadControl.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\LoadPattern.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\MachineBroker.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\NewtonLineSearch.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\NewtonRaphson.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\packages.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\PenaltyConstraintHandler.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\PenaltyMP_FE.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\PenaltySP_FE.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\PlainNumberer.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\RegulaFalsiLineSearch.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Shadow.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Socket.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\SocketAddress.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Socket.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_SocketSSL.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Timer.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeries.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeriesIntegrator.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\UDP_Socket.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Analysis.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Channel.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\classTags.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ColorMap.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ConstraintHandler.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\CrdTransf.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\DOF_Group.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\DOF_GrpIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Domain.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\DomainComponent.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\DomainDecompositionAnalysis.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Element.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ElementalLoad.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ElementalLoadIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\elementAPI.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ElementIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ElementResponse.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\EquiSolnAlgo.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FE_Datastore.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FE_EleIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FE_Element.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FEM_ObjectBroker.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Fiber.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FiberResponse.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\File.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\FileIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\G3Globals.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Graph.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ID.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\IncrementalIntegrator.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Information.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Integrator.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\LinearSOE.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\LinearSOESolver.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Load.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\LoadPattern.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\LoadPatternIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MapOfTaggedObjects.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MapOfTaggedObjectsIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Material.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MaterialResponse.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Matrix.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MeshRegion.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Message.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MovableObject.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_ConstraintIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Node.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodeIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ObjectBroker.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Globals.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Stream.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Parameter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ParameterIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlaneStrainMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlaneStressMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlateFiberMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Pressure_Constraint.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Pressure_ConstraintIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Recorder.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Renderer.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Response.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomAllSP_Iter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomEleIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomMP_Iter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomNodIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomParamIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomPC_Iter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SingleDomSP_Iter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SolutionAlgorithm.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SP_Constraint.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SP_ConstraintIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StandardStream.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StaticIntegrator.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StringContainer.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Subdomain.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SubdomainNodIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TaggedObject.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TaggedObjectIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TaggedObjectStorage.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TransientIntegrator.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\UniaxialMaterial.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Vector.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Vertex.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\VertexIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
