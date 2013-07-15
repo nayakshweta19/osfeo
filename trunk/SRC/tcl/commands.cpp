@@ -6731,7 +6731,7 @@ removeObject(ClientData clientData, Tcl_Interp *interp, int argc,
     }
   }
   
-/*  else if((strcmp(argv[1],"PressureConstraint")==0) || (strcmp(argv[1],"pc")==0)) {
+  else if((strcmp(argv[1],"PressureConstraint")==0) || (strcmp(argv[1],"pc")==0)) {
     if (argc < 3) {
       opserr << "WARNING want - remove PressureConstraint pcTag?\n";
       return TCL_ERROR;
@@ -6745,7 +6745,7 @@ removeObject(ClientData clientData, Tcl_Interp *interp, int argc,
     if (thePC != 0) {
       delete thePC;
     }
-  }*/
+  }
 
   else if ((strcmp(argv[1],"MPconstraint") == 0) || (strcmp(argv[1],"mp") == 0)) {
     if (argc < 3) {

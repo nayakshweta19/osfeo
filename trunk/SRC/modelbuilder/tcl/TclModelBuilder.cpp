@@ -52,6 +52,7 @@
 #include <SP_ConstraintIter.h>
 #include <MP_Constraint.h>
 #include <MD_Constraint.h>
+#include <Pressure_Constraint.h>
 
 #include <RigidRod.h>
 #include <RigidBeam.h>
@@ -245,9 +246,9 @@ int
 TclCommand_addSP(ClientData clientData, Tcl_Interp *interp, int argc,   
 		      TCL_Char **argv);
 
-//int
-//TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,   
-//		      TCL_Char **argv);
+int
+TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,   
+		      TCL_Char **argv);
 
 int
 TclCommand_addImposedMotionSP(ClientData clientData, 
@@ -580,8 +581,8 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   Tcl_CreateCommand(interp, "sp", TclCommand_addSP,
 		    (ClientData)NULL, NULL);
 
-//  Tcl_CreateCommand(interp, "pc", TclCommand_addPC,
-//		    (ClientData)NULL, NULL);
+  Tcl_CreateCommand(interp, "pc", TclCommand_addPC,
+		    (ClientData)NULL, NULL);
 
   Tcl_CreateCommand(interp, "imposedMotion", 
 		    TclCommand_addImposedMotionSP,
@@ -789,7 +790,7 @@ TclModelBuilder::~TclModelBuilder()
   Tcl_DeleteCommand(theInterp, "fixY");
   Tcl_DeleteCommand(theInterp, "fixZ");
   Tcl_DeleteCommand(theInterp, "sp");
-//  Tcl_DeleteCommand(theInterp, "pc");
+  Tcl_DeleteCommand(theInterp, "pc");
   Tcl_DeleteCommand(theInterp, "imposedSupportMotion");
   Tcl_DeleteCommand(theInterp, "groundMotion");
   Tcl_DeleteCommand(theInterp, "equalDOF");
@@ -2666,7 +2667,7 @@ TclCommand_addSP(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 
-/*int
+int
 TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,   
 		      TCL_Char **argv)
 {
@@ -2698,7 +2699,7 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
     }
 
     return TCL_OK;
-}*/
+}
 
 int
 TclCommand_addImposedMotionSP(ClientData clientData, 
