@@ -217,9 +217,9 @@ TclModelBuilder_addBeamWithHinges(ClientData, Tcl_Interp *, int, TCL_Char **,
 				  Domain*, TclModelBuilder *);
 
 // Minjie Zhu
-//extern int
-//TclModelBuilder_addPFEMElement2D(ClientData clientData, Tcl_Interp *interp,  int argc,
-//                                 TCL_Char **argv, Domain*, TclModelBuilder *);
+extern int
+TclModelBuilder_addPFEMElement2D(ClientData clientData, Tcl_Interp *interp,  int argc,
+                                 TCL_Char **argv, Domain*, TclModelBuilder *);
 
 // Quan
 extern int
@@ -1373,11 +1373,11 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     return result;
   }
 
-//  else if (strcmp(argv[1],"PFEMElement2D") == 0) {
-//    int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
-//      theTclDomain, theTclBuilder);
-//    return result;
-//  }
+  else if (strcmp(argv[1],"PFEMElement2D") == 0) {
+    int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
+      theTclDomain, theTclBuilder);
+    return result;
+  }
 
   else if ((strcmp(argv[1],"multipleShearSpring") == 0) ||
 	   (strcmp(argv[1],"MSS") == 0)) {
