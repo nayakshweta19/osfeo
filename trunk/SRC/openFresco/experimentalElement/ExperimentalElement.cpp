@@ -60,8 +60,8 @@ ExperimentalElement::ExperimentalElement(int tag,
 
 ExperimentalElement::~ExperimentalElement()
 {
-    if (theSite != 0)
-        delete theSite;
+    //if (theSite != 0)
+    //    delete theSite;
     
     if (sizeCtrl != 0)
         delete sizeCtrl;

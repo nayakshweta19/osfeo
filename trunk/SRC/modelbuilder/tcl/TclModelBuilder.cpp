@@ -512,12 +512,12 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   Tcl_CreateCommand(interp, "element", TclCommand_addElement,
 		    (ClientData)NULL, NULL);
 
-  Tcl_CreateCommand(interp, "PFEM2D", TclCommand_PFEM2D,
+/*  Tcl_CreateCommand(interp, "PFEM2D", TclCommand_PFEM2D,
 		    (ClientData)NULL, NULL);
 
   Tcl_CreateCommand(interp, "PFEM3D", TclCommand_PFEM3D,
 		    (ClientData)NULL, NULL);
-
+*/
   Tcl_CreateCommand(interp, "pfem2d", TclCommand_PFEM2D,
 		    (ClientData)NULL, NULL);
 
@@ -1250,12 +1250,12 @@ TclCommand_addNode(ClientData clientData, Tcl_Interp *interp, int argc,
       }
       theNode->setMass(mass);
     } else if (strcmp(argv[currentArg],"-disp") == 0) {
+      currentArg++;
       if (argc < currentArg+ndf) {
-	opserr << "WARNING incorrect number of nodal disp terms \n";
+	opserr << "WARNING incorrect number of nodal disp terms\n";
 	opserr << "node: " << nodeId << endln;
 	return TCL_ERROR;      
       }	
-      currentArg++;
       Vector disp(ndf);
       double theDisp;
       for (int i=0; i<ndf; i++) {
@@ -1267,13 +1267,14 @@ TclCommand_addNode(ClientData clientData, Tcl_Interp *interp, int argc,
 	disp(i) = theDisp;
       }
       theNode->setTrialDisp(disp);      
+      theNode->commitState();
     } else if (strcmp(argv[currentArg],"-vel") == 0) {
+      currentArg++;
       if (argc < currentArg+ndf) {
 	opserr << "WARNING incorrect number of nodal vel terms\n";
 	opserr << "node: " << nodeId << endln;
 	return TCL_ERROR;      
       }	
-      currentArg++;
       Vector disp(ndf);
       double theDisp;
       for (int i=0; i<ndf; i++) {
@@ -1285,6 +1286,7 @@ TclCommand_addNode(ClientData clientData, Tcl_Interp *interp, int argc,
 	disp(i) = theDisp;
       }
       theNode->setTrialVel(disp); 
+      theNode->commitState();
     } else
       currentArg++;
   }
@@ -2678,7 +2680,7 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
     }
 
     // check number of arguments
-    if (argc < 2) {
+    if (argc < 3) {
         opserr << "WARNING bad command - want: pc nodeId";
         printCommand(argc, argv);
         return TCL_ERROR;
@@ -2690,7 +2692,15 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
         opserr << "WARNING invalid nodeId: " << argv[1] << " -  pc nodeId\n";
         return TCL_ERROR;
     }
-    Pressure_Constraint* pc = new Pressure_Constraint(nodeId, true);
+
+	// get the gravity
+	double g;
+	if (Tcl_GetDouble(interp, argv[2], &g) != TCL_OK) {
+		opserr << "WARNING invalid gravity: " << argv[2] << " - pd nodeId Gravity\n";
+		return TCL_ERROR;
+	}
+
+    Pressure_Constraint* pc = new Pressure_Constraint(nodeId, g);
     if (theTclDomain->addPressure_Constraint(pc) == false) {
         opserr << "WARNING failed to add Pressure_Constraint to the domain\n";
         opserr << "node: " << nodeId << endln;

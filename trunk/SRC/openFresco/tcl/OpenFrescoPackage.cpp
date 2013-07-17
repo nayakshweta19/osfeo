@@ -43,7 +43,10 @@
 extern Domain *ops_TheActiveDomain;
 double ops_Dt = 0.0;
 StandardStream sserr;
-OPS_Stream *opserrPtr = &sserr;
+//OPS_Stream *opserrPtr = &sserr;
+extern OPS_Stream *opserrPtr;
+#define opserr (*opserrPtr)
+#define endln "\n"
 #endif
 
 Domain *theDomain = 0;
