@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.7 $
+// $Date: 2010/03/04 19:05:29 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/OPS_Stream.cpp,v $
 
 #include <OPS_Stream.h>

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.8 $
+// $Date: 2009-01-09 00:55:03 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/StandardStream.cpp,v $
 
 #include <StandardStream.h>

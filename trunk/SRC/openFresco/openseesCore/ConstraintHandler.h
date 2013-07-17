@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.3 $
+// $Date: 2005/08/31 17:28:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/handler/ConstraintHandler.h,v $
                                                                         
                                                                         

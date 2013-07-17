@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.4 $
+// $Date: 2009/08/25 22:11:55 $
 // $Source: /usr/local/cvs/OpenSees/SRC/tagged/storage/TaggedObjectStorage.h,v $
                                                                         
                                                                         

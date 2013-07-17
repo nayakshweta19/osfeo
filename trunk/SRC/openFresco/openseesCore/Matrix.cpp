@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.16 $
+// $Date: 2009/08/25 21:57:03 $
 // $Source: /usr/local/cvs/OpenSees/SRC/matrix/Matrix.cpp,v $
                                                                         
                                                                         
@@ -34,6 +34,7 @@
 #include "Matrix.h"
 #include "Vector.h"
 #include "ID.h"
+#include <Tensor.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -197,7 +198,6 @@ Matrix::~Matrix()
       delete [] data; 
   //  if (data != 0) free((void *) data);
 }
-    
 
 //
 // METHODS - Zero, Assemble, Solve
@@ -243,7 +243,6 @@ Matrix::Zero(void)
     *dataPtr++ = 0;
 }
 
-
 int
 Matrix::resize(int rows, int cols) {
 
@@ -285,10 +284,6 @@ Matrix::resize(int rows, int cols) {
 
   return 0;
 }
-
-
-
-
 
 int
 Matrix::Assemble(const Matrix &V, const ID &rows, const ID &cols, double fact) 
@@ -440,7 +435,6 @@ Matrix::Solve(const Vector &b, Vector &x) const
     return 0;
 }
 
-
 int
 Matrix::Solve(const Matrix &b, Matrix &x) const
 {
@@ -549,16 +543,13 @@ Matrix::Solve(const Matrix &b, Matrix &x) const
     return info;
 }
 
-
 int
 Matrix::Invert(Matrix &theInverse) const
 {
 
     int n = numRows;
 
-
 #ifdef _G3DEBUG    
-
     if (numRows != numCols) {
       opserr << "Matrix::Solve(B,X) - the matrix of dimensions [" << numRows << "," << numCols << "] is not square\n";
       return -1;
@@ -647,7 +638,6 @@ Matrix::Invert(Matrix &theInverse) const
     return info;
 }
 
-
 int
 Matrix::addMatrix(double factThis, const Matrix &other, double factOther)
 {
@@ -713,10 +703,9 @@ Matrix::addMatrix(double factThis, const Matrix &other, double factOther)
       }
     } 
 
-    // successfull
+    // successful
     return 0;
 }
-
 
 int
 Matrix::addMatrixTranspose(double factThis, const Matrix &other, double factOther)
@@ -789,10 +778,9 @@ Matrix::addMatrixTranspose(double factThis, const Matrix &other, double factOthe
       }
     } 
 
-    // successfull
+    // successful
     return 0;
 }
-
 
 int
 Matrix::addMatrixProduct(double thisFact, 
@@ -932,7 +920,6 @@ Matrix::addMatrixTransposeProduct(double thisFact,
   return 0;
 }
 
-
 // to perform this += T' * B * T
 int
 Matrix::addMatrixTripleProduct(double thisFact, 
@@ -1026,10 +1013,6 @@ Matrix::addMatrixTripleProduct(double thisFact,
 
     return 0;
 }
-
-
-
-
 
 // to perform this += At * B * C
 int
@@ -1203,6 +1186,102 @@ Matrix::operator=(const Matrix &other)
 
 
 
+Matrix &
+Matrix::operator=(const Tensor &V)
+{
+  int rank = V.rank();
+  if (rank != 4) {
+    opserr << "Matrix::operator=() - tensor must be of rank 4\n";
+      return *this;
+  }
+  int dim = V.dim(1);
+  if (dim != V.dim(2) != V.dim(3) != V.dim(4)) {
+      opserr << "Matrix::operator=() - tensor must have square dimensions\n";
+      return *this;
+  }
+
+  if (dim != 2 || dim != 3 || dim != 1) {
+      opserr << "Matrix::operator=() - tensor must be of dimension 2 or 3\n";
+      return *this;
+  }      
+
+  if (dim == 1) {
+    if ((numCols != 1) || (numRows != 1)) {      
+      opserr << "Matrix::operator=() - matrix must be 1x1 for tensor of dimension 3\n";
+      return *this;
+    }      	  
+    (*this)(0,0) = V.cval(1,1,1,1);
+    
+  } else if (dim == 2) {
+    if ((numCols != 3) || (numRows != 3)) {      
+      opserr << "Matrix::operator=() - matrix must be 1x1 for tensor of dimension 3\n";      
+      
+      return *this;
+    }
+    (*this)(0,0) = V.cval(1,1,1,1);
+    (*this)(0,1) = V.cval(1,1,2,2);
+    (*this)(0,2) = V.cval(1,1,1,2);      
+    
+    (*this)(1,0) = V.cval(2,2,1,1);
+    (*this)(1,1) = V.cval(2,2,2,2);
+    (*this)(1,2) = V.cval(2,2,1,2);      
+    
+    (*this)(2,0) = V.cval(1,2,1,1);
+    (*this)(2,1) = V.cval(1,2,2,2);
+    (*this)(2,2) = V.cval(1,2,1,2);            
+    
+  } else {
+    if ((numCols != 6) || (numRows != 6)) {      
+      opserr << "Matrix::operator=() - matrix must be 1x1 for tensor of dimension 3\n";      
+	
+      return *this;
+    }      
+    (*this)(0,0) = V.cval(1,1,1,1);
+    (*this)(0,1) = V.cval(1,1,2,2);
+    (*this)(0,2) = V.cval(1,1,3,3);      
+    (*this)(0,3) = V.cval(1,1,1,2);
+    (*this)(0,4) = V.cval(1,1,1,3);
+    (*this)(0,5) = V.cval(1,1,2,3);      
+    
+    (*this)(1,0) = V.cval(2,2,1,1);
+    (*this)(1,1) = V.cval(2,2,2,2);
+    (*this)(1,2) = V.cval(2,2,3,3);      
+    (*this)(1,3) = V.cval(2,2,1,2);
+    (*this)(1,4) = V.cval(2,2,1,3);
+    (*this)(1,5) = V.cval(2,2,2,3);            
+    
+    (*this)(2,0) = V.cval(3,3,1,1);
+    (*this)(2,1) = V.cval(3,3,2,2);
+    (*this)(2,2) = V.cval(3,3,3,3);      
+    (*this)(2,3) = V.cval(3,3,1,2);
+    (*this)(2,4) = V.cval(3,3,1,3);
+    (*this)(2,5) = V.cval(3,3,2,3);                  
+    
+    (*this)(3,0) = V.cval(1,2,1,1);
+    (*this)(3,1) = V.cval(1,2,2,2);
+    (*this)(3,2) = V.cval(1,2,3,3);      
+    (*this)(3,3) = V.cval(1,2,1,2);
+    (*this)(3,4) = V.cval(1,2,1,3);
+    (*this)(3,5) = V.cval(1,2,2,3);                        
+    
+    (*this)(4,0) = V.cval(1,3,1,1);
+    (*this)(4,1) = V.cval(1,3,2,2);
+    (*this)(4,2) = V.cval(1,3,3,3);      
+    (*this)(4,3) = V.cval(1,3,1,2);
+    (*this)(4,4) = V.cval(1,3,1,3);
+    (*this)(4,5) = V.cval(1,3,2,3);                              
+    
+    (*this)(5,0) = V.cval(2,3,1,1);
+    (*this)(5,1) = V.cval(2,3,2,2);
+    (*this)(5,2) = V.cval(2,3,3,3);      
+    (*this)(5,3) = V.cval(2,3,1,2);
+    (*this)(5,4) = V.cval(2,3,1,3);
+    (*this)(5,5) = V.cval(2,3,2,3);                                    
+  }
+  return *this;
+}
+
+
 // virtual Matrix &operator+=(double fact);
 // virtual Matrix &operator-=(double fact);
 // virtual Matrix &operator*=(double fact);
@@ -1327,7 +1406,6 @@ Matrix::operator/(double fact) const
     return result;
 }
 
-
 //
 // MATRIX_VECTOR OPERATIONS
 //
@@ -1383,12 +1461,10 @@ Matrix::operator^(const Vector &V) const
     return result;
 }
 
-
 //
 // MATRIX - MATRIX OPERATIONS
 //
 	    
-
 Matrix
 Matrix::operator+(const Matrix &M) const
 {
@@ -1404,8 +1480,7 @@ Matrix::operator-(const Matrix &M) const
     result.addMatrix(1.0,M,-1.0);    
     return result;
 }
-	    
-    
+
 Matrix
 Matrix::operator*(const Matrix &M) const
 {
@@ -1441,8 +1516,6 @@ Matrix::operator*(const Matrix &M) const
     return result;
 }
 
-
-
 // Matrix operator^(const Matrix &M) const
 //	We overload the * operator to perform matrix^t-matrix multiplication.
 //	reults = (*this)transposed * M.
@@ -1476,9 +1549,6 @@ Matrix::operator^(const Matrix &M) const
 
     return result;
 }
-    
-
-
 
 Matrix &
 Matrix::operator+=(const Matrix &M)
@@ -1518,7 +1588,6 @@ Matrix::operator-=(const Matrix &M)
   return *this;
 }
 
-
 //
 // Input/Output Methods
 //
@@ -1532,7 +1601,6 @@ Matrix::Output(OPS_Stream &s) const
 	s << endln;
     }
 }
-
 
 /*****************
 void 
@@ -1555,7 +1623,6 @@ OPS_Stream &operator<<(OPS_Stream &s, const Matrix &V)
     s << endln;        
     return s;
 }
-
 	
 /****************	
 istream &operator>>(istream &s, Matrix &V)
@@ -1564,7 +1631,6 @@ istream &operator>>(istream &s, Matrix &V)
     return s;
 }
 ****************/
-
 
 int
 Matrix::Assemble(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1601,7 +1667,6 @@ Matrix::Assemble(const Matrix &V, int init_row, int init_col, double fact)
   return res;
 }
 
-
 int
 Matrix::Assemble(const Vector &V, int init_row, int init_col, double fact) 
 {
@@ -1636,7 +1701,6 @@ Matrix::Assemble(const Vector &V, int init_row, int init_col, double fact)
 
   return res;
 }
-
 
 int
 Matrix::AssembleTranspose(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1673,7 +1737,6 @@ Matrix::AssembleTranspose(const Matrix &V, int init_row, int init_col, double fa
   return res;
 }
 
-
 int
 Matrix::AssembleTranspose(const Vector &V, int init_row, int init_col, double fact) 
 {
@@ -1708,7 +1771,6 @@ Matrix::AssembleTranspose(const Vector &V, int init_row, int init_col, double fa
 
   return res;
 }
-
 
 int
 Matrix::Extract(const Matrix &V, int init_row, int init_col, double fact) 
@@ -1745,14 +1807,25 @@ Matrix::Extract(const Matrix &V, int init_row, int init_col, double fact)
   return res;
 }
 
-
-Matrix operator*(double a, const Matrix &V)
+Matrix
+operator*(double a, const Matrix &V)
 {
   return V * a;
 }
 
+// double Norm();
+//	Method to return the norm of  vector. (non-const as may save norm for later)
 
-
+double 
+Matrix::Norm(void) const
+{
+  double value = 0;
+  for (int i=0; i<dataSize; i++) {
+    double theData = data[i];
+    value += theData*theData;
+  }
+  return sqrt(value);
+}
 
 int
 Matrix::Eigen3(const Matrix &M)

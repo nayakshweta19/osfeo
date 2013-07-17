@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.13 $
+// $Date: 2009/08/25 23:33:24 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/objectBroker/FEM_ObjectBroker.h,v $
                                                                         
                                                                         
@@ -69,6 +69,7 @@ class DomainDecompositionAnalysis;
 class PartitionedModelBuilder;
 
 class CrdTransf;
+
 class GraphNumberer;
 
 class BeamIntegration;

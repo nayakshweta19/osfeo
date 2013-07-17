@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.21 $
+// $Date: 2010/02/04 01:21:04 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/fe_ele/FE_Element.cpp,v $
                                                                         
                                                                         
@@ -246,6 +246,12 @@ FE_Element::setAnalysisModel(AnalysisModel &theAnalysisModel)
     theModel = &theAnalysisModel;
 }
 
+int
+FE_Element::getnumdof(void)
+{
+    return numDOF;
+}
+
 // void setID(int index, int value);
 //	Method to set the corresponding index of the ID to value.
 
@@ -416,6 +422,33 @@ FE_Element::addKiToTang(double fact)
   }	
 }    
 
+void
+FE_Element::addKpToTang(double fact, int numP)
+{
+  if (myEle != 0) {
+    // check for a quick return 
+    if (fact == 0.0)
+      return;
+    else if (myEle->isSubdomain() == false) {
+      const Matrix *thePrevMat = myEle->getPreviousK(numP);
+      if (thePrevMat != 0)
+        theTangent->addMatrix(1.0, *thePrevMat, fact);
+    } else {
+      opserr << "WARNING FE_Element::addKpToTang() - ";
+      opserr << "- this should not be called on a Subdomain!\n";
+    }                          
+  }    
+}
+
+int
+FE_Element::storePreviousK(int numP)
+{
+  int res = 0;
+  if (myEle != 0) {
+    res = myEle->storePreviousK(numP);
+  }
+  return res;
+}
 
 void  
 FE_Element::zeroResidual(void)
@@ -477,6 +510,83 @@ FE_Element::addRIncInertiaToResidual(double fact)
 	opserr << "WARNING FE_Element::addRtoResidual() - no Element *given ";
 	opserr << "- subclasses must provide implementation\n";
     }    	        
+}
+
+void
+FE_Element::addRCFTtoResidual(double fact)
+{
+     if (myEle != 0) {
+	// check for a quick return
+        if (fact == 0.0)
+	   return;
+	else if (myEle->isSubdomain() == false) {
+	   const Vector &eleResisting = myEle->getResistingForce();
+	   Vector a(18);
+	   for(int i = 0; i < 18; i++)
+	       a(i) = eleResisting(i);
+	   
+	   for( int i = 6; i < 9; i++){
+		   a(i-6) = a(i-6) + a(i);
+	       a(i) = 0.0;
+	   }
+       for( int i = 15; i < 18; i++){
+	       a(i-6) = a(i-6) + a(i);
+	       a(i) = 0.0;
+	   }
+
+	   const Vector &b = a;
+	   
+	   theResidual->addVector(1.0, b, -fact);
+	}
+	else {
+	   opserr << "WARNING FE_Element::addRtoResidual() - ";
+	   opserr << "- this should not be called on a Subdomain!\n";
+	}
+    }
+    else {
+        opserr << "WARNING FE_Element::addRtoResidual() - no Element *given ";
+        opserr << "- subclasses must provide implementation\n";
+    }
+}
+
+void
+FE_Element::addRCFTIncInertiaToResidual(double fact)
+{
+    //ofstream unbal;
+    //unbal.open("unbal.dat",ios::app);
+    if (myEle != 0) {
+           if (fact == 0.0)
+              return;
+           else if (myEle->isSubdomain() == false) {
+              const Vector &eleResisting = myEle->getResistingForceIncInertia();
+              //unbal<<"\nGLOBAL ELE RESISTING FORCE"<<endl;
+              //unbal>>eleResisting;
+              Vector a(18);
+              for(int i = 0; i < 18; i++)
+                 a(i) = eleResisting(i);
+
+              for( int i = 6; i < 9; i++){
+                 a(i-6) = a(i-6) + a(i);
+                 a(i) = 0.0;
+              }
+              for( int i = 15; i < 18; i++){
+                 a(i-6) = a(i-6) + a(i);
+                 a(i) = 0.0;
+              }
+
+              const Vector &b = a;
+
+              theResidual->addVector(1.0, b, -fact);
+          }
+          else {
+              opserr << "WARNING FE_Element::addRIncInertiaToResidual() - ";
+              opserr << "- this should not be called on a Subdomain!\n";
+          }
+     }
+     else {
+          opserr << "WARNING FE_Element::addRIncInertialToResidual() - no Element *given ";
+          opserr << "- subclasses must provide implementation\n";
+    }
 }
 
 

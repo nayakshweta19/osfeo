@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.31 $
+// $Date: 2010-09-16 00:07:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/domain/Domain.h,v $
                                                                         
 // Written: fmk 

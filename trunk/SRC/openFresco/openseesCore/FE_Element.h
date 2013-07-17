@@ -18,16 +18,14 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.14 $
+// $Date: 2006/02/08 20:20:00 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/fe_ele/FE_Element.h,v $
                                                                         
                                                                         
 #ifndef FE_Element_h
 #define FE_Element_h
 
-// File: ~/analysis/fe_ele/FE_Element.h
-// 
 // Written: fmk 
 // Created: 11/96
 // Revision: A
@@ -58,7 +56,8 @@ class FE_Element: public TaggedObject
     virtual const ID &getID(void) const;
     void setAnalysisModel(AnalysisModel &theModel);
     virtual int  setID(void);
-    
+    int getnumdof(void); //cenk
+
     // methods to form and obtain the tangent and residual
     virtual const Matrix &getTangent(Integrator *theIntegrator);
     virtual const Vector &getResidual(Integrator *theIntegrator);
@@ -69,11 +68,16 @@ class FE_Element: public TaggedObject
     virtual void  addKiToTang(double fact = 1.0);
     virtual void  addCtoTang(double fact = 1.0);    
     virtual void  addMtoTang(double fact = 1.0);    
-    
+    virtual void  addKpToTang(double fact = 1.0, int numP = 0);
+	virtual int   storePreviousK(int numP);
+
     // methods to allow integrator to build residual    
     virtual void  zeroResidual(void);    
     virtual void  addRtoResidual(double fact = 1.0);
-    virtual void  addRIncInertiaToResidual(double fact = 1.0);    
+    virtual void  addRIncInertiaToResidual(double fact = 1.0);
+
+	virtual void  addRCFTtoResidual(double fact = 1.0);
+	virtual void  addRCFTIncInertiaToResidual(double fact = 1.0); 
 
     // methods for ele-by-ele strategies
     virtual const Vector &getTangForce(const Vector &x, double fact = 1.0);

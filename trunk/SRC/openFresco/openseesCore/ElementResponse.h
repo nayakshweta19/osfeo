@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.5 $
+// $Date: 2009/12/17 23:50:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/ElementResponse.h,v $
                                                                         
 // Written: MHS 
@@ -38,6 +38,7 @@ class Element;
 class ID;
 class Vector;
 class Matrix;
+class Tensor;
 
 class ElementResponse : public Response
 {
@@ -48,6 +49,7 @@ public:
 	ElementResponse(Element *ele, int id, const ID &val);
 	ElementResponse(Element *ele, int id, const Vector &val);
 	ElementResponse(Element *ele, int id, const Matrix &val);
+	ElementResponse(Element *ele, int id, const Tensor &val);
 	ElementResponse(Element *ele, int id, const Vector &val1, const ID &val2);
 
 	~ElementResponse();

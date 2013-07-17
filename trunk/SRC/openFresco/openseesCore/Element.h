@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.19 $
+// $Date: 2009-08-25 22:32:08 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Element.h,v $
                                                                         
                                                                         
@@ -107,11 +107,16 @@ class Element : public DomainComponent
 
     virtual int addResistingForceToNodalReaction(int flag);
 
+	virtual int storePreviousK(int numK);
+	virtual const Matrix *getPreviousK(int num);
+
   protected:
     const Vector &getRayleighDampingForces(void);
-
     double alphaM, betaK, betaK0, betaKc;
     Matrix *Kc; // pointer to hold last committed matrix if needed for rayleigh damping
+
+	Matrix **previousK;
+	int numPreviousK;
 
   private:
     int index, nodeIndex;

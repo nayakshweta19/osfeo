@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2003-02-14 23:01:24 $
+// $Date: 2003/02/14 23:01:24 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/BeamFiberMaterial2d.h,v $
 
 // Written: MHS
@@ -27,13 +27,13 @@
 //
 // Description: This file contains the class definition of BeamFiberMaterial2d.
 // The BeamFiberMaterial2d class is a wrapper class that performs static
-// condensation on a three-dimensional material model to give the 11 and 12
+// condensation on a three-dimensional material model to give the 11, 12
 // stress components which can then be integrated over an area to model a
 // shear flexible 2D beam.
 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <math.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 #include <Vector.h>
 #include <Matrix.h>
@@ -48,10 +48,15 @@ class BeamFiberMaterial2d: public NDMaterial {
     virtual ~BeamFiberMaterial2d(void);
 
     int setTrialStrain( const Vector &strainFromElement);
+	int BeamFiberMaterial2d::setTrialStrain(const Vector &strainFromElement, double theta);
     const Vector& getStrain(void);
+	const Vector& getStrain(double theta);
     const Vector& getStress(void);
+	const Vector& getStress(double theta);
     const Matrix& getTangent(void);
+	const Matrix& getTangent(double theta);
     const Matrix& getInitialTangent(void);
+	const Matrix& getInitialTangent(double theta);
 
     double getRho(void);
 
@@ -69,27 +74,27 @@ class BeamFiberMaterial2d: public NDMaterial {
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
-    int setParameter(const char **argv, int argc, Parameter &param);
-
   private:
     double Tstrain22;
     double Tstrain33;
-    double Tgamma31;
     double Tgamma23;
+	double Tgamma31;
     double Cstrain22;
     double Cstrain33;
-    double Cgamma31;
     double Cgamma23;
+	double Cgamma31;
 
     NDMaterial *theMaterial;
 
     Vector strain;
-
+	Vector strain3d;
     static Vector stress;
     static Matrix tangent;
+	static Vector stress3d;
+	static Matrix tangent3d;
 
-    int indexMap(int i);
-
+    //int indexMap(int i);
+	static int iMap[6];
 };
 
 

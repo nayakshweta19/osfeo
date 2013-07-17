@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.1 $
+// $Date: 2005/11/28 22:07:24 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/model/FE_EleIter.cpp,v $
                                                                         
 // Written: fmk 

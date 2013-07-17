@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.5 $
+// $Date: 2010/04/23 22:50:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/constraints/MP_Constraint.cpp,v $
                                                                         
                                                                         
@@ -184,7 +184,7 @@ MP_Constraint::getConstraint(void)
 int 
 MP_Constraint::sendSelf(int cTag, Channel &theChannel)
 {
-    static ID data(9);
+    static ID data(10);
     int dataTag = this->getDbTag();
 
     data(0) = this->getTag(); 
@@ -203,6 +203,7 @@ MP_Constraint::sendSelf(int cTag, Channel &theChannel)
 
     data(7) = dbTag1;
     data(8) = dbTag2;
+	data(9) = nextTag;
 
     int result = theChannel.sendID(dataTag, cTag, data);
     if (result < 0) {
@@ -246,7 +247,7 @@ MP_Constraint::recvSelf(int cTag, Channel &theChannel,
 			FEM_ObjectBroker &theBroker)
 {
     int dataTag = this->getDbTag();
-    static ID data(9);
+    static ID data(10);
     int result = theChannel.recvID(dataTag, cTag, data);
     if (result < 0) {
 	opserr << "WARNING MP_Constraint::recvSelf - error receiving ID data\n";
@@ -260,7 +261,8 @@ MP_Constraint::recvSelf(int cTag, Channel &theChannel,
     int numCols = data(4);
     dbTag1 = data(7);
     dbTag2 = data(8);
-    
+    nextTag = data(9);
+
     if (numRows != 0 && numCols != 0) {
 	constraint = new Matrix(numRows,numCols);
 	

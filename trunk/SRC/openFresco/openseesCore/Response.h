@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.8 $
+// $Date: 2009/12/17 23:50:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/Response.h,v $
                                                                         
 // Written: MHS 
@@ -33,6 +33,7 @@
 class ID;
 class Vector;
 class Matrix;
+class Tensor;
 
 #include <Information.h>
 
@@ -45,6 +46,7 @@ class Response
   Response(const ID &val);
   Response(const Vector &val);
   Response(const Matrix &val);
+  Response(const Tensor &val);
   Response(const Vector &val1, const ID &val2);
 
   virtual ~Response();

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.8 $
+// $Date: 2007/02/02 01:18:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/fiber/Fiber.h,v $
                                                                         
                                                                         
@@ -73,10 +73,10 @@ class Fiber : public TaggedObject, public MovableObject
     virtual int getResponse(int responseID, Information &info);
 
     virtual void getFiberLocation(double &y, double &z) =0;
-    virtual double getArea(void) =0;
-
     virtual UniaxialMaterial *getMaterial(void) {return 0;}
     virtual NDMaterial *getNDMaterial(void) {return 0;}
+    virtual double getArea(void) = 0;
+	virtual double getPerpTheta(void) {return 0.;};
 
     virtual const Vector &getFiberSensitivity(int gradNumber, bool cond);
     virtual int commitSensitivity(const Vector &dedh, int gradNumber,

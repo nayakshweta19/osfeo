@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.8 $
+// $Date: 2010-01-21 21:43:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Information.cpp,v $
                                                                         
                                                                         
@@ -32,31 +32,32 @@
 #include <ID.h>
 #include <Vector.h>
 #include <Matrix.h>
+#include <Tensor.h>
 
 Information::Information() 
   :theType(UnknownType),
-   theID(0), theVector(0), theMatrix(0), theString(0)
+   theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
     // does nothing
 }
 
 Information::Information(int val) 
   :theType(IntType), theInt(val),
-  theID(0), theVector(0), theMatrix(0), theString(0)
+  theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
     // does nothing
 }
 
 Information::Information(double val) 
   :theType(DoubleType), theDouble(val),
-  theID(0), theVector(0), theMatrix(0), theString(0)
+  theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
   // does nothing
 }
 
 Information::Information(const ID &val) 
   :theType(IdType),
-  theID(0), theVector(0), theMatrix(0), theString(0)
+  theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
   // Make a copy
   theID = new ID(val);
@@ -67,7 +68,7 @@ Information::Information(const ID &val)
 
 Information::Information(const Vector &val) 
   :theType(VectorType),
-  theID(0), theVector(0), theMatrix(0), theString(0)
+  theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
   // Make a copy
   theVector = new Vector(val);
@@ -78,7 +79,7 @@ Information::Information(const Vector &val)
 
 Information::Information(const Matrix &val) 
   :theType(MatrixType),
-   theID(0), theVector(0), theMatrix(0), theString(0)
+   theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
   // Make a copy
   theMatrix = new Matrix(val);
@@ -87,9 +88,21 @@ Information::Information(const Matrix &val)
     opserr << "Information::Information -- failed to allocate Matrix\n";
 }
 
+Information::Information(const Tensor &val) 
+  :theType(TensorType),
+  theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
+{
+  // Make a copy
+  theTensor = new Tensor(val);
+  
+  if (theTensor == 0)
+    opserr << "Information::Iformation -- failed to allocate Tensor\n";
+}
+
+
 Information::Information(const ID &val1, const Vector &val2) 
   :theType(IdType),
-   theID(0), theVector(0), theMatrix(0), theString(0)
+   theID(0), theVector(0), theMatrix(0), theTensor(0), theString(0)
 {
   // Make a copy
   theID = new ID(val1);
@@ -111,6 +124,8 @@ Information::~Information()
   if (theMatrix != 0)
     delete theMatrix;
   
+  if (theTensor != 0)
+    delete theTensor;
 }
 
 int 
@@ -165,6 +180,17 @@ Information::setMatrix(const Matrix &newMatrix)
 }
 
 int 
+Information::setTensor(const Tensor &newTensor)
+{
+  if (theTensor != 0) {
+    *theTensor = newTensor;
+  } else {
+    theTensor = new Tensor(newTensor);
+  }
+  return 0;
+}
+
+int 
 Information::setString(const char *newString)
 {
   int newLength = strlen(newString);
@@ -205,9 +231,12 @@ Information::Print(OPS_Stream &s, int flag)
 	s <<  (*theMatrix)(i,j) << " ";
 	s << endln;
     }
-  }
-
-  return;
+  } else if (theType == TensorType && theTensor != 0)
+    // No overloaded << for Tensors yet!
+    //s << *theTensor;
+    s << "No Tensor output";
+  else
+    return;
 }
 
 
@@ -231,8 +260,12 @@ Information::Print(ofstream &s, int flag)
 	s << endln;
     }
   }
-  
-  return;
+  else if (theType == TensorType && theTensor != 0)
+    // No overloaded << for Tensors yet!
+    //s << *theTensor;
+    s << "No Tensor output";
+  else
+    return;
 }
 
 const Vector &

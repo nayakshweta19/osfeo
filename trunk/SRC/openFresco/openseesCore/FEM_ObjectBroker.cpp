@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.48 $
+// $Date: 2009/05/14 22:52:04 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/objectBroker/FEM_ObjectBroker.cpp,v $
                                                                         
                                                                         
@@ -105,7 +105,7 @@ FEM_ObjectBroker::getNewSP(int classTag)
 }
 
 Pressure_Constraint *
-FEM_ObjectBroker::getNewPC(int classTag)
+  FEM_ObjectBroker::getNewPC(int classTag)
 {
   return 0;
 }
@@ -126,7 +126,7 @@ FEM_ObjectBroker::getNewElementalLoad(int classTag)
 CrdTransf*
 FEM_ObjectBroker::getNewCrdTransf(int classTag)
 {
-  return 0;
+	return 0;
 }
 
 BeamIntegration *

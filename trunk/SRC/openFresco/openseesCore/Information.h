@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.8 $
+// $Date: 2010-01-21 21:43:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Information.h,v $
                                                                         
                                                                         
@@ -41,6 +41,7 @@ class Vector;
 
 
 #include <OPS_Globals.h>
+#include <Tensor.h>
 class ID;
 class Vector;
 
@@ -49,7 +50,7 @@ class Vector;
 using std::ofstream;
 
 enum InfoType {UnknownType, IntType, DoubleType, 
-	       IdType, VectorType, MatrixType};
+	       IdType, VectorType, MatrixType, TensorType};
 		   
 class Information
 {
@@ -60,6 +61,7 @@ class Information
     Information(const ID &val);
     Information(const Vector &val);
     Information(const Matrix &val);
+    Information(const Tensor &val);
     Information(const ID &val1, const Vector &val2);
     
     virtual ~Information();
@@ -69,6 +71,7 @@ class Information
     virtual int setID(const ID &newID);
     virtual int setVector(const Vector &newVector);
     virtual int setMatrix(const Matrix &newMatrix);
+    virtual int setTensor(const Tensor &newTensor);
     virtual int setString(const char *theString);
     
     virtual void Print(OPS_Stream &s, int flag = 0);
@@ -82,6 +85,7 @@ class Information
     ID		*theID;    // pointer to an ID object, created elsewhere
     Vector 	*theVector;// pointer to a Vector object, created elsewhere
     Matrix	*theMatrix;// pointer to a Matrix object, created elsewhere
+    Tensor      *theTensor;// pointer to a Tensor object, created elsewhere
     char        *theString;// pointer to string
 
   protected:
