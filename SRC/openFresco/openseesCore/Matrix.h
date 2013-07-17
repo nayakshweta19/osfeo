@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.12 $
+// $Date: 2007/07/16 22:57:03 $
 // $Source: /usr/local/cvs/OpenSees/SRC/matrix/Matrix.h,v $
                                                                         
                                                                         
@@ -42,6 +42,9 @@
 class Vector;
 class ID;
 class Message;
+
+#include <Tensor.h> // cannot use class as Tensor is itself defined in Tensor.h
+
 
 #define MATRIX_VERY_LARGE_VALUE 1.0e213
 
@@ -82,6 +85,7 @@ class Matrix
     Matrix operator()(const ID &rows, const ID & cols) const;
     
     Matrix &operator=(const Matrix &M);
+    Matrix &operator=(const Tensor &T);
     
     // matrix operations which will preserve the derived type and
     // which can be implemented efficiently without many constructor calls.
@@ -122,13 +126,14 @@ class Matrix
     
     // methods added by Remo
     int  Assemble(const Matrix &V, int init_row, int init_col, double fact = 1.0);
-    int  Assemble(const Vector &V, int init_row, int init_col, double fact = 1.0);
+	int  Assemble(const Vector &V, int init_row, int init_col, double fact = 1.0);
     int  AssembleTranspose(const Matrix &V, int init_row, int init_col, double fact = 1.0);
     int  AssembleTranspose(const Vector &V, int init_row, int init_col, double fact = 1.0);
-    int  Extract(const Matrix &V, int init_row, int init_col, double fact = 1.0);
+	int  Extract(const Matrix &V, int init_row, int init_col, double fact = 1.0);
+	double Norm(void) const; // neallee@tju.edu.cn
 
     int Eigen3(const Matrix &M);
-
+    
     friend OPS_Stream &operator<<(OPS_Stream &s, const Matrix &M);
     //    friend istream &operator>>(istream &s, Matrix &M);    
     friend Matrix operator*(double a, const Matrix &M);

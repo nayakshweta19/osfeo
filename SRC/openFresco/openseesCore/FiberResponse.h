@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.3 $
+// $Date: 2001/07/31 18:26:59 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/FiberResponse.h,v $
                                                                         
 // Written: MHS 
@@ -38,6 +38,7 @@ class Fiber;
 class ID;
 class Vector;
 class Matrix;
+class Tensor;
 
 class FiberResponse : public Response
 {
@@ -48,6 +49,7 @@ public:
 	FiberResponse(Fiber *fib, int id, const ID &val);
 	FiberResponse(Fiber *fib, int id, const Vector &val);
 	FiberResponse(Fiber *fib, int id, const Matrix &val);
+	FiberResponse(Fiber *fib, int id, const Tensor &val);
 	~FiberResponse();
 
 	int getResponse(void);

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.5 $
+// $Date: 2010/02/04 00:32:01 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/pattern/TimeSeries.h,v $
                                                                         
 #ifndef TimeSeries_h
@@ -73,7 +73,6 @@ class TimeSeries : public TaggedObject, public MovableObject
 
   private:
 };
-
 
 extern void OPS_clearAllTimeSeries(void);
 extern bool OPS_addTimeSeries(TimeSeries *newComponent);

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2003-02-14 23:00:43 $
+// $Date: 2003/02/14 23:00:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/algorithm/equiSolnAlgo/RegulaFalsiLineSearch.h,v $
 
 // Written: fmk 

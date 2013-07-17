@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.4 $
+// $Date: 2003/02/14 23:00:49 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/StaticIntegrator.cpp,v $
                                                                         
                                                                         
@@ -76,7 +76,13 @@ StaticIntegrator::formEleResidual(FE_Element *theEle)
 {
     // only elements residual needed
     theEle->zeroResidual();
-    theEle->addRtoResidual();
+	int numdof = theEle->getnumdof();
+	if( numdof == 18 ){
+		theEle->addRCFTtoResidual();
+	}
+	else{    
+		theEle->addRtoResidual();
+	}
     return 0;
 }    
 

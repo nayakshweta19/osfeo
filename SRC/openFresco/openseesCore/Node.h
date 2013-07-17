@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.13 $
+// $Date: 2008/08/19 22:50:49 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/node/Node.h,v $
                                                                         
                                                                         
@@ -151,7 +151,7 @@ class Node : public DomainComponent
     virtual int   resetReactionForce(int flag);
     virtual const Vector *getResponse(NodeResponseType);
     
- protected:
+  protected:
     virtual void setCrds(double Crd1);
     virtual void setCrds(double Crd1, double Crd2);
     virtual void setCrds(double Crd1, double Crd2, double Crd3);

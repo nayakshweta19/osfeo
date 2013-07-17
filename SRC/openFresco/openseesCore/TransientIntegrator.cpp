@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.8 $
+// $Date: 2007/04/02 23:42:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/TransientIntegrator.cpp,v $
                                                                         
                                                                         
@@ -106,7 +106,13 @@ int
 TransientIntegrator::formEleResidual(FE_Element *theEle)
 {
   theEle->zeroResidual();
-  theEle->addRIncInertiaToResidual();
+  int numdof = theEle->getnumdof();
+  if( numdof == 18 ){
+	  theEle->addRCFTIncInertiaToResidual();
+  }
+  else{
+	  theEle->addRIncInertiaToResidual();
+  }
   return 0;
 }    
 

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.3 $
+// $Date: 2001/07/31 18:26:58 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/FiberResponse.cpp,v $
                                                                         
 // Written: MHS 
@@ -66,6 +66,11 @@ Response(val), theFiber(fib), responseID(id)
 
 }
 
+FiberResponse::FiberResponse(Fiber *fib, int id, const Tensor &val):
+Response(val), theFiber(fib), responseID(id)
+{
+
+}
 
 FiberResponse::~FiberResponse()
 {

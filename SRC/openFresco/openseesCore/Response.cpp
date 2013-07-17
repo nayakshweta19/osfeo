@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.6 $
+// $Date: 2009/12/17 23:50:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/Response.cpp,v $
                                                                         
 // Written: MHS 
@@ -64,6 +64,13 @@ Response::Response(const Matrix &val)
 {
 
 }
+
+Response::Response(const Tensor &val)
+ :myInfo(val)
+{
+
+}
+
 
 Response::Response(const Vector &val1, const ID &val2)
  :myInfo(val2,val1)

@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 317 $
-// $Date: 2011-06-04 10:18:55 +0800 (星期六, 04 六月 2011) $
+// $Date: 2011-06-03 19:18:55 -0700 (Fri, 03 Jun 2011) $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/channel/TCP_SocketSSL.h,v $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -104,6 +104,15 @@ public:
     int recvID(int dbTag, int commitTag, 
         ID &theID, 
         ChannelAddress *theAddress =0);    
+
+	//Guanzhou added
+    int sendnDarray(int dbTag, int commitTag,
+           const nDarray &theNDarray,
+           ChannelAddress *theAddress =0) {return 0;};
+
+    int recvnDarray(int dbTag, int commitTag,
+           nDarray &theNDarray,			
+           ChannelAddress *theAddress =0) {return 0;};
 
 protected:
     unsigned int getPortNumber() const;

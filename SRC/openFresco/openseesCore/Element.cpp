@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.26 $
+// $Date: 2010-05-08 00:16:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/Element.cpp,v $
                                                                         
                                                                         
@@ -58,9 +58,9 @@ int  Element::numMatrices(0);
 Element::Element(int tag, int cTag) 
   :DomainComponent(tag, cTag), alphaM(0.0), 
   betaK(0.0), betaK0(0.0), betaKc(0.0), 
-  Kc(0), index(-1), nodeIndex(-1)
+  Kc(0), previousK(0), numPreviousK(0), index(-1), nodeIndex(-1)
 {
-    // does nothing
+  // does nothing
   ops_TheActiveElement = this;
 }
 
@@ -69,6 +69,12 @@ Element::~Element()
 {
   if (Kc != 0)
     delete Kc;
+
+  if (previousK != 0) {
+    for (int i=0; i<numPreviousK; i++)
+      delete previousK[i];
+    delete [] previousK;
+  }
 }
 
 int
@@ -566,8 +572,9 @@ Element::addResistingForceToNodalReaction(int flag)
   const Vector *theResistingForce =0;
   if (flag == 0)
     theResistingForce = &(this->getResistingForce());
-  else if (flag == 1)
+  else if (flag == 1) {
     theResistingForce = &(this->getResistingForceIncInertia());
+  }
   else if (flag == 2)
     theResistingForce = &(this->getRayleighDampingForces());
 
@@ -606,7 +613,7 @@ double Element::getCharacteristicLength(void)
     int iDOF = nodeI->getNumberDOF();
     for (int j=i+1; j<numNodes; j++) {
       Node *nodeJ = theNodes[j];
-      Vector jCoords = nodeJ->getCrds();      
+      Vector jCoords = nodeJ->getCrds();
       int jDOF = nodeI->getNumberDOF();
       double ijLength = 0;
       for (int k=0; k<iDOF && k<jDOF; k++) {
@@ -614,13 +621,59 @@ double Element::getCharacteristicLength(void)
       }	
       ijLength = sqrt(ijLength);
       if (ijLength > cLength)
-	cLength = ijLength;
+    cLength = ijLength;
       if (ijLength < minSize) 
-	minSize = ijLength;
+    minSize = ijLength;
     }
   }
   return minSize;
 }
       
+int 
+Element::storePreviousK(int numK) {
 
+  //
+  // set up pointer to matrices and create matrices
+  // copy old
+  //
 
+  if (numPreviousK < numK) {
+    Matrix **theKMatrices = new Matrix *[numK];
+
+    if (theKMatrices == 0) 
+      return -1;
+    
+    int numEleDOF = this->getNumDOF();
+    for (int i=0; i<numPreviousK; i++)
+      theKMatrices[i] = previousK[i];
+
+    for (int i=numPreviousK; i<numK; i++) {
+      theKMatrices[i] = new Matrix(numEleDOF, numEleDOF);
+
+      if (theKMatrices[i] == 0)
+        return -1;
+    }
+    
+    if (previousK != 0)
+      delete [] previousK;
+    previousK = theKMatrices;
+
+    numPreviousK = numK;
+  }
+
+  // now copy the matrices
+  for (int i=numPreviousK-1; i>0; i--)
+    *(previousK[i]) = *(previousK[i-1]);
+
+  *(previousK[0]) = this->getTangentStiff();
+  
+  return 0;
+}
+
+const Matrix *
+Element::getPreviousK(int num) {
+  if (num < numPreviousK)
+    return previousK[num];
+  else
+    return 0;
+}

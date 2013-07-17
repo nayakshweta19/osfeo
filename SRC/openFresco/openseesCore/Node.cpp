@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.31 $
+// $Date: 2010/02/04 00:39:05 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/node/Node.cpp,v $
                                                                         
                                                                         
@@ -264,7 +264,7 @@ Node::Node(int tag, int ndof, double Crd1, double Crd2, double Crd3)
 //  copy everything but the mass 
 //  we should really set the mass to 0.0
 Node::Node(const Node &otherNode, bool copyMass)
-  :DomainComponent(otherNode.getTag(),otherNode.getClassTag()), 
+:DomainComponent(otherNode.getTag(),otherNode.getClassTag()),
  numberDOF(otherNode.numberDOF), theDOF_GroupPtr(0),
  Crd(0), commitDisp(0), commitVel(0), commitAccel(0), 
  trialDisp(0), trialVel(0), trialAccel(0), unbalLoad(0), incrDisp(0),
@@ -2052,7 +2052,7 @@ Node::setCrds(double Crd1, double Crd2, double Crd3)
     (*Crd)(1) = Crd2;
     (*Crd)(2) = Crd3;
 
-    // Need to "setDomain" to make the change take effect. 
+	// Need to "setDomain" to make the change take effect. 
     Domain *theDomain = this->getDomain();
     ElementIter &theElements = theDomain->getElements();
     Element *theElement;
@@ -2063,17 +2063,9 @@ Node::setCrds(double Crd1, double Crd2, double Crd3)
 }
 
 void
-Node::setCrds(const Vector &newCrds) 
-{
+Node::setCrds(const Vector &newCrds)
+{	
   if (Crd != 0 && Crd->Size() == newCrds.Size()) {
     (*Crd) = newCrds;
-
-    // Need to "setDomain" to make the change take effect. 
-    Domain *theDomain = this->getDomain();
-    ElementIter &theElements = theDomain->getElements();
-    Element *theElement;
-    while ((theElement = theElements()) != 0) {
-      theElement->setDomain(theDomain);
-    }
   }
 }

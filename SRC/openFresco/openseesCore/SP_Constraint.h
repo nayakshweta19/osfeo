@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.5 $
+// $Date: 2010/04/23 22:50:19 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/constraints/SP_Constraint.h,v $
                                                                         
                                                                         

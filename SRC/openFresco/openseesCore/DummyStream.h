@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.1 $
+// $Date: 2006/08/03 23:34:32 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/DummyStream.h,v $
 
 #ifndef _DummyStream
@@ -44,7 +44,8 @@ class DummyStream : public OPS_Stream
   int attr(const char *name, double value) {return 0;};
   int attr(const char *name, const char *value) {return 0;};
   int write(Vector &data) {return 0;};
-
+  int write(int data) {return 0;};
+  int write(double data) {return 0;};
 
   OPS_Stream& write(const char *s, int n) {return *this;};
   OPS_Stream& write(const unsigned char *s, int n) {return *this;};

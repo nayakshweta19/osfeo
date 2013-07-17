@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.6 $
+// $Date: 2009/12/17 23:50:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/ElementResponse.cpp,v $
                                                                         
 // Written: MHS 
@@ -65,6 +65,13 @@ Response(val), theElement(ele), responseID(id)
 {
 
 }
+
+ElementResponse::ElementResponse(Element *ele, int id, const Tensor &val):
+Response(val), theElement(ele), responseID(id)
+{
+
+}
+
 
 ElementResponse::ElementResponse(Element *ele, int id, const Vector &val1, const ID &val2)
  :Response(val1, val2), theElement(ele), responseID(id)

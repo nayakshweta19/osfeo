@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.6 $
+// $Date: 2008-08-26 16:52:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/ElementalLoad.cpp,v $
                                                                         
                                                                         
@@ -64,6 +64,11 @@ void
 ElementalLoad::setDomain(Domain *theDomain)
 {
   this->DomainComponent::setDomain(theDomain);
+
+  if (theDomain == 0) {
+    theElement = 0;
+    return;
+  }
 
   theElement = theDomain->getElement(eleTag);
   if (theElement == 0) {

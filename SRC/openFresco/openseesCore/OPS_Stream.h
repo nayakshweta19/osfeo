@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.7 $
+// $Date: 2009/04/30 23:23:04 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/OPS_Stream.h,v $
 
 #ifndef _OPS_Stream
@@ -43,6 +43,7 @@ class OPS_Stream:  public MovableObject
   virtual int setFloatField(floatField) {return 0;}
   virtual int precision(int precision) {return 0;}
   virtual int width(int width) {return 0;}
+  virtual int getEleGPs() {return 0;}
 
   // xml stuff
   virtual int tag(const char *) =0;
@@ -52,6 +53,8 @@ class OPS_Stream:  public MovableObject
   virtual int attr(const char *name, double value) =0;
   virtual int attr(const char *name, const char *value) =0;
   virtual int write(Vector &data) =0; 
+  virtual int write(int data) =0;
+  virtual int write(double data) =0;
 
   // regular stuff
   virtual OPS_Stream& write(const char *s, int n);

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.3 $
+// $Date: 2006/08/03 23:24:56 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/StandardStream.h,v $
 
 #ifndef _StandardStream
@@ -50,7 +50,8 @@ class StandardStream : public OPS_Stream
   int attr(const char *name, double value);
   int attr(const char *name, const char *value);
   int write(Vector &data);
-
+  int write(int data) {return 0;};
+  int write(double data) {return 0;};
 
   OPS_Stream& write(const char *s, int n);
   OPS_Stream& write(const unsigned char *s, int n);

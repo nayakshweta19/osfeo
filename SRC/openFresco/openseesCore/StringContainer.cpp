@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2006-11-08 20:06:10 $
+// $Date: 2006/11/08 20:06:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/utility/StringContainer.cpp,v $
 //
 // Description: This file contains the class definition for StringContainer.

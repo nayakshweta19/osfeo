@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -18,27 +18,33 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.12 $
+// $Date: 2008/06/13 22:24:48 $
 // $Source: /usr/local/cvs/OpenSees/SRC/matrix/Vector.h,v $
 
 // Written: fmk 
 // Created: 11/96
+// Revision: A
 //
 // Description: This file contains the class definition for Vector.
 // Vector is a concrete class implementing the vector abstraction.
+//
+// What: "@(#) Vector.h, revA"
 
 #ifndef Vector_h
 #define Vector_h 
 
 #include <OPS_Globals.h>
 
+class ID;
+
 #define VECTOR_VERY_LARGE_VALUE 1.0e200
 
 class Matrix; 
 class Message;
 class SystemOfEqn;
-class ID;
+
+#include <Tensor.h> // cannot use class as Tensor is itself defined in Tensor.h
 
 class Vector
 {
@@ -72,6 +78,7 @@ class Vector
     double &operator[](int x);
     Vector operator()(const ID &rows) const;
     Vector &operator=(const Vector  &V);
+    Vector &operator=(const Tensor  &T);
     
     Vector &operator+=(double fact);
     Vector &operator-=(double fact);

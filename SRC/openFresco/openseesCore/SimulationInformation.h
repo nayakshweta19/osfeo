@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2008-12-18 22:46:52 $
+// $Date: 2008/12/18 22:46:52 $
 // $Source: /usr/local/cvs/OpenSees/SRC/utility/SimulationInformation.h,v $
                                                                         
                                                                         

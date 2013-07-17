@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 1.8 $
+// $Date: 2007/04/02 23:42:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/IncrementalIntegrator.cpp,v $
                                                                         
 // Written: fmk 
@@ -34,7 +34,9 @@
 #include <FE_Element.h>
 #include <LinearSOE.h>
 #include <AnalysisModel.h>
+#include <Domain.h>
 #include <Vector.h>
+#include <Node.h>
 #include <DOF_Group.h>
 #include <FE_EleIter.h>
 #include <DOF_GrpIter.h>
@@ -218,8 +220,6 @@ IncrementalIntegrator::formNodalUnbalance(void)
     int res = 0;
 
     while ((dofPtr = theDOFs()) != 0) { 
-      //      opserr << "NODPTR: " << dofPtr->getUnbalance(this);
-
 	if (theSOE->addB(dofPtr->getUnbalance(this),dofPtr->getID()) <0) {
 	    opserr << "WARNING IncrementalIntegrator::formNodalUnbalance -";
 	    opserr << " failed in addB for ID " << dofPtr->getID();
@@ -235,20 +235,62 @@ IncrementalIntegrator::formElementResidual(void)
 {
     // loop through the FE_Elements and add the residual
     FE_Element *elePtr;
+    AnalysisModel *an = this->getAnalysisModel();
+    Domain *dom = an->getDomainPtr();
+    Node *nod;
+    DOF_Group *dof;
 
     int res = 0;    
 
     FE_EleIter &theEles2 = theAnalysisModel->getFEs();    
     while((elePtr = theEles2()) != 0) {
-      //      opserr << "ELEPTR " << elePtr->getResidual(this);
-
-	if (theSOE->addB(elePtr->getResidual(this),elePtr->getID()) <0) {
-	    opserr << "WARNING IncrementalIntegrator::formElementResidual -";
-	    opserr << " failed in addB for ID " << elePtr->getID();
-	    res = -2;
+	if( ( elePtr->getDOFtags().Size() == 1 ) && ( elePtr->getnumdof() == 1 ) ){
+      int nd = elePtr->getDOFtags()(0);
+      nod = dom->getNode(nd+1);
+      if( nod->getNumberDOF() == 9 ){
+        dof = nod->getDOF_GroupPtr();
+      	const ID &dofid = dof->getID();
+      	const ID &spid = elePtr->getID();
+      	for(int i = 6; i < nod->getNumberDOF(); i++){
+          if( ( dofid(i) == spid(0) ) ){
+      	    ID idnew(1);
+       	    idnew(0) = spid(0) - 6;
+       	    const ID &idnewest = idnew;
+       	    if (theSOE->addB(elePtr->getResidual(this),idnewest) <0) {
+              opserr << "WARNING IncrementalIntegrator::formElementResidual -";
+              opserr << " failed in addB for ID " << elePtr->getID();
+              res = -2;
+            }
+          }
+        }
+        for(int i = 0; i < nod->getNumberDOF() - 3; i++){
+          if( ( dofid(i) == spid(0) ) ){
+            if (theSOE->addB(elePtr->getResidual(this),spid) <0) {
+              opserr << "WARNING IncrementalIntegrator::formElementResidual -";
+              opserr << " failed in addB for ID " << elePtr->getID();
+              res = -2;
+            }
+          }
+	    }
+	  }
+      else{
+		if (theSOE->addB(elePtr->getResidual(this),elePtr->getID()) <0) {
+		    opserr << "WARNING IncrementalIntegrator::formElementResidual -";
+		    opserr << " failed in addB for ID " << elePtr->getID();
+		    res = -2;
+		}
+	  }	      
 	}
+	else {
+      if (theSOE->addB(elePtr->getResidual(this),elePtr->getID()) <0) {
+          opserr << "WARNING IncrementalIntegrator::formElementResidual -";
+          opserr << " failed in addB for ID " << elePtr->getID();
+          res = -2;
+      }	
     }
+    }
+
+    const Vector &a = theSOE->getB();
 
     return res;	    
 }
-

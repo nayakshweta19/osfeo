@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 1.4 $
+// $Date: 2007/03/02 00:12:50 $
 // $Source: /usr/local/cvs/OpenSees/SRC/recorder/response/MaterialResponse.cpp,v $
                                                                         
 // Written: MHS 
@@ -61,6 +61,12 @@ Response(val), theMaterial(mat), responseID(id)
 }
 
 MaterialResponse::MaterialResponse(Material *mat, int id, const Matrix &val):
+Response(val), theMaterial(mat), responseID(id)
+{
+
+}
+
+MaterialResponse::MaterialResponse(Material *mat, int id, const Tensor &val):
 Response(val), theMaterial(mat), responseID(id)
 {
 
