@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.22 $
+// $Date: 2009-08-25 23:40:17 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/UniaxialMaterial.cpp,v $
                                                                         
                                                                         
@@ -77,8 +77,6 @@ UniaxialMaterial::~UniaxialMaterial()
 	// does nothing
 }
 
-
-
 int
 UniaxialMaterial::setTrialStrain(double strain, double temperature, double strainRate)
 {
@@ -86,7 +84,6 @@ UniaxialMaterial::setTrialStrain(double strain, double temperature, double strai
 
   return res;
 }
-
 
 int
 UniaxialMaterial::setTrial(double strain, double &stress, double &tangent, double strainRate)
@@ -126,7 +123,6 @@ UniaxialMaterial::setTrial(double strain, double temperature, double &stress, do
   return res;
 }
 
-
 // default operation for strain rate is zero
 double
 UniaxialMaterial::getStrainRate(void)
@@ -144,19 +140,17 @@ UniaxialMaterial::getDampTangent(void)
 }
 
 // default operation for secant stiffness
-/*
 double
 UniaxialMaterial::getSecant (void)
 {
-double strain = this->getStrain();
-double stress = this->getStress();
+	double strain = this->getStrain();
+	double stress = this->getStress();
 
-if (strain != 0.0)
-return stress/strain;
-else
-return this->getTangent();
+	if (strain != 0.0)
+		return stress/strain;
+	else
+		return this->getTangent();
 }
-*/
 
 double 
 UniaxialMaterial::getRho(void)
@@ -295,6 +289,12 @@ UniaxialMaterial::getStressSensitivity(int gradIndex, bool conditional)
 
 double
 UniaxialMaterial::getStrainSensitivity(int gradIndex)
+{
+    return 0.0;
+}
+
+double
+UniaxialMaterial::getTangentSensitivity(int gradIndex)
 {
     return 0.0;
 }

@@ -19,17 +19,17 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.00 $
-// $Date: 2012/01/11 13:48:46 $
-// $Source: /usr/local/cvs/OpenSees/SRC/element/PFEMElement/PFEMElement2D.h,v $
+// $Date: 2013/01/29 13:41:01 $
+// $Source: /usr/local/cvs/OpenSees/SRC/element/PFEMElement/PFEMElement3D.h,v $
                                                                         
 // Written: Minjie Zhu (zhum@engr.orst.edu)
-// Created: Jan 2012
+// Created: Jan 2013
 // Revised: --------
 //
-// Description: This file contains the class definition for PFEMElement2D.
+// Description: This file contains the class definition for PFEMElement3D.
 
-#ifndef PFEMElement2D_h
-#define PFEMElement2D_h
+#ifndef PFEMElement3D_h
+#define PFEMElement3D_h
 
 #include <Matrix.h>
 #include <Vector.h>
@@ -37,14 +37,13 @@
 
 class Pressure_Constraint;
 
-class PFEMElement2D : public Element
+class PFEMElement3D : public Element
 {
 public:
-    PFEMElement2D();
-    PFEMElement2D(int tag, int nd1, int nd2, int nd3,
-                  double r, double m, double b1, double b2, double thk=1.0);
+    PFEMElement3D(int tag, int nd1, int nd2, int nd3, int nd4,
+                  double r, double m, double b1, double b2, double b3);
     
-    ~PFEMElement2D();
+    ~PFEMElement3D();
 
     // methods dealing with nodes and number of external dof
     int getNumExternalNodes(void) const;
@@ -58,7 +57,7 @@ public:
     int update(void);
     int commitState(void);    
 
-    // public methods to obtain stiffness, mass, damping and residual information    
+    // public methods to obtain stiffness, mass, damping and residual information  
     const Matrix &getTangentStiff(void);
     const Matrix &getInitialStiff(void);    
     const Matrix &getDamp();
@@ -82,26 +81,29 @@ public:
 
     // TaggedObject
     void Print(OPS_Stream &s, int flag =0);
-    int displaySelf(Renderer &theViewer, int displayMode, float fact);
 
 protected:
     
 private:
 
     ID ntags; // Tags of nodes
-    Node* nodes[6]; // pointers of nodes
-    Pressure_Constraint* thePCs[3];
+    Node* nodes[8]; // pointers of nodes
+    Pressure_Constraint* thePCs[4];
     double rho;  // density
     double mu;   // viscocity
     double bx;    // body force
     double by;    // body force
-    double dNdx[3], dNdy[3];
+    double bz;    // body force
+    double dNdx[4], dNdy[4], dNdz[4];
     double J;
     ID numDOFs;
-    double thickness;
 
     static Matrix K;
     static Vector P;
+
+private:
+    double det33(const Matrix& A);
+
 };
 
 #endif

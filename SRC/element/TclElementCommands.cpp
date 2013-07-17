@@ -221,6 +221,10 @@ extern int
 TclModelBuilder_addPFEMElement2D(ClientData clientData, Tcl_Interp *interp,  int argc,
                                  TCL_Char **argv, Domain*, TclModelBuilder *);
 
+extern int
+TclModelBuilder_addPFEMElement3D(ClientData clientData, Tcl_Interp *interp,  int argc,
+                                 TCL_Char **argv, Domain*, TclModelBuilder *);
+
 // Quan
 extern int
 TclModelBuilder_addFourNodeQuadWithSensitivity(ClientData, Tcl_Interp *, int, TCL_Char **,
@@ -1376,6 +1380,12 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
   else if (strcmp(argv[1],"PFEMElement2D") == 0) {
     int result = TclModelBuilder_addPFEMElement2D(clientData, interp, argc, argv,
       theTclDomain, theTclBuilder);
+    return result;
+  }
+
+  else if (strcmp(argv[1],"PFEMElement3D") == 0) {
+      int result = TclModelBuilder_addPFEMElement3D(clientData, interp, argc, argv,
+                                                    theTclDomain, theTclBuilder);
     return result;
   }
 

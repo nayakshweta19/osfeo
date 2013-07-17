@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 1.12 $
+// $Date: 2008/08/26 16:36:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/UniaxialMaterial.h,v $
                                                                         
                                                                         
@@ -55,17 +55,18 @@ class UniaxialMaterial : public Material
     UniaxialMaterial (int tag, int classTag);    
     virtual ~UniaxialMaterial();
 
-    virtual int setTrialStrain (double strain, double strainRate =0) =0;
-    virtual int setTrialStrain (double strain, double temperature, double strainRate);
-    virtual int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
-    virtual int setTrial (double strain, double temperature, double &stress, double &tangent, double &thermalElongation, double strainRate = 0.0);
+	virtual int setTrialStrain (double strain, double strainRate =0) =0;
+	virtual int setTrialStrain (double strain, double temperature, double strainRate);
+	virtual int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
+	virtual int setTrial (double strain, double temperature, double &stress, double &tangent, double &thermalElongation, double strainRate = 0.0);
 
-    virtual double getStrain (void) = 0;
+	virtual double getStrain (void) = 0;
     virtual double getStrainRate (void);
     virtual double getStress (void) = 0;
     virtual double getTangent (void) = 0;
     virtual double getInitialTangent (void) = 0;
     virtual double getDampTangent (void);
+    virtual double getSecant (void);
     virtual double getRho(void);
     
     virtual int commitState (void) = 0;
@@ -79,9 +80,16 @@ class UniaxialMaterial : public Material
 				   OPS_Stream &theOutputStream);
     virtual int getResponse (int responseID, Information &matInformation);    
 
+
+	virtual double getCommittedStrain (void) {return 0;};
+	virtual int setTrialStrain (double x, double k, double Dfactor, double ITAP, double EPSLONTP, double strain, double strainRate) {return 0;};
+	virtual int setTrialStrain(double x, double k, double D, double beta, double tempStrain1, double tempStrain0) {return 0;};
+	virtual double getPD(void) {return 0;};
+
     // AddingSensitivity:BEGIN //////////////////////////////////////////
     virtual double getStressSensitivity     (int gradIndex, bool conditional);
     virtual double getStrainSensitivity     (int gradIndex);
+	virtual double getTangentSensitivity(int gradIndex);
     virtual double getInitialTangentSensitivity(int gradIndex);
     virtual double getDampTangentSensitivity(int gradIndex);
     virtual double getRhoSensitivity        (int gradIndex);
