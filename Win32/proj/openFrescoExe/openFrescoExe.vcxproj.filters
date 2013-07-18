@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="experimentalControl">
+      <UniqueIdentifier>{d5d3c310-8b36-447e-91d4-0ca3b9c4bf3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSetup">
+      <UniqueIdentifier>{3fedb149-8df2-4472-a02c-699b361804b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSignalFilter">
+      <UniqueIdentifier>{a53d54dc-68ec-4ed6-8480-132a9895b128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalSite">
+      <UniqueIdentifier>{dbb0adeb-3cac-4a9a-a1d3-121efc798f9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tcl">
+      <UniqueIdentifier>{2e405786-d0f0-4854-8a14-daf1085b98d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalElement">
+      <UniqueIdentifier>{6a446aee-04e8-479a-bf8f-a7eefbf4080a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalRecorder">
+      <UniqueIdentifier>{062c959a-d189-40b9-aeb1-e02d966582a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="experimentalRecorder\response">
+      <UniqueIdentifier>{914a2706-4c79-4509-a35b-cefd70567b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="openseesCore">
+      <UniqueIdentifier>{e965b6e1-227c-4d27-aef7-d26912bb4687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="openseesExtra">
+      <UniqueIdentifier>{e0c24322-a479-4e6c-b848-eebd99237553}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\experimentalControl\ECNIEseries.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\tcl\tclAppInit.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\tcl\tclMain.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimulation.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimUniaxialMaterials.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECxPCtarget.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\TclExpControlCommand.cpp">
+      <Filter>experimentalControl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETrussCorot.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETwoNodeLink.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEBeamColumnCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEGenericCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEInvertedVBraceCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEETrussCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEETwoNodeLinkCommand.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclExpElementCommands.cpp">
+      <Filter>experimentalElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSetupRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSignalFilterRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSiteRecorder.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\TclExpRecorderCommands.cpp">
+      <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESFourActuators3d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBrace2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBraceJntOff2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESNoTransformation.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESOneActuator.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuators2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuatorsJntOff2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESTwoActuators2d.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ExperimentalSetup.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\TclExpSetupCommand.cpp">
+      <Filter>experimentalSetup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimRandomGauss.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimulation.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimUndershoot.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ExperimentalSignalFilter.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSignalFilter\TclExpSignalFilterCommand.cpp">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ActorExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ExperimentalSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\TclExpSiteCommand.cpp">
+      <Filter>experimentalSite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\ExpControlSP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\ExperimentalCP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\utility\TclExpCPCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\xPCtarget\xpcinitfree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\tcl\commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\myCommands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimulation.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimUniaxialMaterials.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECxPCtarget.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.h">
+      <Filter>experimentalControl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETrussCorot.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETwoNodeLink.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.h">
+      <Filter>experimentalElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSetupRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSignalFilterRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSiteRecorder.h">
+      <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESFourActuators3d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBrace2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESInvertedVBraceJntOff2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESNoTransformation.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESOneActuator.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuators2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESThreeActuatorsJntOff2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESTwoActuators2d.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ExperimentalSetup.h">
+      <Filter>experimentalSetup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimRandomGauss.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimulation.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ESFErrorSimUndershoot.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSignalFilter\ExperimentalSignalFilter.h">
+      <Filter>experimentalSignalFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ActorExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ExperimentalSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.h">
+      <Filter>experimentalSite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\utility\ExpControlSP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\utility\ExperimentalCP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\FrescoGlobals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\bool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\tcl\commands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="OpenFresco.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="openFrescoExe.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\SRC\experimentalControl\ECNIEseries.h">
+      <Filter>experimentalControl</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

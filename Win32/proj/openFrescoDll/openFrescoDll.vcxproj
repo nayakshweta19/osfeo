@@ -19,12 +19,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -47,6 +47,9 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">OpenFresco</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">OpenFresco</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>/D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
@@ -67,7 +70,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)OpenFresco.dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\win32\lib;..\..\..\win32\lib\debug;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -91,7 +94,7 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\experimentalControl;..\..\..\src\experimentalControl\dSpace;..\..\..\src\experimentalControl\MTSCsi;..\..\..\src\experimentalControl\NIEseries;..\..\..\src\experimentalControl\SCRAMNet;..\..\..\src\experimentalControl\xPCtarget;..\..\..\src\experimentalElement;..\..\..\src\experimentalRecorder;..\..\..\src\experimentalRecorder\response;..\..\..\src\experimentalSetup;..\..\..\src\experimentalSignalFilter;..\..\..\src\experimentalSite;..\..\..\src\openseesCore;..\..\..\src\openseesExtra;..\..\..\src\utility;c:\Program Files\tcl;c:\Program Files\tcl\include;c:\Program Files\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl;c:\tcl\include;c:\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_TCL85;_WIN32;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -108,9 +111,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libeay32MT.lib;ssleay32MT.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscr.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MT.lib;ssleay32MT.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscr.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)OpenFresco.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\src\experimentalControl\dSpace;..\..\..\src\experimentalControl\MTSCsi;..\..\..\src\experimentalControl\NIEseries;..\..\..\src\experimentalControl\SCRAMNet;..\..\..\win32\lib;..\..\..\win32\lib\release;c:\Program Files\Tcl\lib;c:\Program Files\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\win32\lib;..\..\..\win32\lib\release;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmtd.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -123,9 +126,13 @@
       <ImportLibrary>
       </ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\analysis\analysis\Analysis.cpp" />
+    <ClCompile Include="..\..\..\SRC\nDarray\straint.cpp" />
+    <ClCompile Include="..\..\..\SRC\nDarray\stresst.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.cpp" />
@@ -184,13 +191,15 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\TclExpSiteCommand.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Analysis.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Channel.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ConstraintHandler.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.cpp" />
@@ -226,6 +235,7 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Message.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MovableObject.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\nDarray.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.cpp" />
@@ -301,6 +311,9 @@
     <ClCompile Include="..\..\..\SRC\openFresco\utility\TclExpCPCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h" />
+    <ClInclude Include="..\..\..\SRC\nDarray\straint.h" />
+    <ClInclude Include="..\..\..\SRC\nDarray\stresst.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECGenericTCP.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.h" />
@@ -348,13 +361,14 @@
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\FrescoGlobals.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Analysis.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Channel.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\classTags.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ColorMap.h" />
@@ -402,13 +416,13 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MovableObject.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_ConstraintIter.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\nDarray.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Node.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodeIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ObjectBroker.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Globals.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Stream.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Parameter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ParameterIter.h" />
@@ -486,6 +500,7 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\utility\ExpControlSP.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\utility\ExperimentalCP.h" />
+    <ClInclude Include="..\..\..\SRC\OPS_Globals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
