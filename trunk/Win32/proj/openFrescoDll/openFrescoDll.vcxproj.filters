@@ -21,9 +21,6 @@
     <Filter Include="tcl">
       <UniqueIdentifier>{d0d99a71-e11f-47c5-82f9-ec3ff94b14be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{2392e3b8-2a42-410b-a330-a32b9ae52cce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="experimentalElement">
       <UniqueIdentifier>{e4e418b8-8e59-4b97-be8c-d1def78952b5}</UniqueIdentifier>
     </Filter>
@@ -329,9 +326,6 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.cpp">
       <Filter>openseesExtra</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Analysis.cpp">
-      <Filter>openseesCore</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
@@ -354,9 +348,6 @@
       <Filter>openseesCore</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ConstraintHandler.cpp">
-      <Filter>openseesCore</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DOF_Group.cpp">
@@ -561,6 +552,30 @@
       <Filter>openseesCore</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\win32Functions.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\analysis\Analysis.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\nDarray.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\nDarray\straint.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\nDarray\stresst.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
   </ItemGroup>
@@ -832,9 +847,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.h">
       <Filter>openseesExtra</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Analysis.h">
-      <Filter>openseesCore</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.h">
       <Filter>openseesCore</Filter>
     </ClInclude>
@@ -1012,9 +1024,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ObjectBroker.h">
       <Filter>openseesCore</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Globals.h">
-      <Filter>openseesCore</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\OPS_Stream.h">
       <Filter>openseesCore</Filter>
     </ClInclude>
@@ -1118,6 +1127,27 @@
       <Filter>openseesCore</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\VertexIter.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\OPS_Globals.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\nDarray.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\nDarray\straint.h">
+      <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\nDarray\stresst.h">
       <Filter>openseesCore</Filter>
     </ClInclude>
   </ItemGroup>
