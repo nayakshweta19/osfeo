@@ -96,9 +96,9 @@ Domain *theDomain = 0;
 TclModelBuilder *theModelBuilder = 0;
 FE_Datastore *theDatabase = 0;
 SimulationInformation simulationInfo;
-SimulationInformation *theSimulationInfo = 0;
-StandardStream sserr;
-OPS_Stream *opserrPtr = &sserr;
+extern SimulationInformation *theSimulationInfo;
+extern StandardStream sserr;
+extern OPS_Stream *opserrPtr; // = &sserr;
 //double ops_Dt = 0.0;
 
 #ifndef _WIN32

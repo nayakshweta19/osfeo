@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 321 $
-// $Date: 2011-08-20 14:11:25 +0800 (星期六, 20 八月 2011) $
+// $Revision: 344 $
+// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/TclStartSimAppElemServer.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -45,7 +45,7 @@ int TclStartSimAppElemServer(ClientData clientData, Tcl_Interp *interp,
 { 
     if (argc < 3)  {
         opserr << "WARNING insufficient arguments\n"
-            << "Want: startSimAppElemServer eleTag ipPort <-ssl>\n";
+            << "Want: startSimAppElemServer eleTag ipPort <-udp> <-ssl>\n";
         return TCL_ERROR;
     }
     

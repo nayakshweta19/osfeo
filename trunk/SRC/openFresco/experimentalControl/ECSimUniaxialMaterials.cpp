@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 344 $
+// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimUniaxialMaterials.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -193,7 +193,12 @@ int ECSimUniaxialMaterials::setSize(ID sizeT, ID sizeO)
         sizeO(OF_Resp_Disp) != numMats ||
         sizeO(OF_Resp_Vel) != numMats ||
         sizeO(OF_Resp_Force) != numMats) {
-        opserr << "ECSimUniaxialMaterials::setSize() - wrong sizeTrial/Out\n"; 
+        opserr << "ECSimUniaxialMaterials::setSize() - wrong sizeTrial/Out\n";
+        opserr << "sizeT(Disp) = " << sizeT(OF_Resp_Disp) << " != " << numMats << endln;
+        opserr << "sizeT(Vel) = " << sizeT(OF_Resp_Vel) << " != " << numMats << endln;
+        opserr << "sizeO(Disp) = " << sizeO(OF_Resp_Disp) << " != " << numMats << endln;
+        opserr << "sizeO(Vel) = " << sizeO(OF_Resp_Vel) << " != " << numMats << endln;
+        opserr << "sizeO(Force) = " << sizeO(OF_Resp_Force) << " != " << numMats << endln;
         opserr << "see User Manual.\n";
         exit(OF_ReturnType_failed);
     }

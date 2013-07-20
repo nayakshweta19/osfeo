@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 344 $
+// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSite/TclExpSiteCommand.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -181,7 +181,7 @@ int TclExpSiteCommand(ClientData clientData, Tcl_Interp *interp,
 		if (5 > argc && argc > 9)  {
 			opserr << "WARNING invalid number of arguments\n";
 			printCommand(argc,argv);
-			opserr << "Want: expSite ShadowSite tag <-setup setupTag> ipAddr ipPort <-ssl> <-dataSize size>\n";
+			opserr << "Want: expSite ShadowSite tag <-setup setupTag> ipAddr ipPort <-udp> <-ssl> <-dataSize size>\n";
 			return TCL_ERROR;
 		}
 		
@@ -299,8 +299,8 @@ int TclExpSiteCommand(ClientData clientData, Tcl_Interp *interp,
 		if (6 > argc || argc > 8)  {
 			opserr << "WARNING invalid number of arguments\n";
 			printCommand(argc,argv);
-			opserr << "Want: expSite ActorSite tag -setup setupTag ipPort <-ssl>\n"
-                << "  or: expSite ActorSite tag -control ctrlTag ipPort <-ssl>\n";
+			opserr << "Want: expSite ActorSite tag -setup setupTag ipPort <-udp> <-ssl>\n"
+                << "  or: expSite ActorSite tag -control ctrlTag ipPort <-udp> <-ssl>\n";
 			return TCL_ERROR;
 		}    
 		
