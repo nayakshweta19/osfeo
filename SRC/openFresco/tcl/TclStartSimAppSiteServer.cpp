@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenFRESCO - Open Framework                                     **
 **                 for Experimental Setup and Control                 **
 **                                                                    **
@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 321 $
-// $Date: 2011-08-20 14:11:25 +0800 (星期六, 20 八月 2011) $
+// $Revision: 344 $
+// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/TclStartSimAppSiteServer.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -45,7 +45,7 @@ int TclStartSimAppSiteServer(ClientData clientData,
 { 
     if (argc < 3)  {
         opserr << "WARNING insufficient arguments\n"
-            << "Want: startSimAppSiteServer siteTag ipPort <-ssl>\n";
+            << "Want: startSimAppSiteServer siteTag ipPort <-udp> <-ssl>\n";
         return TCL_ERROR;
     }
     

@@ -28,7 +28,7 @@
 //
 // Description: This file contains the class definition for Tri31.
 
-#include "Tri31.h"
+#include <Tri31.h>
 #include <Node.h>
 #include <NDMaterial.h>
 #include <Matrix.h>
@@ -61,7 +61,7 @@ OPS_Tri31(void)
 {
   if (num_Tri31 == 0) {
     num_Tri31++;
-    //OPS_Error("Tri31 - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n",1);
+    OPS_Error("Tri31 - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n",1);
   }
   
   // Pointer to an element that will be returned
@@ -95,7 +95,7 @@ OPS_Tri31(void)
   }
   
   if (OPS_GetStringCopy(&theType) != 0) {
-    opserr << "WARNING invalid type, want: ""PlaneStress"" or ""PlaneStrain""  element Tri31 " << iData[0] << endln;
+    opserr << "WARNING invalid type, want: ""PlaneStress"" or ""PlaneStrain""  element SSPquad " << iData[0] << endln;
     return 0;
   }
   

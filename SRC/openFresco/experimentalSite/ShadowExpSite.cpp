@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 344 $
+// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSite/ShadowExpSite.cpp $
 
 // Written: Yoshi (yos@catfish.dpri.kyoto-u.ac.jp)
@@ -169,6 +169,8 @@ int ShadowExpSite::setSize(ID sizeT, ID sizeO)
     // call the base class method
     this->ExperimentalSite::setSize(sizeT, sizeO);
     
+    int usrDataSize = dataSize;
+
     if (theSetup != 0)  {
         theSetup->checkSize(sizeT, sizeO);
         int nCtrl = 0, nDaq = 0;
@@ -186,6 +188,12 @@ int ShadowExpSite::setSize(ID sizeT, ID sizeO)
         }
         if (dataSize < 1+nInput) dataSize = 1+nInput;
         if (dataSize < nOutput)  dataSize = nOutput;
+    }
+    
+    // warning message if user-provided dataSize was too small
+    if (dataSize > usrDataSize)  {
+        opserr << "\nWARNING ShadowExpSite::setSize() - "
+            << "dataSize increased to " << dataSize << ".\n";
     }
     
     // send experimental setup to ActorExpSite

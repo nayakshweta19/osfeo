@@ -60,7 +60,7 @@ PFEMElement2D::PFEMElement2D()
 PFEMElement2D::PFEMElement2D(int tag, int nd1, int nd2, int nd3,
                              double r, double m, double b1, double b2, double thk)
     :Element(tag, ELE_TAG_PFEMElement2D), ntags(6), 
-     rho(r), mu(m), bx(b1), by(b2), J(0.0), numDOFs()
+     rho(r), mu(m), bx(b1), by(b2), J(0.0), numDOFs(), thickness(thk)
 {
     ntags(0)=nd1; ntags(2)=nd2; ntags(4)=nd3;
     for(int i=0;i<3;i++)
@@ -108,7 +108,7 @@ PFEMElement2D::getNodePtrs(void)
 int
 PFEMElement2D::getNumDOF()
 {
-	if(numDOFs.Size() == 0) return 0;
+    if(numDOFs.Size() == 0) return 0;
     return numDOFs(numDOFs.Size()-1);
 }
 
@@ -443,7 +443,9 @@ PFEMElement2D::setDomain(Domain *theDomain)
 
         // get pc 
         thePCs[i] = theDomain->getPressure_Constraint(ntags(2*i));
-        if(thePCs[i] == 0) {
+        if(thePCs[i] != 0) {
+            thePCs[i]->setDomain(theDomain);
+        } else {
             thePCs[i] = new Pressure_Constraint(ntags(2*i), by);
             if(thePCs[i] == 0) {
                 opserr<<"WARNING: no enough memory for Pressure_Constraint -- ";
@@ -484,7 +486,6 @@ PFEMElement2D::Print(OPS_Stream &s, int flag)
     s << "PFEMElement2D: "<<this->getTag()<<endln;
 }
 
-
 int
 PFEMElement2D::displaySelf(Renderer &theViewer, int displayMode, float fact)                                          
 {
@@ -519,33 +520,33 @@ PFEMElement2D::displaySelf(Renderer &theViewer, int displayMode, float fact)
 
     if (displayMode >= 0) {  
 
-		const Vector &end1Disp = nodes[0]->getDisp();
+        const Vector &end1Disp = nodes[0]->getDisp();
         const Vector &end2Disp = nodes[2]->getDisp();
         const Vector &end3Disp = nodes[4]->getDisp();
 
         for (int i = 0; i < 2; i++) {
-			coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
-	        coords(1,i) = end2Crd(i) + end2Disp(i)*fact;    
-	        coords(2,i) = end3Crd(i) + end3Disp(i)*fact;    
+            coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
+            coords(1,i) = end2Crd(i) + end2Disp(i)*fact;    
+            coords(2,i) = end3Crd(i) + end3Disp(i)*fact;    
         }
     } else {
-		int mode = displayMode * -1;
+        int mode = displayMode * -1;
         const Matrix &eigen1 = nodes[0]->getEigenvectors();
         const Matrix &eigen2 = nodes[2]->getEigenvectors();
         const Matrix &eigen3 = nodes[4]->getEigenvectors();
         if (eigen1.noCols() >= mode) {
-			for (int i = 0; i < 2; i++) {
-				coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
-	            coords(1,i) = end2Crd(i) + eigen2(i,mode-1)*fact;
-	            coords(2,i) = end3Crd(i) + eigen3(i,mode-1)*fact;
-	        }    
-       } else {
-		   for (int i = 0; i < 2; i++) {
-			   coords(0,i) = end1Crd(i);
-	           coords(1,i) = end2Crd(i);
-	           coords(2,i) = end3Crd(i);
-	       }    
-       }
+            for (int i = 0; i < 2; i++) {
+                coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
+                coords(1,i) = end2Crd(i) + eigen2(i,mode-1)*fact;
+                coords(2,i) = end3Crd(i) + eigen3(i,mode-1)*fact;
+            }    
+        } else {
+            for (int i = 0; i < 2; i++) {
+                coords(0,i) = end1Crd(i);
+                coords(1,i) = end2Crd(i);
+                coords(2,i) = end3Crd(i);
+            }    
+        }
     }
     
     int error = 0;

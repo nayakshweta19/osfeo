@@ -9,6 +9,12 @@
 #include <SimulationInformation.h>
 //SimulationInformation simulationInfo;
 
+#ifdef _RELIABILITY
+#include <SensitivityAlgorithm.h>
+#include <ReliabilityStaticAnalysis.h>
+#include <ReliabilityDirectIntegrationAnalysis.h>
+#endif
+
 #define DllExport _declspec(dllexport)
 
 BOOL APIENTRY DllMain(HANDLE hModule, 
@@ -17,6 +23,16 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 {
     return TRUE;
 }
+
+// AddingSensitivity:BEGIN /////////////////////////////////////////////
+#ifdef _RELIABILITY
+
+SensitivityAlgorithm *theSensitivityAlgorithm = 0;
+SensitivityIntegrator *theSensitivityIntegrator = 0;
+ReliabilityStaticAnalysis *theReliabilityStaticAnalysis = 0;
+ReliabilityDirectIntegrationAnalysis *theReliabilityTransientAnalysis = 0;
+
+#endif
 
 OPS_Stream *opserrPtr = 0;
 SimulationInformation *theSimulationInfo = 0;

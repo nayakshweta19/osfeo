@@ -119,7 +119,7 @@ static void OPS_InvokeMaterialObject(struct matObject *theMat, modelState *theMo
 }
 
 
-extern "C" int OPS_Error(char *errorMessage, int length)
+/*extern "C" int OPS_Error(char *errorMessage, int length)
 {
     opserr << errorMessage;
     opserr << endln;
@@ -199,7 +199,7 @@ int OPS_GetStringCopy(char **arrayData)
     currentArg++;
 
     return 0;  
-}
+}*/
 
 
 extern "C" matObj *OPS_GetMaterial(int *matTag, int *matType)
@@ -449,7 +449,7 @@ return 0;
 }*/
 
 
-extern "C" int OPS_GetNodeCrd(int *nodeTag, int *sizeCrd, double *data)
+/*extern "C" int OPS_GetNodeCrd(int *nodeTag, int *sizeCrd, double *data)
 {
     Node *theNode = theDomain->getNode(*nodeTag);
 
@@ -577,7 +577,7 @@ extern "C" int OPS_GetNodeIncrDeltaDisp(int *nodeTag, int *sizeData, double *dat
         data[i] = disp(i);
 
     return 0;
-}
+}*/
 
 
 /*int Tcl_addWrapperElement(eleObj *theEle, ClientData clientData, Tcl_Interp *interp,
@@ -620,11 +620,11 @@ return 0;
 }*/
 
 
-UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
+/*UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
     ClientData clientData, Tcl_Interp *interp,  int argc, TCL_Char **argv)
 {
     return 0;
-}
+}*/
 
 
 /*UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
@@ -751,7 +751,7 @@ return error;
 }*/
 
 
-UniaxialMaterial *OPS_GetUniaxialMaterial(int matTag)
+/*UniaxialMaterial *OPS_GetUniaxialMaterial(int matTag)
 {
     return OPS_getUniaxialMaterial(matTag);
 }
@@ -766,7 +766,7 @@ NDMaterial *OPS_GetNDMaterial(int matTag)
 CrdTransf *OPS_GetCrdTransfPtr(int tag)
 {
     return OPS_GetCrdTransf(tag);
-}
+}*/
 
 
 /*SectionForceDeformation *OPS_GetSectionForceDeformation(int matTag)
@@ -801,7 +801,7 @@ int OPS_ResetInputNoBuilder(ClientData clientData, Tcl_Interp *interp,
 }
 
 
-int OPS_GetNDF()
+/*int OPS_GetNDF()
 {
     return theModelBuilder->getNDF();
 }
@@ -823,3 +823,4 @@ const char *OPS_GetInterpPWD()
 {
     return getInterpPWD(theInterp);
 }
+*/
