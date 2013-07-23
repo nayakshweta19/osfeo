@@ -318,19 +318,13 @@ FourNodeQuad3d::setDomain(Domain *theDomain)
   for (int i=0; i<3; i++)
     dirns[i] = 1;
   
-  if ( abs(crds1(0) - crds2(0)) < 1.0e-8 &&
-       abs(crds2(0) - crds3(0)) < 1.0e-8 &&
-       abs(crds3(0) - crds4(0)) < 1.0e-8 )
-        dirns[0] = 0;		 
-  if ( abs(crds1(1) - crds2(1)) < 1.0e-8 &&
-	   abs(crds2(1) - crds3(1)) < 1.0e-8 &&
-	   abs(crds3(1) - crds4(1)) < 1.0e-8 )
-        dirns[1] = 0;		 
-  if ( abs(crds1(2) - crds2(2)) < 1.0e-8 &&
-	   abs(crds2(2) - crds3(2)) < 1.0e-8 &&
-	   abs(crds3(2) - crds4(2)) < 1.0e-8 )
-        dirns[2] = 0;
-
+  if ((crds1(0) == crds2(0)) && (crds2(0) == crds3(0)) && (crds3(0) == crds4(0)))
+    dirns[0] = 0;
+  if ((crds1(1) == crds2(1)) && (crds2(1) == crds3(1)) && (crds3(1) == crds4(1)))
+    dirns[1] = 0;
+  if ((crds1(2) == crds2(2)) && (crds2(2) == crds3(2)) && (crds3(2) == crds4(2)))
+    dirns[2] = 0;
+  
   int sum = 0;
   for (int i=0; i<3; i++) {
     if (dirns[i] != 0 && sum < 2)
@@ -646,8 +640,8 @@ FourNodeQuad3d::addLoad(ElementalLoad *theLoad, double loadFactor)
   
   if (type == LOAD_TAG_SelfWeight) {
     applyLoad = 1;
-    appliedB[0] += loadFactor*b[0];
-    appliedB[1] += loadFactor*b[1];
+    appliedB[0] += loadFactor*data(0)*b[0];
+    appliedB[1] += loadFactor*data(1)*b[1];
     return 0;
   } else {
     opserr << "FourNodeQuad3d::addLoad - load type unknown for ele with tag: " << this->getTag() << endln;

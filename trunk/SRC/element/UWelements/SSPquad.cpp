@@ -53,7 +53,7 @@ OPS_SSPquad(void)
 {
 	if (num_SSPquad == 0) {
     	num_SSPquad++;
-    	//OPS_Error("SSPquad element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
+    	OPS_Error("SSPquad element - Written: C.McGann, P.Arduino, P.Mackenzie-Helnwein, U.Washington\n", 1);
   	}
 
   	// Pointer to an element that will be returned
@@ -380,8 +380,8 @@ SSPquad::addLoad(ElementalLoad *theLoad, double loadFactor)
 
 	if (type == LOAD_TAG_SelfWeight) {
 		applyLoad = 1;
-		appliedB[0] += loadFactor*b[0];
-		appliedB[1] += loadFactor*b[1];
+		appliedB[0] += loadFactor*data(0)*b[0];
+		appliedB[1] += loadFactor*data(1)*b[1];
 		return 0;
 	} else {
 		opserr << "SSPquad::addLoad - load type unknown for ele with tag: " << this->getTag() << endln;
@@ -658,73 +658,7 @@ SSPquad::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroke
 int
 SSPquad::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
-    // first set the quantity to be displayed at the nodes;
-    // if displayMode is 1 through 3 we will plot material stresses otherwise 0.0
-
-    static Vector values(4);
-
-    for (int j=0; j<4; j++)
-	   values(j) = 0.0;
-
-    if (displayMode < 4 && displayMode > 0) {
-	  for (int i=0; i<4; i++) {
-	    const Vector &stress = theMaterial->getStress();
-	    values(i) = stress(displayMode-1);
-	  }
-    }
-
-    // now  determine the end points of the quad based on
-    // the display factor (a measure of the distorted image)
-    // store this information in 4 3d vectors v1 through v4
-    const Vector &end1Crd = theNodes[0]->getCrds();
-    const Vector &end2Crd = theNodes[1]->getCrds();	
-    const Vector &end3Crd = theNodes[2]->getCrds();	
-    const Vector &end4Crd = theNodes[3]->getCrds();	
-
-    static Matrix coords(4,3);
-
-    if (displayMode >= 0) {    
-      
-      const Vector &end1Disp = theNodes[0]->getDisp();
-      const Vector &end2Disp = theNodes[1]->getDisp();
-      const Vector &end3Disp = theNodes[2]->getDisp();
-      const Vector &end4Disp = theNodes[3]->getDisp();
-
-      for (int i = 0; i < 2; i++) {
-	coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
-	coords(1,i) = end2Crd(i) + end2Disp(i)*fact;    
-	coords(2,i) = end3Crd(i) + end3Disp(i)*fact;    
-	coords(3,i) = end4Crd(i) + end4Disp(i)*fact;    
-      }
-    } else {
-      int mode = displayMode * -1;
-      const Matrix &eigen1 = theNodes[0]->getEigenvectors();
-      const Matrix &eigen2 = theNodes[1]->getEigenvectors();
-      const Matrix &eigen3 = theNodes[2]->getEigenvectors();
-      const Matrix &eigen4 = theNodes[3]->getEigenvectors();
-      if (eigen1.noCols() >= mode) {
-	for (int i = 0; i < 2; i++) {
-	  coords(0,i) = end1Crd(i) + eigen1(i,mode-1)*fact;
-	  coords(1,i) = end2Crd(i) + eigen2(i,mode-1)*fact;
-	  coords(2,i) = end3Crd(i) + eigen3(i,mode-1)*fact;
-	  coords(3,i) = end4Crd(i) + eigen4(i,mode-1)*fact;
-	}    
-      } else {
-	for (int i = 0; i < 2; i++) {
-	  coords(0,i) = end1Crd(i);
-	  coords(1,i) = end2Crd(i);
-	  coords(2,i) = end3Crd(i);
-	  coords(3,i) = end4Crd(i);
-	}    
-      }
-    }
-    
-    int error = 0;
-
-    // finally we draw the element using drawPolygon
-    error += theViewer.drawPolygon (coords, values);
-
-    return error;
+	return 0;
 }
 
 void
