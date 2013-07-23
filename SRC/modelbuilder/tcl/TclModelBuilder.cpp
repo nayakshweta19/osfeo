@@ -1999,28 +1999,43 @@ TclCommand_addElementalLoad(ClientData clientData, Tcl_Interp *interp, int argc,
   }
   // Added: C.McGann, U.Washington
   else if ((strcmp(argv[count],"-selfWeight") == 0) || (strcmp(argv[count],"-SelfWeight") == 0)) {
-	  count++;
-  	  for (int i=0; i<theEleTags.Size(); i++) {
-		  theLoad = new SelfWeight(eleLoadTag, theEleTags(i));
+    count++;
 
-	      if (theLoad == 0) {
-	          opserr << "WARNING eleLoad - out of memory creating load of type " << argv[count] ;
-	          return TCL_ERROR;
-	      }
+    double xf, yf, zf;
+    if (Tcl_GetDouble(interp, argv[count], &xf) != TCL_OK) {
+	  opserr << "WARNING eleLoad - invalid xFactor " << argv[count] << " for -selfWeight\n";
+	  return TCL_ERROR;
+	}
+    if (Tcl_GetDouble(interp, argv[count+1], &yf) != TCL_OK) {
+	  opserr << "WARNING eleLoad - invalid yFactor " << argv[count+1] << " for -selfWeight\n";
+	  return TCL_ERROR;
+	}
+    if (Tcl_GetDouble(interp, argv[count+2], &zf) != TCL_OK) {
+	  opserr << "WARNING eleLoad - invalid zFactor " << argv[count+2] << " for -selfWeight\n";
+	  return TCL_ERROR;
+	}
 
-	      // get the current pattern tag if no tag given in i/p
-	      int loadPatternTag = theTclLoadPattern->getTag();
-	
-	      // add the load to the domain
-	      if (theTclDomain->addElementalLoad(theLoad, loadPatternTag) == false) {
-	          opserr << "WARNING eleLoad - could not add following load to domain:\n ";
-	          opserr << theLoad;
-	          delete theLoad;
-	          return TCL_ERROR;
-	      }
-	  	  eleLoadTag++;
+    for (int i=0; i<theEleTags.Size(); i++) {
+      theLoad = new SelfWeight(eleLoadTag, xf, yf, zf, theEleTags(i));
+
+      if (theLoad == 0) {
+	opserr << "WARNING eleLoad - out of memory creating load of type " << argv[count] ;
+	return TCL_ERROR;
       }
-      return 0;
+
+      // get the current pattern tag if no tag given in i/p
+      int loadPatternTag = theTclLoadPattern->getTag();
+      
+      // add the load to the domain
+      if (theTclDomain->addElementalLoad(theLoad, loadPatternTag) == false) {
+	opserr << "WARNING eleLoad - could not add following load to domain:\n ";
+	opserr << theLoad;
+	delete theLoad;
+	return TCL_ERROR;
+      }
+      eleLoadTag++;
+    }
+    return 0;
   }
 
   // Added by Scott R. Hamilton   - Stanford
