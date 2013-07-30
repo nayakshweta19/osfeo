@@ -638,6 +638,8 @@ convertBinaryToText(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Cha
 int
 convertTextToBinary(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
+int
+maxOpenFiles(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int Tcl_InterpOpenSeesObjCmd(ClientData clientData,  Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -896,6 +898,9 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
 
 	Tcl_CreateCommand(interp, "setParameter", &setParameter,
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL); 
+
+    Tcl_CreateCommand(interp, "setMaxOpenFiles", &maxOpenFiles, 
+		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);  
 
 #ifdef _RELIABILITY
     Tcl_CreateCommand(interp, "wipeReliability", wipeReliability, 
@@ -9772,6 +9777,34 @@ setParameter(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
 
   return TCL_OK; 
 } 
+
+int
+maxOpenFiles(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  int maxOpenFiles;
+  int newMax = 0;
+
+  if (Tcl_GetInt(interp, argv[1], &maxOpenFiles) != TCL_OK) {
+      return TCL_ERROR;
+  } 
+
+  #ifdef _WIN32
+  newMax = _setmaxstdio(maxOpenFiles);
+  if (maxOpenFiles > 2048) {
+		opserr << "setMaxOpenFiles: too many files specified (2048 max)\n";
+  } else {
+	 if (newMax != maxOpenFiles) {
+		opserr << "setMaxOpenFiles FAILED: max allowed files: " << newMax;
+		return TCL_ERROR;
+	}
+  }
+  return TCL_OK;
+  #endif
+
+  opserr << "setMaxOpenFiles FAILED: - command not available on this machine\n";
+  return TCL_OK;
+}
+
 
 // Talledo Start
 int 
