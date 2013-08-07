@@ -151,6 +151,8 @@ extern void *OPS_ModIMKPinching(void);
 extern void *OPS_ConcretewBeta(void);
 extern void *OPS_PinchingLimitState(void);
 
+extern void *OPS_SteelBRB();
+
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
 
@@ -197,6 +199,12 @@ TclCommand_ReinforcingSteel(ClientData clientData, Tcl_Interp *interp, int argc,
 
 int
 TclCommand_KikuchiAikenHDR(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+TclCommand_KikuchiAikenLRB(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+TclCommand_AxialSp(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int
 TclCommand_AxialSpHD(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
@@ -409,6 +417,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
     } else if (strcmp(argv[1],"Steel02Thermal") == 0) {
       void *theMat = OPS_NewSteel02Thermal();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if ((strcmp(argv[1],"SteelBRB") == 0) || (strcmp(argv[1],"BRB") == 0)) {
+      void *theMat = OPS_SteelBRB();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
@@ -3590,6 +3605,12 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
 	else if (strcmp(argv[1],"KikuchiAikenHDR") == 0) { 
       return TclCommand_KikuchiAikenHDR(clientData, interp, argc, argv);
+    }
+    else if (strcmp(argv[1],"KikuchiAikenLRB") == 0) { 
+      return TclCommand_KikuchiAikenLRB(clientData, interp, argc, argv);
+    }
+    else if (strcmp(argv[1],"AxialSp") == 0) { 
+      return TclCommand_AxialSp(clientData, interp, argc, argv);
     }
 	else if (strcmp(argv[1],"AxialSpHD") == 0) { 
       return TclCommand_AxialSpHD(clientData, interp, argc, argv);
