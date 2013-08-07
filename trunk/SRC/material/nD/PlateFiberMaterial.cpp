@@ -395,7 +395,7 @@ PlateFiberMaterial::getInitialTangent()
 }
 
 
-int 
+/*int 
 PlateFiberMaterial::indexMap(int i)
 {
   int ii;
@@ -436,7 +436,7 @@ PlateFiberMaterial::indexMap(int i)
 
   return ii;
 }
-
+*/
 
 
 //print out data

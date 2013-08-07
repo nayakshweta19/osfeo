@@ -41,7 +41,10 @@ Vector PlaneStressRCFiberMaterial::stress(2);
 Matrix PlaneStressRCFiberMaterial::tangent(2,2);
 
 #define ND_TAG_PlaneStressRCFiberMaterial 265891
-
+//       0   1   2
+// PS   11, 22, 12
+// FB   11, 12, 22
+int PlaneStressRCFiberMaterial::iMap[] = {0, 2, 1};
 
 PlaneStressRCFiberMaterial::PlaneStressRCFiberMaterial(void)
 : NDMaterial(0, ND_TAG_PlaneStressRCFiberMaterial),
@@ -188,10 +191,10 @@ PlaneStressRCFiberMaterial::setTrialStrain(const Vector &strainFromElement)
     //BeamFiber 2d material strain order = 11, 12, 22
     //swap matrix indices to sort out-of-plane components
     for (i=0; i<3; i++) {
-      ii = this->indexMap(i);
+      ii = iMap[i];
       twoDstressCopy(ii) = twoDstress(i);
       for (j=0; j<3; j++) {
-	jj = this->indexMap(j);
+	jj = iMap[j];
 	twoDtangentCopy(ii,jj) = twoDtangent(i,j);
       }//end for j
     }//end for i
@@ -264,10 +267,10 @@ PlaneStressRCFiberMaterial::getStress()
 
     //swap matrix indices to sort out-of-plane components 
     for (i=0; i<3; i++) {
-      ii = this->indexMap(i);
+      ii = iMap[i];
       twoDstressCopy(ii) = twoDstress(i);
       for (j=0; j<3; j++) {
-	jj = this->indexMap(j);
+	jj = iMap[j];
 	twoDtangentCopy(ii,jj) = twoDtangent(i,j);
       }//end for j
     }//end for i
@@ -294,7 +297,7 @@ PlaneStressRCFiberMaterial::getStress()
   
   //swap matrix indices to sort out-of-plane components 
   for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
+    ii = iMap[i];
     twoDstressCopy(ii) = twoDstress(i);
   }
   
@@ -319,9 +322,9 @@ PlaneStressRCFiberMaterial::getTangent()
   //swap matrix indices to sort out-of-plane components 
   int i, j, ii, jj;
   for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
+    ii = iMap[i];
     for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
+      jj = iMap[j];
       twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     }//end for j
   }//end for i
@@ -366,9 +369,9 @@ PlaneStressRCFiberMaterial::getInitialTangent()
   //swap matrix indices to sort out-of-plane components 
   int i, j , ii, jj;
   for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
+    ii = iMap[i];
     for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
+      jj = iMap[j];
       twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     }//end for j
   }//end for i
@@ -396,23 +399,6 @@ PlaneStressRCFiberMaterial::getInitialTangent()
   this->tangent(i,j) -= (dd12(i)*dd22invdd21(j));
 
   return this->tangent;
-}
-
-//2D material strain order        = 11, 22, 12
-//PlaneStressRCFiberMaterial strain order = 11, 12, 22
-int 
-PlaneStressRCFiberMaterial::indexMap(int i)
-{
-  int ii;
-
-  if (i == 1) 
-	  ii = 2;
-  else if (i == 2)
-	  ii = 1;
-  else 
-	  ii = i;
-
-  return ii;
 }
 
 void  

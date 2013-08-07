@@ -385,26 +385,26 @@ BeamFiberMaterial::getInitialTangent()
 
 //NDmaterial strain order        = 11, 22, 33, 12, 23, 31 
 //BeamFiberMaterial strain order = 11, 12, 31, 22, 33, 23
-int 
-BeamFiberMaterial::indexMap(int i)
-{
-  int ii;
-
-  if (i == 3) 
-    ii = 1;
-  else if (i == 5)
-    ii = 2;
-  else if (i == 1)
-    ii = 3;
-  else if (i == 2)
-    ii = 4;
-  else if (i == 4)
-    ii = 5;
-  else 
-    ii = i;
-  
-  return ii;
-}
+//int 
+//BeamFiberMaterial::indexMap(int i)
+//{
+//  int ii;
+//
+//  if (i == 3) 
+//    ii = 1;
+//  else if (i == 5)
+//    ii = 2;
+//  else if (i == 1)
+//    ii = 3;
+//  else if (i == 2)
+//    ii = 4;
+//  else if (i == 4)
+//    ii = 5;
+//  else 
+//    ii = i;
+//  
+//  return ii;
+//}
 
 void  
 BeamFiberMaterial::Print(OPS_Stream &s, int flag)

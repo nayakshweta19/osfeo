@@ -86,7 +86,7 @@ class BeamFiberMaterial: public NDMaterial {
     static Vector stress;
     static Matrix tangent;
 
-    int indexMap(int i);
+    //int indexMap(int i);
     static int iMap[6];
 };
 
