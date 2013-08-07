@@ -8,10 +8,10 @@ include ../../../Makefile.def
         ElasticBilin.o \
 	ParallelMaterial.o \
 	AxialSpHD.o \
+	AxialSp.o \
 	Neoprene.o \
 	Maxwell.o \
 	Cast.o \
-	PinchingLimitStateMaterial.o \
         HardeningMaterial.o \
 	Concrete01.o \
 	Concrete02Thermal.o \
@@ -66,6 +66,7 @@ include ../../../Makefile.def
 	Concrete01WithSITC.o \
 	ConcretewBeta.o \
 	KikuchiAikenHDR.o \
+	KikuchiAikenLRB.o \
 	Concrete05.o \
 	ECC01.o \
 	PrestressedSteelMaterial.o \

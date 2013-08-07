@@ -251,6 +251,8 @@
 #define MAT_TAG_Concrete01WithSITC 3011
 
 #define MAT_TAG_KikuchiAikenHDR 6102
+#define MAT_TAG_KikuchiAikenLRB 6105
+#define MAT_TAG_AxialSp   6111
 #define MAT_TAG_AxialSpHD 6112
 
 #define MAT_TAG_Clough1	201
@@ -403,6 +405,9 @@
 #define ND_TAG_DruckerPragerSteelThermal    122
 #define ND_TAG_ElasticIsotropic3DThermal    123
 #define ND_TAG_ElasticIsotropic3DThermalSteel    124
+#define ND_TAG_CapPlasticity  125
+#define ND_TAG_SimplifiedJ2   126
+#define MAT_TAG_SteelBRB      201
 //end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang
