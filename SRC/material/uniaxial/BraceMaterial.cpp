@@ -33,16 +33,13 @@
 
 using namespace std;
 //ErrorHandler *g3ErrorHandler;
-static int numBilinMaterials = 0;
-
-
-static int numCastMaterials = 0;
+static int numBraceMaterials = 0;
 
 void *
-OPS_Cast(void)
+OPS_Brace(void)
 {
-  if (numCastMaterials == 0) {
-    numCastMaterials++;
+  if (numBraceMaterials == 0) {
+    numBraceMaterials++;
     opserr << "Cast Fuse uniaxial material - Written by Dimitrios G. Lignos, Ph.D.\n";
   }
   
@@ -54,14 +51,14 @@ OPS_Cast(void)
   int numData = 1;
   // Check Tag and number of Fingers
   if (OPS_GetIntInput(&numData, iData) != 0) {
-    opserr << "WARNING invalid uniaxialMaterial  Cast Fuse tag" << endln;
+    opserr << "WARNING invalid uniaxialMaterial Brace tag" << endln;
     return 0;
   }
   
   int numRemaining = OPS_GetNumRemainingInputArgs();
   if (numRemaining != 17 || numRemaining != 13) {
     if (OPS_GetDoubleInput(&numRemaining, dData) != 0) {
-      opserr << "Invalid Args want: uniaxialMaterial CastFuse tag? NLegs? bo? h? Fy? E? L? b? R0? cR1? cR2? a1? a2? a3? a4?";
+      opserr << "Invalid Args want: uniaxialMaterial Brace tag? NLegs? bo? h? Fy? E? L? b? R0? cR1? cR2? a1? a2? a3? a4?";
       return 0;	
     }
     
@@ -81,7 +78,7 @@ OPS_Cast(void)
   }
 
   if (theMaterial == 0) {
-    opserr << "WARNING could not create uniaxialMaterial of type Cast Material\n";
+    opserr << "WARNING could not create uniaxialMaterial of type Brace Material\n";
     return 0;
   }
   

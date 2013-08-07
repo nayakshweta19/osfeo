@@ -39,6 +39,10 @@
 
 Vector PlaneStressFiberMaterial::stress(2);
 Matrix PlaneStressFiberMaterial::tangent(2,2);
+//       0   1   2
+// PS   11, 22, 12
+// FB   11, 12, 22
+int PlaneStressFiberMaterial::iMap[] = {0, 2, 1};
 
 PlaneStressFiberMaterial::PlaneStressFiberMaterial(void)
 : NDMaterial(0, ND_TAG_PlaneStressFiberMaterial),
@@ -235,13 +239,13 @@ PlaneStressFiberMaterial::setTrialStrain(const Vector &strainFromElement)
 	// swap matrix indices to sort out-of-plane components 
     for (i=0; i<3; i++) {
     
-      ii = this->indexMap(i);
+      ii = iMap[i];
     
       twoDstressCopy(ii) = twoDstress(i);
     
       for (j=0; j<3; j++) {
     
-    jj = this->indexMap(j);
+    jj = iMap[j];
     
     twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     
@@ -324,7 +328,7 @@ PlaneStressFiberMaterial::getStress()
   
   for (i=0; i<3; i++) {
 
-    ii = this->indexMap(i);
+    ii = iMap[i];
     
     twoDstressCopy(ii) = twoDstress(i);
 
@@ -351,9 +355,9 @@ PlaneStressFiberMaterial::getTangent()
   //swap matrix indices to sort out-of-plane components 
   int i, j, ii, jj;
   for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
+    ii = iMap[i];
     for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
+      jj = iMap[j];
       twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     }//end for j
   }//end for i
@@ -395,9 +399,9 @@ PlaneStressFiberMaterial::getInitialTangent()
   //swap matrix indices to sort out-of-plane components 
   int i, j, ii, jj;
   for (i=0; i<3; i++) {
-    ii = this->indexMap(i);
+    ii = iMap[i];
     for (j=0; j<3; j++) {
-      jj = this->indexMap(j);
+      jj = iMap[j];
       twoDtangentCopy(ii,jj) = twoDtangent(i,j);
     }//end for j
   }//end for i
@@ -422,23 +426,6 @@ PlaneStressFiberMaterial::getInitialTangent()
   this->tangent  -= (dd12*dd22invdd21);
 
   return this->tangent;
-}
-
-//2D material strain order        = 11, 22, 12
-//PlaneStressFiberMaterial strain order = 11, 12, 22
-int 
-PlaneStressFiberMaterial::indexMap(int i)
-{
-  int ii;
-
-  if (i == 1) 
-	  ii = 2;
-  else if (i == 2)
-	  ii = 1;
-  else 
-	  ii = i;
-
-  return ii;
 }
 
 void  

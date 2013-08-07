@@ -84,8 +84,8 @@ class PlaneStressFiberMaterial: public NDMaterial {
 	int    maxIters;               // maximum number of local iterations
 	double tol;	                   // tolerance for relative energy norm for local
 
-    int indexMap(int i);
-
+    //int indexMap(int i);
+	static int iMap[3];
 };
 
 

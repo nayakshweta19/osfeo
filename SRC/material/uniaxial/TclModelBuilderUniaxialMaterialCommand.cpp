@@ -134,6 +134,7 @@ extern void *OPS_NewInitStressMaterial(void);
 extern void *OPS_New_pyUCLA(void);
 extern void *OPS_Maxwell(void);
 extern void *OPS_Cast(void);
+extern void *OPS_Brace(void);                     // neallee
 extern void *OPS_NewReinforcingSteel(void);
 extern void *OPS_Dodd_Restrepo(void);
 extern void *OPS_NewElasticMultiLinear(void);
@@ -301,6 +302,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
     } else if ((strcmp(argv[1],"Cast") == 0) || (strcmp(argv[1],"CastFuse") == 0)) {
       void *theMat = OPS_Cast();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if ((strcmp(argv[1],"Brace") == 0) || (strcmp(argv[1],"brace") == 0)) {
+      void *theMat = OPS_Brace();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
