@@ -905,6 +905,12 @@
     <ClCompile Include="..\..\..\SRC\element\HUelements\KikuchiBearing.cpp">
       <Filter>HUelements</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement3D.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1497,6 +1503,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\HUelements\KikuchiBearing.h">
       <Filter>HUelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement3D.h">
+      <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.h">
+      <Filter>PFEMElement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -47,6 +47,9 @@
     <Filter Include="ritz">
       <UniqueIdentifier>{08f1db7d-d00f-493c-98e6-e4e8c11f0784}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mumps">
+      <UniqueIdentifier>{2c7a4d8f-c176-437f-80e0-d21be446091d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp">
@@ -235,6 +238,18 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.cpp">
       <Filter>profileSPD</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsParallelSOE.cpp">
+      <Filter>mumps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsParallelSolver.cpp">
+      <Filter>mumps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSOE.cpp">
+      <Filter>mumps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSolver.cpp">
+      <Filter>mumps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h">
@@ -410,6 +425,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.h">
       <Filter>profileSPD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsParallelSOE.h">
+      <Filter>mumps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsParallelSolver.h">
+      <Filter>mumps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSOE.h">
+      <Filter>mumps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSolver.h">
+      <Filter>mumps</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

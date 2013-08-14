@@ -173,59 +173,38 @@ ItpackLinSolver::recvSelf(int commitTag, Channel &theChannel,
 }
 
 #ifdef _WIN32
-#define DFAULT dfault_
-#define VFILL  vfill_
-#define JCG    jcg_
-#define JSI    jsi_
-#define SOR    sor_
-#define SSORCG ssorcg_
-#define SSORSI ssorsi_
-#define RSCG   rscg_
-#define RSSI   rssi_
 
-extern "C" int _stdcall DFAULT(int *IPARM, double *RPARM);
+extern "C" int DFAULT(int *IPARM, double *RPARM);
 
-extern "C" int _stdcall VFILL(int *N, double *U, double *VAL);
+extern "C" int VFILL(int *N, double *U, double *VAL);
 
-extern "C" int _stdcall JCG(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int JCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall JSI(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int JSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall SOR(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int SOR(int *N, int *IA, int *JA, double *A, double *RHS,
 			    double *U, int *IWKSP, int *NW, double *WKSP,
 			    int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall SSORCG(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int SSORCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			       double *U, int *IWKSP, int *NW, double *WKSP,
 			       int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall SSORSI(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int SSORSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			       double *U, int *IWKSP, int *NW, double *WKSP,
 			       int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall RSCG(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int RSCG(int *N, int *IA, int *JA, double *A, double *RHS,
 			     double *U, int *IWKSP, int *NW, double *WKSP,
 			     int *IPARM, double *RPARM, int *IER);
 
-extern "C" int _stdcall RSSI(int *N, int *IA, int *JA, double *A, double *RHS,
+extern "C" int RSSI(int *N, int *IA, int *JA, double *A, double *RHS,
 			     double *U, int *IWKSP, int *NW, double *WKSP,
 			     int *IPARM, double *RPARM, int *IER);
-
-/* NOT HERE B..A..
-#define DFAULT dfault_
-#define VFILL  vfill_
-#define JCG    jcg_
-#define JSI    jsi_
-#define SOR    sor_
-#define SSORCG ssorcg_
-#define SSORSI ssorsi_
-#define RSCG   rscg_
-#define RSSI   rssi_
-*/
 
 #else
 
@@ -267,8 +246,11 @@ int
 ItpackLinSolver::solve(void)
 {
   // Let ITPACK fill in default parameter values
-  dfault_(iparm, rparm);
-
+#ifdef _WIN32
+	DFAULT(iparm, rparm);
+#else
+	dfault_(iparm, rparm);
+#endif
   // Override defaults for "textbook" methods
   switch (method) {
   case ItpackJ:
@@ -321,34 +303,69 @@ ItpackLinSolver::solve(void)
 
   switch (method) {
   case ItpackJCG:
-    jcg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+#ifdef _WIN32
+	JCG(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
+	jcg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   case ItpackJSI: case ItpackJ:
+#ifdef _WIN32
+    JSI(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
     jsi_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   case ItpackSOR: case ItpackGS: case ItpackSORFixed:
-    sor_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+#ifdef _WIN32
+    SOR(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
+	sor_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	 iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   case ItpackSSORCG:
-    ssorcg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+#ifdef _WIN32
+	SSORCG(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	    iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
+	ssorcg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	    iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   case ItpackSSORSI: case ItpackSSORFixed:
-    ssorsi_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+#ifdef _WIN32
+    SSORSI(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	    iwksp, &nwksp, wksp, iparm, rparm, &ier);
-    break;
+#else
+	ssorsi_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	    iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
+	break;
   case ItpackRSCG:
     iparm[8] = nb;
-    rscg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+#ifdef _WIN32
+	RSCG(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
+	rscg_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   case ItpackRSSI: case ItpackRS:
     iparm[8] = nb;
+#ifdef _WIN32
+	RSSI(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
+	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#else
     rssi_(&n, iaPtr, jaPtr, aPtr, bPtr, xPtr,
 	  iwksp, &nwksp, wksp, iparm, rparm, &ier);
+#endif
     break;
   default:
     opserr << method << " -- unknown method type in ItpackLinSolver::solve()" << endln;
