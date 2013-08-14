@@ -14,45 +14,42 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="experimentalControl">
-      <UniqueIdentifier>{d5d3c310-8b36-447e-91d4-0ca3b9c4bf3d}</UniqueIdentifier>
+      <UniqueIdentifier>{6dba75d8-8514-4bc4-bac1-3aa86b6e0c55}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalSetup">
-      <UniqueIdentifier>{3fedb149-8df2-4472-a02c-699b361804b0}</UniqueIdentifier>
+      <UniqueIdentifier>{ea7c18f1-6579-4e66-abb6-1a15b49a534a}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalSignalFilter">
-      <UniqueIdentifier>{a53d54dc-68ec-4ed6-8480-132a9895b128}</UniqueIdentifier>
+      <UniqueIdentifier>{12c2e6ea-a8d5-4fef-b4a8-48987fa0238e}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalSite">
-      <UniqueIdentifier>{dbb0adeb-3cac-4a9a-a1d3-121efc798f9a}</UniqueIdentifier>
+      <UniqueIdentifier>{2306af49-cee1-48c5-a6a3-86ef8fe2413e}</UniqueIdentifier>
     </Filter>
     <Filter Include="tcl">
-      <UniqueIdentifier>{2e405786-d0f0-4854-8a14-daf1085b98d3}</UniqueIdentifier>
+      <UniqueIdentifier>{43d00ad5-c857-498e-8559-f12a570a5fa4}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalElement">
-      <UniqueIdentifier>{6a446aee-04e8-479a-bf8f-a7eefbf4080a}</UniqueIdentifier>
+      <UniqueIdentifier>{426b9eaa-7ff6-43eb-9bf2-d266896293d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalRecorder">
-      <UniqueIdentifier>{062c959a-d189-40b9-aeb1-e02d966582a1}</UniqueIdentifier>
+      <UniqueIdentifier>{e83f686f-a877-4bb6-b867-3c6b1571aa91}</UniqueIdentifier>
     </Filter>
     <Filter Include="experimentalRecorder\response">
-      <UniqueIdentifier>{914a2706-4c79-4509-a35b-cefd70567b03}</UniqueIdentifier>
+      <UniqueIdentifier>{3616af05-2d01-49a6-8f3a-4dd7a692a159}</UniqueIdentifier>
     </Filter>
     <Filter Include="openseesCore">
-      <UniqueIdentifier>{e965b6e1-227c-4d27-aef7-d26912bb4687}</UniqueIdentifier>
+      <UniqueIdentifier>{83e2e110-c722-4e51-b8dd-86f3b7e1029d}</UniqueIdentifier>
     </Filter>
     <Filter Include="openseesExtra">
-      <UniqueIdentifier>{e0c24322-a479-4e6c-b848-eebd99237553}</UniqueIdentifier>
+      <UniqueIdentifier>{e82cebe3-bd22-464c-a28a-d1f489246f29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\experimentalControl\ECNIEseries.cpp">
       <Filter>experimentalControl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\tcl\tclAppInit.cpp">
-      <Filter>tcl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\tcl\tclMain.cpp">
-      <Filter>tcl</Filter>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\TclExpControlCommand.cpp">
+      <Filter>experimentalControl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.cpp">
       <Filter>experimentalControl</Filter>
@@ -88,9 +85,6 @@
       <Filter>experimentalControl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.cpp">
-      <Filter>experimentalControl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\TclExpControlCommand.cpp">
       <Filter>experimentalControl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.cpp">
@@ -135,18 +129,6 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclExpElementCommands.cpp">
       <Filter>experimentalElement</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.cpp">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.cpp">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.cpp">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.cpp">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.cpp">
       <Filter>experimentalRecorder</Filter>
     </ClCompile>
@@ -161,6 +143,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\TclExpRecorderCommands.cpp">
       <Filter>experimentalRecorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.cpp">
+      <Filter>experimentalRecorder\response</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.cpp">
       <Filter>experimentalSetup</Filter>
@@ -237,17 +231,32 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\xPCtarget\xpcinitfree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\tcl\commands.cpp">
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\tclAppInit.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\tclMain.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VC2005errno.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\myCommands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.cpp">
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\win32Functions.cpp">
       <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartLabServer.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartSimAppElemServer.cpp">
+      <Filter>tcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartSimAppSiteServer.cpp">
+      <Filter>tcl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\utility\bool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -311,18 +320,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.h">
       <Filter>experimentalElement</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.h">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.h">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.h">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.h">
-      <Filter>experimentalRecorder\response</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpControlRecorder.h">
       <Filter>experimentalRecorder</Filter>
     </ClInclude>
@@ -334,6 +331,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\ExpSiteRecorder.h">
       <Filter>experimentalRecorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpControlResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSetupResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSignalFilterResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalRecorder\response\ExpSiteResponse.h">
+      <Filter>experimentalRecorder\response</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalSetup\ESAggregator.h">
       <Filter>experimentalSetup</Filter>
@@ -397,15 +406,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\FrescoGlobals.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\bool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\tcl\commands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SimulationInformation.h">
-      <Filter>openseesCore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

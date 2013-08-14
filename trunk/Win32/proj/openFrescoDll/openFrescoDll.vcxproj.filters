@@ -569,13 +569,13 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\nDarray.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp">
-      <Filter>openseesCore</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\nDarray\straint.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\nDarray\stresst.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
   </ItemGroup>

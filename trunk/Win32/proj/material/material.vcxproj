@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\material\nD\BeamFiberMaterial2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\CapPlasticity.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear5.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\DruckerPrager3DThermal.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_z_Eij.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressFiberMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressRCFiberMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete09.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete10.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ConcreteL02.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RARCPlaneStressFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\SimplifiedJ2.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.cpp" />
@@ -227,6 +230,7 @@
     <ClCompile Include="..\..\..\SRC\material\section\repres\patch\tubePatch.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\TimoshenkoSection2d.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\WSection2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\AxialSp.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\AxialSpHD.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.cpp" />
@@ -280,6 +284,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\KikuchiAikenLRB.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.cpp" />
@@ -316,6 +321,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Steel02.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Steel02Thermal.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Steel03.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\SteelBRB.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\SteelMP.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\TclHyperbolicGapMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\TclImpactMaterial.cpp" />
@@ -574,6 +580,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\nD\BeamFiberMaterial2d.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\BoucWen3DMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\CapPlasticity.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear5.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\DruckerPrager3DThermal.h" />
@@ -594,6 +601,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_z_Eij.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressFiberMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressRCFiberMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete09.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\Concrete10.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ConcreteL02.h" />
@@ -617,6 +625,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RARCPlaneStressFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\SimplifiedJ2.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.h" />
@@ -669,6 +678,7 @@
     <ClInclude Include="..\..\..\SRC\material\section\repres\patch\tubePatch.h" />
     <ClInclude Include="..\..\..\SRC\material\section\TimoshenkoSection2d.h" />
     <ClInclude Include="..\..\..\SRC\material\section\WSection2d.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\AxialSp.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\AxialSpHD.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BarSlipMaterial.h" />
@@ -722,6 +732,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStrainMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\InitStressMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\KikuchiAikenHDR.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\KikuchiAikenLRB.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\AxialCurve.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\LimitCurve.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\limitState\limitCurve\RotationShearCurve.h" />
@@ -758,6 +769,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Steel02.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Steel02Thermal.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Steel03.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\SteelBRB.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\SteelMP.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\UniaxialJ2Plasticity.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\UniaxialMaterial.h" />
