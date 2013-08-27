@@ -206,6 +206,7 @@
 #define MAT_TAG_PySimple2        210
 #define MAT_TAG_TzSimple2        211
 #define MAT_TAG_QzSimple2        212
+#define MAT_TAG_SteelBRB                     213
 
 #define MAT_TAG_FedeasMaterial    1000
 #define MAT_TAG_FedeasBond1       1001
@@ -319,6 +320,9 @@
 #define ND_TAG_Damage2p 			23
 #define ND_TAG_Damage2p3D 			24
 #define ND_TAG_Damage2ppstress 			25
+#define ND_TAG_SimplifiedJ2                     26
+#define ND_TAG_CapPlasticity                    27
+
 #define ND_TAG_Template3Dep 			31
 #define ND_TAG_NewTemplate3Dep 			32
 
@@ -405,9 +409,6 @@
 #define ND_TAG_DruckerPragerSteelThermal    122
 #define ND_TAG_ElasticIsotropic3DThermal    123
 #define ND_TAG_ElasticIsotropic3DThermalSteel    124
-#define ND_TAG_CapPlasticity  125
-#define ND_TAG_SimplifiedJ2   126
-#define MAT_TAG_SteelBRB      201
 //end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang
@@ -667,6 +668,8 @@
 #define BEAM_INTEGRATION_TAG_Radau           3
 #define BEAM_INTEGRATION_TAG_NewtonCotes           4
 #define BEAM_INTEGRATION_TAG_Trapezoidal           5
+#define BEAM_INTEGRATION_TAG_CompositeSimpson           36
+#define BEAM_INTEGRATION_TAG_GaussQ          37
 #define BEAM_INTEGRATION_TAG_Midpoint           6
 #define BEAM_INTEGRATION_TAG_UserDefined     7
 #define BEAM_INTEGRATION_TAG_FixedLocation     8
