@@ -911,6 +911,15 @@
     <ClCompile Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.cpp">
       <Filter>PFEMElement</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\CompositeSimpsonBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumnCBDI2d.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1509,6 +1518,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\PFEMElement\TclModelBuilder_addPFEMElement.h">
       <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\CompositeSimpsonBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumnCBDI2d.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

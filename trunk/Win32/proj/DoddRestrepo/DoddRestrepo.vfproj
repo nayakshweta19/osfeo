@@ -41,5 +41,6 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
 	<Files>
-		<File RelativePath="..\..\..\SRC\material\uniaxial\DoddRestrepo.f"/></Files>
+		<File RelativePath="..\..\..\SRC\material\uniaxial\DoddRestrepo.f"/>
+		<File RelativePath="..\..\..\SRC\element\forceBeamColumn\gaussq.f"/></Files>
 	<Globals/></VisualStudioProject>

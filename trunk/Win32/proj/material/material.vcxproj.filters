@@ -1457,6 +1457,9 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\SteelBRB.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\InitStressNDMaterial.cpp">
+      <Filter>nD</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2728,6 +2731,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\SteelBRB.h">
       <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\InitStressNDMaterial.h">
+      <Filter>nD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
