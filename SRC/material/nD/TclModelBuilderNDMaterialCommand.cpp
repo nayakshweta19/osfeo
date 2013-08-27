@@ -108,6 +108,11 @@ extern  void *OPS_NewInitialStateAnalysisWrapperMaterial(void);
 extern  void *OPS_NewManzariDafaliasMaterial(void);
 extern  void *OPS_CycLiqCPMaterial(void);
 
+extern  void *OPS_PlaneStressSimplifiedJ2(void);
+extern  void *OPS_SimplifiedJ2(void);
+extern  void *OPS_CapPlasticity(void);
+extern  void *OPS_NewInitStressNDMaterial(void);
+
 #ifdef _DAMAGE2P
 extern  void *OPS_Damage2p(void);
 #endif
@@ -179,6 +184,14 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
     if ((strcmp(argv[1],"ReinforcedConcretePlaneStress") == 0) || (strcmp(argv[1],"ReinforceConcretePlaneStress") == 0)) {
 
       void *theMat = OPS_NewReinforcedConcretePlaneStressMaterial();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1],"InitStressMaterial") == 0) || (strcmp(argv[1],"InitStress") == 0)) {
+      void *theMat = OPS_NewInitStressNDMaterial();
       if (theMat != 0) 
 	theMaterial = (NDMaterial *)theMat;
       else 
@@ -516,6 +529,15 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
     }
     //Aug. 09, 2011 J.Jiang, U.Edinburgh
 
+	
+    // ----- Cap plasticity model ------    // Quan Gu & ZhiJian Qiu  2013
+    else if (strcmp(argv[1],"CapPlasticity") == 0) {
+      void *theMat = OPS_CapPlasticity();
+      if (theMat != 0)
+	theMaterial = (NDMaterial *)theMat;
+      else
+	return TCL_ERROR;
+    }
 
 
     //Jul. 07, 2001 Boris Jeremic & ZHaohui Yang jeremic|zhyang@ucdavis.edu
@@ -828,6 +850,26 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	theMaterial = new J2Plasticity (tag, 0, K, G, sig0, sigInf,
 					delta, H, eta);
     }
+
+    // Check argv[1] for J2PlaneStrain material type
+    else if ((strcmp(argv[1],"Simplified3DJ2") == 0)  || (strcmp(argv[1],"SimplifiedJ2") == 0)) {
+      void *theMat = OPS_SimplifiedJ2();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }
+
+    // Check argv[1] for J2PlaneStrain material type
+    else if ((strcmp(argv[1],"PlaneStressJ2") == 0)  || (strcmp(argv[1],"PlaneStressSimplifiedJ2") == 0)) {
+      void *theMat = OPS_PlaneStressSimplifiedJ2();
+      if (theMat != 0) 
+	theMaterial = (NDMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+    }
+
+    /////////////////////////////////////////////////////////////////
 
     //
     //  MultiAxialCyclicPlasticity Model   by Gang Wang

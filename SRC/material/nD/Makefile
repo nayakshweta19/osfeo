@@ -2,8 +2,14 @@ include ../../../Makefile.def
 
 #	ElasticCrossAnisotropic.o \
 
+ifdef DAMAGE2P_FLAG
+	DAMAGE_2P = Damage2p.o Damage2p3D.o Damage2ppstress.o
+else
+	DAMAGE_2P =
+endif
+
 OBJS       = NDMaterial.o \
-	BeamFiberMaterial.o \
+	$(DAMAGE_2P) BeamFiberMaterial.o \
 	BeamFiberMaterial2d.o \
 	ElasticIsotropicAxiSymm.o\
 	ElasticIsotropicBeamFiber2d.o \
@@ -13,7 +19,9 @@ OBJS       = NDMaterial.o \
 	ElasticIsotropicPlaneStress2D.o \
 	ElasticIsotropicPlateFiber.o \
 	ElasticIsotropicThreeDimensional.o \
- 	PressureDependentElastic3D.o \
+	ElasticOrthotropicMaterial.o \
+	ElasticOrthotropicThreeDimensional.o \
+	PressureDependentElastic3D.o \
 	FeapMaterial.o \
 	J2AxiSymm.o \
 	J2PlaneStrain.o \
@@ -29,6 +37,7 @@ OBJS       = NDMaterial.o \
 	CycLiqCPPlaneStrain.o \
 	TclModelBuilderNDMaterialCommand.o \
 	WrapperNDMaterial.o \
+	InitStressNDMaterial.o \
 	ConcreteMcftNonLinear5.o \
 	ConcreteMcftNonLinear7.o
 
