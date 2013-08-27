@@ -144,6 +144,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticIsotropicThreeDimensional.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticOrthotropicMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\InitStressNDMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\J2ThreeDimensional.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_alpha_Eij.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_Elastic.cpp" />
@@ -592,6 +593,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticIsotropicThreeDimensional.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticOrthotropicMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ElasticOrthotropicThreeDimensional.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\InitStressNDMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\J2ThreeDimensional.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_alpha_Eij.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\NewTemplate3Dep\SANISAND_Elastic.h" />
