@@ -154,12 +154,14 @@ GLF_LIBS = $(FE)/element/zeroLength/ZeroLength.o \
 
 REMO_LIBS = $(FE)/element/nonlinearBeamColumn/matrixutil/MatrixUtil.o \
 	$(FE)/element/forceBeamColumn/ForceBeamColumn2d.o \
+	$(FE)/element/forceBeamColumn/ForceBeamColumnCBDI2d.o \
 	$(FE)/element/forceBeamColumn/ForceBeamColumn3d.o \
 	$(FE)/element/forceBeamColumn/ElasticForceBeamColumn2d.o \
 	$(FE)/element/forceBeamColumn/ElasticForceBeamColumn3d.o \
 	$(FE)/element/forceBeamColumn/TclForceBeamColumnCommand.o \
 	$(FE)/element/forceBeamColumn/BeamIntegration.o \
 	$(FE)/element/forceBeamColumn/LobattoBeamIntegration.o \
+	$(FE)/element/forceBeamColumn/CompositeSimpsonBeamIntegration.o \
 	$(FE)/element/forceBeamColumn/LegendreBeamIntegration.o \
 	$(FE)/element/forceBeamColumn/RadauBeamIntegration.o \
 	$(FE)/element/forceBeamColumn/NewtonCotesBeamIntegration.o \
@@ -574,7 +576,9 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Concrete01WithSITC.o \
 	$(FE)/material/uniaxial/ConcretewBeta.o \
 	$(FE)/material/uniaxial/KikuchiAikenHDR.o \
+	$(FE)/material/uniaxial/KikuchiAikenLRB.o \
 	$(FE)/material/uniaxial/AxialSpHD.o \
+	$(FE)/material/uniaxial/AxialSp.o \
 	$(FE)/material/uniaxial/ECC01.o \
 	$(FE)/material/uniaxial/HystereticMaterial.o \
 	$(FE)/material/uniaxial/EPPGapMaterial.o \
@@ -623,6 +627,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/J2PlateFiber.o \
 	$(FE)/material/nD/ConcreteMcftNonLinear5.o \
 	$(FE)/material/nD/ConcreteMcftNonLinear7.o \
+	$(FE)/material/nD/InitStressNDMaterial.o \
 	$(FE)/material/nD/CycLiqCP.o \
 	$(FE)/material/nD/CycLiqCP3D.o \
 	$(FE)/material/nD/CycLiqCPPlaneStrain.o \
@@ -635,8 +640,8 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/UWmaterials/BoundingCamClay3D.o \
 	$(FE)/material/nD/UWmaterials/BoundingCamClayPlaneStrain.o \
 	$(FE)/material/nD/UWmaterials/ManzariDafalias.o \
-        $(FE)/material/nD/UWmaterials/ManzariDafalias3D.o \
-        $(FE)/material/nD/UWmaterials/ManzariDafaliasPlaneStrain.o \
+    $(FE)/material/nD/UWmaterials/ManzariDafalias3D.o \
+    $(FE)/material/nD/UWmaterials/ManzariDafaliasPlaneStrain.o \
 	$(FE)/material/nD/UWmaterials/InitialStateAnalysisWrapper.o \
 	$(FE)/material/nD/FeapMaterial.o \
 	$(FE)/material/nD/feap/TclFeapMaterialCommand.o \
@@ -680,7 +685,13 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/reinforcedConcretePlaneStress/ConcreteZ01.o \
 	$(FE)/material/nD/reinforcedConcretePlaneStress/ConcreteL01.o \
 	$(FE)/material/nD/reinforcedConcretePlaneStress/SteelZ01.o \
-	$(FE)/material/nD/reinforcedConcretePlaneStress/TendonL01.o
+	$(FE)/material/nD/reinforcedConcretePlaneStress/TendonL01.o \
+	$(FE)/material/nD/CapPlasticity.o \
+	$(FE)/material/nD/SimplifiedJ2.o \
+	$(FE)/material/nD/PlaneStressSimplifiedJ2.o \
+	$(FE)/material/nD/PlaneStressUserMaterial.o \
+	$(FE)/material/nD/PlateFromPlaneStressMaterial.o \
+	$(FE)/material/nD/PlateRebarMaterial.o
 
 FEDEAS_LIBS = $(FE)/material/uniaxial/FedeasMaterial.o \
 	$(FE)/material/uniaxial/fedeas/FedeasHardeningMaterial.o \
@@ -742,6 +753,7 @@ SECTION_LIBS = $(FE)/material/section/SectionForceDeformation.o \
 	$(FE)/material/section/MembranePlateFiberSection.o \
 	$(FE)/material/section/Bidirectional.o \
 	$(FE)/material/section/Isolator2spring.o \
+	$(FE)/material/section/LayeredShellFiberSection.o \
 	$(FE)/material/section/integration/SectionIntegration.o \
 	$(FE)/material/section/integration/RCSectionIntegration.o \
 	$(FE)/material/section/integration/WideFlangeSectionIntegration.o \

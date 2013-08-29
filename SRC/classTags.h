@@ -289,7 +289,9 @@
 #define SEC_TAG_ElasticShear3d                  24
 #define SEC_TAG_FiberSection2dInt		25
 #define SEC_TAG_FiberSection2dThermal		26
-#define SEC_TAG_FiberSection3dThermal   27
+#define SEC_TAG_LayeredShellFiberSection        27
+#define SEC_TAG_FiberSection3dThermal   28
+
 
 #define SEC_TAG_McftSection2dfiber 7601
 
@@ -322,18 +324,21 @@
 #define ND_TAG_Damage2ppstress 			25
 #define ND_TAG_SimplifiedJ2                     26
 #define ND_TAG_CapPlasticity                    27
+#define ND_TAG_PlaneStressUserMaterial          28
+#define ND_TAG_PlateFromPlaneStressMaterial     29
+#define ND_TAG_PlateRebarMaterial               30
 
-#define ND_TAG_Template3Dep 			31
-#define ND_TAG_NewTemplate3Dep 			32
+#define ND_TAG_ElasticOrthotropic		  31
+#define ND_TAG_ElasticOrthotropicPlaneStrain2d	  32
+#define ND_TAG_ElasticOrthotropicPlaneStress2d	  33
+#define ND_TAG_ElasticOrthotropicAxiSymm          34
+#define ND_TAG_ElasticOrthotropicPlateFiber	  35
+#define ND_TAG_ElasticOrthotropicBeamFiber	  36
+#define ND_TAG_ElasticOrthotropicThreeDimensional 37
+#define ND_TAG_ElasticOrthotropicBeamFiber2d	  38
 
-#define ND_TAG_ElasticOrthotropic                 200
-#define ND_TAG_ElasticOrthotropicPlaneStrain2d  211
-#define ND_TAG_ElasticOrthotropicPlaneStress2d  212
-#define ND_TAG_ElasticOrthotropicAxiSymm          213
-#define ND_TAG_ElasticOrthotropicPlateFiber     214
-#define ND_TAG_ElasticOrthotropicBeamFiber      215
-#define ND_TAG_ElasticOrthotropicThreeDimensional 216
-#define ND_TAG_ElasticOrthotropicBeamFiber2d    218
+#define ND_TAG_Template3Dep 			41
+#define ND_TAG_NewTemplate3Dep 			42
 
 #define ND_TAG_J2PlaneStrain                  3005
 #define ND_TAG_J2PlaneStress                  3006

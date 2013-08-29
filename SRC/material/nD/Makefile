@@ -31,7 +31,10 @@ OBJS       = NDMaterial.o \
 	J2ThreeDimensional.o \
 	PlaneStrainMaterial.o \
 	PlaneStressMaterial.o \
+	PlaneStressUserMaterial.o \
 	PlateFiberMaterial.o \
+	PlateFromPlaneStressMaterial.o \
+	PlateRebarMaterial.o \
 	CycLiqCP.o \
 	CycLiqCP3D.o \
 	CycLiqCPPlaneStrain.o \
@@ -39,7 +42,11 @@ OBJS       = NDMaterial.o \
 	WrapperNDMaterial.o \
 	InitStressNDMaterial.o \
 	ConcreteMcftNonLinear5.o \
-	ConcreteMcftNonLinear7.o
+	ConcreteMcftNonLinear7.o \
+	CapPlasticity.o \
+	SimplifiedJ2.o \
+	PlaneStressSimplifiedJ2.o
+
 
 all: $(OBJS) 
 	@$(CD) $(FE)/material/nD/soil; $(MAKE);
