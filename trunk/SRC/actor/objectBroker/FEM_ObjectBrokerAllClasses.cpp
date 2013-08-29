@@ -119,6 +119,7 @@
 #include <ElasticMembranePlateSection.h>
 #include <MembranePlateFiberSection.h>
 #include <Bidirectional.h>
+#include <LayeredShellFiberSection.h> // Yuli Huang & Xinzheng Lu 
 
 // NDMaterials
 #include <ElasticIsotropicPlaneStrain2D.h>
@@ -133,6 +134,13 @@
 #include <J2ThreeDimensional.h>
 #include <PlaneStressMaterial.h>
 #include <PlateFiberMaterial.h>
+//start Yuli Huang & Xinzheng L
+#include <PlateRebarMaterial.h>
+#include <PlateFromPlaneStressMaterial.h>
+//#include <ConcreteS.h>
+#include <PlaneStressUserMaterial.h>
+//end Yuli Huang & Xinzheng Lu
+
 #include <FeapMaterial03.h>
 
 #include <FluidSolidPorousMaterial.h>
@@ -1055,6 +1063,11 @@ FEM_ObjectBrokerAllClasses::getNewSection(int classTag)
 	case SEC_TAG_ElasticPlateSection:
 		return new ElasticPlateSection();
 
+	//start Yuli Huang & Xinzheng Lu LayeredShellFiberSection
+    case SEC_TAG_LayeredShellFiberSection:
+	  return new LayeredShellFiberSection();
+	//end Yuli Huang & Xinzheng Lu LayeredShellFiberSection
+
 	case SEC_TAG_ElasticMembranePlateSection:
 		return new ElasticMembranePlateSection();
 
@@ -1125,6 +1138,21 @@ FEM_ObjectBrokerAllClasses::getNewNDMaterial(int classTag)
   case ND_TAG_PlaneStressMaterial:
     return new PlaneStressMaterial();
 		  
+
+  //start Yuli Huang & Xinzheng 
+  case ND_TAG_PlateRebarMaterial:
+    return new PlateRebarMaterial();
+
+  case ND_TAG_PlateFromPlaneStressMaterial:
+    return new PlateFromPlaneStressMaterial();
+
+//case ND_TAG_ConcreteS:
+//    return new ConcreteS();
+
+  case ND_TAG_PlaneStressUserMaterial:
+    return new PlaneStressUserMaterial();
+  //end Yuli Huang & Xinzheng Lu 
+
   case ND_TAG_PlateFiberMaterial:
     return new PlateFiberMaterial();
     
