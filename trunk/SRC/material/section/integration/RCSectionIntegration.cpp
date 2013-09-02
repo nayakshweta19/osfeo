@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.6 $
-// $Date: 2010/09/13 21:31:07 $
+// $Date: 2010-09-13 21:31:07 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/integration/RCSectionIntegration.cpp,v $
 
 #include <RCSectionIntegration.h>
@@ -129,12 +129,12 @@ RCSectionIntegration::getFiberLocations(int nFibers, double *yi, double *zi)
 
   if (Nfs > 2) {
     double spacing = (d-2*cover)/(Nfs-1);
-    for (i = 1; i <= Nfs-2; i++)
+    for (int i = 1; i <= Nfs-2; i++)
       yi[loc++] = (-0.5*d+cover) + spacing*i;
   }
 
   if (zi != 0) {
-    for (i = 0; i < nFibers; i++)
+    for (int i = 0; i < nFibers; i++)
       zi[i] = 0.0;
   }
 
@@ -184,26 +184,34 @@ RCSectionIntegration::setParameter(const char **argv, int argc,
   if (argc < 1)
     return -1;
 
-  if (strcmp(argv[0],"d") == 0)
+  if (strcmp(argv[0],"d") == 0) {
+    param.setValue(d);
     return param.addObject(1, this);
-
-  if (strcmp(argv[0],"b") == 0)
+  }
+  if (strcmp(argv[0],"b") == 0) {
     return param.addObject(2, this);
-
-  if (strcmp(argv[0],"Atop") == 0)
+    param.setValue(b);
+  }
+  if (strcmp(argv[0],"Atop") == 0) {
+    param.setValue(Atop);
     return param.addObject(3, this);
-
-  if (strcmp(argv[0],"Abottom") == 0)
+  }
+  if (strcmp(argv[0],"Abottom") == 0) {
+    param.setValue(Abottom);
     return param.addObject(7, this);
-
-  if (strcmp(argv[0],"Aside") == 0)
+  }
+  if (strcmp(argv[0],"Aside") == 0) {
+    param.setValue(Aside);
     return param.addObject(4, this);
-
-  if (strcmp(argv[0],"As") == 0)
+  }
+  if (strcmp(argv[0],"As") == 0) {
+    param.setValue(Atop);
     return param.addObject(5, this);
-
-  if (strcmp(argv[0],"cover") == 0)
+  }
+  if (strcmp(argv[0],"cover") == 0) {
+    param.setValue(cover);
     return param.addObject(6, this);
+  }
 
   return -1;
 }
@@ -292,7 +300,7 @@ RCSectionIntegration::getLocationsDeriv(int nFibers, double *dyidh, double *dzid
     
     if (Nfs > 2) {
       double dspacingdh = (dddh-2*dcoverdh)/(Nfs-1);
-      for (i = 1; i <= Nfs-2; i++)
+      for (int i = 1; i <= Nfs-2; i++)
 	dyidh[loc++] = (-0.5*dddh+dcoverdh) + dspacingdh*i;
     }
   }
