@@ -121,6 +121,8 @@ extern  void *OPS_NewContactMaterial3DMaterial(void);
 extern  void *OPS_NewInitialStateAnalysisWrapperMaterial(void);
 extern  void *OPS_NewManzariDafaliasMaterial(void);
 extern  void *OPS_CycLiqCPMaterial(void);
+extern  void *OPS_CycLiqCPSPMaterial(void);
+extern  void *OPS_NewInitStressNDMaterial(void);
 
 //extern  void *OPS_PlaneStressSimplifiedJ2(void);
 //extern  void *OPS_SimplifiedJ2(void);
@@ -433,6 +435,15 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
 	theMaterial = (NDMaterial *)theMat;
       else 
 	return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1],"CycLiqCPSP") == 0)){
+
+      void *theMat = OPS_CycLiqCPSPMaterial();
+      if (theMat != 0) 
+        theMaterial = (NDMaterial *)theMat;
+      else 
+        return TCL_ERROR;
     }
 
     else if ((strcmp(argv[1],"BoundingCamClay") == 0)){

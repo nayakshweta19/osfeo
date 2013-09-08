@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.10 $
-// $Date: 2009/08/19 17:53:01 $
+// $Date: 2009-08-19 17:53:01 $
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/LinearCrdTransf3d.h,v $
 
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -50,6 +50,8 @@ public:
     
     LinearCrdTransf3d();
     ~LinearCrdTransf3d();
+    
+    const char *getClassType() const {return "LinearCrdTransf3d";};
     
     int initialize(Node *node1Pointer, Node *node2Pointer);
     int update(void);

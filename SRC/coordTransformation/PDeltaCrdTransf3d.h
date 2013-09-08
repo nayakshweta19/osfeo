@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.7 $
-// $Date: 2005/12/15 00:30:38 $
+// $Date: 2005-12-15 00:30:38 $
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/PDeltaCrdTransf3d.h,v $
 
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -50,6 +50,8 @@ public:
     
     PDeltaCrdTransf3d();
     ~PDeltaCrdTransf3d();
+    
+    const char *getClassType() const {return "PDeltaCrdTransf3d";};
     
     int initialize(Node *node1Pointer, Node *node2Pointer);
     int update(void);

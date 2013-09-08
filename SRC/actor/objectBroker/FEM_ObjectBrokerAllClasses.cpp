@@ -140,8 +140,11 @@
 //#include <ConcreteS.h>
 #include <PlaneStressUserMaterial.h>
 //end Yuli Huang & Xinzheng Lu
-
 #include <FeapMaterial03.h>
+#include <CycLiqCP3D.h>
+#include <CycLiqCPPlaneStrain.h>
+#include <CycLiqCPSP3D.h>
+#include <CycLiqCPSPPlaneStrain.h>
 
 #include <FluidSolidPorousMaterial.h>
 #include <PressureDependMultiYield.h>
@@ -1138,7 +1141,6 @@ FEM_ObjectBrokerAllClasses::getNewNDMaterial(int classTag)
   case ND_TAG_PlaneStressMaterial:
     return new PlaneStressMaterial();
 		  
-
   //start Yuli Huang & Xinzheng 
   case ND_TAG_PlateRebarMaterial:
     return new PlateRebarMaterial();
@@ -1195,7 +1197,19 @@ FEM_ObjectBrokerAllClasses::getNewNDMaterial(int classTag)
   case ND_TAG_InitialStateAnalysisWrapper:
     return new InitialStateAnalysisWrapper();
 
-  //Ln add
+  case ND_TAG_CycLiqCP3D:
+      return new CycLiqCP3D(); 
+
+  case ND_TAG_CycLiqCPPlaneStrain:
+      return new CycLiqCPPlaneStrain(); 
+
+  case ND_TAG_CycLiqCPSP3D:
+      return new CycLiqCPSP3D(); 
+
+  case ND_TAG_CycLiqCPSPPlaneStrain:
+      return new CycLiqCPSPPlaneStrain(); 
+
+//Ln add
   //case ND_TAG_ReinforcedConcretePlaneStress:
   //  return new ReinforcedConcretePlaneStress();
   //case ND_TAG_FAReinforcedConcretePlaneStress:

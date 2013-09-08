@@ -40,7 +40,8 @@
 #include <elementAPI.h>
 
 
-void *OPS_SteelBRB(void) { 
+void *OPS_SteelBRB(void) 
+{ 
   
   int tag;
   double E, sigmaY0, sigmaY_T, alpha_T, beta_T, delta_T, sigmaY_C, alpha_C, beta_C, delta_C, Tol;
@@ -67,7 +68,8 @@ void *OPS_SteelBRB(void) {
   if (OPS_GetDouble(&numData, dData) != 0) {
       opserr << "WARNING invalid double values: nDMaterial SimplifiedJ2 " << tag << endln;
     return 0;
-  }  
+  }
+  
   E        = dData[0];
   sigmaY0  = dData[1];
   sigmaY_T = dData[2];
@@ -115,9 +117,9 @@ SteelBRB::SteelBRB(int pTag, double pE,double pSigmaY0, double pSigmaY_T,double 
 	SHVs = 0;
 // AddingSensitivity:END //////////////////////////////////////
 
- //debug1 = new ofstream("stress_sens_debug.out");
+ debug1 = new ofstream("stress_sens_debug.out");
 
- //debug1->precision(16);
+ debug1->precision(16);
 
 
 

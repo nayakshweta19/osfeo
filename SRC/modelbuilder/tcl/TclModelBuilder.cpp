@@ -2695,8 +2695,8 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
     }
 
     // check number of arguments
-    if (argc < 3) {
-        opserr << "WARNING bad command - want: pc nodeId";
+    if (argc < 4) {
+        opserr << "WARNING bad command - want: pc nodeId ndf";
         printCommand(argc, argv);
         return TCL_ERROR;
     }    
@@ -2704,18 +2704,24 @@ TclCommand_addPC(ClientData clientData, Tcl_Interp *interp, int argc,
     // get the nodeID
     int nodeId;
     if (Tcl_GetInt(interp, argv[1], &nodeId) != TCL_OK) {
-        opserr << "WARNING invalid nodeId: " << argv[1] << " -  pc nodeId\n";
+        opserr << "WARNING invalid nodeId: " << argv[1] << " -  pc nodeId Gravity ndf\n";
         return TCL_ERROR;
     }
 
 	// get the gravity
 	double g;
 	if (Tcl_GetDouble(interp, argv[2], &g) != TCL_OK) {
-		opserr << "WARNING invalid gravity: " << argv[2] << " - pd nodeId Gravity\n";
+		opserr << "WARNING invalid gravity: " << argv[2] << " - pc nodeId Gravity ndf \n";
 		return TCL_ERROR;
 	}
 
-    Pressure_Constraint* pc = new Pressure_Constraint(nodeId, g);
+	// get the ndf
+	int ndf;
+	if (Tcl_GetInt(interp, argv[3], &ndf) != TCL_OK) {
+		opserr << "WARNING invalid ndf: " << argv[3] << " - pc nodeId Gravity ndf \n";
+		return TCL_ERROR;
+	}
+    Pressure_Constraint* pc = new Pressure_Constraint(nodeId, g, ndf);
     if (theTclDomain->addPressure_Constraint(pc) == false) {
         opserr << "WARNING failed to add Pressure_Constraint to the domain\n";
         opserr << "node: " << nodeId << endln;

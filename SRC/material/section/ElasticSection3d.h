@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.10 $
-// $Date: 2008/08/26 16:46:59 $
+// $Date: 2008-08-26 16:46:59 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/ElasticSection3d.h,v $
 
 #ifndef ElasticSection3d_h
@@ -81,7 +81,6 @@ class ElasticSection3d : public SectionForceDeformation
   double E, A, Iz, Iy, G, J;
   
   Vector e;			// section trial deformations
-  Vector eCommit;
   
   static Vector s;
   static Matrix ks;

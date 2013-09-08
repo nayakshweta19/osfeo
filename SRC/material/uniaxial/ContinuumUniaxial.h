@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2007/10/26 04:29:24 $
+// $Date: 2007-10-26 04:29:24 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/ContinuumUniaxial.h,v $
 
 // Written: MHS
@@ -65,6 +65,13 @@ class ContinuumUniaxial: public UniaxialMaterial {
   int recvSelf(int commitTag, Channel &theChannel,
 	       FEM_ObjectBroker &theBroker);
   
+  // AddingSensitivity:BEGIN //////////////////////////////////////////
+  int setParameter (const char **argv, int argc, Parameter &param);
+  double getStressSensitivity(int gradIndex, bool conditional);
+  int commitSensitivity(double strainGradient, int gradIndex, int numGrads);
+  // AddingSensitivity:END ///////////////////////////////////////////
+  
+
  private:
   double strain11;
   

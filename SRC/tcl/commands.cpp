@@ -260,6 +260,8 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 #include <SparseGenColLinSOE.h>
 #include <PFEMSolver.h>
 #include <PFEMLinSOE.h>
+#include <PFEMCompressibleSolver.h>
+#include <PFEMCompressibleLinSOE.h>
 #ifdef _THREADS
 #include <ThreadedSuperLU.h>
 #else
@@ -2559,9 +2561,16 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 #endif
 
   else if(strcmp(argv[1], "PFEM") == 0) {
-    PFEMSolver* theSolver = new PFEMSolver();
-    //theSOE = new SparseGenColLinSOE(*theSolver);
-	theSOE = new PFEMLinSOE(*theSolver);
+#ifdef _PFEM
+      if(argc <= 2) {
+          PFEMSolver* theSolver = new PFEMSolver();
+          theSOE = new PFEMLinSOE(*theSolver);
+      } else if(strcmp(argv[2], "-compressible") == 0) {
+          PFEMCompressibleSolver* theSolver = new PFEMCompressibleSolver();
+          theSOE = new PFEMCompressibleLinSOE(*theSolver);          
+      }
+#endif
+
   }
 
   // SPARSE GENERAL SOE * SOLVER

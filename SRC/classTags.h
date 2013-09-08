@@ -336,6 +336,8 @@
 #define ND_TAG_ElasticOrthotropicBeamFiber	  36
 #define ND_TAG_ElasticOrthotropicThreeDimensional 37
 #define ND_TAG_ElasticOrthotropicBeamFiber2d	  38
+#define ND_TAG_CycLiqCPSP3D                       39
+#define ND_TAG_CycLiqCPSPPlaneStrain              40
 
 #define ND_TAG_Template3Dep 			41
 #define ND_TAG_NewTemplate3Dep 			42
@@ -631,6 +633,9 @@
 #define ELE_TAG_CorotTruss2            139
 #define ELE_Tag_ZeroLengthImpact3D     140
 #define ELE_TAG_PFEMElement3D          141
+#define ELE_TAG_PFEMElement2DCompressible 142
+#define ELE_TAG_PFEMElement2DBubble    143
+#define ELE_TAG_PFEMElement2D73    144
 
 #define ELE_TAG_MultipleShearSpring 6201
 #define ELE_TAG_MultipleNormalSpring 6202
@@ -796,7 +801,6 @@
 #define LINESEARCH_TAGS_RegulaFalsiLineSearch         3
 #define LINESEARCH_TAGS_SecantLineSearch              4
 
-
 #define INTEGRATOR_TAGS_Newmark                          1
 #define INTEGRATOR_TAGS_HHT                              2
 #define INTEGRATOR_TAGS_WilsonTheta                      3
@@ -873,7 +877,7 @@
 #define LinSOE_TAGS_MPIDiagonalSOE 25
 #define LinSOE_TAGS_PFEMLinSOE 26
 #define LinSOE_TAGS_SProfileSPDLinSOE		27
-
+#define LinSOE_TAGS_PFEMCompressibleLinSOE 28
 
 #define SOLVER_TAGS_FullGenLinLapackSolver  	1
 #define SOLVER_TAGS_BandGenLinLapackSolver  	2
@@ -902,7 +906,7 @@
 #define SOLVER_TAGS_MPIDiagonalSolver 25
 #define SOLVER_TAGS_PFEMSolver 26
 #define SOLVER_TAGS_SProfileSPDLinSolver  	27
-
+#define SOLVER_TAGS_PFEMCompressibleSolver 28
 
 #define RECORDER_TAGS_ElementRecorder		1
 #define RECORDER_TAGS_NodeRecorder		2
