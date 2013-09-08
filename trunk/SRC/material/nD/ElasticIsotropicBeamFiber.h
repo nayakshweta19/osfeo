@@ -40,8 +40,6 @@
 #include <Information.h>
 #include <Parameter.h>
 
-#include <Tensor.h>
-
 class ElasticIsotropicBeamFiber : public ElasticIsotropicMaterial
 {
   public:
@@ -66,9 +64,6 @@ class ElasticIsotropicBeamFiber : public ElasticIsotropicMaterial
     const char *getType (void) const;
     int getOrder (void) const;
     
-    int setParameter(const char **argv, int argc, Parameter &param);
-    int updateParameter(int paramID, Information &info);
-    int activateParameter(int paramID);
     const Vector& getStressSensitivity(int gradIndex,
 				       bool conditional);
   protected:
@@ -77,8 +72,6 @@ class ElasticIsotropicBeamFiber : public ElasticIsotropicMaterial
     static Vector sigma;	// Stress vector ... class-wide for returns
     static Matrix D;		// Elastic constants
     Vector Tepsilon;		// Trial strains
-
-    int parameterID;
 };
 
 

@@ -12,6 +12,7 @@ include ../../../Makefile.def
 	AxialSp.o \
 	Neoprene.o \
 	Maxwell.o \
+	ViscousDamper.o \
 	Cast.o \
         HardeningMaterial.o \
 	Concrete01.o \
@@ -83,6 +84,7 @@ include ../../../Makefile.def
 	ModIMKPinching.o \
 	pyUCLA.o \
 	Dodd_Restrepo.o DoddRestrepo.o \
+	SteelBRB.o \
         TclModelBuilderUniaxialMaterialCommand.o
 
 all:         $(OBJS)

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2009/04/30 23:23:04 $
+// $Date: 2009-04-30 23:23:04 $
 // $Source: /usr/local/cvs/OpenSees/SRC/handler/DataFileStream.h,v $
 
 #ifndef _DataFileStream
@@ -36,7 +36,7 @@ class DataFileStream : public OPS_Stream
 {
  public:
   DataFileStream(int indent=2);
-  DataFileStream(const char *fileName, openMode mode = OVERWRITE, int indent=2, int doCSV =0);
+  DataFileStream(const char *fileName, openMode mode = OVERWRITE, int indent=2, int doCSV =0, bool closeOnWrite = false);
   ~DataFileStream();
 
   int setFile(const char *fileName, openMode mode = OVERWRITE);
@@ -57,6 +57,7 @@ class DataFileStream : public OPS_Stream
   int attr(const char *name, double value);
   int attr(const char *name, const char *value);
   int write(Vector &data);
+
   int write(int data) {return 0;};
   int write(double data) {return 0;};
 
@@ -113,6 +114,7 @@ class DataFileStream : public OPS_Stream
   Vector **theRemoteData;
 
   int doCSV;
+  bool closeOnWrite;
 };
 
 #endif

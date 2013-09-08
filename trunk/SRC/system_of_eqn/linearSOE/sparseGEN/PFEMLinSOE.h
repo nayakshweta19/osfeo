@@ -69,12 +69,13 @@ class PFEMLinSOE : public LinearSOE
 
     virtual void setX(int loc, double value);        
     virtual void setX(const Vector &x);        
-    virtual int setPFEMSolver(PFEMSolver& newSolver);   
+    int setPFEMSolver(PFEMSolver& newSolver);   
 
     virtual int sendSelf(int commitTag, Channel &theChannel);
     virtual int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
 
-    const ID& getDofType()const {return dofType;}
+    virtual const ID& getDofType()const {return dofType;}
+    virtual const ID& getDofID()const {return dofID;}
 
     friend class PFEMSolver;
 

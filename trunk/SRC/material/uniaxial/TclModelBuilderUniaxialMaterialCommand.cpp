@@ -73,6 +73,7 @@
 #include <Bond_SP01.h>	// JZ
 
 #include <SteelMP.h>             //Quan & Michele
+#include <SteelBRB.h>             //Quan & Michele
 #include <SmoothPSConcrete.h>      //Quan & Michele
 
 #include <SelfCenteringMaterial.h> //JAE
@@ -133,12 +134,14 @@ extern void *OPS_NewInitStrainMaterial(void);
 extern void *OPS_NewInitStressMaterial(void);
 extern void *OPS_New_pyUCLA(void);
 extern void *OPS_Maxwell(void);
+extern void *OPS_ViscousDamper(void);
 extern void *OPS_Cast(void);
 extern void *OPS_Brace(void);                     // neallee
 extern void *OPS_NewReinforcingSteel(void);
 extern void *OPS_Dodd_Restrepo(void);
 extern void *OPS_NewElasticMultiLinear(void);
 extern void *OPS_ImpactMaterial(void);
+extern void *OPS_SteelBRB(void);
 extern void *OPS_New_MultiLinear(void);
 extern void *OPS_NewHookGap(void);
 //extern void *OPS_FRPConfinedConcrete(void);
@@ -294,6 +297,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
+    } else if ((strcmp(argv[1],"SteelBRB") == 0)) {
+      void *theMat = OPS_SteelBRB();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
 	} else if ((strcmp(argv[1],"MinMaxMaterial") == 0) || (strcmp(argv[1],"MinMax") == 0)) {
       void *theMat = OPS_NewMinMaxMaterial();
       if (theMat != 0) 
@@ -306,6 +316,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	  if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
 	  else 
+	return TCL_ERROR;
+
+    } else if ((strcmp(argv[1],"ViscousDamper") == 0)) {
+      void *theMat = OPS_ViscousDamper();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
 	return TCL_ERROR;
 
     } else if ((strcmp(argv[1],"Cast") == 0) || (strcmp(argv[1],"CastFuse") == 0)) {

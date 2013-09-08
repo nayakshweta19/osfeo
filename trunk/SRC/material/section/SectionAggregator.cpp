@@ -77,7 +77,7 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
     theAdditions = new UniaxialMaterial *[numMats];
 
     if (!theAdditions) {
-      opserr << "SectionAggregator::SectionAggregator " << tag << " -- failed to allocate pointers\n";
+      opserr << "SectionAggregator::SectionAggregator " << tag << "  -- failed to allocate pointers\n";
       exit(-1);
     }    
     int i;
@@ -100,7 +100,7 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
     int order = theSec.getOrder()+numAdds;
 
     if (order > maxOrder) {
-      opserr << "SectionAggregator::SectionAggregator " << tag << " -- order too big, need to modify the #define in SectionAggregator.cpp to " <<
+      opserr << "SectionAggregator::SectionAggregator   " << tag << "  -- order too big, need to modify the #define in SectionAggregator.cpp to " <<
 	order << endln;
       exit(-1);
     }
@@ -113,7 +113,7 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
     matCodes = new ID(addCodes);
 
     if (theCode == 0 || e == 0 || s == 0 || ks == 0 || fs == 0 || matCodes == 0) {
-      opserr << "SectionAggregator::SectionAggregator " << tag << " -- out of memory\n";
+      opserr << "SectionAggregator::SectionAggregator   " << tag << " -- out of memory\n";
       exit(-1);
     }	
 }
@@ -127,21 +127,21 @@ SectionAggregator::SectionAggregator (int tag, int numAdds,
   otherDbTag(0)
 {
   if (!theAdds) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- null uniaxial material array passed\n";
+    opserr << "SectionAggregator::SectionAggregator  " << tag << " -- null uniaxial material array passed\n";
     exit(-1);
   }
 
   theAdditions = new UniaxialMaterial *[numMats];
 
   if (!theAdditions) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- failed to allocate pointers\n";
+    opserr << "SectionAggregator::SectionAggregator   " << tag << " -- failed to allocate pointers\n";
     exit(-1);
   }    
     int i;
     
     for (i = 0; i < numMats; i++) {
       if (!theAdds[i]) {
-	opserr << "SectionAggregator::SectionAggregator " << tag << " -- null uniaxial material pointer passed\n";
+	opserr << "SectionAggregator::SectionAggregator   " << tag << " -- null uniaxial material pointer passed\n";
 	exit(-1);
       }		
 	
@@ -149,7 +149,7 @@ SectionAggregator::SectionAggregator (int tag, int numAdds,
       theAdditions[i] = theAdds[i]->getCopy();
       
       if (!theAdditions[i]) {
-	opserr << "SectionAggregator::SectionAggregator " << tag << " -- failed to copy uniaxial material\n";
+	opserr << "SectionAggregator::SectionAggregator   " << tag << " -- failed to copy uniaxial material\n";
 	opserr << theAdds[i];
 	exit(-1);
       }
@@ -158,7 +158,7 @@ SectionAggregator::SectionAggregator (int tag, int numAdds,
     int order = numAdds;
 
     if (order > maxOrder) {
-      opserr << "SectionAggregator::SectionAggregator " << tag << " -- order too big, need to modify the #define in SectionAggregator.cpp to %d\n";
+      opserr << "SectionAggregator::SectionAggregator   " << tag << " -- order too big, need to modify the #define in SectionAggregator.cpp to %d\n";
       exit(-1);
     }
 
@@ -170,7 +170,7 @@ SectionAggregator::SectionAggregator (int tag, int numAdds,
     matCodes = new ID(addCodes);
 
     if (theCode == 0 || e == 0 || s == 0 || ks == 0 || fs == 0 || matCodes == 0) {
-      opserr << "SectionAggregator::SectionAggregator " << tag << " -- out of memory\n";
+      opserr << "SectionAggregator::SectionAggregator   " << tag << " -- out of memory\n";
       exit(-1);
     }
 }
@@ -183,18 +183,18 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
   otherDbTag(0)
 {
   theSection = theSec.getCopy();
-  
+
   if (!theSection) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- failed to get copy of section\n";
+    opserr << "SectionAggregator::SectionAggregator   " << tag << " -- failed to get copy of section\n";
     exit(-1);
   }
 
   theAdditions = new UniaxialMaterial *[1];
   
-  theAdditions[0] = theAddition.getCopy();
+   theAdditions[0] = theAddition.getCopy();
   
   if (!theAdditions[0]) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- failed to copy uniaxial material\n";
+    opserr << "SectionAggregator::SectionAggregator   " << tag << " -- failed to copy uniaxial material\n";
     exit(-1);
   }
     
@@ -204,7 +204,7 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
   int order = theSec.getOrder()+1;
   
   if (order > maxOrder) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- order too big, need to modify the #define in SectionAggregator.cpp to %d\n";
+    opserr << "SectionAggregator::SectionAggregator   " << tag << " -- order too big, need to modify the #define in SectionAggregator.cpp to %d\n";
     exit(-1);
   }
   
@@ -215,7 +215,7 @@ SectionAggregator::SectionAggregator (int tag, SectionForceDeformation &theSec,
   fs = new Matrix(&workArea[maxOrder*(maxOrder+2)], order, order);
   
   if (theCode == 0 || e == 0 || s == 0 || ks == 0 || fs == 0 || matCodes == 0) {
-    opserr << "SectionAggregator::SectionAggregator " << tag << " -- out of memory\n";
+    opserr << "SectionAggregator::SectionAggregator   " << tag << " -- out of memory\n";
     exit(-1);
   }
 }
@@ -874,7 +874,7 @@ SectionAggregator::setParameter(const char **argv, int argc, Parameter &param)
   int result = -1;
 
   // Check if the parameter belongs to only an aggregated material
-  if (strstr(argv[0],"addition") != 0) {
+  if (strstr(argv[0],"addition") != 0 || strstr(argv[0],"material") != 0) {
     
     if (argc < 3)
       return -1;
@@ -959,7 +959,53 @@ SectionAggregator::getStressResultantSensitivity(int gradIndex,
 const Matrix &
 SectionAggregator::getSectionTangentSensitivity(int gradIndex)
 {
+  int i = 0;
+
+  int theSectionOrder = 0;
+
+  // Zero before assembly
   ks->Zero();
+
+  if (theSection) {
+    const Matrix &kSec = theSection->getSectionTangentSensitivity(gradIndex);
+    theSectionOrder = theSection->getOrder();
+
+    for (i = 0; i < theSectionOrder; i++)
+      for (int j = 0; j < theSectionOrder; j++)
+	(*ks)(i,j) = kSec(i,j);
+  }
+  
+  int order = theSectionOrder + numMats;
+
+  for ( ; i < order; i++)
+    (*ks)(i,i) = theAdditions[i-theSectionOrder]->getTangentSensitivity(gradIndex);
+  
+  return *ks;
+}
+
+const Matrix&
+SectionAggregator::getInitialTangentSensitivity(int gradIndex)
+{
+  int i = 0;
+
+  int theSectionOrder = 0;
+
+  // Zero before assembly
+  ks->Zero();
+
+  if (theSection) {
+    const Matrix &kSec = theSection->getInitialTangentSensitivity(gradIndex);
+    theSectionOrder = theSection->getOrder();
+
+    for (i = 0; i < theSectionOrder; i++)
+      for (int j = 0; j < theSectionOrder; j++)
+	(*ks)(i,j) = kSec(i,j);
+  }
+  
+  int order = theSectionOrder + numMats;
+
+  for ( ; i < order; i++)
+    (*ks)(i,i) = theAdditions[i-theSectionOrder]->getInitialTangentSensitivity(gradIndex);
   
   return *ks;
 }

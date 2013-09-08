@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.11 $
-// $Date: 2008/08/26 16:46:32 $
+// $Date: 2008-08-26 16:46:32 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/section/ElasticSection2d.h,v $
 
 #ifndef ElasticSection2d_h
@@ -70,7 +70,10 @@ class ElasticSection2d: public SectionForceDeformation
   int activateParameter(int parameterID);
   const Vector& getStressResultantSensitivity(int gradIndex,
 					      bool conditional);
+  const Matrix& getSectionTangentSensitivity(int gradIndex);
   const Matrix& getInitialTangentSensitivity(int gradIndex);
+  const Matrix& getSectionFlexibilitySensitivity(int gradIndex);
+  const Matrix& getInitialFlexibilitySensitivity(int gradIndex);
   
  protected:
   
@@ -79,7 +82,6 @@ class ElasticSection2d: public SectionForceDeformation
   double E, A, I;
   
   Vector e;			// section trial deformations
-  Vector eCommit;
   
   static Vector s;
   static Matrix ks;

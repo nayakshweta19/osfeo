@@ -520,6 +520,8 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/PFEMElement/TclPFEMCommands.o \
 	$(FE)/element/PFEMElement/PFEMMesher2D.o \
 	$(FE)/element/PFEMElement/PFEMMesher3D.o \
+	$(FE)/element/PFEMElement/PFEMElement2DCompressible.o \
+	$(FE)/element/PFEMElement/PFEMElement2DBubble.o \
 	$(FE)/element/UWelements/SSPquad.o \
 	$(FE)/element/UWelements/SSPquadUP.o \
 	$(FE)/element/UWelements/SSPbrick.o \
@@ -584,6 +586,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/EPPGapMaterial.o \
 	$(FE)/material/uniaxial/ViscousMaterial.o \
 	$(FE)/material/uniaxial/Maxwell.o \
+	$(FE)/material/uniaxial/ViscousDamper.o \
 	$(FE)/material/uniaxial/Cast.o \
 	$(FE)/material/uniaxial/DoddRestrepo.o \
 	$(FE)/material/uniaxial/Dodd_Restrepo.o \
@@ -607,6 +610,7 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/HyperbolicGapMaterial.o \
 	$(FE)/material/uniaxial/TclHyperbolicGapMaterial.o \
 	$(FE)/material/uniaxial/ImpactMaterial.o \
+	$(FE)/material/uniaxial/SteelBRB.o \
 	$(FE)/material/uniaxial/SelfCenteringMaterial.o \
 	$(FE)/material/uniaxial/backbone/HystereticBackbone.o \
 	$(FE)/material/uniaxial/backbone/ArctangentBackbone.o \
@@ -631,6 +635,9 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/CycLiqCP.o \
 	$(FE)/material/nD/CycLiqCP3D.o \
 	$(FE)/material/nD/CycLiqCPPlaneStrain.o \
+	$(FE)/material/nD/CycLiqCPSP.o \
+	$(FE)/material/nD/CycLiqCPSP3D.o \
+	$(FE)/material/nD/CycLiqCPSPPlaneStrain.o \
 	$(FE)/material/nD/UWmaterials/DruckerPrager.o \
 	$(FE)/material/nD/UWmaterials/DruckerPrager3D.o \
 	$(FE)/material/nD/UWmaterials/DruckerPragerPlaneStrain.o \
@@ -828,6 +835,8 @@ SysOfEqn_LIBS =	$(FE)/system_of_eqn/linearSOE/LinearSOE.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSOE.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMLinSOE.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMSolver.o \
+	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMCompressibleLinSOE.o \
+	$(FE)/system_of_eqn/linearSOE/sparseGEN/PFEMCompressibleSolver.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenColLinSolver.o \
 	$(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenRowLinSOE.o \
     $(FE)/system_of_eqn/linearSOE/sparseGEN/SparseGenRowLinSolver.o \

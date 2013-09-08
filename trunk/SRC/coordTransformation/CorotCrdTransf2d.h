@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.11 $                                                              
-// $Date: 2008/12/03 23:40:07 $                                                                  
+// $Date: 2008-12-03 23:40:07 $                                                                  
 // $Source: /usr/local/cvs/OpenSees/SRC/coordTransformation/CorotCrdTransf2d.h,v $ 
                                         
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -46,6 +46,8 @@ public:
     
     CorotCrdTransf2d();
     ~CorotCrdTransf2d();
+    
+    const char *getClassType() const {return "CorotCrdTransf2d";};
     
     int initialize(Node *nodeIPointer, Node *nodeJPointer);
     int update(void);
