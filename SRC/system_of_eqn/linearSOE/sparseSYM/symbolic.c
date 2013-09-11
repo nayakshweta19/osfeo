@@ -124,7 +124,7 @@ int symFactorization(int *fxadj, int *adjncy, int neq, int LSPARSE,
     {
        case 1:
    /* Now call minimum degree ordering  ( a fortran subroutine) */
-#ifdef WIN32 
+#ifdef _WIN32 
 	 MYGENMMD( &neq, fxadj, adjncy, winvp, wperm, &delta, fchild, parent,
 		   sibling, marker, &maxint, &nofsub, &kdx ) ;
 #else
