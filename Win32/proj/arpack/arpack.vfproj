@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{BA05FD21-E0F6-460E-87DB-926FAB2EE42B}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\debug\" IntermediateDirectory=".\..\..\obj\arpack\debug\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\arpack.lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\arpack\release\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\arpack.lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\arpack\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\debug\arpack.lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\arpack\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\arpack.lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cgetv0.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cmout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cnaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cnapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cnaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cnaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cneigh.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cneupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cngets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\csortc.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cstatn.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\cvout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dgetv0.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dlaqrb.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dmout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnaupe.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dnconv.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dneigh.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dneupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dngets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsconv.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dseigt.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsesrt.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dseupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsgets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsortc.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dsortr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dstatn.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dstats.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dstqrb.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\dvout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\icnteq.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\icopy.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\iset.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\iswap.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ivout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\second.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sgetv0.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\slaqrb.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\smout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snaupe.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\snconv.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sneigh.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sneupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sngets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssconv.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sseigt.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssesrt.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sseupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssgets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssortc.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\ssortr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sstatn.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sstats.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\sstqrb.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\svout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zgetv0.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zmout.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\znaitr.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\znapps.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\znaup2.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\znaupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zneigh.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zneupd.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zngets.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zsortc.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zstatn.f"/>
+		<File RelativePath="..\..\..\OTHER\ARPACK\zvout.f"/></Files>
+	<Globals/></VisualStudioProject>
