@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{BA05FD21-E0F6-460E-87DB-926FAB2EE42B}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\$(ConfigurationName)\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\$(ConfigurationName)\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\$(ConfigurationName)\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\$(ConfigurationName)\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<File RelativePath="..\..\..\SRC\material\uniaxial\drain\anal00.f"/>
+		<File RelativePath="..\..\..\SRC\material\uniaxial\drain\common00.f"/>
+		<File RelativePath="..\..\..\SRC\material\uniaxial\drain\infel00.h"/></Files>
+	<Globals/></VisualStudioProject>
