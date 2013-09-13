@@ -408,9 +408,6 @@
     <ClCompile Include="..\..\..\SRC\reliability\analysis\hessian\HessianEvaluator.cpp">
       <Filter>analysis\hessian</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.cpp">
-      <Filter>domain</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\domain\components\CorrelationCoefficient.cpp">
       <Filter>domain\components</Filter>
     </ClCompile>
@@ -593,6 +590,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.cpp">
       <Filter>FEsensitivity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.cpp">
+      <Filter>domain\distributions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -902,9 +902,6 @@
     <ClInclude Include="..\..\..\SRC\reliability\analysis\hessian\HessianEvaluator.h">
       <Filter>analysis\hessian</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.h">
-      <Filter>domain</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\domain\components\CorrelationCoefficient.h">
       <Filter>domain\components</Filter>
     </ClInclude>
@@ -1087,6 +1084,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\StaticSensitivityIntegrator.h">
       <Filter>FEsensitivity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.h">
+      <Filter>domain\distributions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

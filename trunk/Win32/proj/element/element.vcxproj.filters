@@ -920,6 +920,12 @@
     <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.cpp">
       <Filter>forceBeamColumn\beamIntegration</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DBubble.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DCompressible.cpp">
+      <Filter>PFEMElement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1527,6 +1533,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.h">
       <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DBubble.h">
+      <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DCompressible.h">
+      <Filter>PFEMElement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

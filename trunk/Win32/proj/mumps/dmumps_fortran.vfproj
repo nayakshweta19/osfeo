@@ -15,7 +15,7 @@
 				<Tool Name="VFPostBuildEventTool" CommandLine="time /t"/></Configuration>
 		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\$(Configuration)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)/$(Configuration)\" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" Preprocess="preprocessYes" AdditionalIncludeDirectories="..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\src;..\..\..\OTHER\MUMPS_4.10.0\libseq" PreprocessorDefinitions=";;pord;" EnableRecursion="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" RuntimeLibrary="rtMultiThreadedDLL"/>
-				<Tool Name="VFLibrarianTool"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TypeLibraryName="$(IntDir)/$(InputName).tlb"/>
 				<Tool Name="VFCustomBuildTool"/>
@@ -31,7 +31,7 @@
 				<Tool Name="VFPreLinkEventTool" CommandLine="time /t"/>
 				<Tool Name="VFPreBuildEventTool" CommandLine="time /t"/>
 				<Tool Name="VFPostBuildEventTool" CommandLine="time /t"/></Configuration>
-		<Configuration Name="Debug|x64" OutputDirectory="D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(ConfigurationName)/$(PlatformName)" IntermediateDirectory="./do/$(ProjectName)/$(ConfigurationName)/$(PlatformName)" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" AdditionalIncludeDirectories="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq" EnableRecursion="true" WarnTruncateSource="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
 				<Tool Name="VFLibrarianTool"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -40,9 +40,9 @@
 				<Tool Name="VFPreLinkEventTool" CommandLine="time /t"/>
 				<Tool Name="VFPreBuildEventTool" CommandLine="time /t"/>
 				<Tool Name="VFPostBuildEventTool" CommandLine="time /t"/></Configuration>
-		<Configuration Name="Release|x64" OutputDirectory="D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(ConfigurationName)/$(PlatformName)" IntermediateDirectory="./do/$(ProjectName)/$(ConfigurationName)/$(PlatformName)" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" Preprocess="preprocessYes" AdditionalIncludeDirectories="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq" PreprocessorDefinitions=";;pord;" EnableRecursion="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" RuntimeLibrary="rtMultiThreadedDLL"/>
-				<Tool Name="VFLibrarianTool"/>
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\$(Configuration)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)/$(Configuration)\" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeFull" Preprocess="preprocessYes" AdditionalIncludeDirectories="..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\src;..\..\..\OTHER\MUMPS_4.10.0\libseq" PreprocessorDefinitions=";;pord;" EnableRecursion="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TypeLibraryName="$(IntDir)/$(InputName).tlb"/>
 				<Tool Name="VFCustomBuildTool"/>

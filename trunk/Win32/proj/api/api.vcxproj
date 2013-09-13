@@ -29,20 +29,24 @@
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>false</CLRSupport>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>false</CLRSupport>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -73,6 +77,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
     <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,12 +124,11 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>..\..\..\src\material\uniaxial\limitState\limitCurve;..\..\..\src\coordTransformation;c:\tcl\include;..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL84;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_RELIABILITY;_TCL85;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\..\..\obj\api\release/api.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\..\..\obj\api\release/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\api\release/</ObjectFileName>
@@ -129,6 +141,43 @@
     <Lib>
       <OutputFile>.\..\..\lib\release\api.lib</OutputFile>
     </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\src\material\uniaxial\limitState\limitCurve;..\..\..\src\coordTransformation;c:\tcl64\include;..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_RELIABILITY;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\api\release/api.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\api\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\api\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\api\release/</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib64\release\api.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalIncludeDirectories>..\..\..\src\material\uniaxial\limitState\limitCurve;..\..\..\src\coordTransformation;c:\tcl64\include;..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\tagged\storage;..\..\..\src\tagged;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\fesensitivity;..\..\..\src\analysis\integrator;..\..\..\src\analysis\algorithm\domainDecompAlgo;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\src\domain\domain\single;..\..\..\src\convergenceTest;..\..\..\src\analysis\analysis;..\..\..\src\recorder;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\analysis\numberer;..\..\..\src\analysis\fe_ele\transformation;..\..\..\src\analysis\fe_ele\lagrange;..\..\..\src\analysis\fe_ele\penalty;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\domain\subdomain;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\domain\node;..\..\..\src\element;..\..\..\src\analysis\dof_grp;..\..\..\src\matrix;..\..\..\src\analysis\model\simple;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src;..\..\..\src\api;..\..\..\src\actor\actor;..\..\..\src\analysis\handler;..\..\..\src\analysis\fe_ele;..\..\..\src\nDarray;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\spectrum;..\..\..\src\modelbuilder\tcl;..\..\..\src\modelbuilder;..\..\..\src\material;..\..\..\src\material\uniaxial;..\..\..\src\material\nd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_RELIABILITY;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System">

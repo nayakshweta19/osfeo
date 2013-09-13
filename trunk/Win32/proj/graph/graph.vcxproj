@@ -26,19 +26,23 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,6 +74,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
     <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,6 +138,47 @@
       <OutputFile>.\..\..\lib\debug\graph.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\src\handler;..\..\..\src\actor\channel;..\..\..\src\graph\numberer;..\..\..\src\actor\objectBroker;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\actor\actor;..\..\..\src\analysis\model\simple;..\..\..\src\analysis\model;..\..\..\src\tagged\storage;..\..\..\src\matrix;..\..\..\src\graph\graph;..\..\..\src;..\..\..\src\tagged;..\..\..\src\nDarray;..\..\..\OTHER\amd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\graph\release/graph.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\graph\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\graph\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\graph\release/</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib64\release\graph.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalIncludeDirectories>..\..\..\src\handler;..\..\..\src\actor\channel;..\..\..\src\graph\numberer;..\..\..\src\actor\objectBroker;..\..\..\src\analysis\dof_grp;..\..\..\src\analysis\fe_ele;..\..\..\src\actor\actor;..\..\..\src\analysis\model\simple;..\..\..\src\analysis\model;..\..\..\src\tagged\storage;..\..\..\src\matrix;..\..\..\src\graph\graph;..\..\..\src;..\..\..\src\tagged;..\..\..\src\nDarray;..\..\..\OTHER\amd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\graph\numberer\AMDNumberer.cpp" />

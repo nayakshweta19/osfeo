@@ -27,19 +27,23 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,6 +75,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
     <LibraryPath>$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -126,6 +139,51 @@
       <OutputFile>.\..\..\lib\debug\recorder.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalIncludeDirectories>c:\tcl64\include;..\..\..\src\domain\load;..\..\..\src\api;..\..\..\src\package;..\..\..\src\utility;..\..\..\SRC\actor\message;..\..\..\SRC\actor\objectBroker;..\..\..\src\modelbuilder\tcl;..\..\..\src\damage;..\..\..\src\domain\pattern;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\integrator;..\..\..\src\material\section\fiber;..\..\..\src\material;..\..\..\src\recorder\response;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\handler;..\..\..\src\renderer;..\..\..\src\tcl;..\..\..\src\actor\channel;..\..\..\src\modelbuilder;..\..\..\src\database;..\..\..\src\tagged;..\..\..\src\actor\actor;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src;..\..\..\src\recorder;..\..\..\src\domain\node;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\domain\constraints;..\..\..\src\element\updatedlagrangianbeamcolumn;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldsurface\yieldSurfaceBC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_WGL;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\recorder\release/recorder.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\recorder\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\recorder\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\recorder\release/</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>.\..\..\lib64\release\recorder.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalIncludeDirectories>c:\tcl64\include;..\..\..\src\domain\load;..\..\..\src\api;..\..\..\src\package;..\..\..\src\utility;..\..\..\SRC\actor\message;..\..\..\SRC\actor\objectBroker;..\..\..\src\modelbuilder\tcl;..\..\..\src\damage;..\..\..\src\domain\pattern;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\analysis\integrator;..\..\..\src\material\section\fiber;..\..\..\src\material;..\..\..\src\recorder\response;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\handler;..\..\..\src\renderer;..\..\..\src\tcl;..\..\..\src\actor\channel;..\..\..\src\modelbuilder;..\..\..\src\database;..\..\..\src\tagged;..\..\..\src\actor\actor;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\matrix;..\..\..\src\domain\domain;..\..\..\src;..\..\..\src\recorder;..\..\..\src\domain\node;..\..\..\src\nDarray;..\..\..\src\domain\region;..\..\..\src\domain\constraints;..\..\..\src\element\updatedlagrangianbeamcolumn;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldsurface\yieldSurfaceBC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_WGL;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\recorder\AlgorithmIncrements.cpp" />

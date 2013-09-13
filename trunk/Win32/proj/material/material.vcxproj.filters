@@ -119,6 +119,9 @@
     <Filter Include="uniaxial\LimitState\limiteCurve">
       <UniqueIdentifier>{a9d51040-78db-45c8-8386-638a54a7e1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nD\Qinghua">
+      <UniqueIdentifier>{6514bdbc-2f69-4b92-9e34-980d4e7211ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.cpp">
@@ -1442,9 +1445,6 @@
     <ClCompile Include="..\..\..\SRC\material\nD\CapPlasticity.cpp">
       <Filter>nD</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.cpp">
-      <Filter>nD</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\SimplifiedJ2.cpp">
       <Filter>nD</Filter>
     </ClCompile>
@@ -1459,6 +1459,39 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\InitStressNDMaterial.cpp">
       <Filter>nD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\LayeredShellFiberSection.cpp">
+      <Filter>section</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP.cpp">
+      <Filter>nD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP.cpp">
+      <Filter>nD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.cpp">
+      <Filter>nD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.cpp">
+      <Filter>nD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ViscousDamper.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\ConcreteS.cpp">
+      <Filter>nD\Qinghua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.cpp">
+      <Filter>nD\Qinghua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressUserMaterial.cpp">
+      <Filter>nD\Qinghua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\PlateFromPlaneStressMaterial.cpp">
+      <Filter>nD\Qinghua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\PlateRebarMaterial.cpp">
+      <Filter>nD\Qinghua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2717,9 +2750,6 @@
     <ClInclude Include="..\..\..\SRC\material\nD\CapPlasticity.h">
       <Filter>nD</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.h">
-      <Filter>nD</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\SimplifiedJ2.h">
       <Filter>nD</Filter>
     </ClInclude>
@@ -2734,6 +2764,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\InitStressNDMaterial.h">
       <Filter>nD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\LayeredShellFiberSection.h">
+      <Filter>section</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP.h">
+      <Filter>nD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.h">
+      <Filter>nD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.h">
+      <Filter>nD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ViscousDamper.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\ConcreteS.h">
+      <Filter>nD\Qinghua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.h">
+      <Filter>nD\Qinghua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressUserMaterial.h">
+      <Filter>nD\Qinghua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\PlateFromPlaneStressMaterial.h">
+      <Filter>nD\Qinghua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\PlateRebarMaterial.h">
+      <Filter>nD\Qinghua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

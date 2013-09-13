@@ -36,37 +36,40 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -94,12 +97,12 @@
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./do/$(ProjectName)/$(Configuration)/$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./do/$(ProjectName)/$(Configuration)/$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">./do/$(ProjectName)/$(Configuration)/$(Platform)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
@@ -139,17 +142,18 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\PORD\include;..\..\..\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_DEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <SmallerTypeCheck>true</SmallerTypeCheck>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <PreLinkEvent>
       <Command>time /t</Command>
@@ -187,6 +191,9 @@
     <PostBuildEvent>
       <Command>time /t</Command>
     </PostBuildEvent>
+    <Lib>
+      <OutputFile>.\..\..\lib\release\libseq_c.lib</OutputFile>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PreBuildEvent>
@@ -201,15 +208,21 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\PORD\include;..\..\..\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level2</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <AssemblerListingLocation>.\..\..\obj\libseq_c\release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\libseq_c\release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\libseq_c\release/</ProgramDataBaseFileName>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\..\obj\libseq_c\release/libseq_c.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <PreLinkEvent>
       <Command>time /t</Command>
@@ -217,6 +230,9 @@
     <PostBuildEvent>
       <Command>time /t</Command>
     </PostBuildEvent>
+    <Lib>
+      <OutputFile>.\..\..\lib64\release\libseq_c.lib</OutputFile>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <PreBuildEvent>

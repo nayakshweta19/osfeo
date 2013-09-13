@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -18,13 +26,25 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -34,7 +54,13 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -46,12 +72,22 @@
     <IntDir>..\..\obj\openFrescoExe\debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\..\bin\</OutDir>
-    <IntDir>..\..\obj\openFrescoExe\release\</IntDir>
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <TargetName>OpenFresco</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <TargetName>OpenFresco</TargetName>
+    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
+    <IntDir>.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,6 +114,33 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\experimentalControl;..\..\..\src\experimentalControl\dSpace;..\..\..\src\experimentalControl\MTSCsi;..\..\..\src\experimentalControl\NIEseries;..\..\..\src\experimentalControl\SCRAMNet;..\..\..\src\experimentalControl\xPCtarget;..\..\..\src\experimentalElement;..\..\..\src\experimentalRecorder;..\..\..\src\experimentalRecorder\response;..\..\..\src\experimentalSetup;..\..\..\src\experimentalSignalFilter;..\..\..\src\experimentalSite;..\..\..\src\utility;c:\Program Files\tcl;c:\Program Files\tcl\include;c:\Program Files\OpenSSL\include;$(OpenSeesDir)\other\SuperLU_3.0\SRC;$(OpenSeesDir)\src;$(OpenSeesDir)\src\actor\actor;$(OpenSeesDir)\src\actor\address;$(OpenSeesDir)\src\actor\channel;$(OpenSeesDir)\src\actor\message;$(OpenSeesDir)\src\actor\objectBroker;$(OpenSeesDir)\src\actor\shadow;$(OpenSeesDir)\src\analysis\algorithm;$(OpenSeesDir)\src\analysis\algorithm\eigenAlgo;$(OpenSeesDir)\src\analysis\algorithm\equiSolnAlgo;$(OpenSeesDir)\src\analysis\algorithm\equiSolnAlgo\accelerator;$(OpenSeesDir)\src\analysis\analysis;$(OpenSeesDir)\src\analysis\handler;$(OpenSeesDir)\src\analysis\integrator;$(OpenSeesDir)\src\analysis\model;$(OpenSeesDir)\src\analysis\model\simple;$(OpenSeesDir)\src\analysis\numberer;$(OpenSeesDir)\src\api;$(OpenSeesDir)\src\convergenceTest;$(OpenSeesDir)\src\coordTransformation;$(OpenSeesDir)\src\damage;$(OpenSeesDir)\src\database;$(OpenSeesDir)\src\domain\component;$(OpenSeesDir)\src\domain\constraints;$(OpenSeesDir)\src\domain\domain;$(OpenSeesDir)\src\domain\groundMotion;$(OpenSeesDir)\src\domain\load;$(OpenSeesDir)\src\domain\node;$(OpenSeesDir)\src\domain\pattern;$(OpenSeesDir)\src\element;$(OpenSeesDir)\src\graph\graph;$(OpenSeesDir)\src\graph\numberer;$(OpenSeesDir)\src\handler;$(OpenSeesDir)\src\material;$(OpenSeesDir)\src\material\nD;$(OpenSeesDir)\src\material\section;$(OpenSeesDir)\src\material\section\repres\section;$(OpenSeesDir)\src\material\uniaxial;$(OpenSeesDir)\src\material\uniaxial\py;$(OpenSeesDir)\src\material\yieldSurface\evolution;$(OpenSeesDir)\src\material\yieldSurface\plasticHardeningMaterial;$(OpenSeesDir)\src\material\yieldSurface\yieldSurfaceBC;$(OpenSeesDir)\src\matrix;$(OpenSeesDir)\src\modelbuilder;$(OpenSeesDir)\src\modelbuilder\tcl;$(OpenSeesDir)\src\nDarray;$(OpenSeesDir)\src\optimization;$(OpenSeesDir)\src\recorder;$(OpenSeesDir)\src\recorder\response;$(OpenSeesDir)\src\reliability\analysis;$(OpenSeesDir)\src\reliability\analysis\analysis;$(OpenSeesDir)\src\reliability\analysis\convergenceCheck;$(OpenSeesDir)\src\reliability\analysis\curvature;$(OpenSeesDir)\src\reliability\analysis\designPoint;$(OpenSeesDir)\src\reliability\analysis\direction;$(OpenSeesDir)\src\reliability\analysis\gFunction;$(OpenSeesDir)\src\reliability\analysis\hessianApproximation;$(OpenSeesDir)\src\reliability\analysis\meritFunction;$(OpenSeesDir)\src\reliability\analysis\misc;$(OpenSeesDir)\src\reliability\analysis\randomNumber;$(OpenSeesDir)\src\reliability\analysis\rootFinding;$(OpenSeesDir)\src\reliability\analysis\sensitivity;$(OpenSeesDir)\src\reliability\analysis\stepSize;$(OpenSeesDir)\src\reliability\analysis\transformation;$(OpenSeesDir)\src\reliability\domain;$(OpenSeesDir)\src\reliability\domain\components;$(OpenSeesDir)\src\reliability\domain\distributions;$(OpenSeesDir)\src\reliability\domain\filter;$(OpenSeesDir)\src\reliability\domain\modulatingFunction;$(OpenSeesDir)\src\reliability\domain\spectrum;$(OpenSeesDir)\src\reliability\fesensitivity;$(OpenSeesDir)\src\reliability\tcl;$(OpenSeesDir)\src\renderer;$(OpenSeesDir)\src\system_of_eqn;$(OpenSeesDir)\src\system_of_eqn\eigenSOE;$(OpenSeesDir)\src\system_of_eqn\linearSOE;$(OpenSeesDir)\src\system_of_eqn\linearSOE\bandGEN;$(OpenSeesDir)\src\system_of_eqn\linearSOE\bandSPD;$(OpenSeesDir)\src\system_of_eqn\linearSOE\BJsolvers;$(OpenSeesDir)\src\system_of_eqn\linearSOE\cg;$(OpenSeesDir)\src\system_of_eqn\linearSOE\diagonal;$(OpenSeesDir)\src\system_of_eqn\linearSOE\fullGEN;$(OpenSeesDir)\src\system_of_eqn\linearSOE\itpack;$(OpenSeesDir)\src\system_of_eqn\linearSOE\mumps;$(OpenSeesDir)\src\system_of_eqn\linearSOE\petsc;$(OpenSeesDir)\src\system_of_eqn\linearSOE\profileSPD;$(OpenSeesDir)\src\system_of_eqn\linearSOE\sparseGEN;$(OpenSeesDir)\src\system_of_eqn\linearSOE\sparseSYM;$(OpenSeesDir)\src\system_of_eqn\linearSOE\umfGEN;$(OpenSeesDir)\src\tagged;$(OpenSeesDir)\src\tagged\storage;$(OpenSeesDir)\src\tcl;$(OpenSeesDir)\src\utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_TCL85;_WINDOWS;_DEBUG;_CONSOLE;_RELIABILITY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscrd.lib;handler.lib;tcl.lib;OpenGL32.lib;optimization.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;tcl85.lib;tk85.lib;libm.lib;ifconsol.lib;libifcoremt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)OpenFresco.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\src\experimentalControl\dSpace;..\..\..\src\experimentalControl\MTSCsi;..\..\..\src\experimentalControl\NIEseries;..\..\..\src\experimentalControl\SCRAMNet;c:\Program Files\Tcl\lib;c:\Program Files\OpenSSL\lib\VC;$(OpenSeesDir)\win32\lib;$(OpenSeesDir)\win32\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,6 +174,42 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\SRC\analysis\algorithm\ritzAlgo;..\..\..\SRC\element\forceBeamColumn;..\..\..\src\material\uniaxial\compositePackages;..\..\..\SRC\element\compositePackages;..\..\..\SRC\material\uniaxial\backbone;..\..\..\SRC\element\frictionBearing\frictionModel;..\..\..\SRC\material\uniaxial\limitState\limitCurve;..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl64;c:\tcl64\include;c:\OpenSSL64\include;..\..\..\other\SuperLU_4.1\SRC;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\actor\address;..\..\..\src\actor\channel;..\..\..\src\actor\message;..\..\..\src\actor\objectBroker;..\..\..\src\actor\shadow;..\..\..\src\analysis\algorithm;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\analysis\analysis;..\..\..\src\analysis\handler;..\..\..\src\analysis\integrator;..\..\..\src\analysis\model;..\..\..\src\analysis\model\simple;..\..\..\src\analysis\numberer;..\..\..\src\api;..\..\..\src\convergenceTest;..\..\..\src\coordTransformation;..\..\..\src\damage;..\..\..\src\database;..\..\..\src\domain\component;..\..\..\src\domain\constraints;..\..\..\src\domain\domain;..\..\..\src\domain\groundMotion;..\..\..\src\domain\load;..\..\..\src\domain\node;..\..\..\src\domain\pattern;..\..\..\src\element;..\..\..\src\graph\graph;..\..\..\src\graph\numberer;..\..\..\src\handler;..\..\..\src\material;..\..\..\src\material\nD;..\..\..\src\material\section;..\..\..\src\material\section\repres\section;..\..\..\src\material\uniaxial;..\..\..\src\material\uniaxial\py;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\matrix;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\nDarray;..\..\..\src\optimization;..\..\..\src\recorder;..\..\..\src\recorder\response;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\rootFinding;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\tcl;..\..\..\src\renderer;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\BJsolvers;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\mumps;..\..\..\src\system_of_eqn\linearSOE\petsc;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\tagged;..\..\..\src\tagged\storage;..\..\..\src\tcl;..\..\..\src\utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_RELIABILITY;_PFEM;_TCL85;_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>amd.lib;api.lib;DoddRestrepo.lib;triangle.lib;csparse.lib;libeay32MT.lib;ssleay32MT.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscr.lib;tcl85.lib;tk85.lib;actor.lib;analysis.lib;arpack.lib;blas.lib;cblas.lib;convergence.lib;damage.lib;database.lib;domain.lib;drain.lib;element.lib;feap.lib;fedeas.lib;glu32.lib;graph.lib;handler.lib;ifconsol.lib;lapack.lib;libifcoremt.lib;libm.lib;material.lib;matrix.lib;modelbuilder.lib;OpenGL32.lib;optimization.lib;recorder.lib;reliability.lib;renderer.lib;superLU.lib;system.lib;tagged.lib;tcl.lib;umfpack.lib;utility.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)OpenFresco.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;c:\Tcl64\lib;c:\OpenSSL64\lib\VC;..\..\..\win32\lib64;..\..\..\win32\lib64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmtd.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
@@ -184,7 +283,9 @@
     <ClCompile Include="..\..\..\SRC\openFresco\utility\TclExpCPCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\experimentalControl\ECNIEseries.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\VC2005errno.cpp" />
   </ItemGroup>
@@ -242,7 +343,9 @@
     <ClInclude Include="resource.h" />
     <CustomBuild Include="..\..\..\SRC\experimentalControl\ECNIEseries.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

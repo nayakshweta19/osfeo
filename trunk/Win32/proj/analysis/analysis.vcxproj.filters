@@ -353,6 +353,15 @@
     <ClCompile Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.cpp">
       <Filter>integrator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\DifferenceAccelerator.cpp">
+      <Filter>algorithm\accelerator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\DifferenceAccelerator2.cpp">
+      <Filter>algorithm\accelerator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\KrylovAccelerator2.cpp">
+      <Filter>algorithm\accelerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h">
@@ -666,6 +675,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.h">
       <Filter>integrator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\DifferenceAccelerator.h">
+      <Filter>algorithm\accelerator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\DifferenceAccelerator2.h">
+      <Filter>algorithm\accelerator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\KrylovAccelerator2.h">
+      <Filter>algorithm\accelerator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

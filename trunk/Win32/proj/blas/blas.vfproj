@@ -13,7 +13,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\itpack\release\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\blas\release\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -22,7 +22,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\itpack\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -31,7 +31,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\release\" IntermediateDirectory=".\..\..\obj\itpack\release\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\release\" IntermediateDirectory=".\..\..\obj\blas\release\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -41,12 +41,32 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
 	<Files>
-		<File RelativePath="..\..\..\OTHER\ITPACK\dsrc2c.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\jcg.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\jsi.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\rscg.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\rssi.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\sor.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\ssorcg.f"/>
-		<File RelativePath="..\..\..\OTHER\ITPACK\ssorsi.f"/></Files>
+		<File RelativePath="..\..\..\OTHER\BLAS\dasum.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\daxpy.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dcopy.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\ddot.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dgbmv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dgemm.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dgemv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dger.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dnrm2.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\drot.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\drotg.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dscal.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dswap.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dsymv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dsyr.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dsyr2.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dsyrk.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dtbsv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dtrmm.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dtrmv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dtrsm.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dtrsv.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dzasum.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\dznrm2.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\icamax.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\idamax.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\isamax.f"/>
+		<File RelativePath="..\..\..\OTHER\BLAS\izamax.f"/></Files>
 	<Globals/></VisualStudioProject>

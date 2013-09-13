@@ -22,7 +22,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Debug|x64" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -31,9 +31,9 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|x64" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\release\" IntermediateDirectory=".\..\..\obj\fedeas\release\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
-				<Tool Name="VFLibrarianTool"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\$(ProjectName).lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFCustomBuildTool"/>
