@@ -221,6 +221,8 @@ Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "lapack", "proj\lapack\lapac
 EndProject
 Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "arpack", "proj\arpack\arpack.vfproj", "{79697032-7AEE-4BEA-B4DB-6E1F4F3963BD}"
 EndProject
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "drain", "proj\drain\drain.vfproj", "{1FDEDAED-8248-42FA-92C4-B3385402B20A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -796,6 +798,18 @@ Global
 		{79697032-7AEE-4BEA-B4DB-6E1F4F3963BD}.Release|Win32.Build.0 = Release|Win32
 		{79697032-7AEE-4BEA-B4DB-6E1F4F3963BD}.Release|x64.ActiveCfg = Release|x64
 		{79697032-7AEE-4BEA-B4DB-6E1F4F3963BD}.Release|x64.Build.0 = Release|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Debug|Win32.Build.0 = Debug|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Debug|x64.ActiveCfg = Debug|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Debug|x64.Build.0 = Debug|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Profile|Win32.ActiveCfg = Release|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Profile|Win32.Build.0 = Release|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Profile|x64.ActiveCfg = Release|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Profile|x64.Build.0 = Release|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Release|Win32.ActiveCfg = Release|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Release|Win32.Build.0 = Release|Win32
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Release|x64.ActiveCfg = Release|x64
+		{1FDEDAED-8248-42FA-92C4-B3385402B20A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

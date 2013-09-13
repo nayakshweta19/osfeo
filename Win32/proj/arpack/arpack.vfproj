@@ -4,7 +4,7 @@
 		<Platform Name="Win32"/>
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\debug\" IntermediateDirectory=".\..\..\obj\arpack\debug\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\arpack.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -13,7 +13,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\arpack\release\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\arpack.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -31,7 +31,7 @@
 				<Tool Name="VFPreLinkEventTool"/>
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration>
-		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\arpack\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\arpack.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
