@@ -11,21 +11,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq\elapse.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\libseq\elapse.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq\mpic.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\libseq\mpic.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq\elapse.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\libseq\elapse.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq\mpi.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\libseq\mpi.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq\mpif.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\libseq\mpif.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

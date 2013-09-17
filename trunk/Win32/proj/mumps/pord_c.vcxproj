@@ -9,14 +9,6 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Profile|Win32">
-      <Configuration>Profile</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Profile|x64">
-      <Configuration>Profile</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -32,12 +24,6 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -46,13 +32,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
@@ -74,16 +53,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
@@ -103,10 +76,6 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\lib64\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">./do/$(ProjectName)/$(Configuration)/$(Platform)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\workspace\osfeo\OTHER\MUMPS_4.10.0/lib/$(Configuration)/$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">./do/$(ProjectName)/$(Configuration)/$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
@@ -114,7 +83,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\PORD\include;..\..\..\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -173,7 +142,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\PORD\include;..\..\..\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -224,87 +193,30 @@
       <Command>time /t</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <PreBuildEvent>
-      <Command>time /t</Command>
-    </PreBuildEvent>
-    <ClCompile>
-      <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level2</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <PreLinkEvent>
-      <Command>time /t</Command>
-    </PreLinkEvent>
-    <PostBuildEvent>
-      <Command>time /t</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <PreBuildEvent>
-      <Command>time /t</Command>
-    </PreBuildEvent>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
-    <ClCompile>
-      <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include;D:\workspace\osfeo\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN64;NDEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level2</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <PreLinkEvent>
-      <Command>time /t</Command>
-    </PreLinkEvent>
-    <PostBuildEvent>
-      <Command>time /t</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\bucket.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\ddbisect.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\ddcreate.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gbipart.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gbisect.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gelim.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\graph.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\interface.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\minpriority.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\multisector.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\nestdiss.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\sort.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\symbfac.c" />
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\tree.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\bucket.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\ddbisect.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\ddcreate.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gbipart.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gbisect.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gelim.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\graph.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\interface.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\minpriority.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\multisector.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\nestdiss.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\sort.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\symbfac.c" />
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\tree.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\const.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\eval.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\macros.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\params.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\protos.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\space.h" />
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\types.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\const.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\eval.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\macros.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\params.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\protos.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\space.h" />
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

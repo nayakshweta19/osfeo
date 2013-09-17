@@ -11,69 +11,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\bucket.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\bucket.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\ddbisect.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\ddbisect.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\ddcreate.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\ddcreate.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gbipart.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gbipart.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gbisect.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gbisect.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\gelim.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\gelim.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\graph.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\graph.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\interface.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\interface.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\minpriority.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\minpriority.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\multisector.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\multisector.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\nestdiss.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\nestdiss.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\sort.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\sort.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\symbfac.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\symbfac.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\lib\tree.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\lib\tree.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\const.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\const.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\eval.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\eval.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\macros.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\macros.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\params.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\params.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\protos.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\protos.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\space.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\space.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\PORD\include\types.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\PORD\include\types.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

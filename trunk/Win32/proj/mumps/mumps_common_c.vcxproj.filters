@@ -11,57 +11,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_common.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_common.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_basic.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_basic.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_err.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_err.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_thread.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_thread.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_orderings.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_orderings.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_size.c">
+    <ClCompile Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_size.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\include\mumps_compat.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\include\mumps_compat.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_common.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_common.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_headers.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_headers.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_basic.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_basic.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_err.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_err.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_io_thread.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_io_thread.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_orderings.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_orderings.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_size.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_size.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="D:\workspace\osfeo\OTHER\MUMPS_4.10.0\src\mumps_tags.h">
+    <ClInclude Include="..\..\..\OTHER\MUMPS_4.10.0\src\mumps_tags.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
