@@ -182,6 +182,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AdditionalIncludeDirectories>..\..\..\SRC\actor\channel;..\..\..\SRC\actor\actor;..\..\..\src\matrix;..\..\..\src\handler;..\..\..\src;..\..\..\src\nDarray;c:\tcl64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\..\..\obj\matrix\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\matrix\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\matrix\debug/</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

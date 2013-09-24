@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4967 $
-// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $Revision: 5542 $
+// $Date: 2013-09-20 15:22:43 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericCopy.h $
 
 #ifndef GenericCopy_h
@@ -94,18 +94,18 @@ private:
     // private attributes - a copy for each object of the class
     ID connectedExternalNodes;      // contains the tags of the end nodes
     
-    int numExternalNodes;
-    int numDOF;
+    int numExternalNodes;       // number of external nodes
+    int numDOF;                 // number of total DOF
     
-    int srcTag;
-    Element *theSource;
+    int srcTag;                 // tag of the source element
+    Element *theSource;         // pointer to the source element
     
-    static Matrix theMatrix;
-    static Matrix theInitStiff;
-    static Matrix theMass;
-    static Vector theVector;
-    static Vector theLoad;
-    
+    static Matrix theMatrix;        // objects matrix (a class wide Matrix)
+    static Matrix theInitStiff;     // initial stiffness matrix
+    static Matrix theMass;          // mass matrix
+    static Vector theVector;        // objects vector (a class wide Vector)
+    Vector theLoad;                 // load vector
+
     bool initStiffFlag;
     bool massFlag;
     

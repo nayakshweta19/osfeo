@@ -178,6 +178,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AdditionalIncludeDirectories>c:\tcl64\include;..\..\..\SRC\actor\message;..\..\..\SRC\actor\channel;..\..\..\SRC\database;..\..\..\SRC\nDarray;..\..\..\arc\objectbroker;..\..\..\src\matrix;..\..\..\src;..\..\..\src\actor\actor;..\..\..\src\handler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\..\..\obj\handler\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\handler\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\handler\debug/</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

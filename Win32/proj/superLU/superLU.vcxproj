@@ -254,6 +254,10 @@
     <ClCompile>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AdditionalIncludeDirectories>..\..\..\other\superLU;c:\Tcl64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>.\..\..\obj\superLU\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\superLU\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\superLU\debug/</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

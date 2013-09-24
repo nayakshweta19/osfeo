@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5356 $
-// $Date: 2013-06-13 06:47:51 +0800 (星期四, 13 六月 2013) $
+// $Revision: 5543 $
+// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingPlasticity3d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -58,7 +58,7 @@ ElastomericBearingPlasticity3d::ElastomericBearingPlasticity3d(int tag,
     : Element(tag, ELE_TAG_ElastomericBearingPlasticity3d),
     connectedExternalNodes(2), k0(0.0), qYield(0.0), k2(0.0),
     x(_x), y(_y), shearDistI(sdI), addRayleigh(addRay), mass(m),
-    L(0.0), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
+    L(0.0), onP0(true), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
     Tgl(12,12), Tlb(6,12), ubPlasticC(2), kbInit(6,6), theLoad(12)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
@@ -117,10 +117,9 @@ ElastomericBearingPlasticity3d::ElastomericBearingPlasticity3d(int tag,
 
 ElastomericBearingPlasticity3d::ElastomericBearingPlasticity3d()
     : Element(0, ELE_TAG_ElastomericBearingPlasticity3d),
-    connectedExternalNodes(2),
-    k0(0.0), qYield(0.0), k2(0.0), x(0), y(0),
+    connectedExternalNodes(2), k0(0.0), qYield(0.0), k2(0.0), x(0), y(0),
     shearDistI(0.5), addRayleigh(0), mass(0.0),
-    L(0.0), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
+    L(0.0), onP0(false), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
     Tgl(12,12), Tlb(6,12), ubPlasticC(2), kbInit(6,6), theLoad(12)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
@@ -666,6 +665,7 @@ int ElastomericBearingPlasticity3d::recvSelf(int commitTag, Channel &rChannel,
         y.resize(3);
         rChannel.recvVector(0, commitTag, y);
     }
+    onP0 = false;
     
     // initialize initial stiffness matrix
     kbInit.Zero();
@@ -915,7 +915,7 @@ void ElastomericBearingPlasticity3d::setUp()
         if (x.Size() == 0)  {
             x.resize(3);
             x = xp;
-        } else  {
+        } else if (onP0)  {
             opserr << "WARNING ElastomericBearingPlasticity3d::setUp() - " 
                 << "element: " << this->getTag()
                 << " - ignoring nodes and using specified "

@@ -111,7 +111,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\PORD\include;..\..\..\OTHER\MUMPS_4.10.0\libseq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_DEBUG;_LIB;UPPER;MUMPS_CALL=;UpCase;;;pord;NOMINMAX;MUMPS_ARITH=MUMPS_ARITH_d;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
@@ -123,6 +123,9 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AssemblerListingLocation>.\..\..\obj\dmumps_c\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\dmumps_c\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\dmumps_c\debug/</ProgramDataBaseFileName>
     </ClCompile>
     <PreLinkEvent>
       <Command>time /t</Command>

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4967 $
-// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $Revision: 5542 $
+// $Date: 2013-09-20 15:22:43 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/adapter/Adapter.h $
 
 #ifndef Adapter_h
@@ -129,7 +129,7 @@ private:
     
     static Matrix theMatrix;    // objects matrix (a class wide Matrix)
     static Vector theVector;    // objects vector (a class wide Vector)
-    static Vector theLoad;      // load vector
+    Vector theLoad;             // load vector
     
     Vector db;  // deformation in basic system
     Vector q;   // forces in basic system

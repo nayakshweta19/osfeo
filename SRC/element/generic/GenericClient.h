@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5137 $
-// $Date: 2012-11-05 07:27:46 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 5542 $
+// $Date: 2013-09-20 15:22:43 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericClient.h $
 
 #ifndef GenericClient_h
@@ -136,11 +136,11 @@ private:
     int dataSize;               // data size of send/recv vectors
     int addRayleigh;            // flag to add Rayleigh damping
     
-    static Matrix theMatrix;        // objects matrix
+    static Matrix theMatrix;        // objects matrix (a class wide Matrix)
     static Matrix theInitStiff;     // initial stiffness matrix
     static Matrix theMass;          // mass matrix
-    static Vector theVector;        // objects vector
-    static Vector theLoad;          // load vector
+    static Vector theVector;        // objects vector (a class wide Vector)
+    Vector theLoad;                 // load vector
     
     Channel *theChannel;        // channel
     double *sData;              // send data array

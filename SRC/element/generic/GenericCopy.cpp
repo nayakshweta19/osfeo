@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4967 $
-// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $Revision: 5542 $
+// $Date: 2013-09-20 15:22:43 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericCopy.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -48,7 +48,7 @@ Matrix GenericCopy::theMatrix(1,1);
 Matrix GenericCopy::theInitStiff(1,1);
 Matrix GenericCopy::theMass(1,1);
 Vector GenericCopy::theVector(1);
-Vector GenericCopy::theLoad(1);
+
 
 // responsible for allocating the necessary space needed
 // by each object and storing the tags of the end nodes.
@@ -56,7 +56,7 @@ GenericCopy::GenericCopy(int tag, ID nodes, int srctag)
     : Element(tag, ELE_TAG_GenericCopy),
     connectedExternalNodes(nodes),
     numExternalNodes(0), numDOF(0),
-    srcTag(srctag), theSource(0),
+    srcTag(srctag), theSource(0), theLoad(1),
     initStiffFlag(false), massFlag(false)
 {
     // initialize nodes
@@ -81,7 +81,7 @@ GenericCopy::GenericCopy()
     : Element(0, ELE_TAG_GenericCopy),
     connectedExternalNodes(1),
     numExternalNodes(0), numDOF(0),
-    srcTag(0), theSource(0),
+    srcTag(0), theSource(0), theLoad(1),
     initStiffFlag(false), massFlag(false)
 {
     // initialize variables

@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5186 $
-// $Date: 2013-01-25 10:44:44 +0800 (星期五, 25 一月 2013) $
+// $Revision: 5543 $
+// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/FlatSliderSimple3d.h $
 
 #ifndef FlatSliderSimple3d_h
@@ -119,6 +119,7 @@ private:
     int maxIter;        // maximum number of iterations
     double tol;         // tolerance for convergence criterion
     double L;           // element length
+    bool onP0;          // flag to indicate if the element is on P0
     
     // state variables
     Vector ub;          // displacements in basic system
@@ -135,9 +136,9 @@ private:
     // initial stiffness matrix in basic system
     Matrix kbInit;
     
-    static Matrix theMatrix;
-    static Vector theVector;
-    static Vector theLoad;
+    static Matrix theMatrix;  // a class wide Matrix
+    static Vector theVector;  // a class wide Vector
+    Vector theLoad;
 };
 
 #endif
