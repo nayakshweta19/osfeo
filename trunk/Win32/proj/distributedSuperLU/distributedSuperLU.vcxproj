@@ -160,6 +160,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AdditionalIncludeDirectories>C:\MPICH2\include;..\..\..\other\SuperLU_DIST_2.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NO_TIMER;UpCase;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\..\..\obj\distributedSuperLU\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\distributedSuperLU\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\distributedSuperLU\debug/</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

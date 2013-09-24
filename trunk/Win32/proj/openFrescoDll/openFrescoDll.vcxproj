@@ -138,6 +138,9 @@
       <CompileAs>Default</CompileAs>
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AssemblerListingLocation>.\..\..\obj\openFrescoDll\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\openFrescoDll\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\openFrescoDll\debug/</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(ProjectName).res</ResourceOutputFileName>

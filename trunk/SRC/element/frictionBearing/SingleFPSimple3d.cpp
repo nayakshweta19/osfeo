@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5186 $
-// $Date: 2013-01-25 10:44:44 +0800 (星期五, 25 一月 2013) $
+// $Revision: 5543 $
+// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/SingleFPSimple3d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -50,7 +50,6 @@
 // initialize the class wide variables
 Matrix SingleFPSimple3d::theMatrix(12,12);
 Vector SingleFPSimple3d::theVector(12);
-Vector SingleFPSimple3d::theLoad(12);
 
 
 SingleFPSimple3d::SingleFPSimple3d(int tag, int Nd1, int Nd2,
@@ -61,8 +60,8 @@ SingleFPSimple3d::SingleFPSimple3d(int tag, int Nd1, int Nd2,
     connectedExternalNodes(2), theFrnMdl(0), Reff(reff), kInit(kinit),
     x(_x), y(_y), shearDistI(sdI), addRayleigh(addRay), inclVertDisp(vert),
     mass(m), maxIter(maxiter), tol(_tol),
-    L(0.0), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12), Tgl(12,12), Tlb(6,12),
-    ubPlasticC(2), kbInit(6,6)
+    L(0.0), onP0(true), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
+    Tgl(12,12), Tlb(6,12), ubPlasticC(2), kbInit(6,6), theLoad(12)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
     if (connectedExternalNodes.Size() != 2)  {
@@ -128,8 +127,8 @@ SingleFPSimple3d::SingleFPSimple3d()
     connectedExternalNodes(2), theFrnMdl(0), Reff(0.0), kInit(0.0),
     x(0), y(0), shearDistI(0.0), addRayleigh(0), inclVertDisp(0), 
     mass(0.0), maxIter(25), tol(1E-12),
-    L(0.0), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12), Tgl(12,12),
-    Tlb(6,12), ubPlasticC(2), kbInit(6,6)
+    L(0.0), onP0(false), ub(6), ubPlastic(2), qb(6), kb(6,6), ul(12),
+    Tgl(12,12), Tlb(6,12), ubPlasticC(2), kbInit(6,6), theLoad(12)
 {
     // ensure the connectedExternalNode ID is of correct size
     if (connectedExternalNodes.Size() != 2)  {
@@ -769,6 +768,7 @@ int SingleFPSimple3d::recvSelf(int commitTag, Channel &rChannel,
         y.resize(3);
         rChannel.recvVector(0, commitTag, y);
     }
+    onP0 = false;
     
     // initialize initial stiffness matrix
     kbInit.Zero();
@@ -1044,7 +1044,7 @@ void SingleFPSimple3d::setUp()
         if (x.Size() == 0)  {
             x.resize(3);
             x = xp;
-        } else  {
+        } else if (onP0)  {
             opserr << "WARNING SingleFPSimple3d::setUp() - " 
                 << "element: " << this->getTag()
                 << " - ignoring nodes and using specified "

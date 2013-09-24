@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4967 $
-// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $Revision: 5543 $
+// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/twoNodeLink/TwoNodeLink.h $
 
 #ifndef TwoNodeLink_h
@@ -130,6 +130,7 @@ private:
     int addRayleigh;    // flag to add Rayleigh damping
     double mass;        // total mass
     double L;           // element length
+    bool onP0;          // flag to indicate if the element is on P0
     
     Vector ub;          // trial displacements in basic system
     Vector ubdot;       // trial velocities in basic system

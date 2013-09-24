@@ -37,6 +37,8 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
@@ -216,6 +218,9 @@
       <Optimization>Disabled</Optimization>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeaderOutputFile>.\..\..\obj\openSees\debug/openSees.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\obj\openSees\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\openSees\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\openSees\debug/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <AdditionalDependencies>pord_c.lib;mumps_common_c.lib;libseq_c.lib;libseq_fortran.lib;dmumps_fortran.lib;dmumps_c.lib;itpack.lib;triangle.lib;csparse.lib;DoddRestrepo.lib;amd.lib;handler.lib;tcl.lib;api.lib;wsock32.lib;OpenGL32.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;optimization.lib;tcl85.lib;tk85.lib;libm.lib;IFCONSOL.lib;LIBIFCOREMT.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>

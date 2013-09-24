@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5356 $
-// $Date: 2013-06-13 06:47:51 +0800 (星期四, 13 六月 2013) $
+// $Revision: 5543 $
+// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingPlasticity2d.h $
 
 #ifndef ElastomericBearingPlasticity2d_h
@@ -121,6 +121,7 @@ private:
     int addRayleigh;    // flag to add Rayleigh damping
     double mass;        // mass of element
     double L;           // element length
+    bool onP0;          // flag to indicate if the element is on P0
     
     // state variables
     Vector ub;          // displacements in basic system

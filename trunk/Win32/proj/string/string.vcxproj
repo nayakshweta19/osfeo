@@ -179,6 +179,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AdditionalIncludeDirectories>..\..\..\SRC;..\..\..\SRC\actor\actor;..\..\..\src\string;..\..\..\src\handler;c:\Tcl64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_TCL85;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\..\..\obj\string\debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\obj\string\debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\obj\string\debug/</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
