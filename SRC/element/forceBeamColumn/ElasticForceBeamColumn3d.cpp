@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2007/10/13 01:21:43 $
+// $Date: 2007-10-13 01:21:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/forceBeamColumn/ElasticForceBeamColumn3d.cpp,v $
 
 /*
@@ -1265,7 +1265,7 @@ ElasticForceBeamColumn3d::getResponse(int responseID, Information &eleInfo)
     M2 = Se(4);
     theVector(4)  = M1;
     theVector(10) = M2;
-    V = -(M1+M2)/L;
+    V = (M1+M2)/L;
     theVector(2) = -V+p0[3];
     theVector(8) =  V+p0[4];
       
