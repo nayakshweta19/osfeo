@@ -23,12 +23,20 @@
 * Vs 1.60  12-Jul-1999  DS1005 support                                       *
 * Vs 1.61  23-Sep-1999  new error code DSP_INVALID_BOARD_VERSION             *
 * Vs 1.70  19-May-2000  DS1104 support                                       *
+* Vs 1.80  03-Feb-2003  DS1006 support                                       *
+* Vs 1.91  03-Dec-2004  Temporary modifications in intermediate versions     *
+*                       removed                                              *
+* Vs 1.92  28-Jul-2006  new error code DSP_INVALID_HOST_APP_ID               *
+* Vs 1.93  07-Nov-2008  DSP_MAX_BOARD_IDX now 79                             *
+* Vs 1.94  30-Nov-2009  mirror memory access function prototypes added       *
+* Vs 1.95  12-Jan-2010  error code DSP_DAQ_SOCKET_NOT_AVAILABLE added        *
+* Vs 1.96  22-Jan-2010  new error codes for mirror memory                    *
+* Vs 1.97  20-Apr-2010  DS_system_is_connected added                         *
 *                                                                            *
-*                                                                            *
-* Copyright (C) 1995 - 2000 by dSPACE GmbH, Paderborn                        *
+* Copyright (C) 1995 - 2010 by dSPACE GmbH, Germany                          *
 *****************************************************************************/
 
-/* $RCSfile$ $Revision: 314 $ $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $ */
+/* $RCSfile: clib.h $ $Revision: 1.11 $ $Date: 2010/04/20 18:32:26MESZ $ */
 
 #ifndef _INC_CLIB
 
@@ -45,7 +53,7 @@ extern "C" {
 /*   symbolic constants                                                     */
 
 #define DSP_MIN_BOARD_IDX        0
-#define DSP_MAX_BOARD_IDX        19
+#define DSP_MAX_BOARD_IDX        79
 
 #define DSP_BOARD_NAME_LENGTH    8
 #define DSP_DATE_LENGTH          14  /* date format YYYYMMDDHHMMSS          */
@@ -68,6 +76,7 @@ extern "C" {
 #define TYPE_DS1401   0x9
 #define TYPE_DS1005   0xa
 #define TYPE_DS1104   0xb
+#define TYPE_DS1006   0xc
 
 #define DSP_IRQ_10 0
 #define DSP_IRQ_11 1
@@ -122,6 +131,11 @@ extern "C" {
 #define DSP_PROTOCOL_ERROR           1038
 #define DSP_INVALID_BOARD_VERSION    1039
 #define DSP_INVALID_STATE            1040
+#define DSP_INVALID_HOST_APP_ID      1041
+#define DSP_NO_MIRROR_MEM_ALLOCATED  1042
+#define DSP_MIRROR_COMMAND_TIMEOUT   1043
+#define DSP_MIRROR_COMMAND_FAILED    1044
+#define DSP_MIRROR_INVALID_ADDR	     1045
 
 /* return codes referring to errors on searching drivers or network errors */
 #define DSP_DEVICE_DRIVER_NOT_FOUND  3001
@@ -137,6 +151,8 @@ extern "C" {
 #define DSP_ALLOC_SEL_FAILED         3010  /* only with Matlab mex files */
 #define DSP_INVALID_CLIENT           3011
 #define DSP_LOWER_DRIVER_NOT_FOUND   3012
+#define DSP_DAQ_SOCKET_NOT_AVAILABLE 3013
+#define DSP_NET_TIMEOUT              3014
 
 #define DSP_ADDRESS_ERROR            4001  /* only MS Windows version */
 #define DSP_REENTRY_ERROR            4002  /* only DOS Net version */
@@ -180,6 +196,12 @@ typedef struct{
     UInt32 local_ram_size;
     UInt32 global_ram_size;
 }spec_1005_tp;
+
+typedef struct{
+    UInt16 io_port;
+    UInt16 filler;
+    UInt32 global_ram_size;
+}spec_1006_tp;
 
 typedef struct{
     UInt16 io_port;
@@ -227,6 +249,7 @@ typedef struct board_spec{
         spec_1003_tp spec_1003;
         spec_1004_tp spec_1004;
         spec_1005_tp spec_1005;
+        spec_1006_tp spec_1006;
         spec_1102_tp spec_1102;
         spec_1103_tp spec_1103;
         spec_1104_tp spec_1104;
@@ -443,6 +466,67 @@ int DS_write_block64(unsigned int board_index, UInt32 offset,
 UInt32 DSP_cvt_ieee_to_ti(Float32 IEEE_32);
 
 Float32 DSP_cvt_ti_to_ieee(UInt32 C30);
+
+
+/****************************************************************************/
+
+
+/*** Mirror memory access functions ***/
+
+
+int DS_mirror_write16(unsigned int      board_index, 
+                      UInt32            address,
+                      unsigned int      count,
+                      UInt16            *data);
+
+int DS_mirror_read16(unsigned int      board_index,
+                     UInt32            address,
+                     unsigned int      count,
+                     UInt16            *data);
+
+
+int DS_mirror_write32(unsigned int      board_index,
+                      UInt32            address,
+                      unsigned int      count,
+                      UInt32            *data);
+
+
+int DS_mirror_read32(unsigned int      board_index,
+                     UInt32            address,
+                     unsigned int      count, 
+                     UInt32            *data);
+
+
+int DS_mirror_write64(unsigned int      board_index, 
+                      UInt32            address,
+                      unsigned int      count, 
+                      UInt64            *data);
+
+
+int DS_mirror_read64(unsigned int      board_index, 
+                     UInt32            address,
+                     unsigned int      count,
+                     UInt64            *data);
+
+
+int DS_start_daq(unsigned int board_index,
+                 UInt32 flags_addr,
+                 UInt32 buffer_addr,
+                 UInt32 buffer_byte_length,
+                 UInt32 pre_trigger_buffer_length,
+                 UInt32 *DAQHandle);
+
+
+int DS_stop_daq(unsigned int board_index,
+                UInt32 DAQHandle);
+
+
+int DS_stop_all_daqs(unsigned int board_index);
+
+
+int DS_system_is_connected(unsigned int board_index,
+                           int *connected); 
+
 
 
 #ifdef __cplusplus
