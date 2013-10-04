@@ -199,6 +199,8 @@
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteS.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP3D.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.cpp" />
@@ -249,9 +251,6 @@
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\SimplifiedJ2.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.cpp" />
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay3D.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClayPlaneStrain.cpp" />
@@ -657,6 +656,9 @@
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear5.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteS.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCP.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCP3D.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.h" />
@@ -707,9 +709,6 @@
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\SimplifiedJ2.h" />
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP.h" />
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.h" />
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay3D.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClayPlaneStrain.h" />

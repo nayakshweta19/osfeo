@@ -203,7 +203,6 @@
     <ClCompile Include="..\..\..\SRC\renderer\View.cpp" />
     <ClCompile Include="..\..\..\SRC\renderer\Viewport.cpp" />
     <ClCompile Include="..\..\..\SRC\renderer\VrmlViewer.cpp" />
-    <ClCompile Include="..\..\..\SRC\renderer\WindowDevice.cpp" />
     <ClCompile Include="..\..\..\SRC\renderer\WindowRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>

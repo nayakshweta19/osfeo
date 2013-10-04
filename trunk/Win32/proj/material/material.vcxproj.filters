@@ -119,7 +119,7 @@
     <Filter Include="uniaxial\LimitState\limiteCurve">
       <UniqueIdentifier>{a9d51040-78db-45c8-8386-638a54a7e1f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="nD\Qinghua">
+    <Filter Include="nD\Tsinghua">
       <UniqueIdentifier>{6514bdbc-2f69-4b92-9e34-980d4e7211ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -1340,15 +1340,6 @@
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.cpp">
       <Filter>nD\reinforcedConcretePlaneStress</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP.cpp">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.cpp">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.cpp">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\section\integration\RCTBeamSectionIntegration.cpp">
       <Filter>section\integration</Filter>
     </ClCompile>
@@ -1463,35 +1454,41 @@
     <ClCompile Include="..\..\..\SRC\material\section\LayeredShellFiberSection.cpp">
       <Filter>section</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP.cpp">
-      <Filter>nD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP.cpp">
-      <Filter>nD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.cpp">
-      <Filter>nD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.cpp">
-      <Filter>nD</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\uniaxial\ViscousDamper.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\ConcreteS.cpp">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.cpp">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressUserMaterial.cpp">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\PlateFromPlaneStressMaterial.cpp">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\material\nD\PlateRebarMaterial.cpp">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP.cpp">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP.cpp">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.cpp">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.cpp">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCP3D.cpp">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.cpp">
+      <Filter>nD\cyclicSoil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2645,15 +2642,6 @@
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteMcftNonLinear7.h">
       <Filter>nD\reinforcedConcretePlaneStress</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP.h">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCP3D.h">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\soil\CycLiqCPPlaneStrain.h">
-      <Filter>nD\cyclicSoil</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\section\integration\RCTBeamSectionIntegration.h">
       <Filter>section\integration</Filter>
     </ClInclude>
@@ -2768,32 +2756,41 @@
     <ClInclude Include="..\..\..\SRC\material\section\LayeredShellFiberSection.h">
       <Filter>section</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP.h">
-      <Filter>nD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.h">
-      <Filter>nD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.h">
-      <Filter>nD</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\ViscousDamper.h">
       <Filter>uniaxial</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\ConcreteS.h">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressSimplifiedJ2.h">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\PlaneStressUserMaterial.h">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\PlateFromPlaneStressMaterial.h">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\PlateRebarMaterial.h">
-      <Filter>nD\Qinghua</Filter>
+      <Filter>nD\Tsinghua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP.h">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSP3D.h">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPSPPlaneStrain.h">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCP.h">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCP3D.h">
+      <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.h">
+      <Filter>nD\cyclicSoil</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

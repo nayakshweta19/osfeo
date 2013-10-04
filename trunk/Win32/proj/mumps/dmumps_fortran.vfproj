@@ -5,7 +5,7 @@
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\$(Configuration)\" IntermediateDirectory=".\..\..\obj\$(ProjectName)/$(Configuration)\" DeleteExtensionsOnClean="*.obj;*.mod;*.pdb;*.asm;*.map;*.dyn;*.dpi;*.tmp;*.log;*.lib;$(TargetPath)" ConfigurationType="typeStaticLibrary">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" AdditionalIncludeDirectories="..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\src;..\..\..\OTHER\MUMPS_4.10.0\libseq" PreprocessorDefinitions=";;pord;" EnableRecursion="true" SuppressUsageMessages="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" AdditionalIncludeDirectories="..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\OTHER\MUMPS_4.10.0\src;..\..\..\OTHER\MUMPS_4.10.0\libseq" PreprocessorDefinitions=";;pord;" EnableRecursion="true" SuppressUsageMessages="true" ExternalNameInterpretation="extNameUpperCase" ModulePath="$(INTDIR)/" ObjectFile="$(INTDIR)/" PdbFile=".\..\..\obj\dmumps_fortran\debug/" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
 				<Tool Name="VFLibrarianTool"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TypeLibraryName="$(IntDir)/$(InputName).tlb"/>
