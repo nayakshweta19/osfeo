@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\OTHER\Triangle\predicates.cxx" />
-    <ClCompile Include="..\..\..\OTHER\Triangle\showme.c" />
     <ClCompile Include="..\..\..\OTHER\Triangle\tetgen.cxx" />
     <ClCompile Include="..\..\..\OTHER\Triangle\triangle.c" />
     <ClCompile Include="..\..\..\OTHER\Triangle\tricall.c" />
