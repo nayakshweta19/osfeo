@@ -124,7 +124,7 @@ extern  void *OPS_CycLiqCPMaterial(void);
 extern  void *OPS_CycLiqCPSPMaterial(void);
 extern  void *OPS_NewInitStressNDMaterial(void);
 
-//extern  void *OPS_PlaneStressSimplifiedJ2(void);
+extern  void *OPS_PlaneStressSimplifiedJ2(void);
 //extern  void *OPS_SimplifiedJ2(void);
 //extern  void *OPS_CapPlasticity(void);
 extern  void *OPS_NewInitStressNDMaterial(void);
@@ -1595,7 +1595,13 @@ TclModelBuilderNDMaterialCommand (ClientData clientData, Tcl_Interp *interp, int
       
     }
     
-    
+	else if (strcmp(argv[1],"PlaneStressSimplifiedJ2") == 0 || strcmp(argv[1],"2DJ2" ) == 0) {
+		void *theMat =  OPS_PlaneStressSimplifiedJ2();
+		if (theMat != 0)
+	  theMaterial = (NDMaterial *)theMat;
+		else
+	  return TCL_ERROR;
+	}
 /////////////////////////////////////////////////////////////////
 /*
    nDmaterial Simplified3DJ2  $matTag  $G  $K  $sig0  $H_kin  $H_iso 

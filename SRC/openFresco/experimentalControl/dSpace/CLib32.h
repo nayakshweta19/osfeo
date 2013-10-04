@@ -11,11 +11,13 @@
 * Vs 1.1   02-Nov-1999  DS1005 support added                                 *
 * Vs 1.11  05-May-2000  new error code added                                 *
 * Vs 1.2   22-Nov-2000  DS1104 support added                                 *
+* Vs 1.3   17-Feb-2004  DS1006 support added                                 *
+* Vs 1.4   16-Aug-2011  Changed DS_MAX_BOARD_IDX from 19 to 79               *
 *                                                                            *
 *                                                                            *
-* Copyright (C) 1999 - 2000 by dSPACE GmbH, Paderborn                        *
+* Copyright (C) 1999 - 2004 by dSPACE GmbH, Germany                          *
 *****************************************************************************/
-/* $RCSfile$ $Revision: 314 $ $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $ */
+/* $RCSfile: CLIB32.H $ $Revision: 1.3 $ $Date: 2011/08/16 14:53:31MESZ $ */
 
 #ifndef _INC_CLIB32
 
@@ -32,7 +34,7 @@
 /*   symbolic constants                                                     */
 
 #define DS_MIN_BOARD_IDX        0
-#define DS_MAX_BOARD_IDX        19
+#define DS_MAX_BOARD_IDX        79
 
 #define DS_BOARD_NAME_LENGTH    8
 #define DS_DATE_LENGTH          14   /* date format YYYYMMDDHHMMSS          */
@@ -55,6 +57,7 @@
 #define TYPE_DS1401   0x9
 #define TYPE_DS1005   0xa
 #define TYPE_DS1104   0xb
+#define TYPE_DS1006   0xc
 
 
 /****************************************************************************/
@@ -173,6 +176,19 @@ typedef struct{
 
 typedef struct{
     UInt16 io_port;
+    UInt16 filler;
+    UInt32 local_ram_size;
+    UInt32 global_ram_size;
+}spec_1005_tp;
+
+typedef struct{
+    UInt16 io_port;
+    UInt16 filler;
+    UInt32 global_ram_size;
+}spec_1006_tp;
+
+typedef struct{
+    UInt16 io_port;
     UInt16 primary_ram_size;
 }spec_1102_tp;
 
@@ -216,6 +232,8 @@ typedef struct board_spec{
         spec_1002_tp spec_1002;
         spec_1003_tp spec_1003;
         spec_1004_tp spec_1004;
+        spec_1005_tp spec_1005;
+        spec_1006_tp spec_1006;
         spec_1102_tp spec_1102;
         spec_1103_tp spec_1103;
         spec_1104_tp spec_1104;
