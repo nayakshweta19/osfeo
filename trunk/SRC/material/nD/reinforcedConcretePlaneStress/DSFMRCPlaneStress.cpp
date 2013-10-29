@@ -47,6 +47,7 @@
 #include <DummyStream.h>
 #include <MaterialResponse.h>
 #include <elementAPI.h>
+#include <f2c.h>
 
 using namespace std;
 

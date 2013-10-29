@@ -148,7 +148,7 @@ extern void *OPS_NewHookGap(void);
 extern void *OPS_NewSteel01Thermal(void);
 extern void *OPS_NewSteel02Thermal(void);
 extern void *OPS_NewConcrete02Thermal(void);
-
+extern void *OPS_BWBN(void);
 extern void *OPS_ModIMKPeakOriented(void);
 extern void *OPS_ModIMKPinching(void);
 extern void *OPS_ConcretewBeta(void);
@@ -406,6 +406,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
 	} else if ((strcmp(argv[1],"MultiLinear") == 0)) {
 	  void *theMat = OPS_New_MultiLinear();
+	  if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+	  else 
+	return TCL_ERROR;
+
+	} else if (strcmp(argv[1],"BWBN") == 0) {
+	  void *theMat = OPS_BWBN();
 	  if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
 	  else 

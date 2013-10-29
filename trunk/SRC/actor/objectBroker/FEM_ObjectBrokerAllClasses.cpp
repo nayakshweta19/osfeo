@@ -58,6 +58,7 @@
 
 // uniaxial material model header files
 #include <ElasticMaterial.h>
+#include <ElasticMultiLinear.h>
 #include <Elastic2Material.h>
 #include <ElasticPPMaterial.h>
 #include <ParallelMaterial.h>
@@ -105,6 +106,7 @@
 #include <DrainClough1Material.h>
 #include <DrainClough2Material.h>
 #include <DrainPinch1Material.h>
+#include <HyperbolicGapMaterial.h>
 
 // Sections
 #include <ElasticSection2d.h>
@@ -242,6 +244,8 @@
 #include <ElastomericBearingPlasticity3d.h>
 #include <ElastomericBearingBoucWen2d.h>
 #include <ElastomericBearingBoucWen3d.h>
+#include <SingleFPSimple2d.h>
+#include <SingleFPSimple3d.h>
 
 #ifdef _PFEM
 #include <PFEMElement2D.h>
@@ -697,9 +701,16 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 	case ELE_TAG_TwentyNodeBrick_u_p_U:
 	    return new TwentyNodeBrick_u_p_U();
 
+	case ELE_TAG_SingleFPSimple2d:
+		return new SingleFPSimple2d();
+	
+	case ELE_TAG_SingleFPSimple3d:
+		return new SingleFPSimple3d();
+		
+#ifdef _PFEM
 	case ELE_TAG_PFEMElement2D:
         return new PFEMElement2D();
-
+#endif
 	default:
 	     opserr << "FEM_ObjectBrokerAllClasses::getNewElement - ";
 	     opserr << " - no Element type exists for class tag " ;
@@ -906,6 +917,9 @@ FEM_ObjectBrokerAllClasses::getNewUniaxialMaterial(int classTag)
 	case MAT_TAG_ElasticMaterial:  
 	     return new ElasticMaterial(); // values set in recvSelf
 
+	case MAT_TAG_ElasticMultiLinear:
+		 return new ElasticMultiLinear(); // values set in recvSelf
+
 	case MAT_TAG_Elastic2Material:  
 	     return new Elastic2Material(); 
 	     
@@ -1019,6 +1033,9 @@ FEM_ObjectBrokerAllClasses::getNewUniaxialMaterial(int classTag)
 
 	case MAT_TAG_DrainBilinear:
 		return new DrainBilinearMaterial();
+
+	case MAT_TAG_HyperbolicGapMaterial:
+		return new HyperbolicGapMaterial();
 
 	case MAT_TAG_Bilin:
 		return new Bilin();

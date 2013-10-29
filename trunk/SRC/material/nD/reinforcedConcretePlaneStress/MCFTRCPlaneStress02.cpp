@@ -48,6 +48,8 @@
 #include <MaterialResponse.h>
 #include <elementAPI.h>
 
+#include <f2c.h>
+
 using namespace std;
 
 #define OPS_Export 
