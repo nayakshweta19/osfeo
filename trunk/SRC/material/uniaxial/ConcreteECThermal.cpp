@@ -1,9 +1,42 @@
-////J.Z. 01/2010 Concrete02Thermal.cpp   **for Siliceous aggregates
-// this is the second edition of Concrete02Thermal,the interface of it is same with concrete02.
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+                                                                       
+// Added by Liming Jiang (UoE)
+// Created: 06/13
+//
+// Description: This file contains the class definition for 
+// ConcreteECThermal. ConcreteECThermal is modified from Concrete02Thermal
+// ConcreteECthermal is dedicated to provide a concrete material which 
+// strictly satisfy Eurocode regarding the temperature dependent properties.
+
+// Concrete02 is written by FMK in the year of 2006 and based on Concr2.f
+/*-----------------------------------------------------------------------
+! concrete model with damage modulus    
+!       by MOHD YASSIN (1993)
+! adapted to FEDEAS material library
+! by D. Sze and Filip C. Filippou in 1994
+-----------------------------------------------------------------------*/
 
 
 #include <stdlib.h>
-#include <Concrete02Thermal.h>
+#include <ConcreteECThermal.h>
 #include <OPS_Globals.h>
 #include <float.h>
 #include <Channel.h>
@@ -13,7 +46,7 @@
 #include <OPS_Globals.h>
 
 void *
-OPS_NewConcrete02Thermal()
+OPS_NewConcreteECThermal()
 {
   // Pointer to a uniaxial material that will be returned
   UniaxialMaterial *theMaterial = 0;
@@ -23,28 +56,28 @@ OPS_NewConcrete02Thermal()
   int numData = 1;
 
   if (OPS_GetIntInput(&numData, iData) != 0) {
-    opserr << "WARNING invalid uniaxialMaterial Concrete02Thermal tag" << endln;
+    opserr << "WARNING invalid uniaxialMaterial ConcreteECThermal tag" << endln;
     return 0;
   }
 
   numData = OPS_GetNumRemainingInputArgs();
 
   if (numData != 7) {
-    opserr << "Invalid #args, want: uniaxialMaterial Concrete02Thermal " << iData[0] << "fpc? epsc0? fpcu? epscu? rat? ft? Ets?\n";
+    opserr << "Invalid #args, want: uniaxialMaterial ConcreteECThermal " << iData[0] << "fpc? epsc0? fpcu? epscu? rat? ft? Ets?\n";
     return 0;
   }
 
   if (OPS_GetDoubleInput(&numData, dData) != 0) {
-    opserr << "Invalid #args, want: uniaxialMaterial Concrete02Thermal " << iData[0] << "fpc? epsc0? fpcu? epscu? rat? ft? Ets?\n";
+    opserr << "Invalid #args, want: uniaxialMaterial ConcreteECThermal " << iData[0] << "fpc? epsc0? fpcu? epscu? rat? ft? Ets?\n";
     return 0;
   }
 
 
   // Parsing was successful, allocate the material
-  theMaterial = new Concrete02Thermal(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6]);
+  theMaterial = new ConcreteECThermal(iData[0], dData[0], dData[1], dData[2], dData[3], dData[4], dData[5], dData[6]);
   
   if (theMaterial == 0) {
-    opserr << "WARNING could not create uniaxialMaterial of type Concrete02Thermal Material\n";
+    opserr << "WARNING could not create uniaxialMaterial of type ConcreteECThermal Material\n";
     return 0;
   }
 
@@ -52,9 +85,9 @@ OPS_NewConcrete02Thermal()
 }
 
 
-Concrete02Thermal::Concrete02Thermal(int tag, double _fc, double _epsc0, double _fcu,
+ConcreteECThermal::ConcreteECThermal(int tag, double _fc, double _epsc0, double _fcu,
 				     double _epscu, double _rat, double _ft, double _Ets):
-  UniaxialMaterial(tag, MAT_TAG_Concrete02Thermal),
+  UniaxialMaterial(tag, MAT_TAG_ConcreteECThermal),
   //fc(_fc), epsc0(_epsc0), fcu(_fcu), epscu(_epscu), rat(_rat), ft(_ft), Ets(_Ets)
   fcT(_fc), epsc0T(_epsc0), fcuT(_fcu), epscuT(_epscu), rat(_rat), ftT(_ft), EtsT(_Ets) //JZ
 {
@@ -89,13 +122,13 @@ Concrete02Thermal::Concrete02Thermal(int tag, double _fc, double _epsc0, double 
 
 }
 
-Concrete02Thermal::Concrete02Thermal(void):
-  UniaxialMaterial(0, MAT_TAG_Concrete02Thermal)
+ConcreteECThermal::ConcreteECThermal(void):
+  UniaxialMaterial(0, MAT_TAG_ConcreteECThermal)
 {
  
 }
 
-Concrete02Thermal::~Concrete02Thermal(void)
+ConcreteECThermal::~ConcreteECThermal(void)
 {
   // Does nothing
 }
@@ -104,24 +137,24 @@ Concrete02Thermal::~Concrete02Thermal(void)
 	
 
 UniaxialMaterial*
-Concrete02Thermal::getCopy(void)
+ConcreteECThermal::getCopy(void)
 {
-  Concrete02Thermal *theCopy = new Concrete02Thermal(this->getTag(), fc, epsc0, fcu, epscu, rat, ft, Ets);
+  ConcreteECThermal *theCopy = new ConcreteECThermal(this->getTag(), fc, epsc0, fcu, epscu, rat, ft, Ets);
   
   return theCopy;
 }
 
 double
-Concrete02Thermal::getInitialTangent(void)
+ConcreteECThermal::getInitialTangent(void)
 {
   return 2.0*fc/epsc0;
 }
 
 int
-Concrete02Thermal::setTrialStrain(double trialStrain, double FiberTemperature, double strainRate)
+ConcreteECThermal::setTrialStrain(double trialStrain, double FiberTemperature, double strainRate)
 {
-  double 	ec0 = fc * 2. / epsc0;//?
-  // double 	ec0 = fc * 1.5 / epsc0; //JZ. 27/07/10 ??
+ // double 	ec0 = fc * 2. / epsc0;//?
+   double 	ec0 = fc * 1.5 / epsc0; //JZ. 27/07/10 ??
   
   // retrieve concrete hitory variables
   
@@ -172,11 +205,10 @@ Concrete02Thermal::setTrialStrain(double trialStrain, double FiberTemperature, d
       double sigmax = er * .5f * (eps - ept);
       sig = sigP + ec0 * deps;
       e = ec0;
-      if (sig <= sigmin) {
+      if (sig <= sigmin) { 
 	sig = sigmin;
 	e = er;
-      }
-      if (sig >= sigmax) {
+      }      if (sig >= sigmax) {
 	sig = sigmax;
 	e = 0.5 * er;
       }
@@ -212,38 +244,38 @@ Concrete02Thermal::setTrialStrain(double trialStrain, double FiberTemperature, d
       }
     }
   }
-  
+//opserr<<"trialStrain: "<<eps << "  Stress: "<<sig<< "Modulus: "<<e<<endln;
   return 0;
 }
 
 
 
 double 
-Concrete02Thermal::getStrain(void)
+ConcreteECThermal::getStrain(void)
 {
   return eps;
 }
 
 double 
-Concrete02Thermal::getStress(void)
+ConcreteECThermal::getStress(void)
 {
   return sig;
 }
 
 double 
-Concrete02Thermal::getTangent(void)
+ConcreteECThermal::getTangent(void)
 {
   return e;
 }
 
 double 
-Concrete02Thermal::getThermalElongation(void) //***JZ
+ConcreteECThermal::getThermalElongation(void) //***JZ
 {
   return ThermalElongation;
 }
 
 double 
-Concrete02Thermal::getElongTangent(double TempT, double& ET, double& Elong, double TempTmax) //PK add to include max temp
+ConcreteECThermal::getElongTangent(double TempT, double& ET, double& Elong, double TempTmax) //PK add to include max temp
 {
   //material properties with temperature
   Temp = TempT;  //make up the 20 degree which is minus in the class of thermalfield
@@ -361,7 +393,7 @@ Concrete02Thermal::getElongTangent(double TempT, double& ET, double& Elong, doub
       ThermalElongation = -1.8e-4 + 9e-6 *(Temp+20) + 2.3e-11 *(Temp+20)*(Temp+20)*(Temp+20);
   }
   else if (Temp <= 1180) {
-      ThermalElongation = 14e.009-3;
+      ThermalElongation = 14e-3;
   }
   else {
 	  opserr << "the temperature is invalid\n";
@@ -562,7 +594,7 @@ Concrete02Thermal::getElongTangent(double TempT, double& ET, double& Elong, doub
 
 
 int 
-Concrete02Thermal::commitState(void)
+ConcreteECThermal::commitState(void)
 {
   ecminP = ecmin;
   deptP = dept;
@@ -577,7 +609,7 @@ Concrete02Thermal::commitState(void)
 }
 
 int 
-Concrete02Thermal::revertToLastCommit(void)
+ConcreteECThermal::revertToLastCommit(void)
 {
   ecmin = ecminP;;
   dept = deptP;
@@ -594,7 +626,7 @@ Concrete02Thermal::revertToLastCommit(void)
 }
 
 int 
-Concrete02Thermal::revertToStart(void)
+ConcreteECThermal::revertToStart(void)
 {
   ecminP = 0.0;
   deptP = 0.0;
@@ -610,7 +642,7 @@ Concrete02Thermal::revertToStart(void)
 }
 
 int 
-Concrete02Thermal::sendSelf(int commitTag, Channel &theChannel)
+ConcreteECThermal::sendSelf(int commitTag, Channel &theChannel)
 {
   static Vector data(13);
   data(0) =fc;    
@@ -628,21 +660,21 @@ Concrete02Thermal::sendSelf(int commitTag, Channel &theChannel)
   data(12) = this->getTag();
 
   if (theChannel.sendVector(this->getDbTag(), commitTag, data) < 0) {
-    opserr << "Concrete02Thermal::sendSelf() - failed to sendSelf\n";
+    opserr << "ConcreteECThermal::sendSelf() - failed to sendSelf\n";
     return -1;
   }
   return 0;
 }
 
 int 
-Concrete02Thermal::recvSelf(int commitTag, Channel &theChannel, 
+ConcreteECThermal::recvSelf(int commitTag, Channel &theChannel, 
 	     FEM_ObjectBroker &theBroker)
 {
 
   static Vector data(13);
 
   if (theChannel.recvVector(this->getDbTag(), commitTag, data) < 0) {
-    opserr << "Concrete02Thermal::recvSelf() - failed to recvSelf\n";
+    opserr << "ConcreteECThermal::recvSelf() - failed to recvSelf\n";
     return -1;
   }
 
@@ -668,14 +700,14 @@ Concrete02Thermal::recvSelf(int commitTag, Channel &theChannel,
 }
 
 void 
-Concrete02Thermal::Print(OPS_Stream &s, int flag)
+ConcreteECThermal::Print(OPS_Stream &s, int flag)
 {
-  s << "Concrete02Thermal:(strain, stress, tangent) " << eps << " " << sig << " " << e << endln;
+  s << "ConcreteECThermal:(strain, stress, tangent) " << eps << " " << sig << " " << e << endln;
 }
 
 
 void
-Concrete02Thermal::Tens_Envlp (double epsc, double &sigc, double &Ect)
+ConcreteECThermal::Tens_Envlp (double epsc, double &sigc, double &Ect)
 {
 /*-----------------------------------------------------------------------
 ! monotonic envelope of concrete in tension (positive envelope)
@@ -690,8 +722,8 @@ Concrete02Thermal::Tens_Envlp (double epsc, double &sigc, double &Ect)
 !    Ect  = tangent concrete modulus
 !-----------------------------------------------------------------------*/
   
-  double Ec0  = 2.0*fc/epsc0;
-	// double Ec0  = 1.5*fc/epsc0;
+ // double Ec0  = 2.0*fc/epsc0;
+  double Ec0  = 1.5*fc/epsc0;
 
   double eps0 = ft/Ec0;
   double epsu = ft*(1.0/Ets+1.0/Ec0);
@@ -713,7 +745,7 @@ Concrete02Thermal::Tens_Envlp (double epsc, double &sigc, double &Ect)
 
   
 void
-Concrete02Thermal::Compr_Envlp (double epsc, double &sigc, double &Ect) 
+ConcreteECThermal::Compr_Envlp (double epsc, double &sigc, double &Ect) 
 {
 /*-----------------------------------------------------------------------
 ! monotonic envelope of concrete in compression (negative envelope)
@@ -734,9 +766,10 @@ Concrete02Thermal::Compr_Envlp (double epsc, double &sigc, double &Ect)
   //double Ec0  = 1.5*fc/epsc0;
 
   double ratLocal = epsc/epsc0;
-  if (epsc>=epsc0) {
-    sigc = fc*ratLocal*(2.0-ratLocal);
-    Ect  = Ec0*(1.0-ratLocal);
+  if (epsc>epsc0) {
+    double ratCube = ratLocal*ratLocal*ratLocal;
+    sigc = 3*ratLocal*fc/(2.0+ratCube);
+    Ect  = 3*fc/epsc0/(2+ratCube)*(1-3/(2/ratCube+1));
   } else {
     
     //   linear descending branch between epsc0 and epscu
@@ -752,11 +785,12 @@ Concrete02Thermal::Compr_Envlp (double epsc, double &sigc, double &Ect)
       //       Ect  = 0.0
     }
   }
+
   return;
 }
 
 int
-Concrete02Thermal::getVariable(const char *varName, Information &theInfo)
+ConcreteECThermal::getVariable(const char *varName, Information &theInfo)
 {
   if (strcmp(varName,"ec") == 0) {
     theInfo.theDouble = epsc0;
@@ -777,6 +811,10 @@ Concrete02Thermal::getVariable(const char *varName, Information &theInfo)
     }
     return 0;
   }
+  else if(strcmp(varName,"ThermalElongation") == 0) {
+	    theInfo.theDouble = ThermalElongation;
+		return 0;
+	}
   return -1;
 }
 
@@ -784,8 +822,8 @@ Concrete02Thermal::getVariable(const char *varName, Information &theInfo)
 
 //this function is no use, just for the definiation of pure virtual function.
 int
-Concrete02Thermal::setTrialStrain(double strain, double strainRate)
+ConcreteECThermal::setTrialStrain(double strain, double strainRate)
 {
-  opserr << "Concrete02Thermal::setTrialStrain(double strain, double strainRate) - should never be called\n";
+  opserr << "ConcreteECThermal::setTrialStrain(double strain, double strainRate) - should never be called\n";
   return -1;
 }

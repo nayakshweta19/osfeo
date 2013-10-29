@@ -147,7 +147,12 @@ extern void *OPS_NewHookGap(void);
 //extern void *OPS_FRPConfinedConcrete(void);
 extern void *OPS_NewSteel01Thermal(void);
 extern void *OPS_NewSteel02Thermal(void);
+extern void *OPS_NewSteel01PThermal(void);
+extern void *OPS_NewSteelECThermal(void);
 extern void *OPS_NewConcrete02Thermal(void);
+extern void *OPS_NewConcreteECThermal(void);
+extern void *OPS_NewElasticMaterialThermal(void);
+
 extern void *OPS_BWBN(void);
 extern void *OPS_ModIMKPeakOriented(void);
 extern void *OPS_ModIMKPinching(void);
@@ -439,14 +444,35 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"Steel02Thermal") == 0) {
+	} else if (strcmp(argv[1], "Steel01PThermal") == 0) {
+		void *theMat = OPS_NewSteel01PThermal();
+		if (theMat != 0)
+			theMaterial = (UniaxialMaterial *)theMat;
+		else
+			return TCL_ERROR;
+
+	} else if (strcmp(argv[1], "Steel02Thermal") == 0) {
       void *theMat = OPS_NewSteel02Thermal();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
 	return TCL_ERROR;
 
-    } else if ((strcmp(argv[1],"SteelBRB") == 0) || (strcmp(argv[1],"BRB") == 0)) {
+	  // -----Adding identity for SteelECThermal
+	} else if (strcmp(argv[1], "SteelECThermal") == 0) {
+		void *theMat = OPS_NewSteelECThermal();
+		if (theMat != 0)
+			theMaterial = (UniaxialMaterial *)theMat;
+		else
+			return TCL_ERROR;
+		//------End of adding identity for SteelEcThermal
+	} else if (strcmp(argv[1], "ElasticThermal") == 0) {
+		void *theMat = OPS_NewElasticMaterialThermal();
+		if (theMat != 0)
+			theMaterial = (UniaxialMaterial *)theMat;
+		else
+			return TCL_ERROR;
+	} else if ((strcmp(argv[1], "SteelBRB") == 0) || (strcmp(argv[1], "BRB") == 0)) {
       void *theMat = OPS_SteelBRB();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
@@ -467,7 +493,14 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"Elastic2") == 0) {
+	} else if (strcmp(argv[1], "ConcreteECThermal") == 0) {
+		void *theMat = OPS_NewConcreteECThermal();
+		if (theMat != 0)
+			theMaterial = (UniaxialMaterial *)theMat;
+		else
+			return TCL_ERROR;
+
+	} else if (strcmp(argv[1], "Elastic2") == 0) {
 	if (argc < 4 || argc > 5) {
 	    opserr << "WARNING invalid number of arguments\n";
 	    printCommand(argc,argv);

@@ -21,8 +21,8 @@
 //              Panagiotis Kotsovinos(P.Kotsovinos@ed.ac.uk)// 
 
                                                                                                                                                 
-#ifndef Steel01Thermal_h
-#define Steel01Thermal_h
+#ifndef Steel01PThermal_h
+#define Steel01PThermal_h
 
 
 #include <UniaxialMaterial.h>
@@ -33,16 +33,16 @@
 #define STEEL_01_DEFAULT_A3        0.0
 #define STEEL_01_DEFAULT_A4       55.0
 
-class Steel01Thermal : public UniaxialMaterial
+class Steel01PThermal : public UniaxialMaterial
 {
   public:
-    Steel01Thermal(int tag, double fy, double E0, double b,
+    Steel01PThermal(int tag, double fy, double E0, double b,
 		   double a1 = STEEL_01_DEFAULT_A1, double a2 = STEEL_01_DEFAULT_A2,
 		   double a3 = STEEL_01_DEFAULT_A3, double a4 = STEEL_01_DEFAULT_A4);
-    Steel01Thermal();
-    ~Steel01Thermal();
+    Steel01PThermal();
+    ~Steel01PThermal();
 
-    const char *getClassType(void) const {return "Steel01Thermal";};
+    const char *getClassType(void) const {return "Steel01PThermal";};
 
 
     double getThermalElongation(void); //***JZ
@@ -91,8 +91,7 @@ class Steel01Thermal : public UniaxialMaterial
     double fyT;
     double E0T;
     double fp; // 11/10
-	
-	
+    double TemperautreC;
     //JZ 07/10 /////////////////////////////////////////////////////////////end 
     
     
@@ -114,28 +113,25 @@ class Steel01Thermal : public UniaxialMaterial
                         // 1 = loading (positive strain increment)
                         // -1 = unloading (negative strain increment)
                         // 0 initially
-    bool Cmono;   //state of monotonic loading
-	
+    
     /*** CONVERGED State Variables ***/    
     double Cstrain;
     double Cstress;
     double Ctangent;    
-    double Ctemperature;
-	
+
     /*** TRIAL History Variables ***/
     double TminStrain;
     double TmaxStrain;
     double TshiftP;
     double TshiftN;
     int Tloading;
-    bool Tmono;   //state of monotonic loading
-	
+    
     /*** TRIAL State Variables ***/
     double Tstrain;
     double Tstress;
     double Ttangent; // Not really a state variable, but declared here
                      // for convenience
-    double Ttemperature; //Trial Temperature
+
     // Calculates the trial state variables based on the trial strain
     void determineTrialState (double dStrain);
 

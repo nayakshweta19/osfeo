@@ -40,8 +40,8 @@
 #include <fstream>
 using namespace std;
 
-#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
-#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+#define min(a, b)  (((a) < (b)) ? (a) : (b))
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
 
 #ifdef _USRDLL
 #define OPS_Export extern "C" _declspec(dllexport)
