@@ -49,7 +49,7 @@ void *OPS_SteelBRB(void)
   Tol = 1.0e-14; 
   
   int numArgs = OPS_GetNumRemainingInputArgs();
-  if (numArgs != 11 || numArgs != 12) {
+  if (numArgs != 11 && numArgs != 12) {    // ---- correct!!
     opserr << "Warning Insufficient args: unixialMaterial SteelBRB tag E sigmaY0 sigmaY_T alpha_T beta_T delta_T sigmaY_C alpha_C beta_C delta_C <Tol> \n";
     return 0;
   }
@@ -1291,7 +1291,7 @@ SteelBRB::getInitialTangentSensitivity(int gradNumber)
 
 
 Response* 
-SteelBRB::setResponse(const char **argv, int argc, Information &matInfo)
+SteelBRB::setResponse(const char **argv, int argc, OPS_Stream &theOutput)
 {
 
 
@@ -1367,7 +1367,15 @@ SteelBRB::setResponse(const char **argv, int argc, Information &matInfo)
 
 	  } 
 
-	return 0;
+
+	  //by default, See if the response is one of the defaults
+	  Response *res =  UniaxialMaterial::setResponse(argv, argc, theOutput);
+
+	  if (res != 0)      return res;
+	  else { 
+		  opserr<<"error in SteelBRB::setResponse"<<endln;
+		  return 0;
+	  }
 }
 
 int 

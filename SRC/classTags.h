@@ -175,9 +175,10 @@
 #define MAT_TAG_BraceMaterial                   70
 #define MAT_TAG_ViscousDamper                   71
 #define MAT_TAG_ConcwBeta                       72
+#define MAT_TAG_WrapperUniaxialMaterial         73
+#define MAT_TAG_UniaxialJ2Plasticity            74
+#define MAT_TAG_BWBN                            75
 
-#define MAT_TAG_WrapperUniaxialMaterial      73
-#define MAT_TAG_UniaxialJ2Plasticity         74
 
 // Neallee@tju.edu.cn
 #define MAT_TAG_ConcreteL02			60
