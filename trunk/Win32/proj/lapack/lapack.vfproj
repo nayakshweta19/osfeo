@@ -41,12 +41,15 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
 	<Files>
+		<File RelativePath="..\..\..\OTHER\LAPACK\chla_transtype.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgbsv.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgbtf2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgbtrf.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgbtrs.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgebak.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgebal.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgecon.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgeequb.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgeev.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgehd2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgehrd.f"/>
@@ -55,7 +58,12 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgels.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgeqr2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgeqrf.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgerfsx.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgesv.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgesvd.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgesvj.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgesvx.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dgesvxx.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgetf2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgetrf.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgetri.f"/>
@@ -68,7 +76,15 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dgttrs.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dhgeqz.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dhseqr.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_geamv.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_gercond.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_gerfsx_extended.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_gerpvgrw.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_lin_berr.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_rpvgrw.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dla_wwaddw.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlabad.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dlacn2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlacon.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlacpy.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dladiv.f"/>
@@ -92,6 +108,7 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlaptm.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlapy2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlapy3.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dlaqge.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlar2v.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlaran.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlarf.f"/>
@@ -106,6 +123,7 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlartv.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlaruv.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlascl.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dlascl2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlaset.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlasr.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlasrt.f"/>
@@ -113,6 +131,7 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlasv2.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlaswp.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dlasy2.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\dlatrs.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dorg2r.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dorghr.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dorgqr.f"/>
@@ -129,6 +148,7 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\dpotrs.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dpttrf.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dpttrs.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\drscl.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dsbevx.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dsbtrd.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\dstebz.f"/>
@@ -148,6 +168,8 @@
 		<File RelativePath="..\..\..\OTHER\LAPACK\icmax1.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\ieeeck.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\ilaenv.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\ilaprec.f"/>
+		<File RelativePath="..\..\..\OTHER\LAPACK\ilatrans.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\izmax1.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\lsame.f"/>
 		<File RelativePath="..\..\..\OTHER\LAPACK\lsamen.f"/>
