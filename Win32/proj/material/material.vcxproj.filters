@@ -1490,6 +1490,9 @@
     <ClCompile Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.cpp">
       <Filter>nD\cyclicSoil</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\BWBN.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2791,6 +2794,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\nD\CycLiqCPPlaneStrain.h">
       <Filter>nD\cyclicSoil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\BWBN.h">
+      <Filter>uniaxial</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

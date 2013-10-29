@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -102,6 +102,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -308,6 +309,7 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Bond_SP01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BraceMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\BWBN.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\CableMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\Cast.cpp" />
     <ClCompile Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.cpp" />
@@ -766,6 +768,7 @@
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Bond_SP01.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BoucWenMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BraceMaterial.h" />
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\BWBN.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\CableMaterial.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Cast.h" />
     <ClInclude Include="..\..\..\SRC\material\uniaxial\compositePackages\CCFT_concMaterial.h" />

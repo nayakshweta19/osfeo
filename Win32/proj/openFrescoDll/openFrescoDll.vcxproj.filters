@@ -308,19 +308,10 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.cpp">
       <Filter>openseesExtra</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Socket.cpp">
-      <Filter>openseesExtra</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_SocketSSL.cpp">
-      <Filter>openseesExtra</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.cpp">
       <Filter>openseesExtra</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeries.cpp">
-      <Filter>openseesExtra</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\UDP_Socket.cpp">
       <Filter>openseesExtra</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.cpp">
@@ -578,6 +569,15 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp">
       <Filter>openseesCore</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\channel\TCP_Socket.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\channel\TCP_SocketSSL.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\actor\channel\UDP_Socket.cpp">
+      <Filter>openseesExtra</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.h">
@@ -823,12 +823,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.h">
       <Filter>openseesExtra</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Socket.h">
-      <Filter>openseesExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_SocketSSL.h">
-      <Filter>openseesExtra</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.h">
       <Filter>openseesExtra</Filter>
     </ClInclude>
@@ -839,9 +833,6 @@
       <Filter>openseesExtra</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeriesIntegrator.h">
-      <Filter>openseesExtra</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\UDP_Socket.h">
       <Filter>openseesExtra</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.h">
@@ -1149,6 +1140,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\nDarray\stresst.h">
       <Filter>openseesCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\channel\TCP_Socket.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\channel\TCP_SocketSSL.h">
+      <Filter>openseesExtra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\actor\channel\UDP_Socket.h">
+      <Filter>openseesExtra</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
