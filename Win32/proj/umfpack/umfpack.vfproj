@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{236DFA68-5A01-4DB5-ACF0-1F237B30ABC0}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" OutputDirectory=".\..\..\lib\debug\" IntermediateDirectory=".\..\..\obj\umfpack\debug\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" PdbFile=".\..\..\obj\itpack\debug/" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\debug\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" OutputDirectory=".\..\..\lib\release\" IntermediateDirectory=".\..\..\obj\umfpack\release\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib\release\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Debug|x64" OutputDirectory=".\..\..\lib64\$(ConfigurationName)\" IntermediateDirectory=".\..\..\obj\umfpack\$(ConfigurationName)\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Optimization="optimizeDisabled" InlineFunctionExpansion="expandOnlyInline" FavorSizeOrSpeed="favorSpeed"/>
+				<Tool Name="VFLibrarianTool"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|x64" OutputDirectory=".\..\..\lib64\release\" IntermediateDirectory=".\..\..\obj\umfpack\release\" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLibrarianTool" OutputFile=".\..\..\lib64\release\$(ProjectName).lib"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\mc13e.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\mc21b.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd21i.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2co.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2er.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2f0.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2f1.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2f2.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2fa.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2fb.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2fg.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2in.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2lt.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2of.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2p1.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2p2.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2r0.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2r2.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2ra.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2rf.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2rg.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2s2.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2sl.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2so.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2su.f"/>
+		<File RelativePath="..\..\..\OTHER\UMFPACK\umd2ut.f"/></Files>
+	<Globals/></VisualStudioProject>
