@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2004/11/25 00:54:09 $
+// $Date: 2004-11-25 00:54:09 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/message/Message.cpp,v $
                                                                         
                                                                         
@@ -81,6 +81,13 @@ Message::putData(char *theData, int startLoc, int endLoc)
 	opserr << "Message::putData() - invalid length of data given\n";
 	return -1;
     }
+}
+
+void
+Message::setData(char *theData, int theLength)
+{
+	data = theData;
+	length = theLength;
 }
 
 const char *

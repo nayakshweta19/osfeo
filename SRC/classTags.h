@@ -166,18 +166,22 @@
 #define MAT_TAG_FRPConfinedConcrete             62
 
 #define MAT_TAG_Steel01Thermal		        63
-#define MAT_TAG_Steel02Thermal			64
-#define MAT_TAG_Concrete02Thermal		65
-#define MAT_TAG_ModIMKPinching                  66
-#define MAT_TAG_ModIMKPeakOriented              67
-#define MAT_TAG_RambergOsgoodSteel              68
-#define MAT_TAG_PinchingLimitStateMaterial      69	
-#define MAT_TAG_BraceMaterial                   70
-#define MAT_TAG_ViscousDamper                   71
-#define MAT_TAG_ConcwBeta                       72
-#define MAT_TAG_WrapperUniaxialMaterial         73
-#define MAT_TAG_UniaxialJ2Plasticity            74
-#define MAT_TAG_BWBN                            75
+#define MAT_TAG_Steel01PThermal		        64
+#define MAT_TAG_Steel02Thermal			65
+#define MAT_TAG_SteelECThermal			66
+#define MAT_TAG_ElasticMaterialThermal  67
+#define MAT_TAG_Concrete02Thermal		68
+#define MAT_TAG_ConcreteECThermal		69
+#define MAT_TAG_ModIMKPinching                  70
+#define MAT_TAG_ModIMKPeakOriented              71
+#define MAT_TAG_RambergOsgoodSteel              72
+#define MAT_TAG_PinchingLimitStateMaterial      73	
+#define MAT_TAG_BraceMaterial                   74
+#define MAT_TAG_ViscousDamper                   75
+#define MAT_TAG_ConcwBeta                       76
+#define MAT_TAG_WrapperUniaxialMaterial         77
+#define MAT_TAG_UniaxialJ2Plasticity            78
+#define MAT_TAG_BWBN                            79
 
 
 // Neallee@tju.edu.cn
@@ -289,10 +293,11 @@
 #define SEC_TAG_ElasticShear2d                  23
 #define SEC_TAG_ElasticShear3d                  24
 #define SEC_TAG_FiberSection2dInt		25
-#define SEC_TAG_FiberSection2dThermal		26
-#define SEC_TAG_LayeredShellFiberSection        27
-#define SEC_TAG_FiberSection3dThermal   28
-
+#define SEC_TAG_FiberSection2dThermal		    26
+#define SEC_TAG_FiberSection3dThermal            27  // U.Edinburgh,2013
+#define SEC_TAG_FiberSectionGJThermal            28  // U.Edinburgh,2013
+#define SEC_TAG_MembranePlateFiberSectionThermal   29 //U.Edinburgh,2013
+#define SEC_TAG_LayeredShellFiberSection        30
 
 #define SEC_TAG_McftSection2dfiber 7601
 
@@ -637,14 +642,18 @@
 #define ELE_TAG_FourNodeQuad02         134
 #define ELE_TAG_cont2d01    	       135	// provisional
 #define ELE_TAG_cont2d02    	       136 	// provisional
-#define ELE_TAG_CST	    	       137
+#define ELE_TAG_CST		    	       137
 #define ELE_TAG_Truss2                 138
 #define ELE_TAG_CorotTruss2            139
 #define ELE_Tag_ZeroLengthImpact3D     140
 #define ELE_TAG_PFEMElement3D          141
 #define ELE_TAG_PFEMElement2DCompressible 142
-#define ELE_TAG_PFEMElement2DBubble    143
-#define ELE_TAG_PFEMElement2D73    144
+#define ELE_TAG_PFEMElement2DBubble       143
+#define ELE_TAG_PFEMElement2D73           144
+#define ELE_TAG_ElasticTimoshenkoBeam2d   145
+#define ELE_TAG_ElasticTimoshenkoBeam3d   146
+#define ELE_TAG_ElastomericBearingUFRP2d  147
+#define ELE_TAG_ElastomericBearingUFRP3d  148
 
 #define ELE_TAG_MultipleShearSpring 6201
 #define ELE_TAG_MultipleNormalSpring 6202

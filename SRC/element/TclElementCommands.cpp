@@ -100,6 +100,8 @@ extern void *OPS_BeamContact3D(void);
 extern void *OPS_BeamContact3Dp(void);
 extern void *OPS_SurfaceLoad(void);
 extern void *OPS_ModElasticBeam2d(void);
+extern void *OPS_ElasticTimoshenkoBeam2d(void);
+extern void *OPS_ElasticTimoshenkoBeam3d(void);
 extern void *OPS_TPB1D(void);
 extern void *OPS_BeamEndContact3D(void);
 extern void *OPS_BeamEndContact3Dp(void);
@@ -397,7 +399,11 @@ TclModelBuilder_addElastomericBearingBoucWen(ClientData clientData, Tcl_Interp *
 				      TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
 extern int
-TclModelBuilder_addTwoNodeLink(ClientData clientData, Tcl_Interp *interp,  int argc,
+TclModelBuilder_addElastomericBearingUFRP(ClientData clientData, Tcl_Interp *interp, int argc,
+TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
+
+extern int
+TclModelBuilder_addTwoNodeLink(ClientData clientData, Tcl_Interp *interp, int argc,
 			       TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
 
 extern int
@@ -625,7 +631,20 @@ TclModelBuilderElementCommand(ClientData clientData, Tcl_Interp *interp,
 	  return TCL_ERROR;
 	}
 
-  } else if ((strcmp(argv[1],"pyMacro2D") == 0) || (strcmp(argv[1],"PY_Macro2D") == 0)) {
+  } else if ((strcmp(argv[1], "ElasticTimoshenkoBeam") == 0) || (strcmp(argv[1], "elasticTimoshenkoBeam")) == 0) {
+	  Element *theEle = 0;
+	  if (OPS_GetNDM() == 2)
+		  theEle = (Element *)OPS_ElasticTimoshenkoBeam2d();
+	  else
+		  theEle = (Element *)OPS_ElasticTimoshenkoBeam3d();
+	  if (theEle != 0)
+		  theElement = theEle;
+	  else {
+		  opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+		  return TCL_ERROR;
+	  }
+
+  } else if ((strcmp(argv[1], "pyMacro2D") == 0) || (strcmp(argv[1], "PY_Macro2D") == 0)) {
     
     void *theEle = OPS_PY_Macro2D();
     if (theEle != 0) 
@@ -1370,7 +1389,14 @@ else if (strcmp(argv[1],"nonlinearBeamColumn") == 0) {
     return result;
   }
 
-  else if (strcmp(argv[1],"twoNodeLink") == 0) {
+  else if (strcmp(argv[1], "elastomericBearingUFRP") == 0) {
+    int eleArgStart = 1;
+    int result = TclModelBuilder_addElastomericBearingUFRP(clientData, interp, argc, argv,
+                               theTclDomain, theTclBuilder, eleArgStart);
+    return result;
+  }
+
+  else if (strcmp(argv[1], "twoNodeLink") == 0) {
     int eleArgStart = 1;
     int result = TclModelBuilder_addTwoNodeLink(clientData, interp, argc, argv,
 						theTclDomain, theTclBuilder, eleArgStart);

@@ -1,5 +1,5 @@
 // $Revision: 1.3 $
-// $Date: 2009/05/14 22:45:57 $
+// $Date: 2009-05-14 22:45:57 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/EigenSOE.h,v $
 
 // Written: Jun Peng
@@ -32,6 +32,7 @@ class Graph;
 class Matrix;
 class Vector;
 class ID;
+class LinearSOE;
 
 class EigenSOE : public MovableObject
 {
@@ -40,8 +41,9 @@ class EigenSOE : public MovableObject
      EigenSOE(int classTag);
      virtual ~EigenSOE();
      
-     virtual int solve(int numModes, bool generalized);
+     virtual int solve(int numModes, bool generalized, bool findSmallest = true);
      virtual int setLinks(AnalysisModel &theModel);    
+     virtual int setLinearSOE(LinearSOE &theSOE) {return -1;};
      
      // pure virtual functions
      virtual int addA(const Matrix &, const ID &, double fact = 1.0) = 0;

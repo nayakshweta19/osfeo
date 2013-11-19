@@ -419,16 +419,16 @@ FullGenLinSOE::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &th
 }
 
 
-double *
+const Matrix *
 FullGenLinSOE::getA(void)
 {
-    return A;
+	return matA;
 }
 
 double 
 FullGenLinSOE::getminEigenValue(int n, double *b)
 {
-     //this funtion dtermines the minimum eigen value of the global stiffness matrix
+     //this function determines the minimum eigen value of the global stiffness matrix
      //global stiffness matrix should be entered in vector form and starting index is zero
      int i, j, p, q, u, w, t, s;
      double eig, fm, cn, sn, omega, x, y, d;

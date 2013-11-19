@@ -361,7 +361,7 @@ Concrete02Thermal::getElongTangent(double TempT, double& ET, double& Elong, doub
       ThermalElongation = -1.8e-4 + 9e-6 *(Temp+20) + 2.3e-11 *(Temp+20)*(Temp+20)*(Temp+20);
   }
   else if (Temp <= 1180) {
-      ThermalElongation = 14e.009-3;
+      ThermalElongation = 14e-3;
   }
   else {
 	  opserr << "the temperature is invalid\n";

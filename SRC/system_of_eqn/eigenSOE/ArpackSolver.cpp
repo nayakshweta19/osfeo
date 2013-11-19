@@ -127,7 +127,7 @@ extern "C" int dseupd_(bool *rvec, char *howmny, logical *select, double *d, dou
 
 
 int
-ArpackSolver::solve(int numModes, bool generalized)
+ArpackSolver::solve(int numModes, bool generalized, bool findSmallest)
 {
   if (generalized == false) {
     opserr << "ArpackSolver::solve() - at moment only solves generalized problem\n";
@@ -151,7 +151,6 @@ ArpackSolver::solve(int numModes, bool generalized)
   int lworkl = ncv*ncv + 8*ncv;
 
   int processID = theArpackSOE->processID;
-  
   
   // set up the space for ARPACK functions.
   // this is done each time method is called!! .. this needs to be cleaned up
@@ -184,7 +183,14 @@ ArpackSolver::solve(int numModes, bool generalized)
     numModesMax = numModes;
   }
 
-  static char which[3]; strcpy(which, "LM");
+  static char which[3];
+  if (findSmallest == true) {
+    strcpy(which, "LM");
+  }  else {
+    strcpy(which, "SM");
+  }
+
+
   char bmat = 'G';
   char howmy = 'A';
   
@@ -204,8 +210,10 @@ ArpackSolver::solve(int numModes, bool generalized)
   int ido = 0;
   int ierr = 0;
   
-  while (1) { 
+  int counter = 0;
 
+  while (1) { 
+      
 
 #ifdef _WIN32
     unsigned int sizeWhich =2;
@@ -213,20 +221,34 @@ ArpackSolver::solve(int numModes, bool generalized)
     unsigned int sizeHowmany =1;
     unsigned int sizeOne = 1;
 
+   // opserr << "ArpackSOE::solver) -  before DSAPPD\n";
     DSAUPD(&ido, &bmat, &n, which, &nev, &tol, resid, 
 	   &ncv, v, &ldv,
 	   iparam, ipntr, workd, workl, &lworkl, &info);
+	// opserr << "ArpackSOE::solver) - 1 after DSAPPD\n";
 #else
     dsaupd_(&ido, &bmat, &n, which, &nev, &tol, resid, &ncv, v, &ldv,
 	    iparam, ipntr, workd, workl, &lworkl, &info);
 #endif
+	
+
+	if (theArpackSOE->checkSameInt(ido) != 1) {
+		opserr << "ArpackSolver::solve - ido values not the same .. ido, processID: "
+			<< ido << " " << processID << endln;
+		return -1;
+	}
 
     if (ido == -1) {
-
+    
       myMv(n, &workd[ipntr[0]-1], &workd[ipntr[1]-1]); 
-      
+    
       theVector.setData(&workd[ipntr[1] - 1], size);
-      theSOE->setB(theVector);
+     
+	   if (processID > 0)
+	     theSOE->zeroB();
+      else
+	      theSOE->setB(theVector);
+
       ierr = theSOE->solve();
       const Vector &X = theSOE->getX();
       theVector = X;
@@ -237,14 +259,16 @@ ArpackSolver::solve(int numModes, bool generalized)
       
       //  double ratio = 1.0;
       myCopy(n, &workd[ipntr[2]-1], &workd[ipntr[1]-1]);
-      
+      //opserr << "ArpackSOE::solver) - 1 before SOE-setVector\n"; 
       theVector.setData(&workd[ipntr[1] - 1], size);
+	   //opserr << "ArpackSOE::solver) - 1 after SOE-setEVctor\n";
       if (processID > 0)
-	theSOE->zeroB();
+	     theSOE->zeroB();
       else
-	theSOE->setB(theVector);
+	      theSOE->setB(theVector);
 
       theSOE->solve();
+   
       const Vector &X = theSOE->getX();
       theVector = X;
       //      theVector.setData(&workd[ipntr[1] - 1], size);
@@ -257,7 +281,6 @@ ArpackSolver::solve(int numModes, bool generalized)
 
       continue;
     }
-    
     break;
   }
   
@@ -471,7 +494,6 @@ ArpackSolver::myMv(int n, double *v, double *result)
     while((elePtr = theEles()) != 0) {
       const Vector &b = elePtr->getM_Force(x, 1.0);
       y.Assemble(b, elePtr->getID(), 1.0);
-
     }
 
     // loop over the DOF_Groups

@@ -43,7 +43,7 @@
 #include <EigenSOE.h>
 #include <Recorder.h>
 #include <Parameter.h>
-
+#include <Message.h>
 
 #include <ArrayOfTaggedObjects.h>
 #include <ShadowActorSubdomain.h>
@@ -103,12 +103,18 @@ ActorSubdomain::run(void)
       EigenSOE *theEigenSOE;
       ConvergenceTest *theTest;
       Recorder *theRecorder;
-      bool res, generalized;
+      bool res, generalized, findSmallest;
       double doubleRes;
       int intRes;
       NodeResponseType nodeResponseType;
       Parameter *theParameter;
-      
+      int argc;
+      char **argv;
+      char *allResponseArgs;
+      char *currentLoc;
+      int argLength, msgLength;
+      Message theMessage;
+
       const ID *theID;
       
       //     opserr << "ActorSubdomain ACTION: " << action << endln;
@@ -131,7 +137,12 @@ ActorSubdomain::run(void)
 	      generalized = true;
 	    else
 	      generalized = false;
-	    this->eigenAnalysis(numMode, generalized);
+	    if (msgData(3) == 0)
+	      findSmallest = true;
+	    else
+	      findSmallest = false;
+		
+	    this->eigenAnalysis(numMode, generalized, findSmallest);
 	    break;
 	    /*
 	  case ShadowActorSubdomain_buildSubdomain:
@@ -468,7 +479,6 @@ ActorSubdomain::run(void)
 	    tag = msgData(1);
 	    dof = msgData(2);
 	    loadPatternTag = msgData(3);
-
 	    msgData(0) = this->removeSP_Constraint(tag, dof, loadPatternTag);
 	    this->sendID(msgData);
 
@@ -854,6 +864,63 @@ ActorSubdomain::run(void)
 	    if (theVector != 0)
 	      this->sendVector(*theVector);
 
+	    break;
+
+	  case ShadowActorSubdomain_getElementResponse:
+	    tag = msgData(1);  // eleTag
+	    argc = msgData(2);
+	    msgLength = msgData(3);
+
+	    if (msgLength == 0) {
+	      opserr << "ElementRecorder::recvSelf() - 0 sized string for responses\n";
+	      return -1;
+	    }
+
+	    allResponseArgs = new char[msgLength];
+	    if (allResponseArgs == 0) {
+	      opserr << "ElementRecorder::recvSelf() - out of memory\n";
+	      return -1;
+	    }
+
+	    theMessage.setData(allResponseArgs, msgLength);
+	    if (this->recvMessage(theMessage) < 0) {
+	      opserr << "ElementRecorder::recvSelf() - failed to recv message\n";
+	      return -1;
+	    }
+
+	    //
+	    // now break this single array into many
+	    // 
+	    
+	    argv = new char *[argc];
+	    if (argv == 0) {
+	      opserr << "ElementRecorder::recvSelf() - out of memory\n";
+	      return -1;
+	    }
+	    
+	    currentLoc = allResponseArgs;
+	    for (int j=0; j<argc; j++) {
+	      argv[j] = currentLoc;	      
+	      argLength = strlen(currentLoc)+1;
+	      currentLoc += argLength;
+	    }
+
+	    theVector = this->getElementResponse(tag, (const char**)argv, argc);
+
+	    delete [] argv;
+	    delete [] allResponseArgs;
+
+	    if (theVector == 0) 
+	      msgData(0) = 0;
+	    else {
+	      msgData(0) = 1;
+	      msgData(1) = theVector->Size();
+	    }
+	    this->sendID(msgData);
+
+	    if (theVector != 0)
+	      this->sendVector(*theVector);
+      
 	    break;
 
 	  case ShadowActorSubdomain_calculateNodalReactions:

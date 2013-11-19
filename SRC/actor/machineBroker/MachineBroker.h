@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2003/08/29 07:16:40 $
+// $Date: 2003-08-29 07:16:40 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/machineBroker/MachineBroker.h,v $
                                                                         
                                                                         
@@ -60,6 +60,8 @@ class MachineBroker
     virtual Channel *getMyChannel(void)        =0;
     virtual Channel *getRemoteProcess(void)    =0;
     virtual int freeProcess(Channel *)         =0;
+    
+    void setObjectBroker(FEM_ObjectBroker *theBroker);
 
     /* ************ THE OLD INTERFACE ***************
     virtual int startActor(char *actorProgram, 

@@ -50,16 +50,9 @@
 
 #define min(a,b) ( (a)<(b) ? (a):(b) )
 
-static int numShell02 = 0;
-
 void *
 OPS_NewShell02(void)
 {
-  if (numShell02 == 0) {
-    //opserr << "Using Shell02 - Developed by: Neallee@tju.edu.cn";
-    numShell02++;
-  }
-
   Element *theElement = 0;
   
   int numArgs = OPS_GetNumRemainingInputArgs();
@@ -83,8 +76,7 @@ OPS_NewShell02(void)
     return 0;
   }
   
-  theElement = new Shell02(iData[0], iData[1], iData[2], iData[3],
-			      iData[4], *theSection);
+  theElement = new Shell02(iData[0], iData[1], iData[2], iData[3], iData[4], *theSection);
 
   return theElement;
 }
@@ -213,7 +205,6 @@ connectedExternalNodes(4), load(0), Ki(0)
       materialPointers[i] = theMaterial.getCopy( ) ;
 
       if (materialPointers[i] == 0) {
-
 	opserr << "Shell02::constructor - failed to get a material of type: ShellSection\n";
       } //end if
       
@@ -310,8 +301,7 @@ void  Shell02::setDomain( Domain *theDomain )
 
   //node pointers
   for ( i = 0; i < 4; i++ ) {
-     nodePointers[i] = theDomain->getNode( connectedExternalNodes(i) ) ;
-     
+     nodePointers[i] = theDomain->getNode( connectedExternalNodes(i) );
      if (nodePointers[i] == 0) {
        opserr << "Shell02::setDomain - no node " << connectedExternalNodes(i);
        opserr << " exists in the model\n";
@@ -324,7 +314,7 @@ void  Shell02::setDomain( Domain *theDomain )
   //assemble ddMembrane ;
   for ( i = 0; i < 3; i++ ) {
       for ( j = 0; j < 3; j++ )
-         ddMembrane(i,j) = dd(i,j) ;
+         ddMembrane(i,j) = dd(i,j);
   } //end for i 
 
   //eigenvalues of ddMembrane
@@ -426,21 +416,20 @@ void  Shell02::Print( OPS_Stream &s, int flag )
     s << eleTag << "\t" << 1; 
     s  << "\t" << -1 << "\tSHELL\t1.0\0.0";
     s << endln;
-  }  else if (flag < -1) {
-
-     int counter = (flag + 1) * -1;
-     int eleTag = this->getTag();
-     int i,j;
-     for ( i = 0; i < 4; i++ ) {
-       const Vector &stress = materialPointers[i]->getStressResultant();
-       
-       s << "STRESS\t" << eleTag << "\t" << counter << "\t" << i << "\tTOP";
-       for (j=0; j<6; j++)
-	 s << "\t" << stress(j);
-       s << endln;
-     }
-
-   } else {
+  } 
+  else if (flag < -1) {
+    int counter = (flag + 1) * -1;
+    int eleTag = this->getTag();
+    int i,j;
+    for ( i = 0; i < 4; i++ ) {
+      const Vector &stress = materialPointers[i]->getStressResultant();
+      
+      s << "STRESS\t" << eleTag << "\t" << counter << "\t" << i << "\tTOP";
+      for (j=0; j<6; j++)
+	s << "\t" << stress(j);
+      s << endln;
+    }
+  } else {
     s << endln ;
     s << "MITC4 Bbar Non-Locking Four Node Shell \n" ;
     s << "Element Number: " << this->getTag() << endln ;
@@ -691,7 +680,6 @@ const Matrix&  Shell02::getInitialStiff( )
 
   stiff.Zero( ) ;
 
-
   //compute basis vectors and local nodal coordinates
   //computeBasis( ) ;
 
@@ -750,7 +738,6 @@ const Matrix&  Shell02::getInitialStiff( )
   //(*Bhat[node]) /= volume ;
     Bhat[node]->operator/=(volume) ;
     
-
   //gauss loop 
   for ( i = 0; i < ngauss; i++ ) {
 
@@ -759,7 +746,6 @@ const Matrix&  Shell02::getInitialStiff( )
        for ( q = 0; q < numnodes; q++ )
 	  shp[p][q]  = Shape[p][q][i] ;
     } // end for p
-
 
     // j-node loop to compute strain 
     for ( j = 0; j < numnodes; j++ )  {
@@ -792,7 +778,6 @@ const Matrix&  Shell02::getInitialStiff( )
       }//end for p
     } // end for j
   
-
     dd = materialPointers[i]->getInitialTangent( ) ;
     dd *= dvol[i] ;
 
@@ -828,7 +813,6 @@ const Matrix&  Shell02::getInitialStiff( )
 	for ( q = 3; q < 6; q++ ) 
 	  BJ(p,q) *= (-1.0) ;
       } //end for p
-
 
       //transpose 
       //BJtran = transpose( 8, ndf, BJ ) ;
@@ -868,7 +852,6 @@ const Matrix&  Shell02::getInitialStiff( )
 	  for (q=0; q<ndf; q++ )
 	    BK(p,q) = saveB[p][q][k]   ;
 	}//end for p
-	
 	
 	//drilling B matrix
 	drillPointer = computeBdrill( k, shp ) ;
@@ -1044,7 +1027,6 @@ Shell02::formInertiaTerms( int tangFlag )
   //compute basis vectors and local nodal coordinates
   //computeBasis( ) ;
 
-
   //gauss loop 
   for ( i = 0; i < numberGauss; i++ ) {
 
@@ -1054,7 +1036,6 @@ Shell02::formInertiaTerms( int tangFlag )
     //volume element to also be saved
     dvol = wg[i] * xsj ;  
 
-
     //node loop to compute accelerations
     momentum.Zero( ) ;
     for ( j = 0; j < numberNodes; j++ ) 
@@ -1063,46 +1044,42 @@ Shell02::formInertiaTerms( int tangFlag )
 			 nodePointers[j]->getTrialAccel(),
 			 shp[massIndex][j] ) ;
 
-      
     //density
     rhoH = materialPointers[i]->getRho() ;
 
     //multiply acceleration by density to form momentum
     momentum *= rhoH ;
 
-
     //residual and tangent calculations node loops
     //jj = 0 ;
-    for ( j=0, jj=0; j<numberNodes; j++, jj+=ndf ) {
+	for (j = 0, jj = 0; j < numberNodes; j++, jj += ndf) {
 
-      temp = shp[massIndex][j] * dvol ;
-
-      for ( p = 0; p < 3; p++ )
-        resid( jj+p ) += ( temp * momentum(p) ) ;
-
-      
-      if ( tangFlag == 1 && rhoH != 0.0) {
-
-	 //multiply by density
-	 temp *= rhoH ;
-
-	 //node-node translational mass
-         //kk = 0 ;
-         for ( k=0, kk=0; k<numberNodes; k++, kk+=ndf ) {
-
-	   massJK = temp * shp[massIndex][k] ;
-
-	   for ( p = 0; p < 3; p++ ) 
-	      mass( jj+p, kk+p ) +=  massJK ;
-            
-	   //kk += ndf ;
-          } // end for k loop
-
-      } // end if tang_flag 
-
-      //jj += ndf ;
-    } // end for j loop
-
+	  temp = shp[massIndex][j] * dvol;
+	  
+	  for (p = 0; p < 3; p++)
+	resid(jj + p) += (temp * momentum(p));
+	  
+	  if (tangFlag == 1 && rhoH != 0.0) {
+	  
+	//multiply by density
+	temp *= rhoH;
+	
+	//node-node translational mass
+	//kk = 0 ;
+	for (k = 0, kk = 0; k < numberNodes; k++, kk += ndf) {
+	
+	  massJK = temp * shp[massIndex][k];
+	  
+	  for (p = 0; p < 3; p++)
+	mass(jj + p, kk + p) += massJK;
+	  //kk += ndf ;
+		
+	} // end for k loop
+	
+	  } // end if tang_flag 
+	  
+	  //jj += ndf ;
+	} // end for j loop
 
   } //end for i gauss loop 
 
@@ -1944,8 +1921,7 @@ Shell02::computeBbarShear( int node, double L1, double L2,
 
     static Matrix temp1(1,3) ;
     static Matrix temp2(1,3) ;
-
-
+	
     //JinvTran = transpose( 2, 2, Jinv ) ;
     JinvTran(0,0) = Jinv(0,0) ;
     JinvTran(1,1) = Jinv(1,1) ;
@@ -2348,10 +2324,9 @@ Shell02::displaySelf(Renderer &theViewer, int displayMode, float fact)
 
       for (int i = 0; i < 3; i++) {
 	coords(0,i) = end1Crd(i) + end1Disp(i)*fact;
-	coords(1,i) = end2Crd(i) + end2Disp(i)*fact;    
-	coords(2,i) = end3Crd(i) + end3Disp(i)*fact;    
-	coords(3,i) = end4Crd(i) + end4Disp(i)*fact;    
-
+	coords(1,i) = end2Crd(i) + end2Disp(i)*fact; 
+	coords(2,i) = end3Crd(i) + end3Disp(i)*fact; 
+	coords(3,i) = end4Crd(i) + end4Disp(i)*fact;
       }
     } else {
       int mode = displayMode * -1;

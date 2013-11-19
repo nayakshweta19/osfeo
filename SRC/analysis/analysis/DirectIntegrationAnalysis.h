@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2009/05/11 21:32:27 $
+// $Date: 2009-05-11 21:32:27 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/analysis/DirectIntegrationAnalysis.h,v $
                                                                         
                                                                         
@@ -70,7 +70,7 @@ class DirectIntegrationAnalysis: public TransientAnalysis
     void clearAll(void);	    
     
     int analyze(int numSteps, double dT);
-    int eigen(int numMode, bool generlzed = true);
+    int eigen(int numMode, bool generlzed = true, bool findSmallest = true);
     int initialize(void);
     int domainChanged(void);
 

@@ -114,8 +114,12 @@ class Tri31 : public Element
     static Matrix K;		// Element stiffness, damping, and mass Matrix
     static Vector P;		// Element resisting force vector
     Vector Q;		        // Applied nodal loads
-    double b[2];		// Body forces
-    Vector pressureLoad;	// Pressure load at nodes
+    double b[2];			// Body forces
+    
+	double appliedB[2]; // Body forces applied with load pattern
+	int applyLoad;      // flag for body force in load
+	
+	Vector pressureLoad;	// Pressure load at nodes
 
     double thickness;	        // Element thickness
     double pressure;	        // Normal surface traction (pressure) over entire element

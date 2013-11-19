@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2007/07/16 22:56:32 $
+// $Date: 2007-07-16 22:56:32 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/message/Message.h,v $
                                                                         
                                                                         
@@ -42,6 +42,7 @@ class Message
     Message(char *, int);
     virtual ~Message();
 
+	virtual void setData(char *theData, int length);
     virtual int putData(char *theData, int startLoc, int endLoc);    
     virtual const char *getData(void);
     virtual int getSize(void);

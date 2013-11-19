@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.6 $
-// $Date: 2009/05/19 21:54:55 $
+// $Date: 2009-05-19 21:54:55 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/FullGenEigenSolver.cpp,v $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -80,7 +80,7 @@ FullGenEigenSolver::~FullGenEigenSolver()
 }
 
 
-int FullGenEigenSolver::solve(int nEigen, bool generalized)
+int FullGenEigenSolver::solve(int nEigen, bool generalized, bool findSmallest)
 {
   if (generalized == false) {
     opserr << "FullGenEigenSolver::solve() - only solves generalized problem\n";

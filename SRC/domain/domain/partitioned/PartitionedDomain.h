@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.14 $
-// $Date: 2010/09/16 00:07:11 $
+// $Date: 2010-09-16 00:07:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/domain/partitioned/PartitionedDomain.h,v $
                                                                         
                                                                         
@@ -109,9 +109,9 @@ class PartitionedDomain: public Domain
     virtual  int update(void);        
     virtual  int update(double newTime, double dT);
     virtual  int analysisStep(double dT);
-    virtual  int eigenAnalysis(int, bool);
+    virtual  int eigenAnalysis(int, bool, bool);
 
-    virtual int  record(void);    
+    virtual int  record(bool fromAnalysis = true);    
     virtual int  addRecorder(Recorder &theRecorder);    	
     virtual int  removeRecorders(void);
     virtual int  removeRecorder(int tag);
@@ -138,6 +138,8 @@ class PartitionedDomain: public Domain
 
     // nodal methods required in domain interface for parallel interprter
     virtual const Vector *getNodeResponse(int nodeTag, NodeResponseType); 
+    virtual const Vector *getElementResponse(int eleTag, const char **argv, int argc); 
+
     virtual double getNodeDisp(int nodeTag, int dof, int &errorFlag);
     virtual int setMass(const Matrix &mass, int nodeTag);
 

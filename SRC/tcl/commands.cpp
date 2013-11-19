@@ -32,6 +32,7 @@
 //
 // What: "@(#) commands.C, revA"
 
+#include <classTags.h>
 
 #ifdef _PARALLEL_PROCESSING
 #include <mpi.h>
@@ -44,7 +45,7 @@ extern "C" {
 	}
 
 #include <OPS_Globals.h>
-#include <TclModelBuilder.cpp>
+#include <TclModelBuilder.h>
 #include <Matrix.h>
 
 // the following is a little kludgy but it works!
@@ -575,6 +576,12 @@ int
 printModelGIDnow(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
+printA(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+printB(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
 setPrecision(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
@@ -822,10 +829,14 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
     Tcl_CreateCommand(interp, "print", &printModel, 
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
-    // Talledo Start 
+	Tcl_CreateCommand(interp, "printA", &printA,
+		(ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+	Tcl_CreateCommand(interp, "printB", &printB,
+		(ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+	// Talledo Start 
     Tcl_CreateCommand(interp, "printGID", &printModelGID,
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
-	//
+	// neallee@tju.edu.cn
 	Tcl_CreateCommand(interp, "printGIDnow", &printModelGIDnow,
 		      (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
     // Talledo End
@@ -1694,7 +1705,7 @@ analyzeModel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
     if (Tcl_GetDouble(interp, argv[2], &dT) != TCL_OK)	
       return TCL_ERROR;
 
-    // Set global timestep variable
+    // Set global time step variable
     ops_Dt = dT;
 
     if (argc == 6) {
@@ -2013,6 +2024,88 @@ printIntegrator(ClientData clientData, Tcl_Interp *interp, int argc,
   }    
   theIntegrator->Print(output,flag);
   return TCL_OK;  
+}
+
+
+int
+printA(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+	int res = 0;
+
+	FileStream outputFile;
+	OPS_Stream *output = &opserr;
+	bool done = false;
+
+	int currentArg = 1;
+
+	if (argc > 2) {
+		if ((strcmp(argv[currentArg], "file") == 0) ||
+			(strcmp(argv[currentArg], "-file") == 0)) {
+			currentArg++;
+
+			if (outputFile.setFile(argv[currentArg]) != 0) {
+				opserr << "print <filename> .. - failed to open file: " << argv[currentArg] << endln;
+				return TCL_ERROR;
+			}
+			output = &outputFile;
+		}
+	}
+	if (theSOE != 0) {
+		if (theStaticIntegrator != 0)
+			theStaticIntegrator->formTangent();
+		else if (theTransientIntegrator != 0)
+			theTransientIntegrator->formTangent(0);
+
+		const Matrix *A = theSOE->getA();
+		if (A != 0) {
+			*output << *A;
+		}
+	}
+
+	// close the output file
+	outputFile.close();
+
+	return res;
+}
+
+
+int
+printB(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+	int res = 0;
+
+	FileStream outputFile;
+	OPS_Stream *output = &opserr;
+	bool done = false;
+
+	int currentArg = 1;
+
+	if (argc > 2) {
+		if ((strcmp(argv[currentArg], "file") == 0) ||
+			(strcmp(argv[currentArg], "-file") == 0)) {
+			currentArg++;
+
+			if (outputFile.setFile(argv[currentArg]) != 0) {
+				opserr << "print <filename> .. - failed to open file: " << argv[currentArg] << endln;
+				return TCL_ERROR;
+			}
+			output = &outputFile;
+		}
+	}
+	if (theSOE != 0) {
+		if (theStaticIntegrator != 0)
+			theStaticIntegrator->formTangent();
+		else if (theTransientIntegrator != 0)
+			theTransientIntegrator->formTangent(0);
+
+		const Vector &b = theSOE->getB();
+		*output << b;
+	}
+
+	// close the output file
+	outputFile.close();
+
+	return res;
 }
 
 
@@ -3762,12 +3855,6 @@ specifyCTest(ClientData clientData, Tcl_Interp *interp, int argc,
 
 
 
-
-
-	      
-
-
-
 //
 // command invoked to allow the Integrator object to be built
 //
@@ -3776,7 +3863,7 @@ specifyIntegrator(ClientData clientData, Tcl_Interp *interp, int argc,
 		  TCL_Char **argv)
 {
 
-  OPS_ResetInput(clientData, interp, 2, argc, argv, &theDomain, theTclBuilder);	  
+  OPS_ResetInput(clientData, interp, 2, argc, argv, &theDomain, NULL);
 
   // make sure at least one other argument to contain integrator
   if (argc < 2) {
@@ -5970,11 +6057,13 @@ eigenAnalysis(ClientData clientData, Tcl_Interp *interp, int argc,
   }    
   
   bool generalizedAlgo = true; // 0 - frequency/generalized (default),1 - standard, 2 - buckling
-  int typeSolver = 2; // 0 - SymmBandLapack, 1 - SymmSparseArpack, 2 - GenBandArpack (default)
+  int typeSolver = EigenSOE_TAGS_ArpackSOE;
   int loc = 1;
   double shift = 0.0;
+  bool findSmallest = true;
   int factLVALUE = 10; // parameter for UmfPack SOE
 
+  // Check type of eigenvalue analysis
   // Check type of eigenvalue analysis
   while (loc < (argc-1)) {
     if ((strcmp(argv[loc],"frequency") == 0) || 
@@ -5986,55 +6075,24 @@ eigenAnalysis(ClientData clientData, Tcl_Interp *interp, int argc,
     else if ((strcmp(argv[loc],"standard") == 0) || 
 	     (strcmp(argv[loc],"-standard") == 0))
       generalizedAlgo = false;
+
+    else if ((strcmp(argv[loc],"-findLargest") == 0))
+      findSmallest = false;
     
     else if ((strcmp(argv[loc],"symmBandLapackEigen") == 0) || 
 	     (strcmp(argv[loc],"-symmBandLapackEigen") == 0))
-      typeSolver = 0;
-    
-    else if ((strcmp(argv[loc],"symmSparseArpack") == 0) || 
-	     (strcmp(argv[loc],"-symmSparseArpack") == 0) || (strcmp(argv[loc],"-symmSparse") == 0))
-      typeSolver = 1;
-    
-    else if ((strcmp(argv[loc],"genBandArpack") == 0) || 
-	     (strcmp(argv[loc],"-genBandArpack") == 0) || (strcmp(argv[loc],"-BandGeneral") == 0)
-	     || (strcmp(argv[loc],"BandGeneral") == 0))
-      typeSolver = 2;
-    
-    else if ((strcmp(argv[loc],"umfpack") == 0) || 
-	     (strcmp(argv[loc],"-UmfPack") == 0) || (strcmp(argv[loc],"-Umfpack") == 0) ||
-	     (strcmp(argv[loc],"UmfPack") == 0) || (strcmp(argv[loc],"Umfpack") == 0))
-      typeSolver = 5;
-
-	else if ((strcmp(argv[loc],"-lValueFact") == 0) || (strcmp(argv[loc],"-lvalueFact") == 0)) {
-		if (Tcl_GetInt(interp, argv[loc+1], &factLVALUE) != TCL_OK)
-			return TCL_ERROR;
-		loc++;
-	} 
-
-#ifdef _MUMPS
-    else if ((strcmp(argv[loc],"mumps") == 0) || (strcmp(argv[loc],"-Mumps") == 0) 
-	     || (strcmp(argv[loc],"-mumps") == 0) || (strcmp(argv[loc],"Mumps") == 0))
-      typeSolver = 6;
-#endif
-    
-    else if ((strcmp(argv[loc],"SparseGeneral") == 0) || (strcmp(argv[loc],"-SparseGeneral") == 0) 
-	     || (strcmp(argv[loc],"-SuperLU") == 0) || (strcmp(argv[loc],"SuperLU") == 0))
-      typeSolver = 7;
-
-	else if ((strcmp(argv[loc],"ProfileSPD") == 0) || (strcmp(argv[loc],"-ProfileSPD") == 0))
-	  typeSolver = 8;
+      typeSolver = EigenSOE_TAGS_SymBandEigenSOE;
     
     else if ((strcmp(argv[loc],"fullGenLapack") == 0) || 
 	     (strcmp(argv[loc],"-fullGenLapack") == 0))
-      typeSolver = 3;
+      typeSolver = EigenSOE_TAGS_FullGenEigenSOE;
     
     else if ((strcmp(argv[loc],"symmBandLapack") == 0) || 
 	     (strcmp(argv[loc],"-symmBandLapack") == 0))
-      typeSolver = 4;
+      typeSolver = EigenSOE_TAGS_SymBandEigenSOE;
     
     else {
       opserr << "eigen - unknown option specified " << argv[loc] << endln;
-      return TCL_ERROR;
     }
     
     loc++;
@@ -6094,186 +6152,101 @@ eigenAnalysis(ClientData clientData, Tcl_Interp *interp, int argc,
     // create a new eigen system and solver
     //
 
-    if (theEigenSOE == 0) {
+	bool setEigen = false;
+	if (theEigenSOE != 0) {
+		if (theEigenSOE->getClassTag() != typeSolver) {
+			delete theEigenSOE;
+			theEigenSOE = 0;
+			setEigen = true;
+		}
+	}
 
-      if (typeSolver == 0) {
-	
-	SymBandEigenSolver *theEigenSolver = new SymBandEigenSolver(); 
-	theEigenSOE = new SymBandEigenSOE(*theEigenSolver, *theAnalysisModel); 
-	
-      } else if (typeSolver == 1) {
-	
-	int lSparse = 1;     // MMD
-	SymSparseLinSolver *theSolver = new SymSparseLinSolver();
-	LinearSOE *theArpackSOE = new SymSparseLinSOE(*theSolver, lSparse);      
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);
-	
-	// SymArpackSolver *theEigenSolver = new SymArpackSolver(numEigen); 
-	// theEigenSOE = new SymArpackSOE(*theEigenSolver, *theAnalysisModel);    
-	
-      } else if (typeSolver == 2) {  
-	
-	BandGenLinSolver    *theSolver = new BandGenLinLapackSolver();
-#ifdef _PARALLEL_PROCESSING
-	LinearSOE *theArpackSOE = new DistributedBandGenLinSOE(*theSolver);      
-#else
-	LinearSOE *theArpackSOE = new BandGenLinSOE(*theSolver);      
-#endif
-	
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
-	
-	//BandArpackSolver *theEigenSolver = new BandArpackSolver(numEigen); 
-	//theEigenSOE = new BandArpackSOE(*theEigenSolver, *theAnalysisModel);    
-	
-      } else if (typeSolver == 3) {
-	
-	FullGenEigenSolver *theEigenSolver = new FullGenEigenSolver();
-	theEigenSOE = new FullGenEigenSOE(*theEigenSolver, *theAnalysisModel);
-	
-      }  else if (typeSolver == 4) {
-	
-	SymBandEigenSolver *theEigenSolver = new SymBandEigenSolver(); 
-	theEigenSOE = new SymBandEigenSOE(*theEigenSolver, *theAnalysisModel);    
 
-      } else if (typeSolver == 8) {
-	
-	ProfileSPDLinDirectSolver *theLinSolver = new ProfileSPDLinDirectSolver(); 	
-	LinearSOE *theLinSOE = 0;
-#ifdef _PARALLEL_PROCESSING
-	theLinSOE  = new DistributedProfileSPDLinSOE(*theLinSolver);
-#else
-	theLinSOE = new ProfileSPDLinSOE(*theLinSolver);      
-#endif
+	if (theEigenSOE == 0) {
 
-	theEigenSOE = new ArpackSOE(*theLinSOE, shift);    
-	
-      }  else if (typeSolver == 5) {  
-	
-	UmfpackGenLinSolver *theSolver = new UmfpackGenLinSolver();
-	LinearSOE *theArpackSOE = new UmfpackGenLinSOE(*theSolver, factLVALUE);      
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
-	
-#ifdef _MUMPS
-	
-      }  else if (typeSolver == 6) {  
-	
-	int icntl7 = 7;
-	int icntl14 = 20;
-#ifdef _PARALLEL_PROCESSING
-    MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl7, icntl14);
-    LinearSOE *theArpackSOE = new MumpsParallelSOE(*theSolver);
-    theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
+		if (typeSolver == EigenSOE_TAGS_SymBandEigenSOE) {
+			SymBandEigenSolver *theEigenSolver = new SymBandEigenSolver();
+			theEigenSOE = new SymBandEigenSOE(*theEigenSolver, *theAnalysisModel);
 
-#elif _PARALLEL_INTERPRETERS
+		}
+		else if (typeSolver == EigenSOE_TAGS_FullGenEigenSOE) {
 
-    MumpsParallelSolver *theSolver = new MumpsParallelSolver(icntl7, icntl14);
-    MumpsParallelSOE *theParallelSOE = new MumpsParallelSOE(*theSolver);
-    theParallelSOE->setProcessID(OPS_rank);
-    theParallelSOE->setChannels(numChannels, theChannels);
-    theSOE = theParallelSOE;
-	LinearSOE *theArpackSOE = new MumpsParallelSOE(*theSolver);
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);
+			FullGenEigenSolver *theEigenSolver = new FullGenEigenSolver();
+			theEigenSOE = new FullGenEigenSOE(*theEigenSolver, *theAnalysisModel);
 
-#else
-    MumpsSolver *theSolver = new MumpsSolver(icntl7, icntl14);
-    LinearSOE *theArpackSOE = new MumpsSOE(*theSolver);
-    theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
-    theSOE = new MumpsSOE(*theSolver);
-#endif
+		}
+		else {
 
-#endif
-      }  else if (typeSolver == 7) {  
-	SparseGenColLinSolver *theSolver =0;    
-	
-	int npRow = 1;
-	int npCol = 1;
-	
-#ifdef _PARALLEL_PROCESSING
-	theSolver = new DistributedSuperLU(npRow, npCol);
-#else
-	
-	char symmetric = 'N';
-	double drop_tol = 0.0;
-	/*
-	  while (count < argc) {
-	  if (strcmp(argv[count],"s") == 0 || strcmp(argv[count],"symmetric") ||
-	  strcmp(argv[count],"-symm")) {
-	  symmetric = 'Y';
-	  }
-	  count++;
-	  }
-	*/
-	int permSpec = 0;
-	int panelSize = 6;
-	int relax = 6;
-	theSolver = new SuperLU(permSpec, drop_tol, panelSize, relax, symmetric); 	
-#endif
-	
-#ifdef _PARALLEL_PROCESSING
-	LinearSOE *theArpackSOE = new DistributedSparseGenColLinSOE(*theSolver);      
-#else
-	LinearSOE *theArpackSOE = new SparseGenColLinSOE(*theSolver);      
-#endif
-	
-	theEigenSOE = new ArpackSOE(*theArpackSOE, shift);    
-      }
-      
-      
-      //
-      // set the eigen soe in the system
-      //
-      
-      if (theStaticAnalysis != 0) {
-	theStaticAnalysis->setEigenSOE(*theEigenSOE);
-      } else if (theTransientAnalysis != 0) {
-	theTransientAnalysis->setEigenSOE(*theEigenSOE);
-      }
+			theEigenSOE = new ArpackSOE(shift);
+
+		}
+
+		//
+		// set the eigen soe in the system
+		//
+
+		if (theStaticAnalysis != 0) {
+			theStaticAnalysis->setEigenSOE(*theEigenSOE);
+		}
+		else if (theTransientAnalysis != 0) {
+			theTransientAnalysis->setEigenSOE(*theEigenSOE);
+		}
+
+
 
 #ifdef _PARALLEL_PROCESSING
-    if (theStaticAnalysis != 0 || theTransientAnalysis != 0) {
-      SubdomainIter &theSubdomains = theDomain.getSubdomains();
-      Subdomain *theSub;
-      while ((theSub = theSubdomains()) != 0) {
-	theSub->setAnalysisEigenSOE(*theEigenSOE);
-      }
-    }
+		if (OPS_PARTITIONED == false && OPS_NUM_SUBDOMAINS > 1)
+		if (partitionModel() < 0) {
+			opserr << "WARNING before analysis; partition failed - too few elements\n";
+			OpenSeesExit(clientData, interp, argc, argv);
+			return TCL_ERROR;
+		}
+
+		if (theStaticAnalysis != 0 || theTransientAnalysis != 0) {
+			SubdomainIter &theSubdomains = theDomain.getSubdomains();
+			Subdomain *theSub;
+			while ((theSub = theSubdomains()) != 0) {
+				theSub->setAnalysisEigenSOE(*theEigenSOE);
+			}
+		}
 #endif
 
+	} // theEigenSOE != 0    
 
-    } // theEIgenSOE != 0
 
-    int requiredDataSize = 20*numEigen;
-    if (requiredDataSize > resDataSize) {
-      if (resDataPtr != 0) {
-	delete [] resDataPtr;
-      }
-      resDataPtr = new char[requiredDataSize];
-      resDataSize = requiredDataSize;
-    }
-    
-    for (int i=0; i<requiredDataSize; i++)
-      resDataPtr[i] = '\n';
-    
-    int result = 0;
+	int requiredDataSize = 20 * numEigen;
+	if (requiredDataSize > resDataSize) {
+		if (resDataPtr != 0) {
+			delete[] resDataPtr;
+		}
+		resDataPtr = new char[requiredDataSize];
+		resDataSize = requiredDataSize;
+	}
 
-    if (theStaticAnalysis != 0) {
-      result = theStaticAnalysis->eigen(numEigen, generalizedAlgo);      
-    } else if (theTransientAnalysis != 0) {
-      result = theTransientAnalysis->eigen(numEigen, generalizedAlgo);      
-    }
+	for (int i = 0; i<requiredDataSize; i++)
+		resDataPtr[i] = '\n';
 
-    if (result == 0) {
-      //      char *eigenvalueS = new char[15 * numEigen];    
-      const Vector &eigenvalues = theDomain.getEigenvalues();
-      int cnt = 0;
-      for (int i=0; i<numEigen; i++) {
-	cnt += sprintf(&resDataPtr[cnt], "%.6e  ", eigenvalues[i]);
-      }
-      
-      Tcl_SetResult(interp, resDataPtr, TCL_STATIC);
-    }
-    
-    return TCL_OK;
+	int result = 0;
+
+	if (theStaticAnalysis != 0) {
+		result = theStaticAnalysis->eigen(numEigen, generalizedAlgo, findSmallest);
+	}
+	else if (theTransientAnalysis != 0) {
+		result = theTransientAnalysis->eigen(numEigen, generalizedAlgo, findSmallest);
+	}
+
+	if (result == 0) {
+		//      char *eigenvalueS = new char[15 * numEigen];    
+		const Vector &eigenvalues = theDomain.getEigenvalues();
+		int cnt = 0;
+		for (int i = 0; i<numEigen; i++) {
+			cnt += sprintf(&resDataPtr[cnt], "%.6e  ", eigenvalues[i]);
+		}
+
+		Tcl_SetResult(interp, resDataPtr, TCL_STATIC);
+	}
+
+	return TCL_OK;
 }
 
 ///*/
@@ -7196,28 +7169,41 @@ eleForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     }     
     
     dof--;
-    Element *theEle = theDomain.getElement(tag);
+	/*
+	Element *theEle = theDomain.getElement(tag);
     if (theEle == 0)
       return TCL_ERROR;
     
     const Vector &force = theEle->getResistingForce();
-    int size = force.Size();
+	*/
 
-    if (dof >= 0) {
+	const char *myArgv[1];
+	char myArgv0[8];
+	strcpy(myArgv0, "forces");
+	myArgv[0] = myArgv0;
 
-      if (size < dof)
-	return TCL_ERROR;
 
-      double value = force(dof);
+	const Vector *force = theDomain.getElementResponse(tag, &myArgv[0], 1);
+	if (force != 0) {
+      int size = force->Size();
       
-      // now we copy the value to the tcl string that is returned
-      sprintf(interp->result,"%35.20f",value);
+	  if (dof >= 0) {
 
-    } else {
-      char buffer[40];
-      for (int i=0; i<size; i++) {
-	sprintf(buffer,"%35.20f",force(i));
-	Tcl_AppendResult(interp, buffer, NULL);
+	if (size < dof)
+	  return TCL_ERROR;
+
+	double value = (*force)(dof);
+
+	// now we copy the value to the tcl string that is returned
+	sprintf(interp->result, "%35.20f", value);
+
+	}
+	else {
+	  char buffer[40];
+	  for (int i = 0; i < size; i++) {
+	  sprintf(buffer, "%35.20f", (*force)(i));
+	  Tcl_AppendResult(interp, buffer, NULL);
+	}
       }
     }
 
@@ -7292,7 +7278,7 @@ eleResponse(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv
 	  opserr << "WARNING eleResponse eleTag? eleArgs... - could not read eleTag? \n";
 	  return TCL_ERROR;	        
     }    
-
+	/*
     Element *theEle = theDomain.getElement(tag);
     if (theEle == 0)
       return TCL_ERROR;
@@ -7310,14 +7296,16 @@ eleResponse(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv
 
     Information &eleInfo = theResponse->getInformation();
     const Vector &data = eleInfo.getData();
-
-    int size = data.Size();
-    char buffer[40];
-    for (int i=0; i<size; i++) {
-      sprintf(buffer,"%35.20f",data(i));
-      Tcl_AppendResult(interp, buffer, NULL);
+	*/
+	const Vector *data = theDomain.getElementResponse(tag, argv + 2, argc - 2);
+	if (data != 0) {
+	  int size = data->Size();
+	  char buffer[40];
+	  for (int i = 0; i < size; i++) {
+	sprintf(buffer, "%35.20f", (*data)(i));
+	Tcl_AppendResult(interp, buffer, NULL);
+	  }
     }
-    delete theResponse;
 
     return TCL_OK;
 }
@@ -7400,12 +7388,17 @@ eleNodes(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
   
   char buffer[20];
 
-  Element *theElement = theDomain.getElement(tag);
-  if (theElement != 0) {
-    const ID &tags = theElement->getExternalNodes();
-    int numTags = tags.Size();
-    for (int i = 0; i < numTags; i++) {
-      sprintf(buffer, "%d ", tags(i));
+  const char *myArgv[1];
+  char myArgv0[8];
+  strcpy(myArgv0, "nodeTags");
+  myArgv[0] = myArgv0;
+
+  const Vector *tags = theDomain.getElementResponse(tag, &myArgv[0], 1);
+  //  Element *theElement = theDomain.getElement(tag);
+  if (tags != 0) {
+	int numTags = tags->Size();
+	for (int i = 0; i < numTags; i++) {
+	  sprintf(buffer, "%.0f ", (*tags)(i)); sprintf(buffer, "%d ", i);
       Tcl_AppendResult(interp, buffer, NULL);
     }
   }
@@ -7479,8 +7472,8 @@ nodePressure(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
         }
     }
     char buffer[80];
-    sprintf(buffer, "%f", pressure);
-    Tcl_SetResult(interp, buffer, NULL);
+	sprintf(buffer, "%35.20f", pressure);
+	Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
     return TCL_OK;
 }

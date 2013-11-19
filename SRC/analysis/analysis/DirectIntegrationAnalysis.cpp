@@ -245,7 +245,7 @@ DirectIntegrationAnalysis::analyze(int numSteps, double dT)
 }
 
 int 
-DirectIntegrationAnalysis::eigen(int numMode, bool generalized)
+DirectIntegrationAnalysis::eigen(int numMode, bool generalized, bool findSmallest)
 {
     if (theAnalysisModel == 0 || theEigenSOE == 0) {
       opserr << "WARNING DirectIntegrationAnalysis::eigen() - no EigenSOE has been set\n";
@@ -255,20 +255,21 @@ DirectIntegrationAnalysis::eigen(int numMode, bool generalized)
     int result = 0;
     Domain *the_Domain = this->getDomainPtr();
 
-    result = theAnalysisModel->eigenAnalysis(numMode, generalized);
+    result = theAnalysisModel->eigenAnalysis(numMode, generalized, findSmallest);
 
     int stamp = the_Domain->hasDomainChanged();
 
     if (stamp != domainStamp) {
       domainStamp = stamp;
-      
+  
       result = this->domainChanged();
       
       if (result < 0) {
-	opserr << "DirectIntegrationAnalysis::eigen() - domainChanged failed";
+	     opserr << "DirectIntegrationAnalysis::eigen() - domainChanged failed";
 	return -1;
       }	
     }
+
 
     //
     // zero A and M
@@ -279,6 +280,7 @@ DirectIntegrationAnalysis::eigen(int numMode, bool generalized)
     //
     // form K
     //
+
 
     FE_EleIter &theEles = theAnalysisModel->getFEs();    
     FE_Element *elePtr;
@@ -327,11 +329,11 @@ DirectIntegrationAnalysis::eigen(int numMode, bool generalized)
     // solve for the eigen values & vectors
     //
 
-    if (theEigenSOE->solve(numMode, generalized) < 0) {
+    if (theEigenSOE->solve(numMode, generalized, findSmallest) < 0) {
 	opserr << "WARNING DirectIntegrationAnalysis::eigen() - EigenSOE failed in solve()\n";
 	return -4;
     }
-
+	
     //
     // now set the eigenvalues and eigenvectors in the model
     //
@@ -343,7 +345,7 @@ DirectIntegrationAnalysis::eigen(int numMode, bool generalized)
       theAnalysisModel->setEigenvector(i, theEigenSOE->getEigenvector(i));
     }    
     theAnalysisModel->setEigenvalues(theEigenvalues);
-    
+  
     return 0;
 }
 
@@ -488,7 +490,10 @@ DirectIntegrationAnalysis::setLinearSOE(LinearSOE &theNewSOE)
   theIntegrator->setLinks(*theAnalysisModel,*theSOE, theTest);
   theAlgorithm->setLinks(*theAnalysisModel, *theIntegrator, *theSOE, theTest);
   theSOE->setLinks(*theAnalysisModel);
-
+  
+  if (theEigenSOE != 0) 
+    theEigenSOE->setLinearSOE(*theSOE);
+  
   // cause domainChanged to be invoked on next analyze
   domainStamp = 0;
   
@@ -498,17 +503,28 @@ DirectIntegrationAnalysis::setLinearSOE(LinearSOE &theNewSOE)
 int 
 DirectIntegrationAnalysis::setEigenSOE(EigenSOE &theNewSOE)
 {
-  // invoke the destructor on the old one
-  if (theEigenSOE != 0)
-    delete theEigenSOE;
+  // invoke the destructor on the old one if not the same!
+  if (theEigenSOE != 0) {
+    if (theEigenSOE->getClassTag() != theNewSOE.getClassTag()) {
+      delete theEigenSOE;
+      theEigenSOE = 0;
+    }
+  }
 
-  // set the links needed by the other objects in the aggregation
-  theEigenSOE = &theNewSOE;
-  theEigenSOE->setLinks(*theAnalysisModel);
+  if (theEigenSOE == 0) {
+    theEigenSOE = &theNewSOE;
+    theEigenSOE->setLinks(*theAnalysisModel);
+    theEigenSOE->setLinearSOE(*theSOE);
 
-  // cause domainChanged to be invoked on next analyze
-  domainStamp = 0;
-
+    /*
+    if (domainStamp != 0) {
+      Graph &theGraph = theAnalysisModel->getDOFGraph();
+      theEigenSOE->setSize(theGraph);
+    }
+    */
+    domainStamp = 0;
+  }
+ 
   return 0;
 }
 

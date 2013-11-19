@@ -272,8 +272,6 @@ Concrete09::setTrialStrain(double trialStrain, double strainRate)
   return 0;
 }
 
-
-
 double 
 Concrete09::getStrain(void)
 {
@@ -426,7 +424,6 @@ Concrete09::Print(OPS_Stream &s, int flag)
   s << "Concrete09:(strain, stress, tangent) " << eps << " " << sig << " " << e << endln;
 }
 
-
 void
 Concrete09::Tens_Envlp (double epsc, double &sigc, double &Ect)
 {
@@ -464,7 +461,6 @@ Concrete09::Tens_Envlp (double epsc, double &sigc, double &Ect)
   }
   return;
 }
-
   
 void
 Concrete09::Compr_Envlp (double epsc, double &sigc, double &Ect) 
@@ -575,15 +571,11 @@ Concrete09::getPD ()
 	  //-\frac{1160. D \sqrt{\text{fc}} \text{$\epsilon $2}^2}{\text{$\epsilon $0}^2 \zeta ^2 \sqrt{1+\frac{400 \text{$\epsilon $1}}{\text{$\eta $p}}} (400. \text{$\epsilon $1}+\text{$\eta $p})}
 	  //PD = -(1160. * D *sqrt(-fc)*pow(eps,2))/(pow(epsc0,2) * pow(zeta,2) * sqrt(1+(400*epslonTP)/beta) * (400.*epslonTP+beta));
 	  //opserr << "PD=" << PD << endln;
-    }
-    else if ( TloadingState == 2 )   //descending
-    {
+    } else if ( TloadingState == 2 ) {  //descending
       if ( abs(e) < 1e-8 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
       {
         PD = 0.0;
-      }
-      else
-      {
+      } else {
         tempRatio = eps/(zeta*epsc0);
         PD = - D * fbeta * Wp *1160.0 * sqrt(-fc)* pow((1+400.0*epslonTP), -1.5) 
            * (1.0 -(tempRatio-1)/pow(4.0/zeta-1.0,3.0)*(1.0-12.0/zeta+(4.0/zeta+1.0)*tempRatio)); 
@@ -592,9 +584,7 @@ Concrete09::getPD ()
 	    //PD = -((1160.* D*sqrt(-fc)*(-16.*epsc0*eps*zeta+pow(eps,2)*(4.+zeta)+pow(epsc0,2)*(-64.+48.*zeta))))/(pow(epsc0,2)*pow((-4.+zeta),3)*sqrt(1+(400*epslonTP)/beta)*(400.*epslonTP+beta));
 	    //opserr << "PD=" << PD << endln;
       }
-    }		
-    else
-    {
+    } else {
       PD = 0.0;
     }
     if ( abs(zeta - 0.9) < 1e-8  || abs(zeta - 0.25) < 1e-8 ) // zeta = max or min value

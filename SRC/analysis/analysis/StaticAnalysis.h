@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.8 $
-// $Date: 2009/05/11 21:32:27 $
+// $Date: 2009-05-11 21:32:27 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/analysis/StaticAnalysis.h,v $
                                                                         
                                                                         
@@ -71,7 +71,7 @@ class StaticAnalysis: public Analysis
     void clearAll(void);	    
     
     int analyze(int numSteps);
-    int eigen(int numMode, bool generlzed = true);
+    int eigen(int numMode, bool generlzed = true, bool findSmallest = true);
     int initialize(void);
     int domainChanged(void);
 
@@ -103,7 +103,6 @@ class StaticAnalysis: public Analysis
     EigenSOE 		*theEigenSOE;
     StaticIntegrator    *theIntegrator;
     ConvergenceTest     *theTest;
-
     int domainStamp;
 
     // AddingSensitivity:BEGIN ///////////////////////////////
