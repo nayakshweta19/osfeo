@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.1 $
-// $Date: 2009/05/11 21:08:36 $
+// $Date: 2009-05-11 21:08:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/ArpackSolver.h,v $
 
 // Written: fmk
@@ -56,7 +56,7 @@ class ArpackSolver : public EigenSolver
     ArpackSolver();    
     ~ArpackSolver();
 
-    int solve(int numMode, bool generalized);
+    int solve(int numMode, bool generalized, bool findSmallest = true);
     int setSize(void);
     int setEigenSOE(ArpackSOE &theSOE);
     

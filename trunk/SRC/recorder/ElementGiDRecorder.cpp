@@ -159,8 +159,8 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
     int loc = 0;
     //if (echoTimeFlag == true) 
     //  (*data)(loc++) = timeStamp;
-    int ndf = OPS_GetNDF(); 
-	int ndm = OPS_GetNDM();
+    //int ndf = OPS_GetNDF(); 
+	//int ndm = OPS_GetNDM();
 	char outputData[100];
 	// **** Linear Elements - 2 Nodes
     if (hasLinear == 1) {
@@ -178,9 +178,10 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
 		theOutputHandler->write(outputData,80);
 		theOutputHandler->write("\tVector OnNodes \n",80);
 		// ComponentNames 
-		if (ndm == 2) {
+		if (OPS_GetNDM() == 2) {
 		  theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"\n",80);
-		} else if (ndm == 3) {
+		}
+		else if (OPS_GetNDM() == 3) {
 		  theOutputHandler->write(" ComponentNames \"Mz\"  \"P\"  \"Vy\"  \"My\"  \"Vz\"  \"T\"\n",80);
 		}
 

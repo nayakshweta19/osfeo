@@ -1,5 +1,5 @@
 // $Revision: 1.5 $
-// $Date: 2009/05/14 22:45:57 $
+// $Date: 2009-05-14 22:45:57 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/EigenSOE.cpp,v $
 
 // Written: Jun Peng
@@ -39,12 +39,12 @@ EigenSOE::~EigenSOE()
 }
 
 int 
-EigenSOE::solve(int numModes, bool generalized)
+EigenSOE::solve(int numModes, bool generalized, bool findSmallest)
 {
   if (theSolver == 0)
     return -1;
   else
-    return (theSolver->solve(numModes, generalized));
+    return (theSolver->solve(numModes, generalized, findSmallest));
 }
 
 int

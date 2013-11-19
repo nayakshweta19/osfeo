@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.3 $
-// $Date: 2009/08/25 22:34:49 $
+// $Date: 2009-08-25 22:34:49 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/analysis/TransientDomainDecompositionAnalysis.h,v $
                                                                         
 // Written: fmk 
@@ -73,7 +73,7 @@ class TransientDomainDecompositionAnalysis: public DomainDecompositionAnalysis
 
     // methods for non standard domain deomposition analysis
     int analyze(double dT);
-    int eigen(int numMode, bool generalized);
+    int eigen(int numMode, bool generalized, bool findSmallest);
     bool doesIndependentAnalysis(void);    
 
     // methods for standard domain deomposition analysis
@@ -81,7 +81,7 @@ class TransientDomainDecompositionAnalysis: public DomainDecompositionAnalysis
     int  getNumExternalEqn(void);
     int  getNumInternalEqn(void);
     int  analysisStep(double dT);
-    int  eigenAnalysis(int numMode, bool generalized);
+    int  eigenAnalysis(int numMode, bool generalized, bool findSmallest);
     int  computeInternalResponse(void);
     int  formTangent(void);
     int  formResidual(void);

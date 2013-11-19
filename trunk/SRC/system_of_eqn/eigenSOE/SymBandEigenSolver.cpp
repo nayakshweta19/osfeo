@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.9 $
-// $Date: 2009/05/20 17:31:36 $
+// $Date: 2009-05-20 17:31:36 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/SymBandEigenSolver.cpp,v $
 
 // Written: MHS
@@ -75,7 +75,7 @@ extern "C" int dsbevx_(char *jobz, char *range, char *uplo, int *n, int *kd,
 #endif
 
 int
-SymBandEigenSolver::solve(int nModes, bool generalized)
+SymBandEigenSolver::solve(int nModes, bool generalized, bool findSmallest)
 {
 
   if (generalized == true) {

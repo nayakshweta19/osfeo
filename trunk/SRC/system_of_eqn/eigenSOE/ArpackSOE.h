@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2009/05/14 22:46:38 $
+// $Date: 2009-05-14 22:46:38 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/ArpackSOE.h,v $
 
 // Written: fmk
@@ -41,10 +41,7 @@ class LinearSOE;
 class ArpackSOE : public EigenSOE
 {
   public:
-    ArpackSOE(LinearSOE &theLinearSOE,
-	      double shift = 0.0);
-
-    ArpackSOE();
+    ArpackSOE(double shift = 0.0);
 
     ~ArpackSOE();
 
@@ -66,6 +63,8 @@ class ArpackSOE : public EigenSOE
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
     friend class ArpackSolver;
+
+	int checkSameInt(int);
 
   protected:
     

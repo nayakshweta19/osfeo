@@ -125,7 +125,7 @@ class ShadowSubdomain: public Shadow, public Subdomain
     virtual  int update(void);    
     virtual  int update(double newTime, double dT);    
     virtual  int commit(void);
-    virtual  int record(void);
+    virtual  int record(bool fromAnalysis = true);
     virtual  int revertToLastCommit(void);    
     virtual  int revertToStart(void);    
     virtual  int barrierCheckIN(void);    
@@ -159,7 +159,7 @@ class ShadowSubdomain: public Shadow, public Subdomain
     const Vector &getLastExternalSysResponse(void);
     virtual int computeNodalResponse(void);    
     virtual int analysisStep(double deltaT);
-    virtual int eigenAnalysis(int numMode, bool generalized);
+    virtual int eigenAnalysis(int numMode, bool generalized, bool findSmallest);
 
     virtual int sendSelf(int commitTag, Channel &theChannel);
     virtual int recvSelf(int commitTag, Channel &theChannel, 
@@ -175,6 +175,7 @@ class ShadowSubdomain: public Shadow, public Subdomain
     virtual int setMass(const Matrix &mass, int nodeTag);
 
     virtual const Vector *getNodeResponse(int tag, NodeResponseType responseType);
+    virtual const Vector *getElementResponse(int eleTag, const char **argv, int argc); 
     virtual int calculateNodalReactions(bool inclInertia);
     
   protected:    

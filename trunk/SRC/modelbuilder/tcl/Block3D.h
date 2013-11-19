@@ -1,3 +1,6 @@
+#ifndef Block3D_h
+#define Blcok3D_h 
+
 /* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
@@ -19,7 +22,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2003/02/14 23:01:47 $
+// $Date: 2003-02-14 23:01:47 $
 // $Source: /usr/local/cvs/OpenSees/SRC/modelbuilder/tcl/Block3D.h,v $
                                                                         
 // Written: Ed Love
@@ -81,3 +84,5 @@ class Block3D {
 	       double shape[27]);
 
 };
+
+#endif

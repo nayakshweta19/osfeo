@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2009/05/11 21:01:10 $
+// $Date: 2009-05-11 21:01:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/SymBandEigenSolver.h,v $
 
 // Written: MHS
@@ -41,7 +41,7 @@ class SymBandEigenSolver : public EigenSolver
   SymBandEigenSolver();    
   virtual ~SymBandEigenSolver();
   
-  virtual int solve(int nModes, bool generalized);
+  virtual int solve(int nModes, bool generalized, bool findSmallest = true);
   virtual int setSize(void);
   virtual int setEigenSOE(SymBandEigenSOE &theSOE);
   

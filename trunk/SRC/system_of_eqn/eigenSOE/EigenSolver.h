@@ -1,5 +1,5 @@
 // $Revision: 1.2 $
-// $Date: 2009/05/11 21:01:10 $
+// $Date: 2009-05-11 21:01:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/EigenSolver.h,v $
 
 // Written: Jun Peng
@@ -30,7 +30,7 @@ class EigenSolver : public MovableObject
      EigenSolver(int classTag);
      virtual ~EigenSolver();
 
-     virtual int solve(int numModes, bool generalized) =0;     
+     virtual int solve(int numModes, bool generalized, bool findSmallest = true) =0;     
      virtual const Vector &getEigenvector(int mode) = 0;
      virtual double getEigenvalue(int mode) = 0;     
 

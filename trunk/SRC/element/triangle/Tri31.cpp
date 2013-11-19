@@ -42,6 +42,7 @@
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
 #include <ElementResponse.h>
+#include <ElementalLoad.h>
 
 #include <elementAPI.h>
 
@@ -54,15 +55,15 @@ double Tri31::wts[1];
 
 #define OPS_Export
 
-static int num_Tri31 = 0;
+//static int num_Tri31 = 0;
 
 OPS_Export void *
 OPS_Tri31(void)
 {
-  if (num_Tri31 == 0) {
+  /*if (num_Tri31 == 0) {
     num_Tri31++;
     OPS_Error("Tri31 - Written by Roozbeh G. Mikola and N.Sitar, UC Berkeley\n",1);
-  }
+  }*/
   
   // Pointer to an element that will be returned
   Element *theElement = 0;
@@ -70,7 +71,7 @@ OPS_Tri31(void)
   int numRemainingInputArgs = OPS_GetNumRemainingInputArgs();
   
   if (numRemainingInputArgs < 7) {
-    opserr << "Invalid #args, want: element element Tri31 eleTag? iNode? jNode? kNode? thk? type? matTag? <pressure? rho? b1? b2?>\n";
+    opserr << "Invalid #args, want: element Tri31 eleTag? iNode? jNode? kNode? thk? type? matTag? <pressure? rho? b1? b2?>\n";
     return 0;
   }
 
@@ -516,14 +517,33 @@ void
 Tri31::zeroLoad(void)
 {
 	Q.Zero();
+
+	applyLoad = 0;
+
+	appliedB[0] = 0.0;
+	appliedB[1] = 0.0;
     return;
 }
 
 int 
 Tri31::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
-	opserr << "Tri31::addLoad - load type unknown for ele with tag: " << this->getTag() << endln;
-    return -1;
+	// Added option for applying body forces in load pattern: neallee@tju.edu.cn
+	int type;
+	const Vector &data = theLoad->getData(type, loadFactor);
+
+	if (type == LOAD_TAG_SelfWeight) {
+		applyLoad = 1;
+		appliedB[0] += loadFactor*data(0)*b[0];
+		appliedB[1] += loadFactor*data(1)*b[1];
+		return 0;
+	}
+	else {
+		opserr << "Tri31::addLoad - load type unknown for ele with tag: " << this->getTag() << endln;
+		return -1;
+	}
+
+	return -1;
 }
 
 int 
@@ -598,8 +618,17 @@ Tri31::getResistingForce()
 			// Subtract equiv. body forces from the nodes
 			//P = P - (N^ b) * intWt(i)*intWt(j) * detJ;
 			//P.addMatrixTransposeVector(1.0, N, b, -intWt(i)*intWt(j)*detJ);
-			P(ia)   -= dvol*(shp[2][alpha]*b[0]);
-			P(ia+1) -= dvol*(shp[2][alpha]*b[1]);
+			if (applyLoad == 0)
+			{
+				P(ia) -= dvol*(shp[2][alpha] * b[0]);
+				P(ia + 1) -= dvol*(shp[2][alpha] * b[1]);
+			}
+			else
+			{
+				P(ia) -= dvol*(shp[2][alpha] * appliedB[0]);
+				P(ia + 1) -= dvol*(shp[2][alpha] * appliedB[1]);
+			}
+			
 		}
 	}
 
@@ -631,7 +660,7 @@ Tri31::getResistingForceIncInertia()
 	if (sum == 0.0) {
 		this->getResistingForce();
 
-	    // add the damping forces if rayleigh damping
+	    // add the damping forces if Rayleigh damping
 	    if (betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0) P += this->getRayleighDampingForces();
 
 	    return P;
@@ -659,7 +688,7 @@ Tri31::getResistingForceIncInertia()
 	// Take advantage of lumped mass matrix
 	for (i = 0; i < 2*numnodes; i++) P(i) += K(i,i)*a[i];
 
-	// add the damping forces if rayleigh damping
+	// add the damping forces if Rayleigh damping
 	if (alphaM != 0.0 || betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0) P += this->getRayleighDampingForces();
 
 	return P;
@@ -849,7 +878,7 @@ Tri31::Print(OPS_Stream &s, int flag)
 			s << "#NODE " << nodeCrd(0) << " " << nodeCrd(1) << " " << endln;
 		}
 
-		// spit out the section location & invoke print on the scetion
+		// spit out the section location & invoke print on the section
 		const int numMaterials = numgp;
 
 		static Vector avgStress(nstress);

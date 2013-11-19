@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.7 $
-// $Date: 2009/08/25 22:34:49 $
+// $Date: 2009-08-25 22:34:49 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/analysis/DomainDecompositionAnalysis.h,v $
                                                                         
                                                                         
@@ -92,7 +92,7 @@ class DomainDecompositionAnalysis: public Analysis, public MovableObject
 
     virtual int  newStep(double dT);
     virtual int  analysisStep(double dT);
-    virtual int  eigenAnalysis(int numMode, bool generalized);
+    virtual int  eigenAnalysis(int numMode, bool generalized, bool findSmallest);
     virtual int  computeInternalResponse(void);
     virtual int  formTangent(void);
     virtual int  formResidual(void);

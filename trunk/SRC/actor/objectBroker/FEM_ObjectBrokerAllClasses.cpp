@@ -68,6 +68,7 @@
 #include <Concrete06.h>
 #include <Steel01.h>
 #include <Steel02.h>
+#include <FatigueMaterial.h>
 #include <ReinforcingSteel.h>
 #include <HardeningMaterial.h>
 #include <HystereticMaterial.h>
@@ -977,6 +978,9 @@ FEM_ObjectBrokerAllClasses::getNewUniaxialMaterial(int classTag)
 	case MAT_TAG_QzSimple2:
 		return new QzSimple2();
 
+	case MAT_TAG_Fatigue:
+		return new FatigueMaterial();
+
 	case MAT_TAG_Hysteretic:
 		return new HystereticMaterial();
 
@@ -1571,10 +1575,9 @@ FEM_ObjectBrokerAllClasses::getPtrNewRecorder(int classTag)
 	     
 	default:
 	     opserr << "FEM_ObjectBrokerAllClasses::getNewRecordr - ";
-	     opserr << " - no ConstraintHandler type exists for class tag ";
+	     opserr << " - no Recorder type exists for class tag ";
 	     opserr << classTag << endln;
 	     return 0;
-	     
 	 }        
 }
 

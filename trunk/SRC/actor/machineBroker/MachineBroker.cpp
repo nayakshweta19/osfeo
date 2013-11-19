@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2009/05/11 21:14:56 $
+// $Date: 2009-05-11 21:14:56 $
 // $Source: /usr/local/cvs/OpenSees/SRC/actor/machineBroker/MachineBroker.cpp,v $
                                                                         
 // Written: fmk
@@ -237,4 +237,10 @@ MachineBroker::finishedWithActor(Channel *theChannel)
 
   // if get here .. startActor() not called or subclass override
   return -1;
+}
+
+void
+MachineBroker::setObjectBroker(FEM_ObjectBroker *theBroker)
+{
+  theObjectBroker = theBroker;
 }

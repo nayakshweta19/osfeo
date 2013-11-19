@@ -3,11 +3,12 @@
 
 // File ConcreteZ02.h
 // Hsu and Mansour's Model
-// Written: jzhong
-// Created: 2003.7
+// Written: neallee@tju.edu.cn
+// Created: 2013.7
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"
 // by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
+
 #include <UniaxialMaterial.h>
 
 class ConcreteZ02 : public UniaxialMaterial

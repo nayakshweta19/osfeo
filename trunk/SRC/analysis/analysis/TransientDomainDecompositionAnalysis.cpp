@@ -226,7 +226,7 @@ TransientDomainDecompositionAnalysis::analyze(double dT)
 
 
 int 
-TransientDomainDecompositionAnalysis::eigen(int numMode, bool generalized)
+TransientDomainDecompositionAnalysis::eigen(int numMode, bool generalized, bool findSmallest)
 {
   int result = 0;
   Domain *the_Domain = this->getDomainPtr();
@@ -310,7 +310,7 @@ TransientDomainDecompositionAnalysis::eigen(int numMode, bool generalized)
     // 
     // solve for the eigen values & vectors
     //
-    if (theEigenSOE->solve(numMode, generalized) < 0) {
+    if (theEigenSOE->solve(numMode, generalized, findSmallest) < 0) {
 	opserr << "WARNING TransientDomainDecomposition::eigen() - EigenSOE failed in solve()\n";
 	return -4;
     }
@@ -447,9 +447,9 @@ TransientDomainDecompositionAnalysis::analysisStep(double dT)
 }
 
 int  
-TransientDomainDecompositionAnalysis::eigenAnalysis(int numMode, bool generalized) 
+TransientDomainDecompositionAnalysis::eigenAnalysis(int numMode, bool generalized, bool findSmallest) 
 {
-  this->eigen(numMode, generalized);
+  this->eigen(numMode, generalized, findSmallest);
   return 0;
 }
 
@@ -779,6 +779,9 @@ TransientDomainDecompositionAnalysis::setLinearSOE(LinearSOE &theNewSOE)
       theSOE->setLinks(*theAnalysisModel);
     }
 
+    if (theEigenSOE != 0) 
+      theEigenSOE->setLinearSOE(*theSOE);
+
     // cause domainChanged to be invoked on next analyze
     domainStamp = 0;
 
@@ -788,18 +791,28 @@ TransientDomainDecompositionAnalysis::setLinearSOE(LinearSOE &theNewSOE)
 int 
 TransientDomainDecompositionAnalysis::setEigenSOE(EigenSOE &theNewSOE)
 {
-    // invoke the destructor on the old one
-    if (theEigenSOE != 0)
-	delete theEigenSOE;
+  // invoke the destructor on the old one if not the same!
+  if (theEigenSOE != 0) {
+    if (theEigenSOE->getClassTag() != theNewSOE.getClassTag()) {
+      delete theEigenSOE;
+      theEigenSOE = 0;
+    }
+  }
 
-    // set the links needed by the other objects in the aggregation
+  if (theEigenSOE == 0) {
     theEigenSOE = &theNewSOE;
     theEigenSOE->setLinks(*theAnalysisModel);
-
-    // cause domainChanged to be invoked on next analyze
+    theEigenSOE->setLinearSOE(*theSOE);
+    /*    
+    if (domainStamp != 0) {
+      Graph &theGraph = theAnalysisModel->getDOFGraph();
+      theEigenSOE->setSize(theGraph);
+    }
+    */
     domainStamp = 0;
+  }
 
-    return 0;
+  return 0;
 }
 
 int 

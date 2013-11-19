@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2009/05/11 21:01:10 $
+// $Date: 2009-05-11 21:01:10 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/eigenSOE/FullGenEigenSolver.h,v $
 
 
@@ -44,7 +44,7 @@ public:
     FullGenEigenSolver();    
     virtual ~FullGenEigenSolver();
 
-    virtual int solve(int numEigen, bool generalized);    
+    virtual int solve(int numEigen, bool generalized, bool findSmallest = true);    
     virtual int setSize(void);
     virtual int setEigenSOE(FullGenEigenSOE &theSOE);
 

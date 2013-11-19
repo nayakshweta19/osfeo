@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.5 $
-// $Date: 2009/05/11 20:56:11 $
+// $Date: 2009-05-11 20:56:11 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/mumps/MumpsParallelSOE.cpp,v $
                                                                         
 // Written: fmk 
@@ -407,6 +407,8 @@ MumpsParallelSOE::setB(const Vector &v, double fact)
   // check for a quick return 
   if (fact == 0.0)  return 0;
 
+  //opserr << "MumpsParallelSOE::setB() - start()\n";
+  //opserr << v;
 
   if (v.Size() != size) {
     opserr << "WARNING DistributedBandGenLinSOE::setB() -";
@@ -427,6 +429,7 @@ MumpsParallelSOE::setB(const Vector &v, double fact)
       myB[i] = v(i) * fact;
     }
   }
+   //opserr << "MumpsParallelSOE::setB() - end()\n";
   return 0;
 }
 
