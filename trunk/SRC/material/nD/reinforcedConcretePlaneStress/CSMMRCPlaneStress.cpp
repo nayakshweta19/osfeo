@@ -71,7 +71,7 @@ OPS_NewCSMMRCPlaneStressMaterial()
 
 	if (numRemainingArgs < 14) {
 		opserr << "Invalid Args want: NDMaterial CSMMRCPlaneStress matTag? rho? UniaxiaMatTag1? UniaxiaMatTag2? UniaxiaMatTag3? UniaxiaMatTag4? \
-				  				                 angle1? angle2? rou1? rou2? fpc? fy? E0? epsc0?\n";
+			angle1? angle2? rou1? rou2? fpc? fy? E0? epsc0?\n";
 		return 0;
 	}
 
@@ -205,7 +205,7 @@ CSMMRCPlaneStress::CSMMRCPlaneStress(int      tag,
 	CTwoNowMaxComStrain = 0.0;
 	CTwoLastMaxComStrain = 0.0;
 
-	lastStress.Zero();  // add at 7.28
+	lastStress.Zero();
 
 	if (fpc < 0.0) { fpc = -fpc; } // set fpc > 0
 
@@ -518,9 +518,7 @@ CSMMRCPlaneStress::getCopy(const char *type)
 	theModel->stress_vec = stress_vec;
 	return theModel;
 }
-
 //added by Ln
-
 Response*
 CSMMRCPlaneStress::setResponse(const char **argv, int argc, OPS_Stream &output)
 {
@@ -545,7 +543,7 @@ CSMMRCPlaneStress::setResponse(const char **argv, int argc, OPS_Stream &output)
 	else
 		return 0;
 }
-
+//added by Ln
 int
 CSMMRCPlaneStress::getResponse(int responseID, Information &matInfo)
 {
@@ -573,13 +571,11 @@ CSMMRCPlaneStress::getResponse(int responseID, Information &matInfo)
 	}
 }
 //end by LN
-
-
 void
 CSMMRCPlaneStress::Print(OPS_Stream &s, int flag)
 {
 	s << "\n\tCSMMRCPlaneStress, material id: " << this->getTag() << endln;
-	
+
 	s << "\tRho: " << rho << endln;
 	s << "\tangle1: " << angle1 << endln;
 	s << "\tangle2: " << angle2 << endln;
@@ -588,11 +584,10 @@ CSMMRCPlaneStress::Print(OPS_Stream &s, int flag)
 	s << "\tfpc: " << fpc << endln;
 	s << "\tfy: " << fy << endln;
 	s << "\tE0: " << E0 << endln;
-	
 
-	s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159265453*180.0 << endln;
-	s <<  "Principal Stress: citaStress = "<< citaStress/3.14159265453*180.0 << endln;
-	s << " v12 = " << miu12 << " v21 = " << miu21 << endln;	
+	s << "Principal Strain: citaStrain = " << citaStrain / 3.14159265453*180.0 << endln;
+	s << "Principal Stress: citaStress = " << citaStress / 3.14159265453*180.0 << endln;
+	s << " v12 = " << miu12 << " v21 = " << miu21 << endln;
 	s << " steelStatus " << steelStatus << endln;
 	s << " dirStatus " << dirStatus << endln;
 	s << " Damage DOne = " << DDOne << endln;

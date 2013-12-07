@@ -7008,18 +7008,20 @@ nodeDisp(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 	opserr << "WARNING nodeDisp nodeTag? dof? - dofTag? too large\n";
 	return TCL_ERROR;
       }
-      
+	  if (size < dof)
+	return TCL_ERROR;
+
       double value = (*nodalResponse)(dof);
       
       // now we copy the value to the tcl string that is returned
-      sprintf(interp->result,"%35.20f ",value);
+      sprintf(interp->result, "%35.20f ", value);
     } else {
-      char buffer [40];
-      for (int i=0; i<size; i++) {
-	sprintf(buffer,"%35.20f",(*nodalResponse)(i));
-	Tcl_AppendResult(interp, buffer, NULL);
-      }
-    }	
+      char buffer[40];
+	  for (int i = 0; i < size; i++) {
+	sprintf(buffer, "%35.20f", (*nodalResponse)(i));
+	Tcl_AppendResult(interp, buffer);
+	  }
+    }
 	
     return TCL_OK;
 }
@@ -7425,7 +7427,7 @@ nodeMass(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     return TCL_ERROR;	        
   }    
   
-  char buffer[20];
+  char buffer[40];
 
   Node *theNode = theDomain.getNode(tag);
   if (theNode == 0) {
@@ -7439,8 +7441,8 @@ nodeMass(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
   }
   else {
     const Matrix &mass = theNode->getMass();
-    sprintf(buffer, "%f", mass(dof-1,dof-1));
-    Tcl_SetResult(interp, buffer, NULL);
+	sprintf(buffer, "%35.20f", mass(dof - 1, dof - 1));
+	Tcl_AppendResult(interp, buffer, NULL);
   }
   
   return TCL_OK;
@@ -7588,7 +7590,6 @@ nodeAccel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     const Vector *nodalResponse = theDomain.getNodeResponse(tag, Accel);
     if (nodalResponse == 0)
       return TCL_ERROR;
-
 
     int size =  nodalResponse->Size();
 
@@ -9413,7 +9414,7 @@ int domainChange(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char *
 
 int record(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
-  theDomain.record();
+  theDomain.record(false);
   return TCL_OK;
 }
 
