@@ -18,9 +18,9 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: $
-// $Date:  $
-// $URL:  $
+// $Revision: 5646 $
+// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elasticBeamColumn/ElasticTimoshenkoBeam2d.h $
 
 #ifndef ElasticTimoshenkoBeam2d_h
 #define ElasticTimoshenkoBeam2d_h

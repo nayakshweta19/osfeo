@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4967 $
-// $Date: 2012-08-13 13:39:44 +0800 (星期一, 13 八月 2012) $
+// $Revision: 5646 $
+// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/adapter/ActuatorCorot.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -401,6 +401,7 @@ const Matrix& ActuatorCorot::getTangentStiff()
     
     // material stiffness portion
     int i,j;
+    kl.Zero();
     double EAoverL3 = EA/(Ln*Ln*L);
     for (i=0; i<3; i++)
         for (j=0; j<3; j++)
@@ -626,7 +627,7 @@ const Vector& ActuatorCorot::getResistingForceIncInertia()
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {
         if (alphaM != 0.0 || betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0)
-            (*theVector) += this->getRayleighDampingForces();
+            theVector->addVector(1.0, this->getRayleighDampingForces(), 1.0);
     }
     
     // add inertia forces from element mass
