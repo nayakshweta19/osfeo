@@ -153,6 +153,7 @@
 
 #include <FluidSolidPorousMaterial.h>
 #include <PressureDependMultiYield.h>
+#include <PressureDependMultiYield02.h>
 #include <PressureIndependMultiYield.h>
 //  add by ln
 #include <NonlinearBS.h>
@@ -1210,6 +1211,9 @@ FEM_ObjectBrokerAllClasses::getNewNDMaterial(int classTag)
 
   case ND_TAG_PressureDependMultiYield:
     return new PressureDependMultiYield();
+
+  case ND_TAG_PressureDependMultiYield02:
+	  return new PressureDependMultiYield02();
 
   case ND_TAG_PressureIndependMultiYield:
     return new PressureIndependMultiYield();

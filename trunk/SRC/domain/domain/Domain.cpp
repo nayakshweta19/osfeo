@@ -1762,14 +1762,16 @@ Domain::initialize(void)
 {
   Element *elePtr;
   ElementIter &theElemIter = this->getElements();    
-  while ((elePtr = theElemIter()) != 0)
-	// lvalue needed here for M$ VC++ compiler -- MHS
-	// and either the VS2011 or Intel compiler does not like it!
+  while ((elePtr = theElemIter()) != 0) 
+    // lvalue needed here for M$ VC++ compiler -- MHS
+	// and either the  VS2011 or intel compiler does not like it!
 #ifndef _VS2011
-	const Matrix &initM = elePtr->getInitialStiff();
+    const Matrix &initM = elePtr->getInitialStiff();
 #else
-	elePtr->getInitialStiff();
+	 elePtr->getInitialStiff();
 #endif
+
+
   return 0;
 }
 
@@ -1943,15 +1945,18 @@ Domain::update(double newTime, double dT)
 int
 Domain::updateParameter(int tag, int value)
 {
-  // remove the object from the container    
+  // get the object from the container 
   TaggedObject *mc = theParameters->getComponentPtr(tag);
   
   // if not there return 0
   if (mc == 0) 
       return 0;
 
+  // convert to a parameter & update
   Parameter *result = (Parameter *)mc;
-  return result->update(value);
+  int res = result->update(value);
+
+  return res;
 }
 
 int
