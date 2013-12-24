@@ -246,7 +246,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         if (eMode == DATA_STREAM && fileName != 0)  {
             theOutputStream = new DataFileStream(fileName);
         } else if (eMode == DATA_STREAM_CSV && fileName != 0)  {
-	        theOutputStream = new DataFileStream(fileName,OVERWRITE,2,1);
+	        theOutputStream = new DataFileStream(fileName);
         } else if (eMode == XML_STREAM && fileName != 0)  {
             theOutputStream = new XmlFileStream(fileName);
         } else if (eMode == BINARY_STREAM && fileName != 0)  {
@@ -299,6 +299,8 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         int i, j, argi = 2;
         int flags = 0;
         int sizeData = 0;
+		
+		bool closeOnWrite = false;
 
         while (flags == 0 && argi < argc)  {
             
@@ -390,6 +392,11 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
                 argi += 2;
             }
             
+			else if (strcmp(argv[argi], "-closeOnWrite") == 0)  {
+				closeOnWrite = true;
+				argi++;
+			}
+
             else if ((strcmp(argv[argi],"-csv") == 0) || (strcmp(argv[argi],"-fileCSV") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
@@ -452,9 +459,9 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         
         // construct the theOutputStream
         if (eMode == DATA_STREAM && fileName != 0)  {
-            theOutputStream = new DataFileStream(fileName);
+			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite);
         } else if (eMode == DATA_STREAM_CSV && fileName != 0)  {
-	        theOutputStream = new DataFileStream(fileName,OVERWRITE,2,1);
+			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1, closeOnWrite);
         } else if (eMode == XML_STREAM && fileName != 0)  {
             theOutputStream = new XmlFileStream(fileName);
         } else if (eMode == BINARY_STREAM && fileName != 0)  {
@@ -662,7 +669,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         if (eMode == DATA_STREAM && fileName != 0)  {
             theOutputStream = new DataFileStream(fileName);
         } else if (eMode == DATA_STREAM_CSV && fileName != 0)  {
-	        theOutputStream = new DataFileStream(fileName,OVERWRITE,2,1);
+	        theOutputStream = new DataFileStream(fileName);
         } else if (eMode == XML_STREAM && fileName != 0)  {
             theOutputStream = new XmlFileStream(fileName);
         } else if (eMode == BINARY_STREAM && fileName != 0)  {
@@ -870,7 +877,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         if (eMode == DATA_STREAM && fileName != 0)  {
             theOutputStream = new DataFileStream(fileName);
         } else if (eMode == DATA_STREAM_CSV && fileName != 0)  {
-	        theOutputStream = new DataFileStream(fileName,OVERWRITE,2,1);
+	        theOutputStream = new DataFileStream(fileName);
         } else if (eMode == XML_STREAM && fileName != 0)  {
             theOutputStream = new XmlFileStream(fileName);
         } else if (eMode == BINARY_STREAM && fileName != 0)  {

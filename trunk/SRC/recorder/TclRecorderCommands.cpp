@@ -1130,6 +1130,7 @@
 
 	 else if (strcmp(argv[pos],"-timeSeries") == 0) {
 
+	   pos++;
 	   int numTimeSeries = 0;
 	   int dof;
 
@@ -1153,7 +1154,6 @@
 	       theTimeSeries[j] = 0;
 	     }
 	   }
-	   pos++;
 	 }
 
 	 else if (strcmp(argv[pos],"-precision") == 0) {
@@ -1371,6 +1371,8 @@
        int pos = 2;
 	   double dT = 0.0;
 
+	   bool closeOnWrite = false;
+
        while (pos < argc) {
 
 	 if (strcmp(argv[pos],"-file") == 0) {
@@ -1388,6 +1390,11 @@
 	   }
 	 }
 
+	 else if (strcmp(argv[pos],"-closeOnWrite") == 0)  {
+	   closeOnWrite = true;
+	   pos += 1;
+	 }
+	 
 	 else if (strcmp(argv[pos],"-fileCSV") == 0) {
 	   fileName = argv[pos+1];
 	   eMode = DATA_STREAM_CSV;
@@ -1498,9 +1505,9 @@
 
        // construct the DataHandler
        if (eMode == DATA_STREAM && fileName != 0) {
-	 theOutputStream = new DataFileStream(fileName);
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite);
        } else if (eMode == DATA_STREAM_CSV && fileName != 0) {
-	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1);
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1, closeOnWrite);
        } else if (eMode == XML_STREAM && fileName != 0) {
 	 theOutputStream = new XmlFileStream(fileName);
        } else if (eMode == DATABASE_STREAM && tableName != 0) {
@@ -1850,6 +1857,8 @@
        const char *inetAddr = 0;
        int inetPort;
 
+	   bool closeOnWrite = false;
+
        while (flags == 0 && pos < argc) {
 
 	 if (strcmp(argv[pos],"-time") == 0) {
@@ -1863,6 +1872,11 @@
 	   simulationInfo.addOutputFile(fileName, pwd);
 	   eMode = DATA_STREAM;
 	   pos += 2;
+	 }
+
+	 else if (strcmp(argv[pos], "-closeOnWrite") == 0)  {
+	   closeOnWrite = true;
+	   pos += 1;
 	 }
 
 	 else if (strcmp(argv[pos],"-res") == 0) {
@@ -2021,7 +2035,7 @@
        if (eMode == GID_STREAM && fileName != 0) {
 	 theOutputStream = new GiDStream(fileName);
 	   } else if (eMode == DATA_STREAM && fileName != 0) {
-	 theOutputStream = new DataFileStream(fileName);
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite);
        } else if (eMode == XML_STREAM && fileName != 0) {
 	 theOutputStream = new XmlFileStream(fileName);
        } else if (eMode == BINARY_STREAM && fileName != 0) {
@@ -2059,6 +2073,8 @@
        int precision = 6;
        const char *inetAddr = 0;
        int inetPort;
+
+	   bool closeOnWrite = false;
 
        while (flags == 0 && loc < argc) {
 
@@ -2185,7 +2201,12 @@
 	   loc += 2;
 	 }
 	 
-	 else if (strcmp(argv[loc],"-res") == 0) {
+	 else if (strcmp(argv[loc], "-closeOnWrite") == 0)  {
+		 closeOnWrite = true;
+		 loc ++;
+	 }
+
+	 else if (strcmp(argv[loc], "-res") == 0) {
 	   fileName = argv[loc+1];
 	   const char *pwd = getInterpPWD(interp);
 	   simulationInfo.addOutputFile(fileName, pwd);
@@ -2272,9 +2293,9 @@
 	   if (eMode == GID_STREAM && fileName != 0) {
 	 theOutputStream = new GiDStream(fileName);
 	   } else if (eMode == DATA_STREAM && fileName != 0) {
-	 theOutputStream = new DataFileStream(fileName);
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite);
        } else if (eMode == DATA_STREAM_CSV && fileName != 0) {
-	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1);
+	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1, closeOnWrite);
        } else if (eMode == XML_STREAM && fileName != 0) {
 	 theOutputStream = new XmlFileStream(fileName);
        } else if (eMode == DATABASE_STREAM && tableName != 0) {
