@@ -7025,7 +7025,7 @@ nodeDisp(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
       char buffer[40];
 	  for (int i = 0; i < size; i++) {
 	sprintf(buffer, "%35.20f", (*nodalResponse)(i));
-	Tcl_AppendResult(interp, buffer);
+	Tcl_AppendResult(interp, buffer, NULL);
 	  }
     }
 	
