@@ -1493,6 +1493,18 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\BWBN.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ConcreteECThermal.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\ElasticMaterialThermal.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\Steel01PThermal.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\uniaxial\SteelECThermal.cpp">
+      <Filter>uniaxial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2796,6 +2808,18 @@
       <Filter>nD\cyclicSoil</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BWBN.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ConcreteECThermal.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\ElasticMaterialThermal.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\SteelECThermal.h">
+      <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\uniaxial\Steel01PThermal.h">
       <Filter>uniaxial</Filter>
     </ClInclude>
   </ItemGroup>

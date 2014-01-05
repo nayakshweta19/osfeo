@@ -926,6 +926,18 @@
     <ClCompile Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DCompressible.cpp">
       <Filter>PFEMElement</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ElasticTimoshenkoBeam2d.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ElasticTimoshenkoBeam3d.cpp">
+      <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingUFRP2d.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingUFRPCommand.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1539,6 +1551,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\PFEMElement\PFEMElement2DCompressible.h">
       <Filter>PFEMElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ElasticTimoshenkoBeam2d.h">
+      <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\ElasticTimoshenkoBeam3d.h">
+      <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingUFRP2d.h">
+      <Filter>elastomericBearing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

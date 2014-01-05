@@ -9,6 +9,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerDebuggerType>NativeOnly</LocalDebuggerDebuggerType>
+    <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
   </PropertyGroup>
 </Project>

@@ -18,9 +18,15 @@
     <ClCompile Include="..\..\..\SRC\optimization\TclOptimizationBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\optimization\domain\Optimization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\optimization\TclOptimizationBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\optimization\domain\Optimization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
