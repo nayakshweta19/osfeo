@@ -20,7 +20,7 @@
                                                                         
 //Modified by:  Jian Zhang(j.zhang@ed.ac.uk)---------07,2010// 
 //              Panagiotis Kotsovinos(P.Kotsovinos@ed.ac.uk)// 
-
+//              Liming Jiang(Liming.Jiang@ed.ac.uk)---- 2013//
 
 
 #include <Steel01Thermal.h>
@@ -99,16 +99,16 @@ Steel01Thermal::Steel01Thermal
    CshiftP = 1.0;
    CshiftN = 1.0;
    Cloading = 0;
-   Ctemperature = 0;
-   Cmono = true;
+   Ctemperature = 0;//Added by Liming,2013
+   Cmono = true;    //Added by Liming,2013
 
    TminStrain = 0.0;
    TmaxStrain = 0.0;
    TshiftP = 1.0;
    TshiftN = 1.0;
    Tloading = 0;
-   Ttemperature = 0;
-   Tmono = true;
+   Ttemperature = 0; //Added by Liming,2013
+   Tmono = true;     //Added by Liming,2013
    
    // State variables
    Cstrain = 0.0;
@@ -150,10 +150,10 @@ Steel01Thermal::Steel01Thermal():UniaxialMaterial(0,MAT_TAG_Steel01Thermal),
 	  E0 = E0T;//JZ, 07/10//
 	  fy = fyT;//JZ, 07/10//
 	  fp = 0;//JZ, 11/10//
-	  Ttemperature = 0;
-	  Ctemperature = 0;
-      Cmono = true;
-	  Tmono = true;
+	  Ttemperature = 0;  //Added by Liming,2013
+	  Ctemperature = 0;  //Added by Liming,2013
+      Cmono = true;      //Added by Liming,2013
+	  Tmono = true;      //Added by Liming,2013
 }
 
 Steel01Thermal::~Steel01Thermal ()
@@ -167,7 +167,7 @@ Steel01Thermal::~Steel01Thermal ()
 int Steel01Thermal::setTrialStrain(double strain, double FiberTemperature, double strainRate)
 {
 
-  Ttemperature  = FiberTemperature;
+  Ttemperature  = FiberTemperature;    //Added by Liming,2013
 
 
    // Reset history variables to last converged state
@@ -179,7 +179,7 @@ int Steel01Thermal::setTrialStrain(double strain, double FiberTemperature, doubl
    Tstrain = Cstrain;
    Tstress = Cstress;
    Ttangent = Ctangent;
-   Tmono = Cmono;
+   Tmono = Cmono;       //Added by Liming,2013
    // Determine change in strain from last converged state
    double dStrain = strain - Cstrain;
    
@@ -189,7 +189,7 @@ int Steel01Thermal::setTrialStrain(double strain, double FiberTemperature, doubl
      // Calculate the trial state given the trial strain 
      determineTrialState (dStrain);
 	 
-     Ctemperature = Ttemperature; 
+     Ctemperature = Ttemperature;    //Added by Liming,2013
 	 // To enable 0 dStrain in the first iteration for new thermal action step
 	 // The material stress may change due to the degraded modulus.---added by Liming, 2013, OCT//
      
@@ -243,7 +243,10 @@ void Steel01Thermal::determineTrialState (double dStrain)
       double c3 = TshiftP*fyOneMinusB;
 	  
       double c = Cstress + E0*dStrain;
-	  //---------------
+	  
+	  //----if E0 changed due to temperature rise and the material 
+	  //----has not come into unloading, the rectant stress would not be c
+	  //--------------------------------------------------------------
       if (Tmono&&(E0!=E0T)) 
 		   c = E0*Tstrain;
 	 
@@ -304,9 +307,10 @@ void Steel01Thermal::determineTrialState (double dStrain)
       // to positive strain increment
       if (Tloading == -1 && dStrain > 0.0) {
 	  Tloading = 1;
+	  //-------------------
 	  if (Tmono&& (fabs(Ttemperature-Ctemperature)<1e-5))
 		  Tmono = false;
-	  
+	  //added by liming for identifying the material loading status
 	  if (Cstrain < TminStrain)
 	    TminStrain = Cstrain;
 	  TshiftP = 1 + a3*pow((TmaxStrain-TminStrain)/(2.0*a4*epsy),0.8);
@@ -544,7 +548,7 @@ else {fp = 0;}
   //ThermalElongation = 0 ;   //debug  Liming
   ET = E0;   
   Elong = ThermalElongation;
- 
+  //TemperautreC = TempT;  //removed by liming
 
   //opserr << "\getelongation: " << ET << "\ temp:" << TemperautreC <<endln; //PK Check
 
@@ -562,7 +566,7 @@ int Steel01Thermal::commitState ()
    CshiftP = TshiftP;
    CshiftN = TshiftN;
    Cloading = Tloading;
-   Cmono = Tmono;
+   Cmono = Tmono;//added by liming,2013
 
    // State variables
    Cstrain = Tstrain;
@@ -633,7 +637,7 @@ UniaxialMaterial* Steel01Thermal::getCopy ()
    theCopy->CshiftP = CshiftP;
    theCopy->CshiftN = CshiftN;
    theCopy->Cloading = Cloading;
-   theCopy->Cmono = Cmono;
+   theCopy->Cmono = Cmono;   //added by liming,2013
    
    
    // Trial history variables
@@ -642,20 +646,20 @@ UniaxialMaterial* Steel01Thermal::getCopy ()
    theCopy->TshiftP = TshiftP;
    theCopy->TshiftN = TshiftN;
    theCopy->Tloading = Tloading;
-   theCopy->Cmono = Tmono;
+   theCopy->Cmono = Tmono;   //added by liming,2013
    
    
    // Converged state variables
    theCopy->Cstrain = Cstrain;
    theCopy->Cstress = Cstress;
    theCopy->Ctangent = Ctangent;
-   theCopy->Ctemperature = Ctemperature;
+   theCopy->Ctemperature = Ctemperature;  //added by liming,2013
    
    // Trial state variables
    theCopy->Tstrain = Tstrain;
    theCopy->Tstress = Tstress;
    theCopy->Ttangent = Ttangent;
-   theCopy->Ctemperature = Ttemperature;
+   theCopy->Ctemperature = Ttemperature;  //added by liming,2013
    return theCopy;
 }
 
@@ -1035,16 +1039,18 @@ Steel01Thermal::getVariable(const char *variable, Information &info)
 	  (*theVector)(3) = TempTmax;
     }
     return 0;
+	//The following code block is added only for recording temperature and Thermalelongation
   }else if (strcmp(variable,"TempAndElong") == 0) {
     Vector *theVector = info.theVector;
 	if (theVector!= 0) {
 		(*theVector)(0) = Ttemperature;
         (*theVector)(1) = ThermalElongation;
 	}else{
-		opserr<<"null Vector in EC"<<endln;
+		opserr<<"null Vector in Steel01Thermal"<<endln;
 	}
 	return 0;
  }
+ //end of adding "TempAndElong"
    return -1;
 }
 
