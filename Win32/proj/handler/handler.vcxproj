@@ -215,9 +215,6 @@
     <ClInclude Include="..\..\..\SRC\handler\TCP_Stream.h" />
     <ClInclude Include="..\..\..\SRC\handler\XmlFileStream.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\SRC\handler\Makefile" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -161,6 +161,7 @@
       <ObjectFileName>.\..\..\obj\actor\release/</ObjectFileName>
       <ProgramDataBaseFileName>.\..\..\obj\actor\release/</ProgramDataBaseFileName>
       <CompileAs>Default</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Lib>
       <OutputFile>.\..\..\lib64\release\actor.lib</OutputFile>

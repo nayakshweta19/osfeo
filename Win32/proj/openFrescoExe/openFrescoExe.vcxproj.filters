@@ -240,9 +240,6 @@
     <ClCompile Include="..\..\VC2005errno.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\win32Functions.cpp">
-      <Filter>openseesCore</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartLabServer.cpp">
       <Filter>tcl</Filter>
     </ClCompile>
@@ -252,11 +249,11 @@
     <ClCompile Include="..\..\..\SRC\openFresco\tcl\TclStartSimAppSiteServer.cpp">
       <Filter>tcl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\win32Functions.cpp">
+      <Filter>openseesCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SRC\utility\bool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>

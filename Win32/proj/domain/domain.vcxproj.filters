@@ -234,9 +234,6 @@
     <ClCompile Include="..\..\..\SRC\domain\pattern\PathTimeSeries.cpp">
       <Filter>timeSeries</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\domain\pattern\PeerMotion.cpp">
-      <Filter>timeSeries</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\domain\pattern\PulseSeries.cpp">
       <Filter>timeSeries</Filter>
     </ClCompile>
@@ -296,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\domain\load\ShellThermalAction.cpp">
       <Filter>load</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\domain\pattern\PeerMotion.cpp">
+      <Filter>pattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -494,9 +494,6 @@
     <ClInclude Include="..\..\..\SRC\domain\pattern\PathTimeSeries.h">
       <Filter>timeSeries</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\SRC\domain\pattern\PeerMotion.h">
-      <Filter>timeSeries</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SRC\domain\pattern\PulseSeries.h">
       <Filter>timeSeries</Filter>
     </ClInclude>
@@ -550,6 +547,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\domain\load\ShellThermalAction.h">
       <Filter>load</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\domain\pattern\PeerMotion.h">
+      <Filter>pattern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
