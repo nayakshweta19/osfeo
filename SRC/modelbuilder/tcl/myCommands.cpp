@@ -35,6 +35,8 @@
 #include "TclModelBuilder.h"
 #include "TclUniaxialMaterialTester.h"
 #include "TclSectionTester.h"
+#include "TclNDMaterialTester.h"
+#include "Tcl2DMaterialTester.h"
 
 #include <tcl.h>
 
@@ -180,6 +182,36 @@ specifyModelBuilder(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Cha
     }
   }
   
+
+  else if ((strcmp(argv[1],"testnD") == 0) || (strcmp(argv[1],"TestnDMaterial") == 0) ||
+	    (strcmp(argv[1],"nDMaterialTest") == 0)) {
+    int count = 1;
+    if (argc == 3) {
+      if (Tcl_GetInt(interp, argv[2], &count) != TCL_OK) {
+	return TCL_ERROR;
+      }	  
+    }
+	theBuilder = new TclNDMaterialTester(theDomain, interp, count);
+    if (theBuilder == 0) {
+      opserr << "WARNING ran out of memory in creating TclNDMaterialTester model\n";
+      return TCL_ERROR;
+    }
+  }
+  
+  else if ((strcmp(argv[1],"test2D") == 0) || (strcmp(argv[1],"Test2DMaterial") == 0) ||
+	    (strcmp(argv[1],"planeStressMaterialTest") == 0)) {
+    int count = 1;
+    if (argc == 3) {
+      if (Tcl_GetInt(interp, argv[2], &count) != TCL_OK) {
+	return TCL_ERROR;
+      }	  
+    }
+	theBuilder = new Tcl2DMaterialTester(theDomain, interp, count);
+    if (theBuilder == 0) {
+      opserr << "WARNING ran out of memory in creating TclNDMaterialTester model\n";
+      return TCL_ERROR;
+    }
+  }
   
   else if ((strcmp(argv[1],"sectionTest") == 0) || (strcmp(argv[1],"TestSection") == 0) ||
 	   (strcmp(argv[1],"testSection") == 0) || (strcmp(argv[1],"SectionForceDeformationTest") == 0)) {

@@ -170,7 +170,7 @@ TclSectionTester_setStrainSection(ClientData clientData, Tcl_Interp *interp,
   static Vector data;
   double strain;
   for (int i=1; i<argc; i++) {
-    if (Tcl_GetDouble(interp, argv[1], &strain) != TCL_OK) {
+    if (Tcl_GetDouble(interp, argv[i], &strain) != TCL_OK) {
       Tcl_SetResult(interp, "WARNING could not read strain: strainNdTest strain?", TCL_STATIC);
       return TCL_ERROR;
     }
