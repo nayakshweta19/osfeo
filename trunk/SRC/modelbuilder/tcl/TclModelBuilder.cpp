@@ -947,7 +947,7 @@ TclModelBuilder::getNDMaterial(int tag)
   if (mc == 0) 
     return 0;
 
-  // otherweise we do a cast and return
+  // otherwise we do a cast and return
   NDMaterial *result = (NDMaterial *)mc;
   return result;
 }
@@ -1000,7 +1000,7 @@ TclModelBuilder::getYS_EvolutionModel(int tag)
   if (mc == 0)
     return 0;
 
-  // otherweise we do a cast and return
+  // otherwise we do a cast and return
   YS_Evolution *result = (YS_Evolution *)mc;
   return result;
 }
@@ -1040,7 +1040,7 @@ TclModelBuilder::getYieldSurface_BC(int tag)
   if (mc == 0)
     return 0;
 
-  // otherweise we do a cast and return
+  // otherwise we do a cast and return
   YieldSurface_BC *result = (YieldSurface_BC *)mc;
   return result;
 }
@@ -1052,7 +1052,7 @@ TclModelBuilder::getCyclicModel(int tag)
   if (mc == 0)
     return 0;
 
-  // otherweise we do a cast and return
+  // otherwise we do a cast and return
   CyclicModel *result = (CyclicModel *)mc;
   return result;
 }
@@ -1078,7 +1078,7 @@ TclModelBuilder::getPlasticMaterial(int tag)
   if (mc == 0)
     return 0;
 
-  // otherweise we do a cast and return
+  // otherwise we do a cast and return
   PlasticHardeningMaterial *result = (PlasticHardeningMaterial *)mc;
   return result;
 }
