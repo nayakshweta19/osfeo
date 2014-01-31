@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.2 $
-// $Date: 2006/01/10 00:42:51 $
+// $Date: 2006-01-10 00:42:51 $
 // $Source: /usr/local/cvs/OpenSees/SRC/system_of_eqn/linearSOE/sparseGEN/SparseGenRowLinSOE.h,v $
                                                                         
 #ifndef SparseGenRowLinSOE_h
@@ -68,6 +68,8 @@ class SparseGenRowLinSOE : public LinearSOE
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);    
     friend class PetscSparseSeqSolver;    
+    friend class CulaSparseSolverS4;    
+    friend class CulaSparseSolverS5;    
 
   protected:
     
