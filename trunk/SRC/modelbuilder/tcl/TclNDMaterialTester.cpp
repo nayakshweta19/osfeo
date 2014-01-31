@@ -134,7 +134,7 @@ TclNDMaterialTester_setNDMaterial(ClientData clientData, Tcl_Interp *interp, int
 
   // delete the old testing material
   if (theTestingNDMaterial !=0) {
-    delete theTestingNDMaterial;
+    delete [] theTestingNDMaterial;
     theTestingNDMaterial = 0;
   }
 

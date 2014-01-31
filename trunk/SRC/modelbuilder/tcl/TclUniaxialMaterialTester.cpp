@@ -133,7 +133,7 @@ TclUniaxialMaterialTester_setUniaxialMaterial(ClientData clientData, Tcl_Interp 
 
   // delete the old testing material
   if (theTestingUniaxialMaterial !=0) {
-    delete theTestingUniaxialMaterial;
+    delete [] theTestingUniaxialMaterial;
     theTestingUniaxialMaterial = 0;
   }
 
