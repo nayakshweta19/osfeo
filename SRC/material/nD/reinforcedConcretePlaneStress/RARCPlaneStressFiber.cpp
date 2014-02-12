@@ -704,7 +704,7 @@ RARCPlaneStressFiber::setTrialStrain(const Vector &v)
   int iteration_counter = 0;
   double error;
   
-  if (abs(stress_vec(1)) < tolerance)
+  if (fabs(stress_vec(1)) < tolerance)
 	status = 1;
 
   double cita1 = citaR;
@@ -719,12 +719,12 @@ RARCPlaneStressFiber::setTrialStrain(const Vector &v)
     if ( cita1 > -0.5*PI ) {
       strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita1);
   	  determineTrialStress();
-      if ( abs(stress_vec(1)) < tolerance ) {
+      if ( fabs(stress_vec(1)) < tolerance ) {
         status = 1;
         citaEnd = cita1;
       }
-	  if ( mine > abs(stress_vec(1)) ) {
-	    mine = abs(stress_vec(1));
+	  if ( mine > fabs(stress_vec(1)) ) {
+	    mine = fabs(stress_vec(1));
 	    citaEnd = cita1;
 	  }
     }
@@ -732,12 +732,12 @@ RARCPlaneStressFiber::setTrialStrain(const Vector &v)
     if ( cita2 < 0.5*PI ) {
       strain_vec(1) = strain_vec(0)-strain_vec(2)/tan(2.*cita2);
   	  determineTrialStress();
-      if ( abs(stress_vec(1)) < tolerance ) {
+      if ( fabs(stress_vec(1)) < tolerance ) {
         status = 1;
         citaEnd = cita2;
       }
-	  if ( mine > abs(stress_vec(1)) ) {
-	    mine = abs(stress_vec(1));
+	  if ( mine > fabs(stress_vec(1)) ) {
+	    mine = fabs(stress_vec(1));
 	    citaEnd = cita2;
 	  }
     }

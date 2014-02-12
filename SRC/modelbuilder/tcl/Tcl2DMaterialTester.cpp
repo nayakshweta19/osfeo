@@ -44,7 +44,7 @@
 // SOME STATIC POINTERS USED IN THE FUNCTIONS INVOKED BY THE INTERPRETER
 //
 
-static Tcl2DMaterialTester *theTclBuilder =0;
+static Tcl2DMaterialTester *theTclBuilder = 0;
 static NDMaterial *theTestingNDMaterial = 0;
 
 // 
@@ -133,7 +133,7 @@ Tcl2DMaterialTester_setNDMaterial(ClientData clientData, Tcl_Interp *interp, int
 
   // delete the old testing material
   if (theTestingNDMaterial !=0) {
-    delete [] theTestingNDMaterial;
+    delete theTestingNDMaterial;
     theTestingNDMaterial = 0;
   }
 

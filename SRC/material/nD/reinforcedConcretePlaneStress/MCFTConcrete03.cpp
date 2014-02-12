@@ -229,7 +229,7 @@ MCFTConcrete03::setTrialStrain(double trialStrain, double strainRate)
       } else { //reloading
 
     double beta;  
-	if (abs(eps) < abs(epsc0)) beta = 1./(1.+0.1*pow((ecmin-epsro)/epsc0,0.5));
+	if (fabs(eps) < fabs(epsc0)) beta = 1./(1.+0.1*pow((ecmin-epsro)/epsc0,0.5));
     else                       beta = 1./(1.+0.175*pow((ecmin-epsro)/epsc0,0.6));
 
 	e = (beta*sigmm-sigro)/(ecmin-epsro);
@@ -314,7 +314,7 @@ MCFTConcrete03::getTangent(void)
 /*double
 MCFTConcrete03::getSecant(void)
 {
-  if ( abs(eps) <= DBL_EPSILON ) {
+  if ( fabs(eps) <= DBL_EPSILON ) {
     return e;
   } else {
     return sig/(eps-ept);

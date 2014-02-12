@@ -573,7 +573,7 @@ fElement::addInertiaLoadToUnbalance(const Vector &accel)
   const Matrix &mass = this->getMass();
   int nstR = nen*ndf;
   Vector &resid = *(fElementV[nstR]);    
-  static const int numberNodes = 4 ;
+  //static const int numberNodes = 4 ;
 
   // store computed RV fro nodes in resid vector
   int count = 0;

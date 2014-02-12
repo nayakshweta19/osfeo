@@ -561,7 +561,7 @@ Concrete09::getPD ()
   }
   else  //tension for epslonTP, and will degrade compression strength
   {
-    D = 1.0-0.4*(abs(epslonTP/epsc0));
+    D = 1.0-0.4*(fabs(epslonTP/epsc0));
 	//opserr << "D=" << D << endln;
     if ( TloadingState == 1 )   //ascending
     {
@@ -572,7 +572,7 @@ Concrete09::getPD ()
 	  //PD = -(1160. * D *sqrt(-fc)*pow(eps,2))/(pow(epsc0,2) * pow(zeta,2) * sqrt(1+(400*epslonTP)/beta) * (400.*epslonTP+beta));
 	  //opserr << "PD=" << PD << endln;
     } else if ( TloadingState == 2 ) {  //descending
-      if ( abs(e) < 1e-8 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
+      if ( fabs(e) < 1e-8 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
       {
         PD = 0.0;
       } else {
@@ -587,7 +587,7 @@ Concrete09::getPD ()
     } else {
       PD = 0.0;
     }
-    if ( abs(zeta - 0.9) < 1e-8  || abs(zeta - 0.25) < 1e-8 ) // zeta = max or min value
+    if ( fabs(zeta - 0.9) < 1e-8  || fabs(zeta - 0.25) < 1e-8 ) // zeta = max or min value
     {
       PD = 0.0;
     }

@@ -117,7 +117,8 @@ class CSMMRCPlaneStress : public NDMaterial
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
-    Vector   Tstress;   // Trial stresses
+	Vector   Tstrain;   // Trial strains
+	Vector   Tstress;   // Trial stresses
     Vector   lastStress;  // Last committed stresses, added for x, k
     
     int      steelStatus;  // check if steel yield, 0 not yield, 1 yield
@@ -128,8 +129,9 @@ class CSMMRCPlaneStress : public NDMaterial
     double   miu12;        // Hsu/Zhu ratio
     double   miu21;        // Hsu/Zhu ratio
     double   G12;          // Shear Modulus
-    
-    
+	bool     isClockWise;  // counter-clockwise = 0; clockwise = 1;
+	int      cloclWiseStatus; // -1, 0, 1
+
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
@@ -141,7 +143,7 @@ class CSMMRCPlaneStress : public NDMaterial
     double TTwoNowMaxComStrain;
     double TTwoLastMaxComStrain;
     
-    // Converged values
+    // Converged/committed values
     int COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
     double COneNowMaxComStrain;
     double COneLastMaxComStrain;
@@ -153,11 +155,9 @@ class CSMMRCPlaneStress : public NDMaterial
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
     
-    
-    Vector strain_vec;
-    Vector stress_vec;	
-    Matrix tangent_matrix;
-
+	static Vector strain_vec;
+	static Vector stress_vec;
+	static Matrix tangent_matrix;
 
     int determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);

@@ -1,5 +1,3 @@
-                                                                
-                                                                       
 #ifndef SteelZ02_h
 #define SteelZ02_h
 
@@ -162,6 +160,12 @@ class SteelZ02 : public UniaxialMaterial
 	double tt1; // for check
 	double tt2;
 	double ttStrain;
+
+    double epsy; // = fy/E0;
+    double fcr; // = 0.31*sqrt(fpc);
+    //if ( rou < 0.0015 ) rou = 0.0015;
+    double B; // = pow((fcr/fy),1.5)/rou;
+    double epsn; // = epsy * (0.91-2.0*B) / (0.98-0.25*B);
 
 };
 
