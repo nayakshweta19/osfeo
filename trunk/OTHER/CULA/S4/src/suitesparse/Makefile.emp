@@ -1,0 +1,22 @@
+# To build this library, type 'make -f Makefile.emp extract; make -f Makefile.emp'
+
+DEFINES=-DNPRINT
+INCLUDES=-ICOLAMD/Include -IUFconfig
+COPTS=-shared -O3
+NAME=-o colamd.so
+
+CC=icc
+CFLAGS=$(DEFINES) $(INCLUDES) $(COPTS) $(NAME)
+
+colamd.so: COLAMD/Source/colamd.c COLAMD/Source/colamd_global.c
+	$(CC) $(CFLAGS) $<
+
+extract:
+	tar -xzf UFconfig.tar.gz
+	tar -xzf COLAMD.tar.gz
+
+clean:
+	rm -Rf UFconfig
+	rm -Rf COLAMD
+	rm -f colamd.so
+
