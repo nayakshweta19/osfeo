@@ -310,10 +310,10 @@ ConcreteMcftNonLinear5::getStress (void)
 	 //where e2 is always defined as Compression
 
 	double countStep = 1;
-	if (exy != 0 && abs(exy/ex) > 0.01 ) {
+	if (exy != 0 && fabs(exy/ex) > 0.01 ) {
 
 			//Update the principle axis Angle LOOP
-			while((abs(ResiStress) > toleranceEpsy) ) {
+			while((fabs(ResiStress) > toleranceEpsy) ) {
 			//opserr << "theta" << theta << endln;
 			if ( exy > 0) {
 				//CASE 1 formulation 
@@ -429,7 +429,7 @@ ConcreteMcftNonLinear5::getStress (void)
 
 			counter1++;		//count theta stepsize
 			
-			if(abs(ResiStress) > toleranceEpsy)
+			if(fabs(ResiStress) > toleranceEpsy)
 			theta = bound1 + counter1*stepsize;
 		
 

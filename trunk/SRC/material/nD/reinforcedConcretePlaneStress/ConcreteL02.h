@@ -21,10 +21,10 @@ class ConcreteL02 : public UniaxialMaterial
   ~ConcreteL02();
   
   int setTrialStrain(double strain, double strainRate = 0.0); 	
-  int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
+  //int setTrial (double strain, double &stress, double &tangent, double strainRate = 0.0);
   
-  int setTrialStrain(double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double strainRate = 0.0);
-  int setTrial (double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double &stress, double &tangent, double strainRate=0.0);
+  //int setTrialStrain(double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double strainRate = 0.0);
+  //int setTrial (double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double &stress, double &tangent, double strainRate=0.0);
 
   //beta and epslonTP are required arguments when to calculate softening effect zeta
   // D: damage factor for strength
@@ -61,6 +61,7 @@ class ConcreteL02 : public UniaxialMaterial
   /*** Material Properties ***/        
   double fpc;      // Compressive strength
   double epsc0;    // Strain at compressive strength
+  double Ec0;      // Init Modules
   double zeta;     // Softening effect
   double beta;     // Parameter needed for calculating zeta
   double fbeta;    // function of beta

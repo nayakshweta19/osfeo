@@ -706,7 +706,7 @@ Concrete10::getPD ()
   }
   else  //tension for epslonTP, and will degrade compression strength
   {
-    D = 1.0-0.4*(abs(epslonTP/epsc0));
+    D = 1.0-0.4*(fabs(epslonTP/epsc0));
 	//opserr << "D=" << D << endln;
     if ( TloadingState == 1 )   //ascending
     {
@@ -719,7 +719,7 @@ Concrete10::getPD ()
     }
     else if ( TloadingState == 2 )   //descending
     {
-      if ( abs(e) < 1e-8 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
+      if ( fabs(e) < 1e-8 ) // at the end platum part of descending branch FMK CHANGED FROM = 0.0
       {
         PD = 0.0;
       }
@@ -738,7 +738,7 @@ Concrete10::getPD ()
     {
       PD = 0.0;
     }
-    if ( abs(zeta - 0.9) < 1e-8  || abs(zeta - 0.25) < 1e-8 ) // zeta = max or min value
+    if ( fabs(zeta - 0.9) < 1e-8  || fabs(zeta - 0.25) < 1e-8 ) // zeta = max or min value
     {
       PD = 0.0;
     }
@@ -810,7 +810,7 @@ Concrete10::Tens_UnloadingP (double epsc, double epsc2, double epscP, double sig
 	      this->Compr_Envlp(eFF, epsc2, sigFF, Edummy);
 	      double Sige0 = sigFF/Yint;
 	      double AA, BB, CC;
-	      if ( abs(Sige0) < DBL_EPSILON ) {
+	      if ( fabs(Sige0) < DBL_EPSILON ) {
 	    AA = 0.0;
 	    BB = 0.0;
 	    CC = 0.0;
@@ -880,7 +880,7 @@ Concrete10::Tens_UnloadingN (double epsc, double epsc2, double epscP, double sig
 	  this->Compr_Envlp(eFF, epsc2, sigFF, Edummy);
 	  double Sige0 = sigFF/Yint;
 	  double AA, BB, CC;
-	  //if ( abs(Sige0) < DBL_EPSILON) {
+	  //if ( fabs(Sige0) < DBL_EPSILON) {
 	  //	AA = 0.0;
 	  //	BB = 0.0;
 	  //	CC = 0.0;
@@ -926,7 +926,7 @@ Concrete10::Compr_Reloading (double epsc, double epsc2, double epscP, double sig
 	this->Compr_Envlp(eFF, epsc2, sigFF, Edummy);
 	double Sige0 = sigFF/Yint;
 	double AA, BB, CC;
-	//if ( abs(Sige0) < DBL_EPSILON) {
+	//if ( fabs(Sige0) < DBL_EPSILON) {
 	//	AA = 0.0;
 	//	BB = 0.0;
 	//	CC = 0.0;

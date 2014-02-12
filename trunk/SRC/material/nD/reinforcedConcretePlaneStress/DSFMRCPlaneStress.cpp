@@ -939,7 +939,7 @@ DSFMRCPlaneStress::determineTrialStress(Vector strain)
   	  fC1a = fcr * (1 - temp);  //eq. i-34
   
     //  case 2: eq. i-35, 36
-    temp = 4.0*(roux/db1*abs(cos(citan1))+rouy/db2*abs(cos(citan2)));
+    temp = 4.0*(roux/db1*fabs(cos(citan1))+rouy/db2*fabs(cos(citan2)));
     fC1b = fcr/(1+sqrt(2.2/temp*epsC1));
   
     temp = max(fC1a,fC1b); // eq.i-38 /fC1
@@ -1019,7 +1019,7 @@ DSFMRCPlaneStress::determineTrialStress(Vector strain)
   	  
   	  error = fC1 - temp;
   	  
-  	  if (abs(error) <= tolerance) {
+  	  if (fabs(error) <= tolerance) {
   	    fC1converged = true;
 	  } else {
   	  // temp is function of citan1 citan2 and fSx and fSy,
@@ -1056,7 +1056,7 @@ DSFMRCPlaneStress::determineTrialStress(Vector strain)
     else                          citaLag = 7.5/180.*PI;
   
 	dCitaE = citaE - citaIC;
-	dCitaS = (abs(dCitaE) > citaLag ? dCitaE-citaLag : dCitaE);
+	dCitaS = (fabs(dCitaE) > citaLag ? dCitaE-citaLag : dCitaE);
 	citaS  = citaIC + dCitaS;
 
 	double gammaS2 = Tstrain(2)*cos(2.0*citaS) + (Tstrain(1)-Tstrain(0))*sin(2.0*citaS);  // eq. i-18

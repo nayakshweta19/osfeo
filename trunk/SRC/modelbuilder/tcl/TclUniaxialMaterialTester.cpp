@@ -132,9 +132,9 @@ TclUniaxialMaterialTester_setUniaxialMaterial(ClientData clientData, Tcl_Interp 
   }
 
   // delete the old testing material
-  if (theTestingUniaxialMaterial !=0) {
-    delete [] theTestingUniaxialMaterial;
-    theTestingUniaxialMaterial = 0;
+  if (theTestingUniaxialMaterial != 0) {
+    delete theTestingUniaxialMaterial;
+	theTestingUniaxialMaterial = 0;
   }
 
   // get the material from the modelbuilder with matID 
@@ -176,7 +176,7 @@ TclUniaxialMaterialTester_setStrainUniaxialMaterial(ClientData clientData, Tcl_I
 
   // delete the old testing material
   if (theTestingUniaxialMaterial !=0) {
-    theTestingUniaxialMaterial->setTrialStrain(strain);
+    theTestingUniaxialMaterial->setTrialStrain(strain, 0.0);
     if (count == countsTillCommit) {
       theTestingUniaxialMaterial->commitState();    
       count = 1;

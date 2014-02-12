@@ -336,7 +336,7 @@ MCFTSteel02::getTangent(void)
 double
 MCFTSteel02::getSecant(void)
 {
-	if ( abs(Tstrain) < DBL_EPSILON ) {
+	if ( fabs(Tstrain) < DBL_EPSILON ) {
 		return E0;
 	} else {
 		return Tstress/Tstrain;
