@@ -44,9 +44,6 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double getRho(void);
     
     int setTrialStrain(const Vector &v); // really used one
-    int setTrialStrain(const Vector &v, const Vector &r);
-    int setTrialStrainIncr(const Vector &v);
-    int setTrialStrainIncr(const Vector &v, const Vector &r);
     const Matrix &getTangent(void);
     const Matrix &getInitialTangent(void) {return this->getTangent();};
 
@@ -98,7 +95,9 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double   miu21;        // Hsu/Zhu ratio
     double   G12;          // Shear Modulus
     
-    
+	static double epslonOne;
+	static double epslonTwo;
+	static double halfGammaOneTwo;
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
@@ -123,9 +122,9 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double DDTwo; // damage factor for concrete Two
     
     
-    Vector strain_vec;
-    Vector stress_vec;	
-    Matrix tangent_matrix;
+    static Vector strain_vec;
+    static Vector stress_vec;	
+    static Matrix tangent_matrix;
 
 
     int determineTrialStress(void);

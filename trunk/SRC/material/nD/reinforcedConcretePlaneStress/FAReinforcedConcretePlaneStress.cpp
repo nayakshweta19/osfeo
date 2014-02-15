@@ -23,9 +23,13 @@
 
 #include <Tensor.h>
 
-//Vector FAReinforcedConcretePlaneStress :: strain_vec(3);
-//Vector FAReinforcedConcretePlaneStress :: stress_vec(3);
-//Matrix FAReinforcedConcretePlaneStress :: tangent_matrix(3,3);
+Vector FAReinforcedConcretePlaneStress :: strain_vec(3);
+Vector FAReinforcedConcretePlaneStress :: stress_vec(3);
+Matrix FAReinforcedConcretePlaneStress :: tangent_matrix(3,3);
+
+double FAReinforcedConcretePlaneStress :: epslonOne = 0.0;
+double FAReinforcedConcretePlaneStress :: epslonTwo = 0.0;
+double FAReinforcedConcretePlaneStress :: halfGammaOneTwo =0.0;
 
 #include <DummyStream.h>
 #include <MaterialResponse.h>
@@ -157,7 +161,7 @@ FAReinforcedConcretePlaneStress ::FAReinforcedConcretePlaneStress (int      tag,
 								   double   EPSC0) :
   NDMaterial(tag, ND_TAG_FAReinforcedConcretePlaneStress), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
-  fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), strain_vec(3), stress_vec(3),tangent_matrix(3,3)
+  fpc(FPC), fy(FY), E0(E), epsc0(EPSC0)
 {
     steelStatus = 0;
     dirStatus = 0;
@@ -268,8 +272,7 @@ FAReinforcedConcretePlaneStress ::FAReinforcedConcretePlaneStress (int      tag,
 }
 
 FAReinforcedConcretePlaneStress::FAReinforcedConcretePlaneStress()
- :NDMaterial(0, ND_TAG_FAReinforcedConcretePlaneStress), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3)
+ :NDMaterial(0, ND_TAG_FAReinforcedConcretePlaneStress)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -330,85 +333,6 @@ int FAReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
   return 0;
 }
 
-///*
-int FAReinforcedConcretePlaneStress::setTrialStrain(const Vector &v, const Vector &r)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  determineTrialStress();
-  
-  return 0;
-}
-
-
-int FAReinforcedConcretePlaneStress::setTrialStrainIncr(const Vector &v)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  determineTrialStress();
-  
-  return 0;
-}
-
-
-int FAReinforcedConcretePlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  determineTrialStress();
-  
-  return 0;
-}
-//*/
-
 const Matrix& FAReinforcedConcretePlaneStress::getTangent(void)
 {
   return tangent_matrix;
@@ -421,7 +345,7 @@ const Vector& FAReinforcedConcretePlaneStress::getStress(void)
 }
 
 
-const Vector& FAReinforcedConcretePlaneStress :: getStrain()
+const Vector& FAReinforcedConcretePlaneStress::getStrain()
 {
   return strain_vec;
 }
@@ -454,10 +378,30 @@ int FAReinforcedConcretePlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
   
+  char buffer[200];
+  sprintf(buffer, "e%d = %8.6f, e%d = %8.6f, e%d = %8.6f, e%d = %8.6f; ThetaE = %4.2f, ThetaS = %4.2f; |S(i)|-|S(i-1)|=%8.6f. ",
+	  theMaterial[0]->getTag(), theMaterial[0]->getStrain(), theMaterial[1]->getTag(), theMaterial[1]->getStrain(),
+	  theMaterial[2]->getTag(), theMaterial[2]->getStrain(), theMaterial[3]->getTag(), theMaterial[3]->getStrain(),
+	  citaStrain / PI * 180, citaStress / PI * 180, fabs(sqrt(pow(lastStress[0], 2) + pow(lastStress[1], 2) + pow(lastStress[2], 2)) -stress_vec.Norm()));
+  opserr << buffer;
+
+  if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
+	  opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne > 0.0) && (epslonTwo <= 0.0)) {  // one tension, two compression
+	  opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne <= 0.0) && (epslonTwo > 0.0)) {  // one compression, two tension
+	  opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne <= 0.0) && (epslonTwo <= 0.0)) {  //both compression
+	  opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+
   lastStress[0] = stress_vec(0);
   lastStress[1] = stress_vec(1);
   lastStress[2] = stress_vec(2);
-  
+
   return 0;
 }
 
@@ -1066,7 +1010,7 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 			tempStrain[i] += TOne[i][k]*Tstrain[k];	
 	}
 
-    double epslonOne, epslonTwo, halfGammaOneTwo;
+    //double epslonOne, epslonTwo, halfGammaOneTwo;
 	epslonOne = tempStrain[0];
 	epslonTwo = tempStrain[1];
 	halfGammaOneTwo = tempStrain[2];
@@ -1224,8 +1168,8 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	V[2][2] = 1.0;
 	
       }
-    else
-      {
+	else
+	  {
 	V[0][0] = 1.0/(1.0-v12*v21);
 	V[0][1] = v12/(1.0-v12*v21);
 	V[0][2] = 0.0;
@@ -1235,7 +1179,7 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	V[2][0] = 0.0;
 	V[2][1] = 0.0;
 	V[2][2] = 1.0;
-      }
+	  }
     
     
     
