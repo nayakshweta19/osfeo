@@ -49,6 +49,20 @@ Vector CSMMRCPlaneStress :: strain_vec(3);
 Vector CSMMRCPlaneStress :: stress_vec(3);
 Matrix CSMMRCPlaneStress :: tangent_matrix(3,3);
 
+double CSMMRCPlaneStress :: citaR = 0.0;      // principal strain direction
+double CSMMRCPlaneStress :: lastCitaR = 0.0;  // last converged principle strain direction
+int    CSMMRCPlaneStress :: steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
+int    CSMMRCPlaneStress :: dirStatus       = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
+bool   CSMMRCPlaneStress :: isClockWise     = 0; // counter-clockwise = 0; clockwise = 1;
+int    CSMMRCPlaneStress :: cloclWiseStatus = 0; // -1, 0, 1
+
+double CSMMRCPlaneStress :: epslonOne = 0.0;
+double CSMMRCPlaneStress :: epslonTwo = 0.0;
+double CSMMRCPlaneStress :: halfGammaOneTwo = 0.0;
+
+double CSMMRCPlaneStress :: sigmaOneC = 0.0;
+double CSMMRCPlaneStress :: sigmaTwoC = 0.0;
+
 #include <DummyStream.h>
 #include <MaterialResponse.h>
 #include <elementAPI.h>
@@ -180,7 +194,7 @@ CSMMRCPlaneStress::CSMMRCPlaneStress(int      tag,
                                      double   E,
                                      double   EPSC0) :
 NDMaterial(tag, ND_TAG_CSMMRCPlaneStress),
-  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2), citaR(0.0),
+  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), lastStress(3), Tstress(3), Tstrain(3)
 {
   if (fpc < 0.0) { fpc = -fpc; } // set fpc > 0
@@ -264,7 +278,7 @@ NDMaterial(tag, ND_TAG_CSMMRCPlaneStress),
 }
 
 CSMMRCPlaneStress::CSMMRCPlaneStress()
-  :NDMaterial(0, ND_TAG_CSMMRCPlaneStress), citaR(0.)
+  :NDMaterial(0, ND_TAG_CSMMRCPlaneStress)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -293,17 +307,11 @@ CSMMRCPlaneStress::~CSMMRCPlaneStress()
   }
 }
 
-double
-CSMMRCPlaneStress::getRho(void)
-{
-  return rho;
-}
-
 int
-CSMMRCPlaneStress::setTrialStrain(const Vector &strain_from_element)
+CSMMRCPlaneStress::setTrialStrain(const Vector &v)
 {
   // Set values for strain_vec
-  strain_vec = strain_from_element;
+  strain_vec = v;
 
   // Set initial values for Tstress
   Tstress.Zero();
@@ -321,25 +329,10 @@ CSMMRCPlaneStress::setTrialStrain(const Vector &strain_from_element)
   return 0;
 }
 
-int
-CSMMRCPlaneStress::setTrialStrain(const Vector &v, const Vector &r)
+double
+CSMMRCPlaneStress::getRho(void)
 {
-  opserr << "error: CSMMRCPlaneStress::setTrialStrain(&v, &r) -- not really responsibility" << endln;
-  return 0;
-}
-
-int
-CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
-{
-  opserr << "error: CSMMRCPlaneStress::setTrialStrainIncr(&v) -- not really responsibility" << endln;
-  return 0;
-}
-
-int
-CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
-{
-  opserr << "error: CSMMRCPlaneStress::setTrialStrainIncr(&v, &r) -- not really responsibility" << endln;
-  return 0;
+	return rho;
 }
 
 const Matrix&
@@ -387,13 +380,27 @@ CSMMRCPlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
 
-  char buffer [200];
-  sprintf(buffer, "e0 = %8.6f, e1 = %8.6f, e2 = %8.6f, e3 = %8.6f; ThetaE = %8.6f, ThetaS = %8.6f; |S(i)|-|S(i-1)|=%8.6f\n",
+  char buffer[200];
+  sprintf(buffer, "eS1 = %8.6f, eS2 = %8.6f, eC1 = %8.6f, eC2 = %8.6f; ThetaE = %4.2f, ThetaS = %4.2f; |S(i)|-|S(i-1)|=%8.6e. ",
 	  theMaterial[0]->getStrain(), theMaterial[1]->getStrain(), theMaterial[2]->getStrain(), theMaterial[3]->getStrain(),
 	  citaStrain / PI * 180, citaStress / PI * 180, fabs(lastStress.Norm() - stress_vec.Norm()));
   opserr << buffer;
 
+  if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
+	opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne > 0.0) && (epslonTwo <= 0.0)) {  // one tension, two compression
+	opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne <= 0.0) && (epslonTwo > 0.0)) {  // one compression, two tension
+	opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+  else if ((epslonOne <= 0.0) && (epslonTwo <= 0.0)) {  //both compression
+	opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  }
+
   lastStress = stress_vec;
+  lastCitaR = citaR;
 
   return 0;
 }
@@ -762,75 +769,34 @@ CSMMRCPlaneStress::determineTrialStress(void)
   Tstrain(2) = 0.5*strain_vec(2);
 
   // Get citaR based on Tstrain
-  double AA = (Tstrain(0) - Tstrain(1)) / 2. * 1.0e6;
-  double BB = Tstrain(2) * 1.0e6;
-  //double C = pow(A,2.)+pow(B,2.);
+  double citaR; // principal strain direction
+  double temp_citaR;
+  double eps = 1e-12;
 
-  if ( AA == 0.0 && BB == 0.0 ) {
-    citaR = 0.25*PI;
-  } else {  // Tstrain(0) != Tstrain(1) 
-    //ratio = BB / AA;
-	citaR = atan2(BB, AA) / 2.;
+  if (fabs(Tstrain(0) - Tstrain(1)) < 1e-7) {
+	citaR = 0.25*PI;
   }
-
-  //if (_isnan(citaR) != 0) {
-  //  opserr << "CSMMRCPlaneStress::determineTrialStress: Failure to calculate citaR\n";
-  //  opserr << " Tstrain(0) = " << Tstrain(0) << endln;
-  //  opserr << " Tstrain(1) = " << Tstrain(1) << endln;
-  //  opserr << " Tstrain(2) = " << Tstrain(2) << endln;
-  //}
+  else {// Tstrain[0] != Tstrain[1]
+	temp_citaR = 0.5 * atan(fabs(2.0e6*Tstrain(2) / (1.0e6*Tstrain(0) - 1.0e6*Tstrain(1))));
+	if      (fabs(Tstrain(2)) < 1e-7)                      citaR = 0;
+	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)> 0)) citaR = temp_citaR;
+	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)< 0)) citaR = PI - temp_citaR;
+	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)> 0)) citaR = 0.5*PI - temp_citaR;
+	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)< 0)) citaR = 0.5*PI + temp_citaR;
+	else {
+	  opserr << "CSMMRCPlaneStress::determineTrialStress: Failure to calculate citaR\n";
+	  opserr << " Tstrain(0) = " << Tstrain(0) << endln;
+	  opserr << " Tstrain(1) = " << Tstrain(1) << endln;
+	  opserr << " Tstrain(2) = " << Tstrain(2) << endln;
+	}
+  }
 
   while ((citaR - 0.5*PI) > 1e-8) {
     citaR = citaR - 0.5*PI;
-	opserr << "CSMMRCPlaneStress::determineTrialStress() -- compute citaR, error for atan2()." << endln;
-  }
-  if (citaR < -0.5*PI || citaR > 0.5*PI) {
-	dirStatus = 0;
-	opserr << "CSMMRCPlaneStress::determineTrialStress: Failure to calculate citaR\n";
-  }
-  /*double temp_citaR;
-  if (fabs(Tstrain(0) - Tstrain(1)) < 1e-7)
-  {
-	  citaR = 0.25*PI;
-  }
-  else // Tstrain[0] != Tstrain[1]
-  {
-	  temp_citaR = 0.5 * atan(fabs(2.0*1.0e6*Tstrain(2) / (1.0e6*Tstrain(0) - 1.0e6*Tstrain(1))));
-	  if (fabs(Tstrain(2)) < 1e-7)
-	  {
-		  citaR = 0;
-	  }
-	  else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2) > 0))
-	  {
-		  citaR = temp_citaR;
-	  }
-	  else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2) < 0))
-	  {
-		  citaR = PI - temp_citaR;
-	  }
-	  else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2) > 0))
-	  {
-		  citaR = 0.5*PI - temp_citaR;
-	  }
-	  else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2) < 0))
-	  {
-		  citaR = 0.5*PI + temp_citaR;
-	  }
-	  else
-	  {
-		  opserr << "FAReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate citaR\n";
-		  opserr << " Tstrain(0) = " << Tstrain(0) << endln;
-		  opserr << " Tstrain(1) = " << Tstrain(1) << endln;
-		  opserr << " Tstrain(2) = " << Tstrain(2) << endln;
-	  }
+	dirStatus = 1; 
   }
 
-
-  while ((citaR - 0.5*PI) > 1e-8) {
-	  citaR = citaR - 0.5*PI;
-	  dirStatus = 1;  // assign value for output in the screen
-  }*/
-  citaStrain = citaR; // assign value for output in the screen
+  citaStrain = citaR;
 
   int status = 0; // status to check if iteration for principal stress direction
   double tolerance = 0.0088; //PI/360.0; // tolerance for iteration, equals to 0.5 degree
@@ -856,24 +822,24 @@ CSMMRCPlaneStress::determineTrialStress(void)
 	if (citaOne > citaLow) {
       error = getAngleError(citaOne);
       if (minError > error) {
-        minError = error;
-        citaMinError = citaOne;
+    minError = error;
+    citaMinError = citaOne;
       }
       if (error < tolerance) {
-        status = 1;
-        citaFinal = citaOne;
+    status = 1;
+    citaFinal = citaOne;
       }
     }
 
     if (citaTwo < citaHigh) {
       error = getAngleError(citaTwo);
       if (minError > error) {
-        minError = error;
-        citaMinError = citaTwo;
+    minError = error;
+    citaMinError = citaTwo;
       }
       if (error < tolerance) {
-        status = 1;
-        citaFinal = citaTwo;
+	status = 1;
+    citaFinal = citaTwo;
       }
     }
 
@@ -881,10 +847,11 @@ CSMMRCPlaneStress::determineTrialStress(void)
   }
 
   if (status == 0) {  // does not get converged after iteration
-    citaStress = getPrincipalStressAngle(citaMinError);
-    // if ( minError > 0.05 )
+    //citaStress = getPrincipalStressAngle(citaMinError);
+	getAngleError(citaFinal);
+	// if ( minError > 0.05 )
     opserr << "CSMMRCPlaneStress::determineTrialStress(): Warning, failure to get converged principal stress direction\n";
-	opserr << "citaStrain = " << citaStrain/PI*180. << "бу; citaTtress = " << citaStress/PI*180 << "бу." << endln;
+	//opserr << "citaStrain = " << citaStrain/PI*180. << "бу; citaStress = " << citaStress/PI*180 << "бу." << endln;
   }
 
   //citaStress = citaFinal;  // assign value for output in the screen
@@ -899,8 +866,8 @@ CSMMRCPlaneStress::getAngleError(double inputCita)
 
   double error;
   double error1, error2, error3;
-  error1 = fabs(inputCita - outputCita);
-  error2 = fabs(inputCita - outputCita + 0.5*PI);
+  error1 = fabs( inputCita - outputCita);
+  error2 = fabs( inputCita - outputCita + 0.5*PI);
   error3 = fabs(-inputCita + outputCita + 0.5*PI);
 
   if (error1 > error2)
@@ -1027,7 +994,7 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   //calculate tempStrain: epslon1,epslon2, 0.5*gamma12 in trial principal stress direction
   tempStrain.addMatrixVector(0.0, TOne, Tstrain, 1.0);
 
-  double epslonOne, epslonTwo, halfGammaOneTwo;
+  //double epslonOne, epslonTwo, halfGammaOneTwo;
   epslonOne = tempStrain(0);
   epslonTwo = tempStrain(1);
   halfGammaOneTwo = tempStrain(2);
@@ -1050,10 +1017,8 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   double strainSL, strainST; //Biaxial strain of steel in L, T
   double strainSF;           //larger one of strainSL, strainST
 
-  strainSL = pow(cos(citaL), 2)*Tstrain(0) + pow(sin(citaL), 2)*Tstrain(1)
-           + 2.0*sin(citaL)*cos(citaL)*Tstrain(2);
-  strainST = pow(cos(citaT), 2)*Tstrain(0) + pow(sin(citaT), 2)*Tstrain(1)
-           + 2.0*sin(citaT)*cos(citaT)*Tstrain(2);
+  strainSL = pow(cos(citaL), 2)*Tstrain(0) + pow(sin(citaL), 2)*Tstrain(1) + 2.0*sin(citaL)*cos(citaL)*Tstrain(2);
+  strainST = pow(cos(citaT), 2)*Tstrain(0) + pow(sin(citaT), 2)*Tstrain(1) + 2.0*sin(citaT)*cos(citaT)*Tstrain(2);
 
   strainSF = (strainSL > strainST ? strainSL : strainST);
 
@@ -1136,22 +1101,33 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   miu21 = v21; // record the value for output in screen
 
   //set values of matrix V(3,3)
-  V.Zero();
   //if (v12*v21 == 1.0) {
   //  opserr << "CSMMRCPlaneStress::getPrincipalStressAngle: failure to get matrix [V]!\n";
   //  opserr << "v12= " << v12 << endln;
   //  opserr << "v21= " << v21 << endln;
-    V(0, 0) = 1.0; // For testing FA model
+    V(0, 0) = 1.0;
+	V(0, 1) = 0.0;
+	V(0, 2) = 0.0;
+
+	V(1, 0) = 0.0;
     V(1, 1) = 1.0;
+	V(1, 2) = 0.0;
+
+	V(2, 0) = 0.0;
+	V(2, 1) = 0.0;
     V(2, 2) = 1.0;
   //}
   //else {
   //  V(0, 0) = 1.0 / (1.0 - v12*v21);
   //  V(0, 1) = v12 / (1.0 - v12*v21);
+  //  V(0, 2) = 0.0;
   //
   //  V(1, 0) = v21 / (1.0 - v12*v21);
   //  V(1, 1) = 1.0 / (1.0 - v12*v21);
+  //  V(1, 2) = 0.0;
   //
+  //  V(2, 0) = 0.0;
+  //  V(2, 1) = 0.0;
   //  V(2, 2) = 1.0;
   //}
 
@@ -1164,8 +1140,8 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   // tempStrain(2) = halfGammaOneTwo;  // hsu-zhu ratio has no effect on this term
 
   //get stiffness of uniaxial strain of concrete in 12 direction
-  double cigmaOneC; //stress of concrete in 12 direction
-  double cigmaTwoC;
+  //double sigmaOneC; //stress of concrete in 12 direction
+  //double sigmaTwoC;
   double GOneTwoC; //shear modulus of concrete in 12 direction
 
   // get Damage factor: DOne, DTwo
@@ -1277,31 +1253,55 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   Information &theInfoC03 = theResponses[3]->getInformation();
 
   double beta = 0.5*atan2(halfGammaOneTwo*2.e6, (epslonOne - epslonTwo)*1.e6); // set beta to 1.0 for simplification, previously
-
+  
   Vector theData(5);
   theData(0) = xx;
   theData(1) = kk;
-  theData(2) = DOne;
   theData(3) = fabs(beta)/PI*180.;
-  theData(4) = tempStrain(1);   //epslon2_bar
-  theInfoC02.setVector(theData);
-  theResponses[2]->getResponse();
-  theData(2) = DTwo;
-  theData(4) = tempStrain(0);   //epslon1_bar
-  theInfoC03.setVector(theData);
-  theResponses[3]->getResponse();
 
-  theMaterial[2]->setTrialStrain(tempStrain(0)); //epslon1_bar
-  theMaterial[3]->setTrialStrain(tempStrain(1)); //epslon2_bar
+//  if (dirStatus == 1) {
+//    theData(2) = DTwo;
+//    theData(4) = tempStrain(0);   //epslon1_bar
+//    theInfoC02.setVector(theData);
+//    theResponses[2]->getResponse();
+//    
+//    theData(2) = DOne;
+//    theData(4) = tempStrain(1);   //epslon2_bar
+//    theInfoC03.setVector(theData);
+//    theResponses[3]->getResponse();
+//    
+//    theMaterial[2]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
+//    theMaterial[3]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
+//    
+//    sigmaOneC = theMaterial[2]->getStress();
+//    sigmaTwoC = theMaterial[3]->getStress();
+//  }
+//  else if (dirStatus == 0) {
+    theData(2) = DOne;
+	theData(4) = tempStrain(1);   //epslon2_bar
+	theInfoC02.setVector(theData);
+	theResponses[2]->getResponse();
 
-  cigmaOneC = theMaterial[2]->getStress();
-  cigmaTwoC = theMaterial[3]->getStress();
+	theData(2) = DTwo;
+	theData(4) = tempStrain(0);   //epslon1_bar
+	theInfoC03.setVector(theData);
+	theResponses[3]->getResponse();
+
+	theMaterial[2]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
+	theMaterial[3]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
+
+	sigmaOneC = theMaterial[2]->getStress();
+	sigmaTwoC = theMaterial[3]->getStress();
+//  }
+//    else {
+//    opserr << "CSMMRCPlaneStress::(getPrincipalStressAngle) -- wrong dirStatus" << endln; // should not occur
+//  }
 
   // set GOneTwoC = 1.0;
   if (epslonOne == epslonTwo) {
     GOneTwoC = 10000.0; // max value for GOneTwoC
   } else {
-    GOneTwoC = fabs((cigmaOneC - cigmaTwoC) / (epslonOne - epslonTwo));
+    GOneTwoC = fabs((sigmaOneC - sigmaTwoC) / (epslonOne - epslonTwo));
     if (GOneTwoC > 10000.0) // if larger than max value
       GOneTwoC = 10000.0;
   }
@@ -1315,15 +1315,16 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   theResponses[5]->getResponse();
   Information &theInfoC2 = theResponses[5]->getInformation();
 
-  DC_bar.Zero();
   DC_bar(0, 0) = theMaterial[2]->getTangent();
   DC_bar(0, 1) = theInfoC1.theDouble;
-  //DC_bar(0,2) = 0.0;
+  DC_bar(0, 2) = 0.0;
+
   DC_bar(1, 0) = theInfoC2.theDouble;
   DC_bar(1, 1) = theMaterial[3]->getTangent();
-  //DC_bar(1,2) = 0.0;
-  //DC_bar(2,0) = 0.0;
-  //DC_bar(2,1) = 0.0;	
+  DC_bar(1, 2) = 0.0;
+
+  DC_bar(2, 0) = 0.0;
+  DC_bar(2, 1) = 0.0;
   DC_bar(2, 2) = GOneTwoC;
 
   //before [DC]=[v]*[TOne], now update [DC]=[Dc_bar]*[V]*[TOne]
@@ -1389,7 +1390,6 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 
   //****************** get tangent_matrix  ****************    
   // Get tangent_matrix
-  //tangent_matrix.Zero();
   tangent_matrix = DC + DSL + DST;
 
   tangent_matrix(0, 2) *= 0.5;
@@ -1397,45 +1397,43 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   tangent_matrix(2, 2) *= 0.5;
 
   //**************** get Tstress and stress_vec ****************
-  Tstress(0) = pow(cos(citaIn), 2)*cigmaOneC + pow(sin(citaIn), 2)*cigmaTwoC
+  Tstress(0) = pow(cos(citaIn), 2)*sigmaOneC + pow(sin(citaIn), 2)*sigmaTwoC
     - 2 * sin(citaIn)*cos(citaIn)*halfGammaOneTwo*GOneTwoC
     + pow(cos(citaL), 2)*rou1*stressSL + pow(cos(citaT), 2)*rou2*stressST;
 
-  Tstress(1) = pow(sin(citaIn), 2)*cigmaOneC + pow(cos(citaIn), 2)*cigmaTwoC
+  Tstress(1) = pow(sin(citaIn), 2)*sigmaOneC + pow(cos(citaIn), 2)*sigmaTwoC
     + 2 * sin(citaIn)*cos(citaIn)*halfGammaOneTwo*GOneTwoC
     + pow(sin(citaL), 2)*rou1*stressSL + pow(sin(citaT), 2)*rou2*stressST;
 
-  Tstress(2) = cos(citaIn)*sin(citaIn)*cigmaOneC - cos(citaIn)*sin(citaIn)*cigmaTwoC
+  Tstress(2) = cos(citaIn)*sin(citaIn)*sigmaOneC - cos(citaIn)*sin(citaIn)*sigmaTwoC
     + (pow(cos(citaIn), 2) - pow(sin(citaIn), 2))*halfGammaOneTwo*GOneTwoC
     + cos(citaL)*sin(citaL)*rou1*stressSL + cos(citaT)*sin(citaT)*rou2*stressST;
 
   stress_vec = Tstress;
 
   // get calculated principal stress direction citaOut
-  double AA = (Tstress(0) - Tstress(1)) / 2.;
-  double BB = Tstress(2);
-  //double CC = pow(A,2.)+pow(B,2.);
-
-  if ( AA == 0.0 && BB == 0.0) {
-    citaOut = 0.25*PI;
-  } else {
-    //ratio = BB / AA;
-    citaOut = atan2(BB, AA) / 2.;
+  double temp_citaOut;
+  if ( fabs(Tstress(0)-Tstress(1)) < 1e-7 )                 citaOut = 0.25*PI;
+  else { // Tstrain(0) != Tstrain(1)
+	temp_citaOut = 0.5 * atan(fabs(2.0e6*Tstress[2] / (1.0e6*Tstress(0) - 1.0e6*Tstress(1))));
+  	     if ( fabs(Tstress(2)) < 1e-7 )                     citaOut = 0;
+	else if ((Tstress(0) > Tstress(1)) && (Tstress(2) > 0))	citaOut = temp_citaOut;
+  	else if ((Tstress(0) > Tstress(1)) && (Tstress(2) < 0)) citaOut = PI - temp_citaOut;
+  	else if ((Tstress(0) < Tstress(1)) && (Tstress(2) > 0)) citaOut = 0.5*PI - temp_citaOut;
+  	else if ((Tstress(0) < Tstress(1)) && (Tstress(2) < 0)) citaOut = 0.5*PI + temp_citaOut;
+  	else {
+      opserr << "CSMMRCPlaneStress::getPrincipalStressAngle: Failure to calculate principal stress direction\n";
+      opserr << " Tstress(0) = " << Tstress(0) << endln;
+	  opserr << " Tstress(1) = " << Tstress(1) << endln;
+	  opserr << " Tstress(2) = " << Tstress(2) << endln;
+  	}
   }
-
-  //if (_isnan(citaOut) != 0) {
-  //  opserr << "CSMMRCPlaneStress::getPrincipalStressAngle: Failure to calculate principal stress direction\n";
-  //  opserr << " Tstress(0) = " << Tstress(0) << endln;
-  //  opserr << " Tstress(1) = " << Tstress(1) << endln;
-  //  opserr << " Tstress(2) = " << Tstress(2) << endln;
-  //}
-
+  
   while ((citaOut - 0.5*PI) > 1e-8) {
     citaOut = citaOut - 0.5*PI;
-	opserr << "CSMMRCPlaneStress::determineTrialStress() -- compute citaOut; error for atan2()." << endln;
   }
 
-  citaStress = citaOut; // assign value for screen output 
+  citaStress = citaOut;
 
   return citaOut;
 }

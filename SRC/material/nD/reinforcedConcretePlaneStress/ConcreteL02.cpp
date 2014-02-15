@@ -114,53 +114,6 @@ ConcreteL02::~ConcreteL02()
   // Does nothing
 }
 
-/*int
-ConcreteL02::setTrialStrain(double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double strainRate)
-{ 
-  X = x;
-  K = k;
-  D = Dfactor;
-  beta = BETA;
-  epslonTP = EPSLONTP;
-
-  // Make all pre-stressing stress and strain negative
-  if (sigmaCI > 0.0)
-    sigmaCI = -sigmaCI;
-
-  if (epslonCI > 0.0)
-    epslonCI = -epslonCI;
-
-  fbeta = 1 - fabs(beta) / 24;
-  Wp = 1.15 + fabs(beta) * (0.09 * fabs(beta) - 1) / 6;
-
-  //Calculate softening effect: zeta if epslonTP >0 
-  if (epslonTP > 0.0) {
-    // add K into zeta, K is delta
-    zeta = (K)* 5.8 / sqrt(-fpc * (1.0 + 250.0 * epslonTP)) * fbeta * Wp;
-    if (zeta >= 0.9)  zeta = 0.9;
-    if (zeta <= 0.25) zeta = 0.25; //min zeta
-  } else {
-    zeta = 1.0;
-  }
-
-  // Reset history variables to last converged state
-  TloadingState = CloadingState;
-
-  // Set trial strain
-  Tstrain = strain;
-
-  // Determine change in strain from last converged state
-  double dStrain = Tstrain - Cstrain;
-
-  // Calculate the trial state given the trial strain
-  //   if (fabs(dStrain) > DBL_EPSILON)   
-  determineTrialState(dStrain);
-  
-  opserr << "ConcreteL02::setTrialStrain(x, k, Dfactor, BETA, EPSLONTP, strain, strainRate), \n wrong set trial strain subroutine!" << endln;
-
-  return 0;
-}*/
-
 int
 ConcreteL02::setTrialStrain(double strain, double strainRate)
 {
@@ -180,7 +133,8 @@ ConcreteL02::setTrialStrain(double strain, double strainRate)
     zeta = (K)* 5.8 / sqrt(-fpc * (1.0 + 250.0 * epslonTP)) * fbeta * Wp;
     if (zeta >= 0.9)  zeta = 0.9;
     if (zeta <= 0.25) zeta = 0.25; //min zeta
-  } else {
+  }
+  else {
     zeta = 1.0;
   }
 
@@ -194,105 +148,11 @@ ConcreteL02::setTrialStrain(double strain, double strainRate)
   double dStrain = Tstrain - Cstrain;
 
   // Calculate the trial state given the trial strain
-  //   if (fabs(dStrain) > DBL_EPSILON)   
-  determineTrialState(dStrain);
+  if (fabs(dStrain) > DBL_EPSILON)   
+    determineTrialState(dStrain);
 
   return 0;
 }
-
-/*int
-ConcreteL02::setTrial(double x, double k, double Dfactor, double BETA, double EPSLONTP, double strain, double &stress, double &tangent, double strainRate)
-{ 
-  X = x;
-  K = k;
-  D = Dfactor;
-  beta = BETA;
-  epslonTP = EPSLONTP;
-
-  // Make all pre-stressing stress and strain negative
-  if (sigmaCI > 0.0)
-    sigmaCI = -sigmaCI;
-
-  if (epslonCI > 0.0)
-    epslonCI = -epslonCI;
-
-  //Calculate softening effect: zeta if epslonTP >0 
-  fbeta = 1 - fabs(beta) / 24;
-  Wp = 1.15 + fabs(beta) * (0.09 * fabs(beta) - 1) / 6;
-
-  if (epslonTP > 0.0) {
-    // add K into zeta
-    zeta = (K)* 5.8 / sqrt(-fpc * (1.0 + 250.0 * epslonTP)) * fbeta * Wp;
-    if (zeta >= 0.9)  zeta = 0.9;
-    if (zeta <= 0.25) zeta = 0.25; //min zeta
-  } else {
-    zeta = 1.0;
-  }
-
-  // Reset history variables to last converged state
-  TloadingState = CloadingState;
-
-  // Set trial strain
-  Tstrain = strain;
-
-  // Determine change in strain from last converged state
-  double dStrain = Tstrain - Cstrain;
-
-  // Calculate the trial state given the trial strain
-  // if (fabs(dStrain) > DBL_EPSILON) 
-  determineTrialState(dStrain);
-
-  stress = Tstress;
-  tangent = Ttangent;
-  
-  opserr << "ConcreteL02::setTrial(x, k, Dfactor, BETA, EPSLONTP, strain, &stress, &tangent, strainRate), \n wrong set trial strain subroutine!" << endln;
-
-  return 0;
-}*/
-
-/*int
-ConcreteL02::setTrial(double strain, double &stress, double &tangent, double strainRate)
-{ 
-  // Make all pre-stressing stress and strain negative
-  if (sigmaCI > 0.0)
-    sigmaCI = -sigmaCI;
-
-  if (epslonCI > 0.0)
-    epslonCI = -epslonCI;
-
-  //Calculate softening effect: zeta if epslonTP >0 
-  fbeta = 1 - fabs(beta) / 24;
-  Wp = 1.15 + fabs(beta) * (0.09 * fabs(beta) - 1) / 6;
-
-  if (epslonTP > 0.0) {
-    // add K into zeta
-    zeta = (K)* 5.8 / sqrt(-fpc * (1.0 + 250.0 * epslonTP)) * fbeta * Wp;
-    if (zeta >= 0.9)  zeta = 0.9;
-    if (zeta <= 0.25) zeta = 0.25; //min zeta
-  } else {
-    zeta = 1.0;
-  }
-
-  // Reset history variables to last converged state
-  TloadingState = CloadingState;
-
-  // Set trial strain
-  Tstrain = strain;
-
-  // Determine change in strain from last converged state
-  double dStrain = Tstrain - Cstrain;
-
-  // Calculate the trial state given the trial strain
-  // if (fabs(dStrain) > DBL_EPSILON) 
-  determineTrialState(dStrain);
-
-  stress = Tstress;
-  tangent = Ttangent;
-  
-  opserr << "ConcreteL02::setTrial(strain, &stress, &tangent, strainRate), \n wrong set trial strain subroutine!" << endln;
-
-  return 0;
-}*/
 
 double
 ConcreteL02::getStrain()
@@ -405,17 +265,14 @@ ConcreteL02::revertToStart()
 void
 ConcreteL02::determineTrialState(double dStrain)
 {
-  if (TloadingState == 0)
-  {
+  if (TloadingState == 0) {
     envelope();
   }
 
-  if (TloadingState == 1)
-  {
+  if (TloadingState == 1) {
     if (dStrain < 0) //Continues on envelope
       envelope();
-    else //Reverse occurs
-    {
+    else {//Reverse occurs
       reverseFromOneStrain = Cstrain;
       reverseFromOneStress = Cstress;
 
@@ -426,20 +283,17 @@ ConcreteL02::determineTrialState(double dStrain)
       getApproachFiveToComStrain();
       pathFive();
 
-      if (Tstress > 0) //Reach path 7
-      {
+      if (Tstress > 0) {//Reach path 7
         TloadingState = 7;
         pathSeven();
       }
     }
   }
 
-  else if (TloadingState == 2)
-  {
+  else if (TloadingState == 2) {
     if (dStrain < 0)
       envelope();
-    else
-    {
+    else {
       reverseFromTwoStrain = Cstrain;
       reverseFromTwoStress = Cstress;
 
@@ -450,27 +304,22 @@ ConcreteL02::determineTrialState(double dStrain)
       getApproachFiveToComStrain();
       pathFive();
 
-      if (Tstress > 0) //Reach path 7
-      {
+      if (Tstress > 0) { //Reach path 7
         TloadingState = 7;
         pathSeven();
       }
     }
   }
 
-  else if (TloadingState == 3)
-  {
+  else if (TloadingState == 3) {
     envelope();
   }
 
-  else if (TloadingState == 4)
-  {
-    if (dStrain > 0)
-    {
+  else if (TloadingState == 4) {
+    if (dStrain > 0) {
       envelope();
     }
-    else
-    {
+    else {
       reverseFromFourStrain = Cstrain;
       reverseFromFourStress = Cstress;
       TloadingState = 6;
@@ -482,47 +331,38 @@ ConcreteL02::determineTrialState(double dStrain)
     }
   }
 
-  else if (TloadingState == 5)
-  {
+  else if (TloadingState == 5) {
     getApproachFiveToComStrain();
     pathFive();
-    if (dStrain < 0)
-    {
-      if (Tstrain < approachFiveToComStrain)
-      {
+    if (dStrain < 0) {
+      if (Tstrain < approachFiveToComStrain) {
         envelope();
       }
     }
-    else //dStrain > 0
-    {
-      if (Tstress > 0) //Reach path 7
-      {
+    else { //dStrain > 0
+      if (Tstress > 0) {//Reach path 7
         TloadingState = 7;
         pathSeven();
       }
     }
   }
 
-  else if (TloadingState == 6)
-  {
+  else if (TloadingState == 6) {
     if (reloadPath != 0) {
       getApproachSixToComStrain();
     }
     pathSix();
   }
 
-  else if (TloadingState == 7)
-  {
+  else if (TloadingState == 7) {
     pathSeven();
     if (dStrain < 0) {
-      //Check if go back to path 5
-      if (Tstrain < interFiveSevenStrain)
-      {
+	//Check if go back to path 5
+      if (Tstrain < interFiveSevenStrain) {
         TloadingState = 5;
         pathFive();
         getApproachFiveToComStrain();
-        if (Tstrain < approachFiveToComStrain)
-        {
+        if (Tstrain < approachFiveToComStrain) {
           envelope();
         }
       }
@@ -538,21 +378,18 @@ ConcreteL02::determineTrialState(double dStrain)
 void
 ConcreteL02::pathFive()
 {
-  if (reloadPath == 1)
-  {
+  if (reloadPath == 1) {
     Tstress = Ec0 * (Tstrain - reverseFromOneStrain) + reverseFromOneStress;
     Ttangent = Ec0;
   } // if ( reloadPath == 1 )
 
-  else if (reloadPath == 2)
-  {
+  else if (reloadPath == 2) {
     double slope = 0.8*Ec0;
     Tstress = slope * (Tstrain - reverseFromTwoStrain) + reverseFromTwoStress;
     Ttangent = slope;
   } // if ( reloadPath == 2 )
 
-  else
-  {
+  else {
     opserr << " ConcreteL02::pathFive -- improper reloadPath : "
       << reloadPath << "\n";
   }
@@ -565,8 +402,7 @@ ConcreteL02::pathSeven()
   double fcr = 0.31 * sqrt(-fpc); //crack strength
 
   // Approach to reverse point at descending branch of tensile envelope
-  if (reverseFromFourStrain > ecr)
-  {
+  if (reverseFromFourStrain > ecr) {
     if (Tstrain > reverseFromFourStrain) {
       envelope();
     }
@@ -578,8 +414,7 @@ ConcreteL02::pathSeven()
   }
 
   // Approach to peak point of the tensile envelope
-  else
-  {
+  else {
     if (Tstrain > ecr) {
       envelope();
     }
@@ -618,7 +453,8 @@ ConcreteL02::pathSix()
   if (temp<0) {
     opserr << " ConcreteL02::pathSix -- can not get epslonC \n";
     epslonC = 0.0;
-  } else {
+  } 
+  else {
     epslonC = zeta*epsc0*(1 - sqrt(temp));
   }
 
@@ -637,33 +473,27 @@ ConcreteL02::pathSix()
     Ttangent = slope;
   }
   else {
-    if (reloadPath == 0) // no history stress in compressive zone
-    {
+    if (reloadPath == 0) { // no history stress in compressive zone
       envelope();
     }
-    else // has history stress in compressive zone, approach to history point
-    {
-      if (reloadPath == 1)
-      {
+    else { // has history stress in compressive zone, approach to history point
+      if (reloadPath == 1) {
         slope = (reverseFromOneStress - stressC) / (reverseFromOneStrain - epslonC);
         Tstress = slope * (Tstrain - epslonC) + stressC;
         Ttangent = slope;
       }
-      else // ( reloadPath == 2 )
-      {
+      else { // ( reloadPath == 2 )
         slope = 0.93* (reverseFromTwoStress - stressC) / (reverseFromTwoStrain - epslonC);
         Tstress = slope * (Tstrain - epslonC) + stressC;
         Ttangent = slope;
       }
 
       // Check if reach compression envelope
-      if (Tstrain < approachSixToComStrain)
-      {
+      if (Tstrain < approachSixToComStrain) {
         envelope();
       }
     }
   } // else
-
 }
 
 void
@@ -675,10 +505,8 @@ ConcreteL02::envelope()
   //double ecx = epslonCI - sigmaCI/Ec0; //decompression strain
   double Ec = (fcr / ecr < Ec0 ? fcr / ecr : Ec0);  //(ecr - ecx); //modulus of concrete post decompression
 
-  if (Tstrain >= 0) // Tension
-  {
-    if (Tstrain <= ecr) //decompression
-    {
+  if (Tstrain >= 0) { // Tension
+    if (Tstrain <= ecr) { //decompression
       //double Ec = 6458.0 * sqrt( -fpc ); // for hament's test
       Tstress = Ec * Tstrain; //(Tstrain - epslonCI) + sigmaCI;
       /*Ttangent = Tstress/Tstrain;
@@ -694,8 +522,7 @@ ConcreteL02::envelope()
     Ttangent = Ec;
     TloadingState = 3;
     }*/
-    else //Descending branch
-    {
+    else { //Descending branch
       Tstress = fcr * pow((ecr / Tstrain), 0.4);
       /*Ttangent = Tstress/Tstrain;
       if (Tstrain == 0)*/
@@ -703,30 +530,26 @@ ConcreteL02::envelope()
       TloadingState = 4;
     }
   }
-  else //Compression
-  {
+  else { //Compression
     // Uncomment next lines bellow for material test, By L.n.@tju
-    if (epslonTP < 0.0)
-      D = fmax(1.0 - 0.4*fabs(epslonTP / epsc0), 0.2);
+    // if (epslonTP < 0.0)
+    //  D = fmax(1.0 - 0.4*fabs(epslonTP / epsc0), 0.2);
 
-    if (Tstrain >= zeta*epsc0) //Ascending branch
-    {
+    if (Tstrain >= zeta*epsc0) { //Ascending branch
       TloadingState = 1;
       double eta = Tstrain / (zeta*epsc0);
       Tstress = D * zeta * fpc * (2 * eta - eta*eta);
       /*Ttangent = Tstress/Tstrain;
       if (Tstrain == 0)*/
       Ttangent = D*Ec0 * 2 / 1.4*(1.0 - eta);
-      if (Tstress >= 0.84 * D * zeta * fpc)
-      {
-        Tstress = Ec0 * Tstrain;
-        /*Ttangent = Tstress/Tstrain;
+      if (Tstress >= 0.84 * D * zeta * fpc) {
+        /*Tstress = Ec0 * Tstrain;
+        Ttangent = Tstress/Tstrain;
         if (Tstrain == 0) */
-        Ttangent = Ec0;
+        Ttangent = D*Ec0;
       }
     }
-    else //Descending branch
-    {
+    else { //Descending branch
       TloadingState = 2;
       double temp = (Tstrain / (zeta*epsc0) - 1.0) / (4.0 / zeta - 1.0);
 
@@ -741,8 +564,7 @@ ConcreteL02::envelope()
       Ttangent = -D*fpc*(X)*pow(temp, -1.0 + X) / epsc0 / (4.0 / zeta - 1.0);
 
       //check if Tstress > 0.2*zeta*fpc, change to platum part
-      if (Tstress > D*0.2*zeta*fpc)
-      {
+      if (Tstress > D*0.2*zeta*fpc) {
         Tstress = D*0.2*zeta*fpc;
         /*Ttangent = Tstress/Tstrain;
         if (Tstrain == 0)*/
@@ -766,24 +588,26 @@ ConcreteL02::getApproachFiveToComStrain()
   double fiveToTwoStress = 0.0;
 
   if (reloadPath == 1) {
-    tempK = Ec0;
+    tempK = D * Ec0;
     b = -tempK*reverseFromOneStrain + reverseFromOneStress;
-  } else if (reloadPath == 2) {
-    tempK = 0.8*Ec0;
+  } 
+  else if (reloadPath == 2) {
+	tempK = 0.8 * D * Ec0;
     b = -tempK*reverseFromTwoStrain + reverseFromTwoStress;
-  } else { // error reloadPath
+  }
+  else { // error reloadPath
     opserr << " ConcreteL02::getApproachFiveToComStrain -- improper reloadPath! \n";
   }
 
-  // First, get fiveToOneStrain: intersection of pathFive to ascending branch
-  tempB = (tempK - D*Ec0)*zeta*epsc0*epsc0 / (D*fpc);
-  tempC = b*zeta*epsc0*epsc0 / (D*fpc);
-
-  if (tempB*tempB - 4.0*tempC < 0.0) {
-    opserr << " ConcreteL02::getApproachFiveToComStrain -- can not get root of equation: sqrt(x) x<0! \n";
-  }
-
-  fiveToOneStrain = -0.5*tempB - 0.5*sqrt(tempB*tempB - 4.0*tempC);
+//  // First, get fiveToOneStrain: intersection of pathFive to ascending branch
+//  tempB = (tempK - D*Ec0)*zeta*epsc0*epsc0 / (D*fpc);
+//  tempC = b*zeta*epsc0*epsc0 / (D*fpc);
+//
+//  if (tempB*tempB - 4.0*tempC < 0.0) {
+//    opserr << " ConcreteL02::getApproachFiveToComStrain -- can not get root of equation: sqrt(x) x<0! \n";
+//  }
+//
+//  fiveToOneStrain = -0.5*tempB - 0.5*sqrt(tempB*tempB - 4.0*tempC);
 
   if (reverseFromOneStress > D*zeta*fpc && reloadPath == 1) { // intersection occurs at ascending branch
     approachFiveToComStrain = reverseFromOneStrain;
@@ -791,16 +615,15 @@ ConcreteL02::getApproachFiveToComStrain()
   else if (fiveToOneStrain > zeta*epsc0 && reloadPath == 1) { // intersection occurs at ascending branch
     approachFiveToComStrain = fiveToOneStrain;
   } 
-  else if (reloadPath == 2)
-  { // intersection occurs at descending branch
+  else if (reloadPath == 2) { // intersection occurs at descending branch
     // Second, get intersection of pathFive to descending branch		
 
     // Initial solution for intersection when no X
-    tempB = -2.0*zeta*epsc0 + tempK*pow((4.0*epsc0 - zeta*epsc0), 2.0) / (D*zeta*fpc);
-    tempC = pow(zeta*epsc0, 2.0) + pow((4.0*epsc0 - zeta*epsc0), 2.0)*(b / (D*zeta*fpc) - 1.0);
+    //tempB = -2.0*zeta*epsc0 + tempK*pow((4.0*epsc0 - zeta*epsc0), 2.0) / (D*zeta*fpc);
+    //tempC = pow(zeta*epsc0, 2.0) + pow((4.0*epsc0 - zeta*epsc0), 2.0)*(b / (D*zeta*fpc) - 1.0);
 
-    fiveToTwoStrain = -0.5*tempB - 0.5*sqrt(tempB*tempB - 4.0*tempC);
-    fiveToTwoStress = tempK * fiveToTwoStrain + b;
+    //fiveToTwoStrain = -0.5*tempB - 0.5*sqrt(tempB*tempB - 4.0*tempC);
+    //fiveToTwoStress = tempK * fiveToTwoStrain + b;
 
     // Iteration is used to get intersection when there is X, 2004/08
     double xn, xnn; // x(i), x(i+1)
@@ -827,14 +650,16 @@ ConcreteL02::getApproachFiveToComStrain()
 
     if (counter == 50) {
       opserr << " ConcreteL02::getApproachFiveToComStrain -- overflow the iteration limit! \n";
-    } else {
+    } 
+	else {
       fiveToTwoStrain = xnn;
       fiveToTwoStress = tempK*xnn + b;
     }
 
     if (fiveToTwoStress > D*0.2*zeta*fpc) { // intersection occurs at platum, 0.2*zeta*fpc		  
       approachFiveToComStrain = (D*0.2*zeta*fpc - b) / tempK;
-    } else { // intersection occurs at descending branch
+    } 
+	else { // intersection occurs at descending branch
       approachFiveToComStrain = fiveToTwoStrain;
     }
   }  // intersection occurs at descending branch or platum
@@ -846,8 +671,6 @@ ConcreteL02::getApproachFiveToComStrain()
     opserr << " ConcreteL02::getApproachFiveToComStrain -- can not get approachFiveToComStrain! " << endln;
     opserr << " Tstress = " << Tstress << endln;
     opserr << " Tstrain = " << Tstrain << endln;
-    //opserr << " set approachFiveToComStrain = reverseFromOneStrain " << endln;
-    //approachFiveToComStrain = reverseFromOneStrain;
     opserr << " approachFiveToComStrain = " << approachFiveToComStrain << endln;
     opserr << " reloadPath = " << reloadPath << endln;
     opserr << " zeta = " << zeta << endln;
@@ -874,9 +697,11 @@ ConcreteL02::getApproachSixToComStrain()
 
   if (reloadPath == 1) {
     tempK = reverseFromOneStress / reverseFromOneStrain;
-  } else if (reloadPath == 2) {
+  } 
+  else if (reloadPath == 2) {
     tempK = 0.93 * reverseFromTwoStress / reverseFromTwoStrain;
-  } else { // error reloadPath 
+  } 
+  else { // error reloadPath 
     opserr << " ConcreteL02::getApproachSixToComStrain -- improper reloadPath! \n";
   }
 
@@ -889,8 +714,7 @@ ConcreteL02::getApproachSixToComStrain()
   else if (sixToOneStrain > zeta*epsc0 && reloadPath == 1 ) { // intersection occurs at ascending branch
     approachSixToComStrain = sixToOneStrain;
   } 
-  else if (reloadPath == 2)
-  { // intersection occurs at descending branch
+  else if (reloadPath == 2) { // intersection occurs at descending branch
     // Second, get intersection of pathSix to descending branch		
 
     // Initial solution to get intersection
@@ -925,14 +749,16 @@ ConcreteL02::getApproachSixToComStrain()
 
     if (counter == 50) {
       opserr << " ConcreteL02::getApproachSixToComStrain -- overflow the iteration limit! \n";
-    } else {
+    } 
+	else {
       sixToTwoStrain = xnn;
       sixToTwoStress = tempK*xnn;
     }
 
     if (sixToTwoStress > D*0.2*zeta*fpc) { // intersection occurs at platum, 0.2*zeta*fpc		  
       approachSixToComStrain = D*0.2*zeta*fpc / tempK;
-    } else { // intersection occurs at descending branch
+    } 
+	else { // intersection occurs at descending branch
       approachSixToComStrain = sixToTwoStrain;
     }
   }
@@ -962,21 +788,25 @@ ConcreteL02::getPD()
 
   if (epslonTP <= 0.0) {
     PD = 0.0;
-  } else { // epslonTP > 0
+  } 
+  else { // epslonTP > 0
     if (TloadingState == 1) { // Compression Ascending branch
       tempRatio = Tstrain / (zeta*epsc0);
       PD = -D * fbeta * Wp * 1160.0 * sqrt(-fpc)* pow((1 + 250.0*epslonTP), -1.5)
         * pow(tempRatio, 2.0);
-    } else if (TloadingState == 2){ // Compression Descending branch
+    } 
+	else if (TloadingState == 2){ // Compression Descending branch
       if (Ttangent == 0.0) {// at the end platum part of descending branch FMK CHANGED FROM = 0.0
         PD = 0.0;
-      } else {
+      } 
+	  else {
         tempRatio = Tstrain / (zeta*epsc0);
         PD = -D * fbeta * Wp *1160.0 * sqrt(-fpc)* pow((1 + 250.0*epslonTP), -1.5)
           * (1.0 - (tempRatio - 1) / pow(4.0 / zeta - 1.0, 3.0)*(1.0 - 12.0 / zeta + (4.0 / zeta + 1.0)*tempRatio));
         // 1160, 400
       }
-    } else {
+    } 
+	else {
       PD = 0.0;
     }
 

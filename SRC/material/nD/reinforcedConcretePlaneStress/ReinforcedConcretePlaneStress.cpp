@@ -270,7 +270,6 @@ ReinforcedConcretePlaneStress::ReinforcedConcretePlaneStress()
   determineTrialStress();
 }
 
-
 ReinforcedConcretePlaneStress::~ReinforcedConcretePlaneStress()
 {
   // Delete the pointers
@@ -293,12 +292,10 @@ ReinforcedConcretePlaneStress::~ReinforcedConcretePlaneStress()
   }
 }
 
-
 double ReinforcedConcretePlaneStress::getRho(void)
 {
   return rho;
 }
-
 
 int ReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
 {
@@ -327,87 +324,6 @@ int ReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
   
   return 0;
 }
-
-///*
-int ReinforcedConcretePlaneStress::setTrialStrain(const Vector &v, const Vector &r)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  
-  determineTrialStress();
-  
-  return 0;
-}
-
-
-int ReinforcedConcretePlaneStress::setTrialStrainIncr(const Vector &v)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  determineTrialStress();
-  
-  return 0;
-}
-
-
-int ReinforcedConcretePlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
-{
-  // Set values for strain_vec
-  strain_vec(0) = v(0);
-  strain_vec(1) = v(1);
-  strain_vec(2) = v(2);
-  
-  // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
-  
-  TOneReverseStatus = COneReverseStatus;         
-  TOneNowMaxComStrain = COneNowMaxComStrain;
-  TOneLastMaxComStrain = COneLastMaxComStrain;
-  
-  TTwoReverseStatus = CTwoReverseStatus;         
-  TTwoNowMaxComStrain = CTwoNowMaxComStrain;
-  TTwoLastMaxComStrain = CTwoLastMaxComStrain;
-  
-  determineTrialStress();
-  
-  return 0;
-}
-//*/
 
 const Matrix& ReinforcedConcretePlaneStress::getTangent(void)
 {
@@ -453,7 +369,14 @@ int ReinforcedConcretePlaneStress::commitState(void)
     CTwoReverseStatus = TTwoReverseStatus;         
     CTwoNowMaxComStrain = TTwoNowMaxComStrain;
     CTwoLastMaxComStrain = TTwoLastMaxComStrain;
-    
+
+	char buffer[200];
+	sprintf(buffer, "e%d = %8.6f, e%d = %8.6f, e%d = %8.6f, e%d = %8.6f; ThetaE = %8.6f, ThetaS = %8.6f; |S(i)|-|S(i-1)|=%8.6f\n",
+		theMaterial[0]->getTag(), theMaterial[0]->getStrain(), theMaterial[1]->getTag(), theMaterial[1]->getStrain(),
+		theMaterial[2]->getTag(), theMaterial[2]->getStrain(), theMaterial[3]->getTag(), theMaterial[3]->getStrain(),
+		citaStrain / PI * 180, citaStress / PI * 180, fabs(sqrt(pow(lastStress[0], 2) + pow(lastStress[1], 2) + pow(lastStress[2], 2)) - stress_vec.Norm()));
+	opserr << buffer;
+
     lastStress[0] = stress_vec(0);
     lastStress[1] = stress_vec(1);
     lastStress[2] = stress_vec(2);

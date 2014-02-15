@@ -70,10 +70,7 @@ class CSMMRCPlaneStress : public NDMaterial
     
     double getRho(void);
     
-    int setTrialStrain(const Vector &v); // really used one
-    int setTrialStrain(const Vector &v, const Vector &r);
-    int setTrialStrainIncr(const Vector &v);
-    int setTrialStrainIncr(const Vector &v, const Vector &r);
+    int setTrialStrain(const Vector &v);
     const Matrix &getTangent(void);
     const Matrix &getInitialTangent(void) {return this->getTangent();};
 
@@ -108,47 +105,52 @@ class CSMMRCPlaneStress : public NDMaterial
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
 
-	double   citaR;     // principal strain direction
-    double   angle1;    // angel of the first steel layer to x coordinate 
-    double   angle2;    // angel of the second steel layer to x coordinate
-    double   rou1;      // steel ratio of the first steel layer
-    double   rou2;      // steel ratio of the second steel layer
-    double   fpc;       // compressive strength of the concrete
-    double   fy;        // yield stress of the bare steel bar
-    double   E0;        // young's modulus of the steel
-    double   epsc0;     // compressive strain of the concrete
-	Vector   Tstrain;   // Trial strains
-	Vector   Tstress;   // Trial stresses
-    Vector   lastStress;  // Last committed stresses, added for x, k
-    
-    int      steelStatus;  // check if steel yield, 0 not yield, 1 yield
-    int      dirStatus;    // check if principle direction has exceed 90 degree, 1 yes, 0 no
-    
-    double   citaStrain;      // principle strain direction
-    double   citaStress;     // principle stress direction
-    double   miu12;        // Hsu/Zhu ratio
-    double   miu21;        // Hsu/Zhu ratio
-    double   G12;          // Shear Modulus
-	bool     isClockWise;  // counter-clockwise = 0; clockwise = 1;
-	int      cloclWiseStatus; // -1, 0, 1
+	static double citaR;           // principal strain direction
+	static double lastCitaR;       // last converged principle strain direction
+	static bool   isClockWise;     // counter-clockwise = 0; clockwise = 1;
+	static int    cloclWiseStatus; // -1, 0, 1
+    static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
+    static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+	static double epslonOne;
+	static double epslonTwo;
+	static double halfGammaOneTwo;
+	static double sigmaOneC;
+	static double sigmaTwoC;
 
+	double        angle1;    // angel of the first steel layer to x coordinate 
+	double        angle2;    // angel of the second steel layer to x coordinate
+	double        rou1;      // steel ratio of the first steel layer
+	double        rou2;      // steel ratio of the second steel layer
+	double        fpc;       // compressive strength of the concrete
+	double        fy;        // yield stress of the bare steel bar
+	double        E0;        // young's modulus of the steel
+	double        epsc0;     // compressive strain of the concrete
+	Vector        Tstrain;   // Trial strains
+	Vector        Tstress;   // Trial stresses
+	Vector        lastStress;  // Last committed stresses, added for x, k
+
+	double        citaStrain;   // principle strain direction
+	double        citaStress;   // principle stress direction
+	double        miu12;        // Hsu/Zhu ratio
+	double        miu21;        // Hsu/Zhu ratio
+	double        G12;          // Shear Modulus
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
-    int TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
+    int    TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
     double TOneNowMaxComStrain;
     double TOneLastMaxComStrain;
     
-    int TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
+    int    TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
     double TTwoNowMaxComStrain;
     double TTwoLastMaxComStrain;
     
     // Converged/committed values
-    int COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
+    int    COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
     double COneNowMaxComStrain;
     double COneLastMaxComStrain;
     
-    int CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
+    int    CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
     double CTwoNowMaxComStrain;
     double CTwoLastMaxComStrain;
     
@@ -159,7 +161,7 @@ class CSMMRCPlaneStress : public NDMaterial
 	static Vector stress_vec;
 	static Matrix tangent_matrix;
 
-    int determineTrialStress(void);
+    int    determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
  
