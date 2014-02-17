@@ -542,12 +542,12 @@ ConcreteL02::envelope()
       /*Ttangent = Tstress/Tstrain;
       if (Tstrain == 0)*/
       Ttangent = D*Ec0 * 2 / 1.4*(1.0 - eta);
-      if (Tstress >= 0.84 * D * zeta * fpc) {
-        /*Tstress = Ec0 * Tstrain;
+      /*if (Tstress >= 0.84 * D * zeta * fpc) {
+        Tstress = Ec0 * Tstrain;
         Ttangent = Tstress/Tstrain;
-        if (Tstrain == 0) */
+        if (Tstrain == 0) 
         Ttangent = D*Ec0;
-      }
+      }*/
     }
     else { //Descending branch
       TloadingState = 2;
@@ -588,11 +588,11 @@ ConcreteL02::getApproachFiveToComStrain()
   double fiveToTwoStress = 0.0;
 
   if (reloadPath == 1) {
-    tempK = D * Ec0;
+    tempK = Ec0;
     b = -tempK*reverseFromOneStrain + reverseFromOneStress;
   } 
   else if (reloadPath == 2) {
-	tempK = 0.8 * D * Ec0;
+	tempK = 0.8 * Ec0;
     b = -tempK*reverseFromTwoStrain + reverseFromTwoStress;
   }
   else { // error reloadPath

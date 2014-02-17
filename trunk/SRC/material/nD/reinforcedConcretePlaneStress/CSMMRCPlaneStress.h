@@ -107,15 +107,21 @@ class CSMMRCPlaneStress : public NDMaterial
 
 	static double citaR;           // principal strain direction
 	static double lastCitaR;       // last converged principle strain direction
-	static bool   isClockWise;     // counter-clockwise = 0; clockwise = 1;
-	static int    cloclWiseStatus; // -1, 0, 1
+	static bool   isSwapped;       // primary concrete direction has changed
+	static int    lastDirStatus;
     static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
     static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+	
 	static double epslonOne;
 	static double epslonTwo;
 	static double halfGammaOneTwo;
+	
 	static double sigmaOneC;
 	static double sigmaTwoC;
+
+	static Vector strain_vec;
+	static Vector stress_vec;
+	static Matrix tangent_matrix;
 
 	double        angle1;    // angel of the first steel layer to x coordinate 
 	double        angle2;    // angel of the second steel layer to x coordinate
@@ -156,15 +162,11 @@ class CSMMRCPlaneStress : public NDMaterial
     
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
-    
-	static Vector strain_vec;
-	static Vector stress_vec;
-	static Matrix tangent_matrix;
 
     int    determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
- 
+	void   determineConcreteStatus(int);
 	//double CSMMRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p);
 };
 
