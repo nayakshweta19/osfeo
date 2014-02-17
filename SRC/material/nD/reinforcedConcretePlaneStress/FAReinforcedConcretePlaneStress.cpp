@@ -1,5 +1,28 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+
 // Written: JZhong
 // Created: 2004.5
+//
+// Written: Lining
+// Created: 2010.11
 //
 // Description: This file contains the class definition for
 // FAReinforcedConcretePlaneStress
@@ -18,9 +41,6 @@
 
 #include <stdlib.h>
 
-#include "SteelZ01.h"
-#include "ConcreteZ01.h"
-
 #include <Tensor.h>
 
 Vector FAReinforcedConcretePlaneStress :: strain_vec(3);
@@ -30,6 +50,16 @@ Matrix FAReinforcedConcretePlaneStress :: tangent_matrix(3,3);
 double FAReinforcedConcretePlaneStress :: epslonOne = 0.0;
 double FAReinforcedConcretePlaneStress :: epslonTwo = 0.0;
 double FAReinforcedConcretePlaneStress :: halfGammaOneTwo =0.0;
+
+double FAReinforcedConcretePlaneStress :: sigmaOneC = 0.0;
+double FAReinforcedConcretePlaneStress :: sigmaTwoC = 0.0;
+
+double FAReinforcedConcretePlaneStress :: citaR = 0.0;      // principal strain direction
+double FAReinforcedConcretePlaneStress :: lastCitaR = 0.0;  // last converged principle strain direction
+int    FAReinforcedConcretePlaneStress :: steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
+int    FAReinforcedConcretePlaneStress :: dirStatus = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
+bool   FAReinforcedConcretePlaneStress :: isSwapped = 0; // counter-clockwise = 0; clockwise = 1;
+int    FAReinforcedConcretePlaneStress :: lastDirStatus = 0; // 0, 1, 2, 3, 4, 5
 
 #include <DummyStream.h>
 #include <MaterialResponse.h>
@@ -163,37 +193,11 @@ FAReinforcedConcretePlaneStress ::FAReinforcedConcretePlaneStress (int      tag,
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0)
 {
-    steelStatus = 0;
-    dirStatus = 0;
-    G12 = 0;
-    citaStrain = 0.0;
-    citaStress = 0.0;
-    
-    TOneReverseStatus = 0;         
-    TOneNowMaxComStrain = 0.0;
-    TOneLastMaxComStrain = 0.0;
-    
-    TTwoReverseStatus = 0;         
-    TTwoNowMaxComStrain = 0.0;
-    TTwoLastMaxComStrain = 0.0;
-    
-    COneReverseStatus = 0;         
-    COneNowMaxComStrain = 0.0;
-    COneLastMaxComStrain = 0.0;
-    
-    CTwoReverseStatus = 0;         
-    CTwoNowMaxComStrain = 0.0;
-    CTwoLastMaxComStrain = 0.0;
-    
-    lastStress[0] = 0.0;  // add at 7.28
-    lastStress[1] = 0.0;  // add at 7.28
-    lastStress[2] = 0.0;  // add at 7.28 
-    
-    
     if ( fpc < 0.0 ) { fpc = -fpc; } // set fpc > 0
-    
-    theMaterial = 0;
-    
+	
+	citaStrain = 0;
+	citaStress = 0;
+
     // Allocate pointers to theSteel1
     theMaterial = new UniaxialMaterial *[4];
     
@@ -209,7 +213,6 @@ FAReinforcedConcretePlaneStress ::FAReinforcedConcretePlaneStress (int      tag,
       opserr << " FAReinforcedConcretePlaneStress::FAReinforcedConcretePlaneStress - failed to get a copy for steel1\n";
       exit(-1);
     }
-    
     
     // Get the copy for theSteel2
     theMaterial[1] = s2->getCopy();	
@@ -260,7 +263,6 @@ FAReinforcedConcretePlaneStress ::FAReinforcedConcretePlaneStress (int      tag,
     if ((theResponses[0] == 0) || (theResponses[1] == 0) ||
 	(theResponses[2] == 0) || (theResponses[3] == 0) ||
 	(theResponses[4] == 0) || (theResponses[5] == 0)) {
-
       opserr << " ReinforcedConcretePlaneStress::ReinforcedConcretePlaneStress - failed to set appropriate materials tag: " << tag << "\n";
       exit(-1);
     }
@@ -277,6 +279,7 @@ FAReinforcedConcretePlaneStress::FAReinforcedConcretePlaneStress()
   theMaterial = 0;
   theResponses = 0;
   determineTrialStress();
+  this->revertToStart();
 }
 
 
@@ -284,31 +287,29 @@ FAReinforcedConcretePlaneStress::~FAReinforcedConcretePlaneStress()
 {
   // Delete the pointers
   if (theMaterial != 0) {
-    for (int i=0; i<4; i++)
-      {
+    for (int i=0; i<4; i++) {
 	if (theMaterial[i])
 	  delete theMaterial[i];
     }
     delete [] theMaterial;
   }
   if (theResponses != 0) {
-    for (int j=0; j<6; j++)
-      {
+    for (int j=0; j<6; j++) {
 	if (theResponses[j] != 0)
 	  delete theResponses[j];
     }
     delete [] theResponses;
   }
 }
-								  
 
-double FAReinforcedConcretePlaneStress::getRho(void)
+double 
+FAReinforcedConcretePlaneStress::getRho(void)
 {
 	return rho;
 }
 
-
-int FAReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
+int 
+FAReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
 {
   
   // Set values for strain_vec
@@ -333,42 +334,42 @@ int FAReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
   return 0;
 }
 
-const Matrix& FAReinforcedConcretePlaneStress::getTangent(void)
+const Matrix& 
+FAReinforcedConcretePlaneStress::getTangent(void)
 {
   return tangent_matrix;
 }
 
-const Vector& FAReinforcedConcretePlaneStress::getStress(void)
+const Vector& 
+FAReinforcedConcretePlaneStress::getStress(void)
 {
-  
   return stress_vec;
 }
 
-
-const Vector& FAReinforcedConcretePlaneStress::getStrain()
+const Vector& 
+FAReinforcedConcretePlaneStress::getStrain()
 {
   return strain_vec;
 }
-    
 
-const Vector& FAReinforcedConcretePlaneStress::getCommittedStress(void)
+const Vector& 
+FAReinforcedConcretePlaneStress::getCommittedStress(void)
 {
   return stress_vec;
 }
 
-
-const Vector& FAReinforcedConcretePlaneStress::getCommittedStrain(void)
+const Vector& 
+FAReinforcedConcretePlaneStress::getCommittedStrain(void)
 {
     return strain_vec;
 }
-    
 
-int FAReinforcedConcretePlaneStress::commitState(void)
+int 
+FAReinforcedConcretePlaneStress::commitState(void)
 {
-  for (int i=0; i<4; i++)
-    {
+  for (int i=0; i<4; i++) {
       theMaterial[i]->commitState();
-    }
+  }
   
   COneReverseStatus = TOneReverseStatus;         
   COneNowMaxComStrain = TOneNowMaxComStrain;
@@ -378,7 +379,7 @@ int FAReinforcedConcretePlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
   
-  char buffer[200];
+  /*char buffer[200];
   sprintf(buffer, "e%d = %8.6f, e%d = %8.6f, e%d = %8.6f, e%d = %8.6f; ThetaE = %4.2f, ThetaS = %4.2f; |S(i)|-|S(i-1)|=%8.6f. ",
 	  theMaterial[0]->getTag(), theMaterial[0]->getStrain(), theMaterial[1]->getTag(), theMaterial[1]->getStrain(),
 	  theMaterial[2]->getTag(), theMaterial[2]->getStrain(), theMaterial[3]->getTag(), theMaterial[3]->getStrain(),
@@ -386,33 +387,33 @@ int FAReinforcedConcretePlaneStress::commitState(void)
   opserr << buffer;
 
   if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
-	  opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne > 0.0) && (epslonTwo <= 0.0)) {  // one tension, two compression
-	  opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne <= 0.0) && (epslonTwo > 0.0)) {  // one compression, two tension
-	  opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne <= 0.0) && (epslonTwo <= 0.0)) {  //both compression
-	  opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+  opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
+  opserr << dirStatus << ". swap=" << int(isSwapped) << endln;*/
 
   lastStress[0] = stress_vec(0);
   lastStress[1] = stress_vec(1);
   lastStress[2] = stress_vec(2);
+  lastCitaR = citaR;
+  lastDirStatus = dirStatus;
 
   return 0;
 }
 
-
-int FAReinforcedConcretePlaneStress::revertToLastCommit(void)
+int 
+FAReinforcedConcretePlaneStress::revertToLastCommit(void)
 {
-
   for (int i=0; i<4; i++)
-    {
       theMaterial[i]->revertToLastCommit();
-    }
   
   TOneReverseStatus = COneReverseStatus;         
   TOneNowMaxComStrain = COneNowMaxComStrain;
@@ -429,23 +430,26 @@ int FAReinforcedConcretePlaneStress::revertToLastCommit(void)
 int FAReinforcedConcretePlaneStress::revertToStart(void)
 {
   int i;
-  for (i=0; i<4; i++)
-    {
+  for (i=0; i<4; i++) {
       theMaterial[i]->revertToStart();
-    }
+  }
   
-  for (i=0; i<3; i++)
-    {
+  for (i=0; i<3; i++) {
       Tstress[i] = 0.0;
-    }
-  
+	  Tstrain[i] = 0.0;
+	  lastStress[i] = 0.0;
+  }
+
   strain_vec.Zero();
   stress_vec.Zero();
   
   steelStatus = 0;
   dirStatus = 0;
   G12 = 0;
-  
+
+  DDOne = 1.0;
+  DDTwo = 1.0;
+
   TOneReverseStatus = 0;         
   TOneNowMaxComStrain = 0.0;
   TOneLastMaxComStrain = 0.0;
@@ -463,20 +467,14 @@ int FAReinforcedConcretePlaneStress::revertToStart(void)
   CTwoLastMaxComStrain = 0.0;
 
   //add by lining for shell
-  determineTrialStress();
+  //determineTrialStress();
 
   return 0;
 }
 
-NDMaterial* FAReinforcedConcretePlaneStress::getCopy(void)
+NDMaterial* 
+FAReinforcedConcretePlaneStress::getCopy(void)
 {
-  /*
-    FAReinforcedConcretePlaneStress *clone;
-    clone = new FAReinforcedConcretePlaneStress();
-    *clone = *this;
-    return clone;
-  //*/
-  
   FAReinforcedConcretePlaneStress* theCopy =
     new FAReinforcedConcretePlaneStress( this->getTag(), 
 					 rho, 
@@ -492,32 +490,87 @@ NDMaterial* FAReinforcedConcretePlaneStress::getCopy(void)
 					 fy, 
 					 E0, 
 					 epsc0 );
-  //theCopy->strain_vec = strain_vec;
+  theCopy->strain_vec = strain_vec;
+  theCopy->stress_vec = stress_vec;
+  theCopy->lastCitaR = lastCitaR;
+  theCopy->lastDirStatus = lastDirStatus;
+
   return theCopy;
 }
 
-
-NDMaterial* FAReinforcedConcretePlaneStress::getCopy(const char *type)
+NDMaterial* 
+FAReinforcedConcretePlaneStress::getCopy(const char *type)
 {
-    /*
-	FAReinforcedConcretePlaneStress *clone;
-	clone = new FAReinforcedConcretePlaneStress();
-	*clone = *this;
-	return clone;
-	//*/
 	FAReinforcedConcretePlaneStress* theModel =
 		new FAReinforcedConcretePlaneStress( this->getTag(), 
            rho, theMaterial[0], theMaterial[1], theMaterial[2], theMaterial[3], angle1, angle2, rou1, rou2, fpc, fy, E0, epsc0 );
-	//theModel->strain_vec = strain_vec;
-	//theModel->stress_vec = stress_vec;
+	theModel->strain_vec = strain_vec;
+	theModel->stress_vec = stress_vec;
+	theModel->lastCitaR = lastCitaR;
+	theModel->lastDirStatus = lastDirStatus;
+
 	return theModel;
 }
 
+//added by Ln
+Response*
+FAReinforcedConcretePlaneStress::setResponse(const char **argv, int argc, OPS_Stream &output)
+{
 
-void FAReinforcedConcretePlaneStress::Print(OPS_Stream &s, int flag )
+#ifdef DEBUG
+  opserr << "FAReinforcedConcretePlaneStress::setResponse(...)" << endln;
+#endif
+
+  //Response *theResponse =0;
+  const char *matType = this->getType();
+
+  output.tag("NdMaterialOutput");
+  output.attr("matType", this->getClassType());
+  output.attr("matTag", this->getTag());
+
+  if (strcmp(argv[0], "stress") == 0 || strcmp(argv[0], "stresses") == 0)
+    return new MaterialResponse(this, 1, this->getStress());
+  else if (strcmp(argv[0], "strain") == 0 || strcmp(argv[0], "strains") == 0)
+    return new MaterialResponse(this, 2, this->getStrain());
+  //else if (strcmp(argv[0], "state") == 0)
+  //return new MaterialResponse(this, 3, this->getState());
+  else
+    return 0;
+}
+
+int
+FAReinforcedConcretePlaneStress::getResponse(int responseID, Information &matInfo)
+{
+#ifdef DEBUG
+  opserr << "FAReinforcedConcretePlaneStress::getResponse(...)" << endln;
+#endif
+
+  switch (responseID) {
+  case -1:
+    return -1;
+  case 1:
+    if (matInfo.theVector != 0)
+      *(matInfo.theVector) = getStress();
+    return 0;
+  case 2:
+    if (matInfo.theVector != 0)
+      *(matInfo.theVector) = getStrain();
+    return 0;
+  case 3:
+    //if (matInfo.theVector != 0)
+    //	*(matInfo.theVector) = getState();
+    return 0;
+  default:
+    return -1;
+  }
+}
+//end by LN
+
+void 
+FAReinforcedConcretePlaneStress::Print(OPS_Stream &s, int flag )
 {
 	s << "\n\tFAReinforcedConcretePlaneStress, material id: " << this->getTag() << endln;
-    /*
+    
 	s << "\tRho: " << rho << endln;
 	s << "\tangle1: " << angle1 << endln;
 	s << "\tangle2: " << angle2 << endln;
@@ -526,23 +579,18 @@ void FAReinforcedConcretePlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\tfpc: " << fpc << endln;
 	s << "\tfy: " << fy << endln;
 	s << "\tE0: " << E0 << endln;
-	//*/
 
-	//s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159*180.0 << endln;
-	//s <<  "Principal Stress: citaStress = "<< citaStress/3.14159*180.0 << endln;
-	//s << " v12 = " << miu12 << " v21 = " << miu21 << endln;	
-	//s << " steelStatus " << steelStatus << endln;
-	//s << " dirStatus " << dirStatus << endln;
-	//s << " Damage DOne = " << DDOne << endln;
-	//s << " Damage DTwo = " << DDTwo << endln;
+	s <<  "Principal Strain: citaStrain = "<< citaStrain/3.14159*180.0 << endln;
+	s <<  "Principal Stress: citaStress = "<< citaStress/3.14159*180.0 << endln;
+	s << " v12 = " << miu12 << " v21 = " << miu21 << endln;	
+	s << " steelStatus " << steelStatus << endln;
+	s << " dirStatus " << dirStatus << endln;
+	s << " Damage DOne = " << DDOne << endln;
+	s << " Damage DTwo = " << DDTwo << endln;
 	
-	//s << " G12 = " << G12 << endln;
+	s << " G12 = " << G12 << endln;
 
-
-	//int i, j;
-    
-
-
+	int i, j;
 	s << "\t call the material print() function : "<< endln;
 	
 	s << "\t the steel 1 information is : " << endln;
@@ -554,17 +602,17 @@ void FAReinforcedConcretePlaneStress::Print(OPS_Stream &s, int flag )
 	s << "\t the concrete 2 information is : " << endln;
 	theMaterial[3]->Print(s,flag);
 
-
-	//s << "\tStrain and stress of the uniaxial materials:"<<endln;
-	//for ( i=0; i<4; i++)
-	//{
-	//	s<< "Uniaxial Material "<<i+1<<" :"<<theMaterial[i]->getStrain()<<"   "<<theMaterial[i]->getStress()<< endln;
-	//}
-
+	s << "\tStrain and stress of the uniaxial materials:" << endln;
+	for (i = 0; i < 4; i++) {
+		s << "\tUniaxial Material " << i + 1 << " :" << endln;
+		s << "\t            Strain : " << theMaterial[i]->getStrain() << endln;
+		s << "\t            Stress : " << theMaterial[i]->getStress() << endln;
+		s << "\t  Uniaxial Tangent : " << theMaterial[i]->getTangent() << endln;
+	}
 }
  
-
-int FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel)
+int 
+FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel)
 {
   int res = 0;
   
@@ -588,7 +636,6 @@ int FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel
     return res;
   }	      
   
-  
   // Now sends the IDs of its materials
   int matDbTag;
   
@@ -598,8 +645,7 @@ int FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel
   // tag if sending to a database channel.
   
   int i;
-  for (i=0; i<4; i++)
-    {
+  for (i=0; i<4; i++) {
       idData(i) = theMaterial[i]->getClassTag();
       matDbTag = theMaterial[i]->getDbTag();
       if (matDbTag == 0) {
@@ -608,7 +654,7 @@ int FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel
 	  theMaterial[i]->setDbTag(matDbTag);
       }
       idData(i+4) = matDbTag;
-    }
+  }
   
   res += theChannel.sendID(dataTag, commitTag, idData);
   if (res < 0) {
@@ -628,8 +674,8 @@ int FAReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel
   return res;
 }
  
-
-int FAReinforcedConcretePlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
+int 
+FAReinforcedConcretePlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
   int res = 0;
   
@@ -662,7 +708,6 @@ int FAReinforcedConcretePlaneStress::recvSelf(int commitTag, Channel &theChannel
     opserr << "WARNING FAReinforcedConcretePlaneStress::recvSelf() - " << this->getTag() << " failed to receive ID\n";
     return res;
   }
-
 
   if (theMaterial == 0) {
     // Allocate new materials
@@ -715,59 +760,49 @@ int FAReinforcedConcretePlaneStress::recvSelf(int commitTag, Channel &theChannel
     }
   }
 
-  
   return res;
 
 }
 
-
-
-
-
-
-int FAReinforcedConcretePlaneStress::determineTrialStress(void)
+int 
+FAReinforcedConcretePlaneStress::determineTrialStress(void)
 { 
-  double pi = 3.14159265359;
-  
   // Get Principal strain direction first
-  
-  double Tstrain[3];     //epslonx,epslony,0.5*gammaxy	
   // Get strain values from strain of element
-  Tstrain[0] = strain_vec(0);
+  Tstrain[0] = strain_vec(0); //epslonx,epslony,0.5*gammaxy	
   Tstrain[1] = strain_vec(1);
   Tstrain[2] = 0.5*strain_vec(2);
   
   // Get citaR based on Tstrain
-  double citaR; // principal strain direction
   double temp_citaR;
-  double eps = 1e-12;
-  
+  //double eps = 1e-12;
   
   if ( fabs(Tstrain[0]-Tstrain[1]) < 1e-7 )
     {
-      citaR = 0.25*pi;	
+	  citaR = 0.25*PI;	 dirStatus = 0;
     }
   else // Tstrain[0] != Tstrain[1]
     {
       temp_citaR = 0.5 * atan(fabs(2.0*1000000.0*Tstrain[2]/(1000000.0*Tstrain[0]-1000000.0*Tstrain[1]))); 
       if ( fabs(Tstrain[2]) < 1e-7 ) 
 	{
-	  citaR = 0;
-	} else if ( (Tstrain[0] > Tstrain[1]) && ( Tstrain[2] > 0) )
+	  citaR = 0; dirStatus = 1;
+	} 
+	  else if ( (Tstrain[0] > Tstrain[1]) && ( Tstrain[2] > 0) )
 	{			
-	  citaR = temp_citaR;
+	  citaR = temp_citaR; dirStatus = 2;
 	}
       else if ( (Tstrain[0] > Tstrain[1]) && ( Tstrain[2] < 0) )
 	{
-	  citaR = pi - temp_citaR;
+	  citaR = PI - temp_citaR; dirStatus = 3;
 	}
       else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] > 0) )
 	{
-	  citaR = 0.5*pi - temp_citaR;
+	  citaR = 0.5*PI - temp_citaR; dirStatus = 4;
 	}
       else if ( (Tstrain[0] < Tstrain[1]) && ( Tstrain[2] < 0) )
 	{
-	  citaR = 0.5*pi + temp_citaR;
+	  citaR = 0.5*PI + temp_citaR; dirStatus = 5;
 	}
       else
 	{
@@ -777,11 +812,11 @@ int FAReinforcedConcretePlaneStress::determineTrialStress(void)
 	  opserr << " Tstrain[2] = " << Tstrain[2] << endln;
 	}
     }
+  determineConcreteStatus(dirStatus);
   
-  
-  while (  (citaR - 0.5*pi) > 1e-8 ) {
-    citaR = citaR-0.5*pi;
-    dirStatus = 1;  // assign value for output in the screen
+  while (  (citaR - 0.5*PI) > 1e-8 ) {
+    citaR = citaR-0.5*PI;
+    //dirStatus = 1;  // assign value for output in the screen
   }
   
   citaStrain = citaR; // assign value for output in the screen
@@ -797,13 +832,13 @@ int FAReinforcedConcretePlaneStress::determineTrialStress(void)
   
   double citaOne = citaR;
   double citaTwo = citaR;
-  double minError = 100;
-  double citaFinal = 100;
+  double minError = citaR;
+  double citaFinal = citaR;
   
-  while ( (status == 0) && ( citaOne>0 || citaTwo<0.5*pi ) )
+  while ( (status == 0) && ( citaOne>0 || citaTwo<0.5*PI ) )
     {
-      citaOne = citaOne - pi/360.0;
-      citaTwo = citaTwo + pi/360.0;
+      citaOne = citaOne - PI/360.0;
+      citaTwo = citaTwo + PI/360.0;
       
       if ( citaOne >0 )
 	{
@@ -820,7 +855,7 @@ int FAReinforcedConcretePlaneStress::determineTrialStress(void)
 	    }
 	}
       
-      if ( citaTwo < 0.5*pi )
+      if ( citaTwo < 0.5*PI )
 	{
 	  error = getAngleError(citaTwo);
 	  if ( minError > error )
@@ -841,9 +876,9 @@ int FAReinforcedConcretePlaneStress::determineTrialStress(void)
   
   if ( status == 0 ) // does not get converged after iteration
     {
-      getAngleError(citaFinal);
+      error = getAngleError(citaFinal);
       // if ( minError > 0.05 )
-      opserr << "FAReinforcedConcretePlaneStress::determineTrialStress: Warning, failure to get converged principal stress direction\n";
+	  opserr << "FAReinforcedConcretePlaneStress::determineTrialStress: Warning, failure to get converged principal stress. error=" << error / PI * 180 << endln;
     } 
   
   //citaStress = citaFinal;  // assign value for output in the screen
@@ -851,19 +886,17 @@ int FAReinforcedConcretePlaneStress::determineTrialStress(void)
   return 0;
 }
 
-
-
-double FAReinforcedConcretePlaneStress::getAngleError(double inputCita)
+double 
+FAReinforcedConcretePlaneStress::getAngleError(double inputCita)
 {
-	double pi = 3.14159265359;
 	double outputCita;
 	outputCita = getPrincipalStressAngle(inputCita);
 
 	double error;
 	double error1, error2, error3;
 	error1 = fabs ( inputCita - outputCita);
-	error2 = fabs ( inputCita - outputCita + 0.5*pi);
-	error3 = fabs ( -inputCita + outputCita + 0.5*pi);
+	error2 = fabs ( inputCita - outputCita + 0.5*PI);
+	error3 = fabs ( -inputCita + outputCita + 0.5*PI);
 
 	if (error1 > error2)
 		error = error2;
@@ -876,14 +909,12 @@ double FAReinforcedConcretePlaneStress::getAngleError(double inputCita)
 	return error;
 }
 
-
-
-double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngle)
+double 
+FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngle)
 {   
-    double citaIn; // Trial principal stress direction, obtained from input
-    citaIn = inputAngle;
+    double citaIn = inputAngle; // Trial principal stress direction, obtained from input
 
-	double citaOut; // outputAngle, obtained from stresses based on citaIn
+	double citaOut = 0.0; // outputAngle, obtained from stresses based on citaIn
 
 	// Define i, j, k, for loop use
 	int i, j, k;
@@ -900,7 +931,7 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	double V[3][3];        //Matrix considering Hsu/Zhu ratios
 
 	//Strain and stress
-	double Tstrain[3];     //epslonx,epslony,0.5*gammaxy	
+	//double Tstrain[3];     //epslonx,epslony,0.5*gammaxy	
 	double tempStrain[3]; //temp values of strains
 	double stressSL, stressST; // stress of steel layers in L and T direction
 
@@ -912,7 +943,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	double DC_bar[3][3];   //partial differentiation matrix of concrete part Eq.(49)	
 	double tempD[3][3];  //temp matrix for data transfer
 
-	double pi = 3.14159265359;
 	double epsy = fy/E0;
 	double fcr = 0.31*sqrt(fpc);
 	double rou;
@@ -927,10 +957,10 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	if ( rou < 0.0025 ) rou = 0.0025;
 	double B = pow((fcr/fy),1.5)/rou;
 	double fn = fy * (0.91-2.0*B) / (0.98-0.25*B);
+	double epsn = epsy*(0.91 - 2.0*B) / (0.98 - 0.25*B);
 
 	double citaL = angle1; // angle for direction of steel one
 	double citaT = angle2; // angle for direction of steel two
-
 
     //Set values for matrix TMSL, TMST
 	TMSL[0][0] = pow(cos(citaL),2);
@@ -953,7 +983,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	TMST[2][1] = -cos(citaT)*sin(citaT);
 	TMST[2][2] = pow(cos(citaT),2)-pow(sin(citaT),2);
     
-
     //Set values for transformation matrix TOne[3][3],TMOne[3][3],TSL_One[3][3],TST_One[3][3]
 	TOne[0][0] = pow(cos(citaIn),2);
 	TOne[0][1] = pow(sin(citaIn),2);
@@ -995,12 +1024,10 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	TST_One[2][1] = cos(citaT-citaIn)*sin(citaT-citaIn);
 	TST_One[2][2] = pow(cos(citaT-citaIn),2)-pow(sin(citaT-citaIn),2);
 
-
     // Get strain values from strain of element in x y directions
-	Tstrain[0] = strain_vec(0);
+	/*Tstrain[0] = strain_vec(0);
 	Tstrain[1] = strain_vec(1);
-	Tstrain[2] = 0.5*strain_vec(2);
-	
+	Tstrain[2] = 0.5*strain_vec(2);*/
 	
 	//calculate tempStrain: epslon1,epslon2, 0.5*gamma12 in trial principal stress direction
     for (i=0;i<3;i++)
@@ -1014,8 +1041,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	epslonOne = tempStrain[0];
 	epslonTwo = tempStrain[1];
 	halfGammaOneTwo = tempStrain[2];
-
-    double epsn = epsy*(0.91-2.0*B)/(0.98-0.25*B); 
 
     /* FMK
        double CSL = theMaterial[0]->getCommittedStrain();
@@ -1037,17 +1062,13 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
     if (( CSL > epsn ) || ( CST > epsn )) {
       steelStatus = 1;
     }
-    
 
-
-	
     //set v12 and v21 obtained from strain
     double strainSL, strainST; //Biaxial strain of steel in L, T
     double strainSF;           //larger one of strainSL, strainST
     
     strainSL= pow(cos(citaL),2)*Tstrain[0] + pow(sin(citaL),2)*Tstrain[1] + 2.0*sin(citaL)*cos(citaL)*Tstrain[2];
     strainST= pow(cos(citaT),2)*Tstrain[0] + pow(sin(citaT),2)*Tstrain[1] + 2.0*sin(citaT)*cos(citaT)*Tstrain[2];
-    
     
 	if (strainSL > strainST)
 	{
@@ -1060,7 +1081,7 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
     
     double v12 = 0.2;
     double v21 = 0.2; //initial values for Hsu/Zhu ratios
-    
+    //For FA - STM theory the ratio contains I matrix
     
 	if ( (epslonOne > 0.0) && (epslonTwo > 0.0) )
 	{
@@ -1088,7 +1109,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 		if (steelStatus == 1)
 			v12 = 1.0;
 		//v12 = 1.9;
-	
 	}
     else if ( (epslonOne <= 0.0) && (epslonTwo > 0.0) )
       {
@@ -1146,17 +1166,15 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
     	opserr << "FAReinforcedConcretePlaneStress::getPrincipalStressAngle: failure to get Hsu/Zhu ratio!\n";
       }
     
-    
     miu12 = v12; // record the value for output in screen
     miu21 = v21; // record the value for output in screen
     
-    
     //set values of matrix V[3][3]
-    if ( v12*v21==1.0 )
-      {
-	opserr << "FAReinforcedConcretePlaneStress::getPrincipalStressAngle: failure to get matrix [V]!\n";
-	opserr << "v12= "<<v12 << endln;
-	opserr << "v21= "<<v21 << endln;
+    //if ( v12*v21==1.0 )
+    //  {
+	//opserr << "FAReinforcedConcretePlaneStress::getPrincipalStressAngle: failure to get matrix [V]!\n";
+	//opserr << "v12= "<<v12 << endln;
+	//opserr << "v21= "<<v21 << endln;
 	V[0][0] = 1.0;
 	V[0][1] = 0.0;
 	V[0][2] = 0.0;
@@ -1166,22 +1184,19 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	V[2][0] = 0.0;
 	V[2][1] = 0.0;
 	V[2][2] = 1.0;
-	
-      }
-	else
-	  {
-	V[0][0] = 1.0/(1.0-v12*v21);
-	V[0][1] = v12/(1.0-v12*v21);
-	V[0][2] = 0.0;
-	V[1][0] = v21/(1.0-v12*v21);
-	V[1][1] = 1.0/(1.0-v12*v21);
-	V[1][2] = 0.0;
-	V[2][0] = 0.0;
-	V[2][1] = 0.0;
-	V[2][2] = 1.0;
-	  }
-    
-    
+	//  }
+	//else
+	//  {
+	//V[0][0] = 1.0/(1.0-v12*v21);
+	//V[0][1] = v12/(1.0-v12*v21);
+	//V[0][2] = 0.0;
+	//V[1][0] = v21/(1.0-v12*v21);
+	//V[1][1] = 1.0/(1.0-v12*v21);
+	//V[1][2] = 0.0;
+	//V[2][0] = 0.0;
+	//V[2][1] = 0.0;
+	//V[2][2] = 1.0;
+	//  }
     
     //********** get [DC]**************
     //set temp[DC]=[V]*[TOne]
@@ -1203,16 +1218,13 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	double temp1 = tempStrain[1];
 	tempStrain[0] = V[0][0]*temp0 + V[0][1]*temp1; //epslon1_bar
 	tempStrain[1] = V[1][0]*temp0 + V[1][1]*temp1; //epslon2_bar
-    
-    
+	// tempStrain(2) = halfGammaOneTwo;  // hsu-zhu ratio has no effect on this term
+
     //get stiffness of unixail strain of concrete in 12 direction
-    double cigmaOneC; //stress of concrete in 12 direction
-    double cigmaTwoC;
+    // double cigmaOneC; //stress of concrete in 12 direction
+    // double cigmaTwoC;
     double GOneTwoC; //shear modulus of concrete in 12 direction
-    
-    double ita = 1.0; // set ita to 1.0 for simpification
-    
-    
+
     // get Damage factor: DOne, DTwo
     if ( tempStrain[0] < 0 )
       {
@@ -1259,9 +1271,8 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	if ( DTwo < 0.2 )	DTwo = 0.2;
       }
     
-    DOne = 1.0;
-    DTwo = 1.0;
-    
+    //DOne = 1.0; // commented by Ln 
+    //DTwo = 1.0;
     
     DDOne = DOne;  // assign values for screen output
     DDTwo = DTwo;
@@ -1339,65 +1350,73 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
     Information &theInfoC02 = theResponses[2]->getInformation();
     Information &theInfoC03 = theResponses[3]->getInformation();
     
-    static Vector theData(5);
-    theData(0) = xx;
-    theData(1) = kk;
-    theData(2) = DOne;
-    theData(3) = ita;
-    theData(4) = tempStrain[1];
-    theInfoC02.setVector(theData);
-    theResponses[2]->getResponse();
-    theData(2) = DTwo;
-    theData(4) = tempStrain[0];
-    theInfoC03.setVector(theData);
-    theResponses[3]->getResponse();
-
-    theMaterial[2]->setTrialStrain(tempStrain[0]); 
-    theMaterial[3]->setTrialStrain(tempStrain[1]); 
+	double beta = 0.5*atan2(halfGammaOneTwo*2.e6, (epslonOne - epslonTwo)*1.e6); // set beta to 1.0 for simplification, previously
     
-    /* END FMK */
+	Vector theData(5);
+	theData(0) = xx;
+	theData(1) = kk;
+	theData(3) = fabs(beta) / PI*180.;
 
+	if (isSwapped) {
+		theData(2) = DTwo;
+		theData(4) = tempStrain[0];   //epslon1_bar
+		theInfoC02.setVector(theData);
+		theResponses[2]->getResponse();
 
-    cigmaOneC = theMaterial[2]->getStress();
-    cigmaTwoC = theMaterial[3]->getStress();
+		theData(2) = DOne;
+		theData(4) = tempStrain[1];   //epslon2_bar
+		theInfoC03.setVector(theData);
+		theResponses[3]->getResponse();
 
-    // set GOneTwoC = 1.0;
-	if (epslonOne == epslonTwo)
-	{
+		theMaterial[2]->setTrialStrain(tempStrain[1], 0.0); //epslon2_bar
+		theMaterial[3]->setTrialStrain(tempStrain[0], 0.0); //epslon1_bar
+
+		sigmaOneC = theMaterial[2]->getStress();
+		sigmaTwoC = theMaterial[3]->getStress();
+	}
+	else {
+		theData(2) = DOne;
+		theData(4) = tempStrain[1];   //epslon2_bar
+		theInfoC02.setVector(theData);
+		theResponses[2]->getResponse();
+
+		theData(2) = DTwo;
+		theData(4) = tempStrain[0];   //epslon1_bar
+		theInfoC03.setVector(theData);
+		theResponses[3]->getResponse();
+
+		theMaterial[2]->setTrialStrain(tempStrain[0], 0.0); //epslon1_bar
+		theMaterial[3]->setTrialStrain(tempStrain[1], 0.0); //epslon2_bar
+
+		sigmaOneC = theMaterial[2]->getStress();
+		sigmaTwoC = theMaterial[3]->getStress();
+	}
+
+	// set GOneTwoC = 1.0;
+	if (epslonOne == epslonTwo) {
 		GOneTwoC = 10000.0; // max value for GOneTwoC
 	}
-	else
+	else 
 	{
-		// change at 03/19/04
-		GOneTwoC = fabs((cigmaOneC-cigmaTwoC)/(epslonOne-epslonTwo));
+		GOneTwoC = fabs((sigmaOneC - sigmaTwoC) / (epslonOne - epslonTwo));
 		if (GOneTwoC > 10000.0) // if larger than max value
-		GOneTwoC = 10000.0;
+			GOneTwoC = 10000.0;
 	}
-    
-    G12 = GOneTwoC; // record the value for output in screen
+	G12 = GOneTwoC; // record the value for output in screen
 
-
-    DC_bar[0][0] = theMaterial[2]->getTangent();
-    
-    // FMK    
     // DC_bar[0][1] = theMaterial[2]->getPD();
-    
-    theResponses[4]->getResponse();
-    Information &theInfoC1 = theResponses[4]->getInformation();
-    DC_bar[0][1] = theInfoC1.theDouble;
-    // end 
-    
-    DC_bar[0][2] = 0.0;
-    
-    // FMK
     // DC_bar[1][0] = theMaterial[3]->getPD();
 
+    theResponses[4]->getResponse();
+    Information &theInfoC1 = theResponses[4]->getInformation();
     theResponses[5]->getResponse();
     Information &theInfoC2 = theResponses[5]->getInformation();
+	
+	DC_bar[0][0] = theMaterial[2]->getTangent();
+	DC_bar[0][1] = theInfoC1.theDouble;
+    DC_bar[0][2] = 0.0;
+
     DC_bar[1][0] = theInfoC2.theDouble;
-    // end FMK 
-    
-    //DC_bar[1][0] = 0.0;
     DC_bar[1][1] = theMaterial[3]->getTangent();
     DC_bar[1][2] = 0.0;
     
@@ -1469,7 +1488,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	double strainSL_b; //uniaxial strain of steel in L direction
 	strainSL_b = DSL[0][0]*Tstrain[0] + DSL[0][1]*Tstrain[1] + DSL[0][2]*Tstrain[2];
      
-
 	//get stiffness
 	double tangentSL;
 	theMaterial[0]->setTrialStrain( strainSL_b );
@@ -1559,7 +1577,6 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 			DST[i][j] = tempD[i][j];			
 		}
   
-     
     //****************** get tangent_matrix  ****************    
 	// Get tangent_matrix
 	for (i=0;i<3;i++)
@@ -1575,17 +1592,16 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	tangent_matrix(1,2) = 0.5*D[1][2];
 	tangent_matrix(2,2) = 0.5*D[2][2];
       
-
     //**************** get Tstress and stress_vec ****************
-    Tstress[0] = pow(cos(citaIn),2)*cigmaOneC + pow(sin(citaIn),2)*cigmaTwoC
+    Tstress[0] = pow(cos(citaIn),2)*sigmaOneC + pow(sin(citaIn),2)*sigmaTwoC
 		         - 2*sin(citaIn)*cos(citaIn)*halfGammaOneTwo*GOneTwoC
 			     + pow(cos(citaL),2)*rou1*stressSL + pow(cos(citaT),2)*rou2*stressST;
 
-	Tstress[1] = pow(sin(citaIn),2)*cigmaOneC + pow(cos(citaIn),2)*cigmaTwoC
+	Tstress[1] = pow(sin(citaIn),2)*sigmaOneC + pow(cos(citaIn),2)*sigmaTwoC
 		         + 2*sin(citaIn)*cos(citaIn)*halfGammaOneTwo*GOneTwoC
 			     + pow(sin(citaL),2)*rou1*stressSL + pow(sin(citaT),2)*rou2*stressST;
 
-	Tstress[2] = cos(citaIn)*sin(citaIn)*cigmaOneC - cos(citaIn)*sin(citaIn)*cigmaTwoC
+	Tstress[2] = cos(citaIn)*sin(citaIn)*sigmaOneC - cos(citaIn)*sin(citaIn)*sigmaTwoC
 		         + (pow(cos(citaIn),2)-pow(sin(citaIn),2))*halfGammaOneTwo*GOneTwoC
 			     + cos(citaL)*sin(citaL)*rou1*stressSL + cos(citaT)*sin(citaT)*rou2*stressST;
 
@@ -1593,14 +1609,12 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	stress_vec(1) = Tstress[1];
 	stress_vec(2) = Tstress[2];
 
- 
-
 	// get calculated principal stress direction citaOut
 	double temp_citaOut;
 
     if ( fabs(Tstress[0]-Tstress[1]) < 1e-7 )
 	{
-	   citaOut = 0.25*pi;	
+	   citaOut = 0.25*PI;	
 	}
 	else // Tstrain[0] != Tstrain[1]
 	{
@@ -1614,15 +1628,15 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 		}
 		else if ( (Tstress[0] > Tstress[1]) && ( Tstress[2] < 0) )
 		{
-			citaOut = pi - temp_citaOut;
+			citaOut = PI - temp_citaOut;
 		}
 		else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] > 0) )
 		{
-			citaOut = 0.5*pi - temp_citaOut;
+			citaOut = 0.5*PI - temp_citaOut;
 		}
 		else if ( (Tstress[0] < Tstress[1]) && ( Tstress[2] < 0) )
 		{
-			citaOut = 0.5*pi + temp_citaOut;
+			citaOut = 0.5*PI + temp_citaOut;
 		}
 		else
 		{
@@ -1634,11 +1648,89 @@ double FAReinforcedConcretePlaneStress::getPrincipalStressAngle(double inputAngl
 	}
 
 
-    while (  (citaOut - 0.5*pi) > 1e-8 ) {
-		citaOut = citaOut-0.5*pi;		
+    while (  (citaOut - 0.5*PI) > 1e-8 ) {
+		citaOut = citaOut-0.5*PI;		
 	}
 	
     citaStress = citaOut; // assign value for screen output 
 
 	return citaOut;
+}
+
+void
+FAReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
+{
+	bool temp = 0;
+	if (tempStatus != lastDirStatus) {
+		switch (lastDirStatus) {
+		case 0:
+			temp = isSwapped;
+			break;
+
+		case 1:
+			if (tempStatus == 3 || tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 2:
+			if (tempStatus == 3) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 3:
+			if (tempStatus == 1 || tempStatus == 2 || tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 4:
+			if (tempStatus == 1 || tempStatus == 3 || tempStatus == 5) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 5:
+			if (tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		default:
+			opserr << "error to determine the concrete status" << endln;
+			break;
+		}
+		isSwapped = temp;
+	}
 }

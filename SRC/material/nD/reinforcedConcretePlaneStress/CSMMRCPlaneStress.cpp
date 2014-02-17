@@ -49,19 +49,19 @@ Vector CSMMRCPlaneStress :: strain_vec(3);
 Vector CSMMRCPlaneStress :: stress_vec(3);
 Matrix CSMMRCPlaneStress :: tangent_matrix(3,3);
 
-double CSMMRCPlaneStress :: citaR = 0.0;      // principal strain direction
-double CSMMRCPlaneStress :: lastCitaR = 0.0;  // last converged principle strain direction
-int    CSMMRCPlaneStress :: steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
-int    CSMMRCPlaneStress :: dirStatus       = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
-bool   CSMMRCPlaneStress :: isClockWise     = 0; // counter-clockwise = 0; clockwise = 1;
-int    CSMMRCPlaneStress :: cloclWiseStatus = 0; // -1, 0, 1
-
 double CSMMRCPlaneStress :: epslonOne = 0.0;
 double CSMMRCPlaneStress :: epslonTwo = 0.0;
 double CSMMRCPlaneStress :: halfGammaOneTwo = 0.0;
 
 double CSMMRCPlaneStress :: sigmaOneC = 0.0;
 double CSMMRCPlaneStress :: sigmaTwoC = 0.0;
+
+double CSMMRCPlaneStress::citaR = 0.0;      // principal strain direction
+double CSMMRCPlaneStress::lastCitaR = 0.0;  // last converged principle strain direction
+int    CSMMRCPlaneStress::steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
+int    CSMMRCPlaneStress::dirStatus = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
+bool   CSMMRCPlaneStress::isSwapped = 0; // counter-clockwise = 0; clockwise = 1;
+int    CSMMRCPlaneStress::lastDirStatus = 0; // 0, 1, 2, 3, 4, 5
 
 #include <DummyStream.h>
 #include <MaterialResponse.h>
@@ -380,27 +380,30 @@ CSMMRCPlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
 
-  char buffer[200];
+  /*char buffer[200];
   sprintf(buffer, "eS1 = %8.6f, eS2 = %8.6f, eC1 = %8.6f, eC2 = %8.6f; ThetaE = %4.2f, ThetaS = %4.2f; |S(i)|-|S(i-1)|=%8.6e. ",
 	  theMaterial[0]->getStrain(), theMaterial[1]->getStrain(), theMaterial[2]->getStrain(), theMaterial[3]->getStrain(),
 	  citaStrain / PI * 180, citaStress / PI * 180, fabs(lastStress.Norm() - stress_vec.Norm()));
   opserr << buffer;
-
+  sprintf(buffer, "Te1 = %8.6f, Te2 = %8.6f, Te3 = %8.6f. ", strain_vec(0), strain_vec(1), strain_vec(2));
+  opserr << buffer ;//<< endln
   if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
-	opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+	opserr << "1t2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne > 0.0) && (epslonTwo <= 0.0)) {  // one tension, two compression
-	opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+	opserr << "1t2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne <= 0.0) && (epslonTwo > 0.0)) {  // one compression, two tension
-	opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+	opserr << "1c2t. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
   else if ((epslonOne <= 0.0) && (epslonTwo <= 0.0)) {  //both compression
-	opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << "." << endln;
+	opserr << "1c2c. e1 = " << epslonOne << ", e2 = " << epslonTwo << ". dir=";
   }
+  opserr << dirStatus << ". swap=" << int(isSwapped) << endln;*/
 
   lastStress = stress_vec;
   lastCitaR = citaR;
+  lastDirStatus = dirStatus;
 
   return 0;
 }
@@ -480,6 +483,10 @@ CSMMRCPlaneStress::getCopy(void)
     E0,
     epsc0);
   theCopy->strain_vec = strain_vec;
+  theCopy->stress_vec = stress_vec;
+  theCopy->lastCitaR = lastCitaR;
+  theCopy->lastDirStatus = lastDirStatus;
+
   return theCopy;
 }
 
@@ -640,8 +647,7 @@ CSMMRCPlaneStress::sendSelf(int commitTag, Channel &theChannel)
   // tag if sending to a database channel.
 
   int i;
-  for (i = 0; i < 4; i++)
-  {
+  for (i = 0; i < 4; i++) {
     idData(i) = theMaterial[i]->getClassTag();
     matDbTag = theMaterial[i]->getDbTag();
     if (matDbTag == 0) {
@@ -704,7 +710,6 @@ CSMMRCPlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker
     opserr << "WARNING CSMMRCPlaneStress::recvSelf() - " << this->getTag() << " failed to receive ID\n";
     return res;
   }
-
 
   if (theMaterial == 0) {
     // Allocate new materials
@@ -769,20 +774,17 @@ CSMMRCPlaneStress::determineTrialStress(void)
   Tstrain(2) = 0.5*strain_vec(2);
 
   // Get citaR based on Tstrain
-  double citaR; // principal strain direction
   double temp_citaR;
-  double eps = 1e-12;
+  //double eps = 1e-12;
 
-  if (fabs(Tstrain(0) - Tstrain(1)) < 1e-7) {
-	citaR = 0.25*PI;
-  }
+  if (fabs(Tstrain(0) - Tstrain(1)) < 1e-7)               { citaR = 0.25*PI;             dirStatus = 0; }
   else {// Tstrain[0] != Tstrain[1]
 	temp_citaR = 0.5 * atan(fabs(2.0e6*Tstrain(2) / (1.0e6*Tstrain(0) - 1.0e6*Tstrain(1))));
-	if      (fabs(Tstrain(2)) < 1e-7)                      citaR = 0;
-	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)> 0)) citaR = temp_citaR;
-	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)< 0)) citaR = PI - temp_citaR;
-	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)> 0)) citaR = 0.5*PI - temp_citaR;
-	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)< 0)) citaR = 0.5*PI + temp_citaR;
+	if (fabs(Tstrain(2)) < 1e-7)                          { citaR = 0;                   dirStatus = 1; }
+	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)>0)) { citaR = temp_citaR;          dirStatus = 2; }
+	else if ((Tstrain(0) > Tstrain(1)) && (Tstrain(2)<0)) { citaR = PI - temp_citaR;     dirStatus = 3; }
+	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)>0)) { citaR = 0.5*PI - temp_citaR; dirStatus = 4; }
+	else if ((Tstrain(0) < Tstrain(1)) && (Tstrain(2)<0)) { citaR = 0.5*PI + temp_citaR; dirStatus = 5; }
 	else {
 	  opserr << "CSMMRCPlaneStress::determineTrialStress: Failure to calculate citaR\n";
 	  opserr << " Tstrain(0) = " << Tstrain(0) << endln;
@@ -790,10 +792,11 @@ CSMMRCPlaneStress::determineTrialStress(void)
 	  opserr << " Tstrain(2) = " << Tstrain(2) << endln;
 	}
   }
+  determineConcreteStatus(dirStatus);
 
   while ((citaR - 0.5*PI) > 1e-8) {
     citaR = citaR - 0.5*PI;
-	dirStatus = 1; 
+	//dirStatus = 1; 
   }
 
   citaStrain = citaR;
@@ -810,16 +813,16 @@ CSMMRCPlaneStress::determineTrialStress(void)
   double citaOne = citaR;
   double citaTwo = citaR;
   double minError = error;
-  double citaFinal = 100;
+  double citaFinal = citaR;
   double citaMinError = citaR;
-  double citaLow = citaR - PI / 2.0; //normally this 45 degree would be enough
-  double citaHigh = citaR + PI / 2.0;
+  //double citaLow = citaR - PI / 2.0; //normally this 45 degree would be enough
+  //double citaHigh = citaR + PI / 2.0;
 
-  while ((status == 0) && (citaOne > citaLow || citaTwo < citaHigh)) {
+  while ((status == 0) && (citaOne>0-FLT_EPSILON || citaTwo<0.5*PI+FLT_EPSILON)) {
     citaOne = citaOne - PI / 360.0;
     citaTwo = citaTwo + PI / 360.0;
 
-	if (citaOne > citaLow) {
+	if (citaOne > 0.0 - FLT_EPSILON) {
       error = getAngleError(citaOne);
       if (minError > error) {
     minError = error;
@@ -831,7 +834,7 @@ CSMMRCPlaneStress::determineTrialStress(void)
       }
     }
 
-    if (citaTwo < citaHigh) {
+	if (citaTwo < 0.5*PI + FLT_EPSILON) {
       error = getAngleError(citaTwo);
       if (minError > error) {
     minError = error;
@@ -848,9 +851,9 @@ CSMMRCPlaneStress::determineTrialStress(void)
 
   if (status == 0) {  // does not get converged after iteration
     //citaStress = getPrincipalStressAngle(citaMinError);
-	getAngleError(citaFinal);
+	error = getAngleError(citaFinal);
 	// if ( minError > 0.05 )
-    opserr << "CSMMRCPlaneStress::determineTrialStress(): Warning, failure to get converged principal stress direction\n";
+    opserr << "CSMMRCPlaneStress::determineTrialStress(): failure to get converged principal stress. error=" << error/PI*180 << endln;
 	//opserr << "citaStrain = " << citaStrain/PI*180. << "бу; citaStress = " << citaStress/PI*180 << "бу." << endln;
   }
 
@@ -884,7 +887,7 @@ CSMMRCPlaneStress::getAngleError(double inputCita)
 double
 CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 {
-  double citaIn = inputAngle;; // Trial principal stress direction, obtained from input
+  double citaIn = inputAngle; // Trial principal stress direction, obtained from input
 
   double citaOut = 0.0; // outputAngle, obtained from stresses based on citaIn
 
@@ -1101,10 +1104,10 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   miu21 = v21; // record the value for output in screen
 
   //set values of matrix V(3,3)
-  //if (v12*v21 == 1.0) {
-  //  opserr << "CSMMRCPlaneStress::getPrincipalStressAngle: failure to get matrix [V]!\n";
-  //  opserr << "v12= " << v12 << endln;
-  //  opserr << "v21= " << v21 << endln;
+  if (v12*v21 == 1.0) {
+    opserr << "CSMMRCPlaneStress::getPrincipalStressAngle: failure to get matrix [V]!\n";
+    opserr << "v12= " << v12 << endln;
+    opserr << "v21= " << v21 << endln;
     V(0, 0) = 1.0;
 	V(0, 1) = 0.0;
 	V(0, 2) = 0.0;
@@ -1116,20 +1119,20 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 	V(2, 0) = 0.0;
 	V(2, 1) = 0.0;
     V(2, 2) = 1.0;
-  //}
-  //else {
-  //  V(0, 0) = 1.0 / (1.0 - v12*v21);
-  //  V(0, 1) = v12 / (1.0 - v12*v21);
-  //  V(0, 2) = 0.0;
-  //
-  //  V(1, 0) = v21 / (1.0 - v12*v21);
-  //  V(1, 1) = 1.0 / (1.0 - v12*v21);
-  //  V(1, 2) = 0.0;
-  //
-  //  V(2, 0) = 0.0;
-  //  V(2, 1) = 0.0;
-  //  V(2, 2) = 1.0;
-  //}
+  }
+  else {
+    V(0, 0) = 1.0 / (1.0 - v12*v21);
+    V(0, 1) = v12 / (1.0 - v12*v21);
+    V(0, 2) = 0.0;
+  
+    V(1, 0) = v21 / (1.0 - v12*v21);
+    V(1, 1) = 1.0 / (1.0 - v12*v21);
+    V(1, 2) = 0.0;
+  
+    V(2, 0) = 0.0;
+    V(2, 1) = 0.0;
+    V(2, 2) = 1.0;
+  }
 
   //********** get [DC]**************
   DC.addMatrixProduct(0.0, V, TOne, 1.0); // DC = V * TOne;
@@ -1184,8 +1187,8 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
     if (DTwo < 0.2)  DTwo = 0.2;
   }
 
-  DOne = 1.0; // commented by Ln 
-  DTwo = 1.0;
+  //DOne = 1.0; // commented by Ln 
+  //DTwo = 1.0;
 
   DDOne = DOne;  // assign values for screen output
   DDTwo = DTwo;
@@ -1259,24 +1262,24 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   theData(1) = kk;
   theData(3) = fabs(beta)/PI*180.;
 
-//  if (dirStatus == 1) {
-//    theData(2) = DTwo;
-//    theData(4) = tempStrain(0);   //epslon1_bar
-//    theInfoC02.setVector(theData);
-//    theResponses[2]->getResponse();
-//    
-//    theData(2) = DOne;
-//    theData(4) = tempStrain(1);   //epslon2_bar
-//    theInfoC03.setVector(theData);
-//    theResponses[3]->getResponse();
-//    
-//    theMaterial[2]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
-//    theMaterial[3]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
-//    
-//    sigmaOneC = theMaterial[2]->getStress();
-//    sigmaTwoC = theMaterial[3]->getStress();
-//  }
-//  else if (dirStatus == 0) {
+  if (isSwapped) {
+    theData(2) = DTwo;
+    theData(4) = tempStrain(0);   //epslon1_bar
+    theInfoC02.setVector(theData);
+    theResponses[2]->getResponse();
+    
+    theData(2) = DOne;
+    theData(4) = tempStrain(1);   //epslon2_bar
+    theInfoC03.setVector(theData);
+    theResponses[3]->getResponse();
+    
+    theMaterial[2]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
+    theMaterial[3]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
+    
+    sigmaOneC = theMaterial[2]->getStress();
+    sigmaTwoC = theMaterial[3]->getStress();
+  }
+  else {
     theData(2) = DOne;
 	theData(4) = tempStrain(1);   //epslon2_bar
 	theInfoC02.setVector(theData);
@@ -1292,15 +1295,16 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 
 	sigmaOneC = theMaterial[2]->getStress();
 	sigmaTwoC = theMaterial[3]->getStress();
-//  }
-//    else {
-//    opserr << "CSMMRCPlaneStress::(getPrincipalStressAngle) -- wrong dirStatus" << endln; // should not occur
-//  }
+  }
+  //  else {
+  //  opserr << "CSMMRCPlaneStress::(getPrincipalStressAngle) -- wrong dirStatus" << endln; // should not occur
+  //}
 
   // set GOneTwoC = 1.0;
   if (epslonOne == epslonTwo) {
     GOneTwoC = 10000.0; // max value for GOneTwoC
-  } else {
+  } 
+  else {
     GOneTwoC = fabs((sigmaOneC - sigmaTwoC) / (epslonOne - epslonTwo));
     if (GOneTwoC > 10000.0) // if larger than max value
       GOneTwoC = 10000.0;
@@ -1436,4 +1440,82 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
   citaStress = citaOut;
 
   return citaOut;
+}
+
+void
+CSMMRCPlaneStress::determineConcreteStatus(int tempStatus)
+{
+	bool temp = 0;
+	if (tempStatus != lastDirStatus) {
+		switch (lastDirStatus) {
+		case 0:
+			temp = isSwapped;
+			break;
+
+		case 1:
+			if (tempStatus == 3 || tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 2:
+			if (tempStatus == 3) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 3:
+			if (tempStatus == 1 || tempStatus == 2 || tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 4:
+			if (tempStatus == 1 || tempStatus == 3 || tempStatus == 5) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		case 5:
+			if (tempStatus == 4) {
+				if (isSwapped)
+					temp = 0;
+				else
+					temp = 1;
+			}
+			else {
+				temp = isSwapped;
+			}
+			break;
+
+		default:
+			opserr << "error to determine the concrete status" << endln;
+			break;
+		}
+		isSwapped = temp;
+	}
 }
