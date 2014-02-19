@@ -26,6 +26,7 @@
 #include <ManzariDafalias.h>
 #include <ManzariDafalias3D.h>
 #include <ManzariDafaliasPlaneStrain.h>
+#include <MaterialResponse.h>
 
 #include <string.h>
 
@@ -1090,8 +1091,13 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 	int errFlag = -1;
 	bool jacoFlag = true;
 	// Declare variables to be used
-	Vector sol(19), R(19), dX(19), norms(20);
-	Matrix  jaco(19,19), jInv(19,19);
+	static Vector sol(19);
+	static Vector R(19);
+	static Vector dX(19);
+	static Vector norms(20);
+	static Matrix jaco(19,19);
+	static Matrix jInv(19,19);
+
 	sol = xo;
 	R = GetResidual(sol, inVar);
 	for(mIter = 1; mIter <= MaxIter; mIter++)
@@ -1103,7 +1109,7 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 				jaco = GetFDMJacobian(sol, inVar);
 		else
 		{	
-			Vector aux(19);
+			static Vector aux(19);
 			aux = SetManzariComponent(mSigma_n, mAlpha_n, mFabric_n, mDGamma_n);
 			if (mJacoType == 1)
 				jaco = GetJacobian(aux, inVar);
@@ -1111,7 +1117,7 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 				jaco = GetFDMJacobian(aux, inVar);
 		}
 
-		
+		/*	
 		norms = NormalizeJacobian(jaco);
 		if (jaco.Invert(jInv) != 0) 
 		{
@@ -1131,8 +1137,8 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 		DenormalizeJacobian(jInv, norms);
 		dX   = -1.0*jInv * R;
 		sol += dX;
+		*/
 		
-		/*
 		errFlag = jaco.Solve(R, dX);
 		if (errFlag != 0) 
 		{
@@ -1140,7 +1146,7 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 			break;
 		}
 		sol -= dX;
-		*/
+		
 		R    = GetResidual(sol, inVar);
 
 		if (R.Norm() < mTolR) 
@@ -1151,7 +1157,7 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 	}
 	if (errFlag == 0)
 	{	
-		/*
+		
 		norms = NormalizeJacobian(jaco);
 		if (jaco.Invert(jInv) != 0) 
 		{
@@ -1159,7 +1165,7 @@ ManzariDafalias::NewtonSolve(const Vector& xo, const Vector& inVar, Vector& x, M
 			if (debugFlag) opserr << "Singular Matrix!!! - Jacobian" << endln;
 		}
 		DenormalizeJacobian(jInv, norms);
-		*/
+		
 		aCepPart.Extract(jInv, 0, 0, 1.0);
 		x = sol;
 	}

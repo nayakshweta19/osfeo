@@ -329,10 +329,28 @@ CSMMRCPlaneStress::setTrialStrain(const Vector &v)
   return 0;
 }
 
+int
+CSMMRCPlaneStress::setTrialStrain(const Vector &v, const Vector &r)
+{
+  return 0;
+}
+
+int
+CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v)
+{
+  return 0;
+}
+
+int
+CSMMRCPlaneStress::setTrialStrainIncr(const Vector &v, const Vector &r)
+{
+  return 0;
+}
+
 double
 CSMMRCPlaneStress::getRho(void)
 {
-	return rho;
+  return rho;
 }
 
 const Matrix&
@@ -510,6 +528,9 @@ CSMMRCPlaneStress::getCopy(const char *type)
     epsc0);
   theModel->strain_vec = strain_vec;
   theModel->stress_vec = stress_vec;
+  theModel->lastCitaR = lastCitaR;
+  theModel->lastDirStatus = lastDirStatus;
+
   return theModel;
 }
 //added by Ln
@@ -1195,54 +1216,54 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
 
   //for xx, kk, m, xx=n, kk=delta, keci
   double xx, kk;
-  if (((fabs(lastStress(0)) + fabs(lastStress(1)) + fabs(lastStress(2))) == 0.0) ||
-    (fabs(lastStress(0)) == 0.0)) {
-    xx = 2.0;
-    kk = 1.0;
-  }
-  else {
-    if ((lastStress(0) < 0.0) && (lastStress(1) < 0.0)) {
-      if (lastStress(2) == 0.0) {
-        xx = 2.0;
-        kk = 1.0;
-        //kk = 0;
-      }
-      else {
-        double keci = sqrt((fabs(lastStress(0)) / fabs(lastStress(2)) + 1) * (fabs(lastStress(1)) / fabs(lastStress(2)) + 1));
-        
-        xx = 2 / pow(keci, 3.0);
-        if (xx < 0.6) xx = 0.6;
-        
-        double a, b;
-        if (keci < 1.5) {
-          a = 0;
-          b = 1.0;
-        }
-        else {
-          a = (1.3 - 1.0) / (1.9 - 1.5);
-          b = 1.0 - a*1.5;
-        }
-        kk = a*keci + b;
-        //kk = 0.105*keci+1;
-      }
-    }
-    else if ((lastStress(0) > 0.0) && (lastStress(1) > 0.0))  {
-      kk = 1.0;
-      xx = 2.0;
-    }
-    else { // under tension and compression
-      kk = 1.0;
-      double keciN;
-      if (lastStress(0) < 0) {
-        keciN = sqrt(fabs(lastStress(0)) / fabs(lastStress(2)) + 1);
-      }
-      else {
-        keciN = sqrt(fabs(lastStress(1)) / fabs(lastStress(2)) + 1);
-      }
-      xx = 2 / pow(keciN, 3.0);
-      if (xx < 0.6) xx = 0.6;
-    }
-  }
+//  if (((fabs(lastStress(0)) + fabs(lastStress(1)) + fabs(lastStress(2))) == 0.0) ||
+//    (fabs(lastStress(0)) == 0.0)) {
+//    xx = 2.0;
+//    kk = 1.0;
+//  }
+//  else {
+//    if ((lastStress(0) < 0.0) && (lastStress(1) < 0.0)) {
+//      if (lastStress(2) == 0.0) {
+//        xx = 2.0;
+//        kk = 1.0;
+//        //kk = 0;
+//      }
+//      else {
+//        double keci = sqrt((fabs(lastStress(0)) / fabs(lastStress(2)) + 1) * (fabs(lastStress(1)) / fabs(lastStress(2)) + 1));
+//        
+//        xx = 2 / pow(keci, 3.0);
+//        if (xx < 0.6) xx = 0.6;
+//        
+//        double a, b;
+//        if (keci < 1.5) {
+//          a = 0;
+//          b = 1.0;
+//        }
+//        else {
+//          a = (1.3 - 1.0) / (1.9 - 1.5);
+//          b = 1.0 - a*1.5;
+//        }
+//        kk = a*keci + b;
+//        //kk = 0.105*keci+1;
+//      }
+//    }
+//    else if ((lastStress(0) > 0.0) && (lastStress(1) > 0.0))  {
+//      kk = 1.0;
+//      xx = 2.0;
+//    }
+//    else { // under tension and compression
+//      kk = 1.0;
+//      double keciN;
+//      if (lastStress(0) < 0) {
+//        keciN = sqrt(fabs(lastStress(0)) / fabs(lastStress(2)) + 1);
+//      }
+//      else {
+//        keciN = sqrt(fabs(lastStress(1)) / fabs(lastStress(2)) + 1);
+//      }
+//      xx = 2 / pow(keciN, 3.0);
+//      if (xx < 0.6) xx = 0.6;
+//    }
+//  }
 
   xx = 2.0; // for normal cases without axial loads
   kk = 1.0;
@@ -1276,8 +1297,8 @@ CSMMRCPlaneStress::getPrincipalStressAngle(double inputAngle)
     theMaterial[2]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
     theMaterial[3]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
     
-    sigmaOneC = theMaterial[2]->getStress();
-    sigmaTwoC = theMaterial[3]->getStress();
+    sigmaOneC = theMaterial[3]->getStress();
+    sigmaTwoC = theMaterial[2]->getStress();
   }
   else {
     theData(2) = DOne;

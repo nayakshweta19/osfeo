@@ -108,8 +108,25 @@ class CSMMRCPlaneStressFiber : public NDMaterial
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
 
-	double   citaR;     // principal strain direction
-    double   angle1;    // angel of the first steel layer to x coordinate 
+	static double citaR;           // principal strain direction
+	static double lastCitaR;       // last converged principle strain direction
+	static bool   isSwapped;       // primary concrete direction has changed
+	static int    lastDirStatus;
+	static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
+	static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+
+	static double epslonOne;
+	static double epslonTwo;
+	static double halfGammaOneTwo;
+
+	static double sigmaOneC;
+	static double sigmaTwoC;
+
+	static Vector strain_vec;
+	static Vector stress_vec;
+	static Matrix tangent_matrix;
+
+	double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
     double   rou1;      // steel ratio of the first steel layer
     double   rou2;      // steel ratio of the second steel layer
@@ -117,11 +134,9 @@ class CSMMRCPlaneStressFiber : public NDMaterial
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
+	Vector   Tstrain;   // Trial strains
     Vector   Tstress;   // Trial stresses
     Vector   lastStress;  // Last committed stresses, added for x, k
-    
-    int      steelStatus;  // check if steel yield, 0 not yield, 1 yield
-    int      dirStatus;    // check if principle direction has exceed 90 degree, 1 yes, 0 no
     
     double   citaStrain;      // principle strain direction
     double   citaStress;     // principle stress direction
@@ -152,10 +167,6 @@ class CSMMRCPlaneStressFiber : public NDMaterial
     
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
-    
-    Vector strain_vec;
-    Vector stress_vec;	
-    Matrix tangent_matrix;
 
 	Vector fiberStrain;
 	Vector fiberStress;
@@ -164,8 +175,8 @@ class CSMMRCPlaneStressFiber : public NDMaterial
     int determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
- 
-	//double CSMMRCPlaneStressFiber::kupferEnvelop(double Tstrain, double sig_p, double eps_p);
+	void   determineConcreteStatus(int);
+    
 };
 
 #endif
