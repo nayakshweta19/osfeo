@@ -430,9 +430,7 @@ Matrix::Solve(const Vector &b, Vector &x) const
     dgesv_(&n,&nrhs,Aptr,&ldA,iPIV,Xptr,&ldB,&info);
 #endif
 
-    
-
-    return 0;
+	return -abs(info);
 }
 
 int
@@ -539,8 +537,7 @@ Matrix::Solve(const Matrix &b, Matrix &x) const
 	    Ferr, Berr, newWork, newIwork, &info);
     */
 #endif
-
-    return info;
+	return -abs(info);
 }
 
 int
@@ -617,7 +614,7 @@ Matrix::Invert(Matrix &theInverse) const
 	return -1;
 #endif
     if (info != 0) 
-      return info;
+	  return -abs(info);
 
 #ifndef _DLL
     DGETRI(&n,Aptr,&ldA,iPIV,Wptr,&workSize,&info);
@@ -629,13 +626,13 @@ Matrix::Invert(Matrix &theInverse) const
 #else
     dgetrf_(&n,&n,Aptr,&ldA,iPIV,&info);
     if (info != 0) 
-      return info;
+	  return -abs(info);
     
     dgetri_(&n,Aptr,&ldA,iPIV,Wptr,&workSize,&info);
     
 #endif
 
-    return info;
+	return -abs(info);
 }
 
 int

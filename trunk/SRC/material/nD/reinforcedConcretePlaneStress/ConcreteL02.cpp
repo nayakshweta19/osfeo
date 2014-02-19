@@ -148,7 +148,7 @@ ConcreteL02::setTrialStrain(double strain, double strainRate)
   double dStrain = Tstrain - Cstrain;
 
   // Calculate the trial state given the trial strain
-  if (fabs(dStrain) > DBL_EPSILON)   
+  if (fabs(dStrain) > FLT_EPSILON)
     determineTrialState(dStrain);
 
   return 0;

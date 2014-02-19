@@ -45,9 +45,23 @@
 
 #include <Tensor.h>
 
-//Vector CSMMRCPlaneStressFiber :: strain_vec(3);
-//Vector CSMMRCPlaneStressFiber :: stress_vec(3);
-//Matrix CSMMRCPlaneStressFiber :: tangent_matrix(3,3);
+Vector CSMMRCPlaneStressFiber :: strain_vec(3);
+Vector CSMMRCPlaneStressFiber :: stress_vec(3);
+Matrix CSMMRCPlaneStressFiber :: tangent_matrix(3,3);
+
+double CSMMRCPlaneStressFiber::epslonOne = 0.0;
+double CSMMRCPlaneStressFiber::epslonTwo = 0.0;
+double CSMMRCPlaneStressFiber::halfGammaOneTwo = 0.0;
+
+double CSMMRCPlaneStressFiber::sigmaOneC = 0.0;
+double CSMMRCPlaneStressFiber::sigmaTwoC = 0.0;
+
+double CSMMRCPlaneStressFiber::citaR = 0.0;      // principal strain direction
+double CSMMRCPlaneStressFiber::lastCitaR = 0.0;  // last converged principle strain direction
+int    CSMMRCPlaneStressFiber::steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
+int    CSMMRCPlaneStressFiber::dirStatus = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
+bool   CSMMRCPlaneStressFiber::isSwapped = 0; // counter-clockwise = 0; clockwise = 1;
+int    CSMMRCPlaneStressFiber::lastDirStatus = 0; // 0, 1, 2, 3, 4, 5
 
 #include <DummyStream.h>
 #include <MaterialResponse.h>
@@ -63,7 +77,6 @@ OPS_NewCSMMRCPlaneStressFiberMaterial()
 {
   if (numCSMMRCPlaneStressFiberMaterials == 0) {
     numCSMMRCPlaneStressFiberMaterials++;
-    //OPS_Error("CSMMRCPlaneStressFiber uniaxial material - Written by J.Zhong, Thomas T.C. Hsu and Y.L. Mo - Copyright@2009\n", 1);
   }
 
   // Pointer to a uniaxial material that will be returned
@@ -183,33 +196,8 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
   NDMaterial(tag, ND_TAG_CSMMRCPlaneStressFiber), 
   rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0), lastStress(3), Tstress(3), 
-  strain_vec(3), stress_vec(3),tangent_matrix(3,3),citaR(0.0),
   fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
-    steelStatus = 0;
-    dirStatus = 0;
-    G12 = 0;
-    citaStrain = 0.0;
-    citaStress = 0.0;
-    
-    TOneReverseStatus = 0;         
-    TOneNowMaxComStrain = 0.0;
-    TOneLastMaxComStrain = 0.0;
-    
-    TTwoReverseStatus = 0;         
-    TTwoNowMaxComStrain = 0.0;
-    TTwoLastMaxComStrain = 0.0;
-    
-    COneReverseStatus = 0;         
-    COneNowMaxComStrain = 0.0;
-    COneLastMaxComStrain = 0.0;
-    
-    CTwoReverseStatus = 0;         
-    CTwoNowMaxComStrain = 0.0;
-    CTwoLastMaxComStrain = 0.0;
-    
-    lastStress.Zero();  // add at 7.28
-
     if ( fpc < 0.0 ) { fpc = -fpc; } // set fpc > 0
     
     theMaterial = 0;
@@ -291,9 +279,8 @@ CSMMRCPlaneStressFiber ::CSMMRCPlaneStressFiber (int      tag,
 }
 
 CSMMRCPlaneStressFiber::CSMMRCPlaneStressFiber()
- :NDMaterial(0, ND_TAG_CSMMRCPlaneStressFiber), strain_vec(3),
-  stress_vec(3),tangent_matrix(3,3),citaR(0.0),
-  fiberStrain(2), fiberStress(2), fiberTangent(2,2)
+ :NDMaterial(0, ND_TAG_CSMMRCPlaneStressFiber), 
+ fiberStrain(2), fiberStress(2), fiberTangent(2,2)
 {
   theMaterial = 0;
   theResponses = 0;
@@ -394,7 +381,9 @@ CSMMRCPlaneStressFiber::commitState(void)
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
   
   lastStress = stress_vec;
-  
+  lastCitaR = citaR;
+  lastDirStatus = dirStatus;
+
   return 0;
 }
 
@@ -423,6 +412,7 @@ CSMMRCPlaneStressFiber::revertToStart(void)
     theMaterial[i]->revertToStart();
   
   Tstress.Zero();
+  Tstrain.Zero();
   strain_vec.Zero();
   stress_vec.Zero();
   fiberStrain.Zero();
@@ -431,7 +421,10 @@ CSMMRCPlaneStressFiber::revertToStart(void)
   steelStatus = 0;
   dirStatus = 0;
   G12 = 0;
-  
+
+  DDOne = 1.0;
+  DDTwo = 1.0;
+
   TOneReverseStatus = 0;         
   TOneNowMaxComStrain = 0.0;
   TOneLastMaxComStrain = 0.0;
@@ -470,6 +463,9 @@ CSMMRCPlaneStressFiber::getCopy(void)
 					 E0, 
 					 epsc0 );
   theCopy->strain_vec = strain_vec;
+  theCopy->stress_vec = stress_vec;
+  theCopy->lastCitaR = lastCitaR;
+  theCopy->lastDirStatus = lastDirStatus;
 
   return theCopy;
 }
@@ -494,6 +490,9 @@ CSMMRCPlaneStressFiber::getCopy(const char *type)
 		                 epsc0 );
 	theModel->strain_vec = strain_vec;
 	theModel->stress_vec = stress_vec;
+	theModel->lastCitaR = lastCitaR;
+	theModel->lastDirStatus = lastDirStatus;
+
 	return theModel;
 }
 

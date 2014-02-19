@@ -71,6 +71,9 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double getRho(void);
     
     int setTrialStrain(const Vector &v); // really used one
+	int setTrialStrain(const Vector &v, const Vector &r);
+	int setTrialStrainIncr(const Vector &v);
+	int setTrialStrainIncr(const Vector &v, const Vector &r);
     const Matrix &getTangent(void);
     const Matrix &getInitialTangent(void) {return this->getTangent();};
 
