@@ -459,9 +459,9 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
         
         // construct the theOutputStream
         if (eMode == DATA_STREAM && fileName != 0)  {
-			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite);
+			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0, closeOnWrite,0);
         } else if (eMode == DATA_STREAM_CSV && fileName != 0)  {
-			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1, closeOnWrite);
+			theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 1, closeOnWrite,0);
         } else if (eMode == XML_STREAM && fileName != 0)  {
             theOutputStream = new XmlFileStream(fileName);
         } else if (eMode == BINARY_STREAM && fileName != 0)  {

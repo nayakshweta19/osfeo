@@ -430,6 +430,8 @@
 #define ND_TAG_DruckerPragerSteelThermal    122
 #define ND_TAG_ElasticIsotropic3DThermal    123
 #define ND_TAG_ElasticIsotropic3DThermalSteel    124
+#define ND_TAG_RASTMRCPlateFiber  126
+#define ND_TAG_FASTMRCPlateFiber  127
 //end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang

@@ -36,7 +36,7 @@ class DataFileStream : public OPS_Stream
 {
  public:
   DataFileStream(int indent=2);
-  DataFileStream(const char *fileName, openMode mode = OVERWRITE, int indent=2, int doCSV =0, bool closeOnWrite = false);
+  DataFileStream(const char *fileName, openMode mode = OVERWRITE, int indent=2, int doCSV =0, bool closeOnWrite = false, int precision = 6, bool doScientific = false);
   ~DataFileStream();
 
   int setFile(const char *fileName, openMode mode = OVERWRITE);
@@ -57,9 +57,8 @@ class DataFileStream : public OPS_Stream
   int attr(const char *name, double value);
   int attr(const char *name, const char *value);
   int write(Vector &data);
-
-  int write(int data) {return 0;};
-  int write(double data) {return 0;};
+  int write(int data) { return 0; };
+  int write(double data) { return 0; };
 
   // regular stuff
   OPS_Stream& write(const char *s, int n);
@@ -115,6 +114,9 @@ class DataFileStream : public OPS_Stream
 
   int doCSV;
   bool closeOnWrite;
+
+  int thePrecision;
+  bool doScientific;
 };
 
 #endif

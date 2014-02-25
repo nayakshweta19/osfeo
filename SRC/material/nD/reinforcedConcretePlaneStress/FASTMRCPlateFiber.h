@@ -18,27 +18,23 @@
 **                                                                    **
 ** ****************************************************************** */
 
-#ifndef CSMMRCPlaneStress_h
-#define CSMMRCPlaneStress_h
+#ifndef FASTMRCPlateFiber_h
+#define FASTMRCPlateFiber_h
 
-// $Revision: 1.2 $
-// $Date: 2003/02/14 23:00:47 $
-// $Source: /usr/local/cvs/OpenSees/SRC/material/nD/CSMMRCPlaneStress.h,v $
-// File: CSMMRCPlaneStress.h
+// File: FASTMRCPlateFiber.h
+//
+// Written: JZhong
+// Created: 2004.5
 //
 // Written: Lining
 // Created: 2010.11
 //
 // Description: This file contains the class definition for 
-// CSMMRCPlaneStress material.
-
+// FASTMRCPlateFiber material.
+// Hsu's Model 2002
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"
 // by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
 #include <NDMaterial.h>
 #include <UniaxialMaterial.h>
@@ -48,10 +44,10 @@
 #include <ID.h>
 #include <Tensor.h>
 
-class CSMMRCPlaneStress : public NDMaterial
+class FASTMRCPlateFiber : public NDMaterial
 {
   public:
-    CSMMRCPlaneStress ( int      tag, 
+    FASTMRCPlateFiber ( int      tag, 
 				      double   RHO,
 				      UniaxialMaterial *s1,
 				      UniaxialMaterial *s2,
@@ -65,15 +61,15 @@ class CSMMRCPlaneStress : public NDMaterial
 				      double   FY,
 				      double   E,
 				      double   EPSC0);					  
-    CSMMRCPlaneStress();
-    ~CSMMRCPlaneStress();				  
+    FASTMRCPlateFiber();
+    ~FASTMRCPlateFiber();				  
     
     double getRho(void);
     
-    int setTrialStrain(const Vector &v);
-	int setTrialStrain(const Vector &v, const Vector &r);
-	int setTrialStrainIncr(const Vector &v);
-	int setTrialStrainIncr(const Vector &v, const Vector &r);
+    int setTrialStrain(const Vector &v); // really used one
+    int setTrialStrain(const Vector &v, const Vector &r);
+    int setTrialStrainIncr(const Vector &v);
+    int setTrialStrainIncr(const Vector &v, const Vector &r);
     const Matrix &getTangent(void);
     const Matrix &getInitialTangent(void) {return this->getTangent();};
 
@@ -94,84 +90,84 @@ class CSMMRCPlaneStress : public NDMaterial
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
-    const char *getType(void) const { return "PlaneStress"; };
+    const char *getType(void) const { return "PlateFiber"; };
     int getOrder(void) const { return 3;};
 
-	Response *setResponse (const char **argv, int argc, OPS_Stream &s);
-	int getResponse (int responseID, Information &matInformation);
+    Response *setResponse(const char **argv, int argc, OPS_Stream &s);
+    int getResponse(int responseID, Information &matInformation);
 
   protected:
     
   private:
 
     double   rho; 
-    UniaxialMaterial **theMaterial;// pointer of the materials 
-    Response **theResponses;       // pointer to material responses needed for Concrete
+    UniaxialMaterial **theMaterial; // pointer of the materials 
+    Response **theResponses; // pointer to material responses needed for Concrete
 
-	static double citaR;           // principal strain direction
-	static double lastCitaR;       // last converged principle strain direction
-	static bool   isSwapped;       // primary concrete direction has changed
-	static int    lastDirStatus;
+    static double citaR;           // principal strain direction
+    static double lastCitaR;       // last converged principle strain direction
+    static bool   isSwapped;       // primary concrete direction has changed
+    static int    lastDirStatus;
     static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
     static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
-    static double beta;            // citaOne - citaR
+    static double beta;           // citaOne - citaR
 
-	static double epslonOne;
-	static double epslonTwo;
-	static double halfGammaOneTwo;
-	
-	static double sigmaOneC;
-	static double sigmaTwoC;
+    static double epslonOne;
+    static double epslonTwo;
+    static double halfGammaOneTwo;
 
-	static Vector strain_vec;
-	static Vector stress_vec;
-	static Matrix tangent_matrix;
+    static double sigmaOneC;
+    static double sigmaTwoC;
 
-	double        angle1;    // angel of the first steel layer to x coordinate 
-	double        angle2;    // angel of the second steel layer to x coordinate
-	double        rou1;      // steel ratio of the first steel layer
-	double        rou2;      // steel ratio of the second steel layer
-	double        fpc;       // compressive strength of the concrete
-	double        fy;        // yield stress of the bare steel bar
-	double        E0;        // young's modulus of the steel
-	double        epsc0;     // compressive strain of the concrete
-	Vector        Tstrain;   // Trial strains
-	Vector        Tstress;   // Trial stresses
-	Vector        lastStress;  // Last committed stresses, added for x, k
+    static Vector strain_vec;
+    static Vector stress_vec;
+    static Matrix tangent_matrix;
 
-	double        citaStrain;   // principle strain direction
-	double        citaStress;   // principle stress direction
-	double        miu12;        // Hsu/Zhu ratio
-	double        miu21;        // Hsu/Zhu ratio
-	double        G12;          // Shear Modulus
+    double   angle1;    // angel of the first steel layer to x coordinate 
+    double   angle2;    // angel of the second steel layer to x coordinate
+    double   rou1;      // steel ratio of the first steel layer
+    double   rou2;      // steel ratio of the second steel layer
+    double   fpc;       // compressive strength of the concrete
+    double   fy;        // yield stress of the bare steel bar
+    double   E0;        // young's modulus of the steel
+    double   epsc0;     // compressive strain of the concrete
+    double   Tstrain[5];  // Trial strains
+    double   Tstress[5];  // Trial stresses
+    double   lastStress[5];  // Last committed stresses, added for x, k
+
+    double   citaStrain;      // principle strain direction
+    double   citaStress;     // principle stress direction
+    double   miu12;        // Hsu/Zhu ratio
+    double   miu21;        // Hsu/Zhu ratio
+    double   G12;          // Shear Modulus
+    
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
-    int    TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
+    int TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
     double TOneNowMaxComStrain;
     double TOneLastMaxComStrain;
     
-    int    TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
+    int TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
     double TTwoNowMaxComStrain;
     double TTwoLastMaxComStrain;
     
-    // Converged/committed values
-    int    COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
+    // Converged values
+    int COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
     double COneNowMaxComStrain;
     double COneLastMaxComStrain;
     
-    int    CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
+    int CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
     double CTwoNowMaxComStrain;
     double CTwoLastMaxComStrain;
     
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
 
-    int    determineTrialStress(void);
+    int determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
-	void   determineConcreteStatus(int);
-	//double CSMMRCPlaneStress::kupferEnvelop(double Tstrain, double sig_p, double eps_p);
+    void determineConcreteStatus(int);
 };
 
 #endif

@@ -1,5 +1,28 @@
+/* ****************************************************************** **
+**    OpenSees - Open System for Earthquake Engineering Simulation    **
+**          Pacific Earthquake Engineering Research Center            **
+**                                                                    **
+**                                                                    **
+** (C) Copyright 1999, The Regents of the University of California    **
+** All Rights Reserved.                                               **
+**                                                                    **
+** Commercial use of this program without express permission of the   **
+** University of California, Berkeley, is strictly prohibited.  See   **
+** file 'COPYRIGHT'  in main directory for information on usage and   **
+** redistribution,  and for a DISCLAIMER OF ALL WARRANTIES.           **
+**                                                                    **
+** Developed by:                                                      **
+**   Frank McKenna (fmckenna@ce.berkeley.edu)                         **
+**   Gregory L. Fenves (fenves@ce.berkeley.edu)                       **
+**   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
+**                                                                    **
+** ****************************************************************** */
+
 // Written: JZhong
 // Created: 2003.10
+//
+// Written: Lining
+// Created: 2010.11
 //
 // Description: This file contains the class definition for
 // RAReinforcedConcretePlateFiber
@@ -23,9 +46,9 @@
 #include "ConcreteL02.h"
 #include <Tensor.h>
 
-//Vector RAReinforcedConcretePlateFiber :: strain_vec(3);
-//Vector RAReinforcedConcretePlateFiber :: stress_vec(3);
-//Matrix RAReinforcedConcretePlateFiber :: tangent_matrix(3,3);
+//Vector ReinforcedConcretePlateFiber :: strain_vec(3);
+//Vector ReinforcedConcretePlateFiber :: stress_vec(3);
+//Matrix ReinforcedConcretePlateFiber :: tangent_matrix(3,3);
 
 #include <MaterialResponse.h>
 #include <DummyStream.h>
@@ -39,7 +62,7 @@ OPS_NewRAReinforcedConcretePlateFiberMaterial()
 {
   if (numRAReinforcedConcretePlateFiberMaterials == 0) {
     numRAReinforcedConcretePlateFiberMaterials++;
-    //opserr << "RAReinforcedConcretePlateFiber unaxial material - Written by J.Zhong, Thomas T.C. Hsu and Y.L. Mo - Copyright@2009\n";
+    //opserr << "ReinforcedConcretePlateFiber unaxial material - Written by J.Zhong, Thomas T.C. Hsu and Y.L. Mo - Copyright@2009\n";
   }
 
   // Pointer to a uniaxial material that will be returned
