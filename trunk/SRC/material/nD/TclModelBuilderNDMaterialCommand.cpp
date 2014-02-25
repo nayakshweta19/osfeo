@@ -109,6 +109,8 @@ extern  void *OPS_NewCSMMRCPlaneStressFiberMaterial(void);
 extern  void *OPS_NewRARCPlaneStressFiberMaterial(void);
 extern  void *OPS_NewConcreteMcftNonlinear7Material(void);
 extern  void *OPS_NewBoucWen3DMaterial(void);
+extern  void *OPS_NewRASTMRCPlateFiberMaterial(void);
+extern  void *OPS_NewFASTMRCPlateFiberMaterial(void);
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -374,7 +376,25 @@ TCL_Char **argv, TclModelBuilder *theTclBuilder)
 			return TCL_ERROR;
 	}
 
-	else if ((strcmp(argv[1], "NonlinearBS") == 0)) {
+    else if ((strcmp(argv[1], "RASTMRCPlateFiber") == 0)) {
+
+      void *theMat = OPS_NewRASTMRCPlateFiberMaterial();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1], "FASTMRCPlateFiber") == 0)) {
+
+      void *theMat = OPS_NewFASTMRCPlateFiberMaterial();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1], "NonlinearBS") == 0)) {
 
 		void *theMat = OPS_NewNonlinearBSMaterial();
 		if (theMat != 0)

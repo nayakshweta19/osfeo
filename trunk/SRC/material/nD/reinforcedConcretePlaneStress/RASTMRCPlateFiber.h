@@ -18,28 +18,23 @@
 **                                                                    **
 ** ****************************************************************** */
 
-#ifndef FAReinforcedConcretePlaneStress_h
-#define FAReinforcedConcretePlaneStress_h
+#ifndef RASTMRCPlateFiber_h
+#define RASTMRCPlateFiber_h
 
-// File: FAReinforcedConcretePlaneStress.h
+// File: RASTMRCPlateFiber.h
 //
 // Written: JZhong
-// Created: 2004.5
+// Created: 2003.10
 //
 // Written: Lining
 // Created: 2010.11
-// FASTM
-
+//
 // Description: This file contains the class definition for 
-// FAReinforcedConcretePlaneStress material.
+// RASTMRCPlateFiber material.
 // Hsu's Model 2002
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"
 // by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
 #include <NDMaterial.h>
 #include <UniaxialMaterial.h>
@@ -49,32 +44,32 @@
 #include <ID.h>
 #include <Tensor.h>
 
-class FAReinforcedConcretePlaneStress : public NDMaterial
+class RASTMRCPlateFiber : public NDMaterial
 {
   public:
-    FAReinforcedConcretePlaneStress ( int      tag, 
-				      double   RHO,
-				      UniaxialMaterial *s1,
-				      UniaxialMaterial *s2,
-				      UniaxialMaterial *c1,
-				      UniaxialMaterial *c2,
-				      double   ANGLE1,
-				      double   ANGLE2,
-				      double   ROU1,
-				      double   ROU2,
-				      double   FPC,
-				      double   FY,
-				      double   E,
-				      double   EPSC0);					  
-    FAReinforcedConcretePlaneStress();
-    ~FAReinforcedConcretePlaneStress();				  
+    RASTMRCPlateFiber (int      tag, 
+				  double   RHO,
+				  UniaxialMaterial *s1,
+				  UniaxialMaterial *s2,
+				  UniaxialMaterial *c1,
+				  UniaxialMaterial *c2,
+				  double   ANGLE1,
+				  double   ANGLE2,
+				  double   ROU1,
+				  double   ROU2,
+				  double   FPC,
+				  double   FY,
+				  double   E,
+				  double   EPSC0);					  
+    RASTMRCPlateFiber();
+    ~RASTMRCPlateFiber();				  
     
     double getRho(void);
     
     int setTrialStrain(const Vector &v); // really used one
-	int setTrialStrain(const Vector &v, const Vector &r);
-	int setTrialStrainIncr(const Vector &v);
-	int setTrialStrainIncr(const Vector &v, const Vector &r);
+    int setTrialStrain(const Vector &v, const Vector &r);
+    int setTrialStrainIncr(const Vector &v);
+    int setTrialStrainIncr(const Vector &v, const Vector &r);
     const Matrix &getTangent(void);
     const Matrix &getInitialTangent(void) {return this->getTangent();};
 
@@ -95,40 +90,39 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     int sendSelf(int commitTag, Channel &theChannel);
     int recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker);
 
-    const char *getType(void) const { return "PlaneStress"; };
+    const char *getType(void) const { return "PlateFiber"; };
     int getOrder(void) const { return 3;};
 
-	Response *setResponse(const char **argv, int argc, OPS_Stream &s);
-	int getResponse(int responseID, Information &matInformation);
+    Response *setResponse(const char **argv, int argc, OPS_Stream &s);
+    int getResponse(int responseID, Information &matInformation);
 
   protected:
     
   private:
-
     double   rho; 
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
 
-	static double citaR;           // principal strain direction
-	static double lastCitaR;       // last converged principle strain direction
-	static bool   isSwapped;       // primary concrete direction has changed
-	static int    lastDirStatus;
-	static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
-	static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+    static double citaR;           // principal strain direction
+    static double lastCitaR;       // last converged principle strain direction
+    static bool   isSwapped;       // primary concrete direction has changed
+    static int    lastDirStatus;
+    static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
+    static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
     static double beta;           // citaOne - citaR
 
-	static double epslonOne;
-	static double epslonTwo;
-	static double halfGammaOneTwo;
+    static double epslonOne;
+    static double epslonTwo;
+    static double halfGammaOneTwo;
 
-	static double sigmaOneC;
-	static double sigmaTwoC;
+    static double sigmaOneC;
+    static double sigmaTwoC;
 
-	static Vector strain_vec;
-	static Vector stress_vec;
-	static Matrix tangent_matrix;
-	
-	double   angle1;    // angel of the first steel layer to x coordinate 
+    static Vector strain_vec;
+    static Vector stress_vec;
+    static Matrix tangent_matrix;
+
+    double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
     double   rou1;      // steel ratio of the first steel layer
     double   rou2;      // steel ratio of the second steel layer
@@ -136,16 +130,16 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
-	double   Tstrain[3];   // Trial strains
-    double   Tstress[3];   // Trial stresses
-    double   lastStress[3];  // Last committed stresses, added for x, k
-    
+    double   Tstrain[5];  // Trial strains
+    double   Tstress[5];  // Trial stresses
+    double   lastStress[5];  // Last committed stresses, added for x, k
+
     double   citaStrain;      // principle strain direction
     double   citaStress;     // principle stress direction
     double   miu12;        // Hsu/Zhu ratio
     double   miu21;        // Hsu/Zhu ratio
-    double   G12;          // Shear Modulus
-
+    double   G12;
+    
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
@@ -168,11 +162,14 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
-
+    
+    double tt1;
+    double tt2;
+    double xxx;
+    double kkk;
+    
     int determineTrialStress(void);
-    double getPrincipalStressAngle(double inputAngle);
-    double getAngleError(double inputCita);
-	void   determineConcreteStatus(int);
+    void determineConcreteStatus(int);
 };
 
 #endif

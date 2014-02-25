@@ -113,6 +113,7 @@ class ReinforcedConcretePlaneStress : public NDMaterial
 	static int    lastDirStatus;
 	static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
 	static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+    static double beta;            // citaOne - citaR
 
 	static double epslonOne;
 	static double epslonTwo;
@@ -171,7 +172,7 @@ class ReinforcedConcretePlaneStress : public NDMaterial
     double kkk;
     
     int determineTrialStress(void);
-	void   determineConcreteStatus(int);
+	void determineConcreteStatus(int);
 };
 
 #endif
