@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5543 $
-// $Date: 2013-09-20 15:24:50 +0800 (星期五, 20 九月 2013) $
+// $Revision: 5697 $
+// $Date: 2014-03-11 02:11:08 +0800 (星期二, 11 三月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/SingleFPSimple3d.h $
 
 #ifndef SingleFPSimple3d_h
@@ -52,7 +52,8 @@ public:
         const Vector y = 0, const Vector x = 0,
         double shearDistI = 0.0, int addRayleigh = 0,
         int inclVertDisp = 0, double mass = 0.0,
-        int maxIter = 25, double tol = 1E-12);
+        int maxIter = 25, double tol = 1E-12,
+        double kFactUplift = 1E-6);
     SingleFPSimple3d();
     
     // destructor
@@ -120,6 +121,7 @@ private:
     double mass;        // mass of element
     int maxIter;        // maximum number of iterations
     double tol;         // tolerance for convergence criterion
+    double kFactUplift; // stiffness factor when uplift is encountered
     double L;           // element length
     bool onP0;          // flag to indicate if the element is on P0
     

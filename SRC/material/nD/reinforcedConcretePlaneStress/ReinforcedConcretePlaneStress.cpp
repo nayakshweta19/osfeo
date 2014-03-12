@@ -1501,17 +1501,17 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
 }
 
 void
-ReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
+ReinforcedConcretePlaneStress::determineConcreteStatus(int nowStatus)
 {
   bool temp = 0;
-  if (tempStatus != lastDirStatus) {
+  if (nowStatus < lastDirStatus || nowStatus > lastDirStatus) {
     switch (lastDirStatus) {
     case 0:
       temp = isSwapped;
       break;
 
     case 1:
-      if (tempStatus == 3 || tempStatus == 4) {
+      if (nowStatus == 3 || nowStatus == 4) {
         if (isSwapped)
           temp = 0;
         else
@@ -1523,7 +1523,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
       break;
 
     case 2:
-      if (tempStatus == 3) {
+      if (nowStatus == 3) {
         if (isSwapped)
           temp = 0;
         else
@@ -1535,7 +1535,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
       break;
 
     case 3:
-      if (tempStatus == 1 || tempStatus == 2 || tempStatus == 4) {
+      if (nowStatus == 1 || nowStatus == 2 || nowStatus == 4) {
         if (isSwapped)
           temp = 0;
         else
@@ -1547,7 +1547,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
       break;
 
     case 4:
-      if (tempStatus == 1 || tempStatus == 3 || tempStatus == 5) {
+      if (nowStatus == 1 || nowStatus == 3 || nowStatus == 5) {
         if (isSwapped)
           temp = 0;
         else
@@ -1559,7 +1559,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int tempStatus)
       break;
 
     case 5:
-      if (tempStatus == 4) {
+      if (nowStatus == 4) {
         if (isSwapped)
           temp = 0;
         else

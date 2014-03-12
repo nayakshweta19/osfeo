@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5646 $
-// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $Revision: 5681 $
+// $Date: 2014-02-26 09:49:45 +0800 (星期三, 26 二月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericCopy.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)

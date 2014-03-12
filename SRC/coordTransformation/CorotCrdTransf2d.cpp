@@ -334,6 +334,10 @@ void CorotCrdTransf2d::transfLocalDisplsToBasic(const Vector &ul)
     ub(0) = Ln - L;
     ub(1) = ul(2) - alpha;
     ub(2) = ul(5) - alpha;
+
+    //ub(1) = atan2(cosAlpha*sin(ul(2))-sinAlpha*cos(ul(2)),cosAlpha*cos(ul(2))+sinAlpha*sin(ul(2)));
+    //ub(2) = atan2(cosAlpha*sin(ul(5))-sinAlpha*cos(ul(5)),cosAlpha*cos(ul(5))+sinAlpha*sin(ul(5)));
+
 }
 
 
@@ -995,7 +999,8 @@ CorotCrdTransf2d::getCopy2d(void)
 int 
 CorotCrdTransf2d::sendSelf(int cTag, Channel &theChannel)
 {
-    Vector data(13);
+    static Vector data(14);
+    data(13) = this->getTag();
     data(0) = ubcommit(0);
     data(1) = ubcommit(1);
     data(2) = ubcommit(2);
@@ -1024,7 +1029,7 @@ CorotCrdTransf2d::sendSelf(int cTag, Channel &theChannel)
         data(12) = 0.0;
     }
     
-    if (theChannel.sendVector(this->getTag(), cTag, data) < 0) {
+    if (theChannel.sendVector(this->getDbTag(), cTag, data) < 0) {
         opserr << " CorotCrdTransf2d::sendSelf() - data could not be sent\n" ;
         return -1;
     }
@@ -1035,16 +1040,17 @@ CorotCrdTransf2d::sendSelf(int cTag, Channel &theChannel)
 int 
 CorotCrdTransf2d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-    Vector data(13);
-    if (theChannel.recvVector(this->getTag(), cTag, data) < 0) {
+    static Vector data(14);
+    if (theChannel.recvVector(this->getDbTag(), cTag, data) < 0) {
         opserr << " CorotCrdTransf2d::recvSelf() - data could not be received\n" ;
         return -1;
     }
     
+    this->setTag((int)data(13));
     ubcommit(0) = data(0);
     ubcommit(1) = data(1);
     ubcommit(2) = data(2);
-    nodeIOffset(0) =data(4);
+    nodeIOffset(0) =data(3);
     nodeIOffset(1) =data(4);
     nodeJOffset(0) =data(5);
     nodeJOffset(1) =data(6);
@@ -1052,29 +1058,29 @@ CorotCrdTransf2d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theB
     int flag, i, j;
     flag = 0;
     for (i=7; i<=9; i++)
-        if (data(i) != 0.0)
-            flag = 1;
-        if (flag == 1) {
-            if (nodeIInitialDisp == 0)
-                nodeIInitialDisp = new double[3];
-            for (i=7, j=0; i<=9; i++, j++)
-                nodeIInitialDisp[j] = data(i);
-        }
-        
-        flag = 0;
-        for (i=10; i<=13; i++)
-            if (data(i) != 0.0)
-                flag = 1;
-            if (flag == 1) {
-                if (nodeJInitialDisp == 0)
-                    nodeJInitialDisp = new double [3];
-                for (i=10, j=0; i<=13; i++, j++)
-                    nodeJInitialDisp[j] = data(i);
-            }
-            
-            ub = ubcommit;
-            initialDispChecked = true;
-            return 0;
+      if (data(i) != 0.0)
+	flag = 1;
+    if (flag == 1) {
+      if (nodeIInitialDisp == 0)
+	nodeIInitialDisp = new double[3];
+      for (i=7, j=0; i<=9; i++, j++)
+	nodeIInitialDisp[j] = data(i);
+    }
+    
+    flag = 0;
+    for (i=10; i<=12; i++)
+      if (data(i) != 0.0)
+	flag = 1;
+    if (flag == 1) {
+      if (nodeJInitialDisp == 0)
+	nodeJInitialDisp = new double[3];
+      for (i=10, j=0; i<=12; i++, j++)
+	nodeJInitialDisp[j] = data(i);
+    }
+    
+    ub = ubcommit;
+    initialDispChecked = true;
+    return 0;
 }
 
 

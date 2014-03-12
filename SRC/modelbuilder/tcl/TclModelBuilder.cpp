@@ -2507,7 +2507,7 @@ TclCommand_addHomogeneousBC(ClientData clientData, Tcl_Interp *interp, int argc,
   }
 
   char buffer[80];
-  strcpy("", buffer);
+  //strcpy("", buffer);
   // get the fixity condition and add the constraint if fixed
   for (int i=0; i<ndf; i++) {
     int theFixity;
