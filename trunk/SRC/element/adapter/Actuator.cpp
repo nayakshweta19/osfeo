@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5646 $
-// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $Revision: 5681 $
+// $Date: 2014-02-26 09:49:45 +0800 (星期三, 26 二月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/adapter/Actuator.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -564,7 +564,7 @@ const Vector& Actuator::getResistingForceIncInertia()
 int Actuator::sendSelf(int commitTag, Channel &sChannel)
 {
     // send element parameters
-    static Vector data(7);
+    static Vector data(11);
     data(0) = this->getTag();
     data(1) = numDIM;
     data(2) = numDOF;
@@ -572,6 +572,10 @@ int Actuator::sendSelf(int commitTag, Channel &sChannel)
     data(4) = ipPort;
     data(5) = addRayleigh;
     data(6) = rho;
+    data(7) = alphaM;
+    data(8) = betaK;
+    data(9) = betaK0;
+    data(10) = betaKc;
     sChannel.sendVector(0, commitTag, data);
     
     // send the two end nodes
@@ -585,15 +589,19 @@ int Actuator::recvSelf(int commitTag, Channel &rChannel,
     FEM_ObjectBroker &theBroker)
 {
     // receive element parameters
-    static Vector data(7);
+    static Vector data(11);
     rChannel.recvVector(0, commitTag, data);
     this->setTag((int)data(0));
     numDIM = (int)data(1);
     numDOF = (int)data(2);
-    EA     = data(3);
+    EA = data(3);
     ipPort = (int)data(4);
     addRayleigh = (int)data(5);
-    rho    = data(6);
+    rho = data(6);
+    alphaM = data(7);
+    betaK = data(8);
+    betaK0 = data(9);
+    betaKc = data(10);
     
     // receive the two end nodes
     rChannel.recvID(0, commitTag, connectedExternalNodes);

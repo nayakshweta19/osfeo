@@ -1502,18 +1502,19 @@ setLoadConst(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
 {
   theDomain.setLoadConstant();
   if (argc == 3) {
-      if( strcmp(argv[1],"-time") == 0) {
-	  double newTime;
-	  if (Tcl_GetDouble(interp, argv[2], &newTime) != TCL_OK) {
-	      opserr << "WARNING readingvalue - loadConst -time value \n";
-	      return TCL_ERROR;
-	  } else {
-	      theDomain.setCurrentTime(newTime);
-	      theDomain.setCommittedTime(newTime);
-	  }
-      }    	  
+    if (strcmp(argv[1], "-time") == 0) {
+      double newTime;
+      if (Tcl_GetDouble(interp, argv[2], &newTime) != TCL_OK) {
+        opserr << "WARNING readingvalue - loadConst -time value \n";
+        return TCL_ERROR;
+      }
+      else {
+        theDomain.setCurrentTime(newTime);
+        theDomain.setCommittedTime(newTime);
+      }
+    }
   }
-	  
+
   return TCL_OK;
 }
 
@@ -1540,9 +1541,19 @@ int
 getTime(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
   double time = theDomain.getCurrentTime();
+
+  // get the display format
+  char format[10];
+  if (argc == 1) {
+    strcpy(format, "%f");
+  }
+  else if (argc == 2) {
+    strcpy(format, argv[1]);
+  }
+
   // now we copy the value to the tcl string that is returned
 
-  sprintf(interp->result,"%f",time);
+  sprintf(interp->result, format, time);
   return TCL_OK;
 }
 

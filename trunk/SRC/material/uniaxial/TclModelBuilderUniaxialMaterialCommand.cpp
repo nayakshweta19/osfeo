@@ -1991,37 +1991,37 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
         double Fc, D, t, Fy, Es;
                                                                                                                              
         if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
-            opserr << "WARNING invalid uniaxialMaterial CCFT_stl tag" << endln;
+            opserr << "WARNING invalid uniaxialMaterial CCFT_conc tag" << endln;
             return TCL_ERROR;
         }
                                                                                                                              
         if (Tcl_GetDouble(interp, argv[3], &Fc) != TCL_OK) {
             opserr << "WARNING invalid fc (concrete compressive strength)\n";
-            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            opserr << "uniaxialMaterial CCFT_conc: " << tag << endln;
             return TCL_ERROR;
         }
                                                                                                                              
         if (Tcl_GetDouble(interp, argv[4], &D) != TCL_OK) {
             opserr << "WARNING invalid D (tube outer diameter)\n";
-            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            opserr << "uniaxialMaterial CCFT_conc: " << tag << endln;
             return TCL_ERROR;
         }
          
         if (Tcl_GetDouble(interp, argv[5], &t) != TCL_OK) {
             opserr << "WARNING invalid t (tube thickenss)\n";
-            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            opserr << "uniaxialMaterial CCFT_conc: " << tag << endln;
             return TCL_ERROR;
         }
                                                                                                                              
         if (Tcl_GetDouble(interp, argv[6], &Fy) != TCL_OK) {
             opserr << "WARNING invalid Fy (steel yield strength)\n";
-            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            opserr << "uniaxialMaterial CCFT_conc: " << tag << endln;
             return TCL_ERROR;
         }
                                                                                                                              
         if (Tcl_GetDouble(interp, argv[7], &Es) != TCL_OK) {
             opserr << "WARNING invalid Es (steel elastic modulus)\n";
-            opserr << "uniaxialMaterial CCFT_stl: " << tag << endln;
+            opserr << "uniaxialMaterial CCFT_conc: " << tag << endln;
             return TCL_ERROR;
         }
                                                                                                                              

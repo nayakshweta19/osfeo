@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5646 $
-// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $Revision: 5697 $
+// $Date: 2014-03-11 02:11:08 +0800 (星期二, 11 三月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/frictionBearing/SingleFPSimple2d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -55,11 +55,12 @@ Vector SingleFPSimple2d::theVector(6);
 SingleFPSimple2d::SingleFPSimple2d(int tag, int Nd1, int Nd2,
     FrictionModel &thefrnmdl, double reff, double kinit,
     UniaxialMaterial **materials, const Vector _y, const Vector _x,
-    double sdI, int addRay, int vert, double m, int maxiter, double _tol)
+    double sdI, int addRay, int vert, double m, int maxiter, double _tol,
+    double kfactuplift)
     : Element(tag, ELE_TAG_SingleFPSimple2d),
     connectedExternalNodes(2), theFrnMdl(0), Reff(reff), kInit(kinit),
     x(_x), y(_y), shearDistI(sdI), addRayleigh(addRay), inclVertDisp(vert),
-    mass(m), maxIter(maxiter), tol(_tol),
+    mass(m), maxIter(maxiter), tol(_tol), kFactUplift(kfactuplift),
     L(0.0), onP0(true), ub(3), ubPlastic(0.0), qb(3), kb(3,3), ul(6),
     Tgl(6,6), Tlb(3,6), ubPlasticC(0.0), kbInit(3,3), theLoad(6)
 {
@@ -123,7 +124,7 @@ SingleFPSimple2d::SingleFPSimple2d()
     : Element(0, ELE_TAG_SingleFPSimple2d),
     connectedExternalNodes(2), theFrnMdl(0), Reff(0.0), kInit(0.0),
     x(0), y(0), shearDistI(0.0), addRayleigh(0), inclVertDisp(0),
-    mass(0.0), maxIter(25), tol(1E-12),
+    mass(0.0), maxIter(25), tol(1E-12), kFactUplift(1E-6),
     L(0.0), onP0(false), ub(3), ubPlastic(0.0), qb(3), kb(3,3), ul(6),
     Tgl(6,6), Tlb(3,6), ubPlasticC(0.0), kbInit(3,3), theLoad(6)
 {
@@ -314,12 +315,12 @@ int SingleFPSimple2d::update()
     }
     
     // transform response from the global to the local system
-    ul = Tgl*ug;
-    uldot = Tgl*ugdot;
+    ul.addMatrixVector(0.0, Tgl, ug, 1.0);
+    uldot.addMatrixVector(0.0, Tgl, ugdot, 1.0);
     
     // transform response from the local to the basic system
-    ub = Tlb*ul;
-    ubdot = Tlb*uldot;
+    ub.addMatrixVector(0.0, Tlb, ul, 1.0);
+    ubdot.addMatrixVector(0.0, Tlb, uldot, 1.0);
     
     // get absolute velocity
     double ubdotAbs = sqrt(pow(ubdot(1)/Reff*ub(1),2) + pow(ubdot(1),2));
@@ -327,10 +328,10 @@ int SingleFPSimple2d::update()
     // 1) get axial force and stiffness in basic x-direction
     double ub0Old = theMaterials[0]->getStrain();
     if (inclVertDisp == 0)  {
-        theMaterials[0]->setTrialStrain(ub(0),ubdot(0));
+        theMaterials[0]->setTrialStrain(ub(0), ubdot(0));
     } else  {
         double ubVert = Reff - sqrt(pow(Reff,2) - pow(ub(1),2));
-        theMaterials[0]->setTrialStrain(ub(0)-ubVert,ubdot(0));
+        theMaterials[0]->setTrialStrain(ub(0)-ubVert, ubdot(0));
     }
     qb(0) = theMaterials[0]->getStress();
     kb(0,0) = theMaterials[0]->getTangent();
@@ -339,10 +340,14 @@ int SingleFPSimple2d::update()
     if (qb(0) >= 0.0)  {
         kb = kbInit;
         if (qb(0) > 0.0)  {
-            theMaterials[0]->setTrialStrain(ub0Old,0.0);
-            kb = DBL_EPSILON*kbInit;
+            theMaterials[0]->setTrialStrain(ub0Old, 0.0);
+            //kb = DBL_EPSILON*kbInit;
+            kb = kFactUplift*kbInit;
             // update plastic displacement
             ubPlastic = ub(1);
+            //opserr << "WARNING: SingleFPSimple2d::update() - element: "
+            //    << this->getTag() << " - uplift encountered, scaling "
+            //    << "stiffness matrix by: " << kFactUplift << endln;
         }
         qb.Zero();
         return 0;
@@ -403,7 +408,7 @@ int SingleFPSimple2d::update()
     }
     
     // 3) get moment and stiffness in basic z-direction
-    theMaterials[1]->setTrialStrain(ub(2),ubdot(2));
+    theMaterials[1]->setTrialStrain(ub(2), ubdot(2));
     qb(2) = theMaterials[1]->getStress();
     kb(2,2) = theMaterials[1]->getTangent();
     
@@ -421,9 +426,9 @@ const Matrix& SingleFPSimple2d::getTangentStiff(void)
     kl.addMatrixTripleProduct(0.0, Tlb, kb, 1.0);
     
     // add geometric stiffness to local stiffness
-    double kGeo = qb(0)*(1.0 - shearDistI)*L;
     kl(2,1) -= qb(0);
     kl(2,4) += qb(0);
+    double kGeo = qb(0)*(1.0 - shearDistI)*L;
     kl(2,5) -= kGeo;
     kl(5,5) += kGeo;
     
@@ -551,7 +556,7 @@ const Vector& SingleFPSimple2d::getResistingForce()
     
     // determine resisting forces in local system
     static Vector ql(6);
-    ql = Tlb^qb;
+    ql.addMatrixTransposeVector(0.0, Tlb, qb, 1.0);
     
     // add P-Delta moments to local forces
     double MpDelta1 = qb(0)*(ul(4)-ul(1));
@@ -561,7 +566,7 @@ const Vector& SingleFPSimple2d::getResistingForce()
     ql(5) += MpDelta2;
     
     // determine resisting forces in global system
-    theVector = Tgl^ql;
+    theVector.addMatrixTransposeVector(0.0, Tgl, ql, 1.0);
     
     // subtract external load
     theVector.addVector(1.0, theLoad, -1.0);
@@ -578,7 +583,7 @@ const Vector& SingleFPSimple2d::getResistingForceIncInertia()
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {
         if (alphaM != 0.0 || betaK != 0.0 || betaK0 != 0.0 || betaKc != 0.0)
-            theVector += this->getRayleighDampingForces();
+            theVector.addVector(1.0, this->getRayleighDampingForces(), 1.0);
     }
     
     // add inertia forces from element mass
@@ -600,7 +605,7 @@ const Vector& SingleFPSimple2d::getResistingForceIncInertia()
 int SingleFPSimple2d::sendSelf(int commitTag, Channel &sChannel)
 {
     // send element parameters
-    static Vector data(10);
+    static Vector data(15);
     data(0) = this->getTag();
     data(1) = Reff;
     data(2) = kInit;
@@ -609,8 +614,13 @@ int SingleFPSimple2d::sendSelf(int commitTag, Channel &sChannel)
     data(5) = mass;
     data(6) = maxIter;
     data(7) = tol;
-    data(8) = x.Size();
-    data(9) = y.Size();
+    data(8) = kFactUplift;
+    data(9) = x.Size();
+    data(10) = y.Size();
+    data(11) = alphaM;
+    data(12) = betaK;
+    data(13) = betaK0;
+    data(14) = betaKc;
     sChannel.sendVector(0, commitTag, data);
     
     // send the two end nodes
@@ -653,7 +663,7 @@ int SingleFPSimple2d::recvSelf(int commitTag, Channel &rChannel,
             delete theMaterials[i];
     
     // receive element parameters
-    static Vector data(10);
+    static Vector data(15);
     rChannel.recvVector(0, commitTag, data);
     this->setTag((int)data(0));
     Reff = data(1);
@@ -663,6 +673,11 @@ int SingleFPSimple2d::recvSelf(int commitTag, Channel &rChannel,
     mass = data(5);
     maxIter = (int)data(6);
     tol = data(7);
+    kFactUplift = data(8);
+    alphaM = data(11);
+    betaK = data(12);
+    betaK0 = data(13);
+    betaKc = data(14);
     
     // receive the two end nodes
     rChannel.recvID(0, commitTag, connectedExternalNodes);
@@ -696,11 +711,11 @@ int SingleFPSimple2d::recvSelf(int commitTag, Channel &rChannel,
     }
     
     // receive remaining data
-    if ((int)data(8) == 3)  {
+    if ((int)data(9) == 3)  {
         x.resize(3);
         rChannel.recvVector(0, commitTag, x);
     }
-    if ((int)data(9) == 3)  {
+    if ((int)data(10) == 3)  {
         y.resize(3);
         rChannel.recvVector(0, commitTag, y);
     }
@@ -902,7 +917,7 @@ int SingleFPSimple2d::getResponse(int responseID, Information &eleInfo)
     case 2:  // local forces
         theVector.Zero();
         // determine resisting forces in local system
-        theVector = Tlb^qb;
+        theVector.addMatrixTransposeVector(0.0, Tlb, qb, 1.0);
         // add P-Delta moments
         MpDelta1 = qb(0)*(ul(4)-ul(1));
         theVector(2) += MpDelta1;

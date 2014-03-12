@@ -116,8 +116,10 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
 	static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
 	static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
     static double beta;           // citaOne - citaR
-
-	static double epslonOne;
+    static int    afterFirstIter; // find the equibium principle strees angle, the first iteration
+    static int    gt90;           // angle great than 90 degree
+    
+    static double epslonOne;
 	static double epslonTwo;
 	static double halfGammaOneTwo;
 
