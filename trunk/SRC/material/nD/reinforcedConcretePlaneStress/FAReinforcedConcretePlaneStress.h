@@ -129,7 +129,10 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
 	static Vector strain_vec;
 	static Vector stress_vec;
 	static Matrix tangent_matrix;
-	
+
+    static double DC[3][3];
+    static double DC_bar[3][3];
+
 	double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
     double   rou1;      // steel ratio of the first steel layer

@@ -12,18 +12,18 @@
 ** and redistribution, and for a DISCLAIMER OF ALL WARRANTIES.        **
 **                                                                    **
 ** Developed by:                                                      **
-**   Andreas Schellenberg (andreas.schellenberg@gmx.net)              **
+**   Andreas Schellenberg (andreas.schellenberg@gmail.com)            **
 **   Yoshikazu Takahashi (yos@catfish.dpri.kyoto-u.ac.jp)             **
 **   Gregory L. Fenves (fenves@berkeley.edu)                          **
 **   Stephen A. Mahin (mahin@berkeley.edu)                            **
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/TclExpElementCommands.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -48,6 +48,9 @@ extern int addEEGeneric(ClientData clientData, Tcl_Interp *interp,
     int argc, TCL_Char **argv, Domain*, int argStart); 
 
 extern int addEEInvertedVBrace(ClientData clientData, Tcl_Interp *interp,
+    int argc, TCL_Char **argv, Domain*, int argStart); 
+
+extern int addEEBearing(ClientData clientData, Tcl_Interp *interp,
     int argc, TCL_Char **argv, Domain*, int argStart); 
 
 
@@ -103,6 +106,13 @@ int TclExpElementCommand(ClientData clientData, Tcl_Interp *interp, int argc,
     else if (strcmp(argv[1],"invertedVBrace") == 0) {
         int eleArgStart = 1;
         int result = addEEInvertedVBrace(clientData, interp, argc, argv,
+            theTclDomain, eleArgStart);
+        return result;
+    }
+    // ----------------------------------------------------------------------------	
+    else if (strcmp(argv[1],"bearing") == 0) {
+        int eleArgStart = 1;
+        int result = addEEBearing(clientData, interp, argc, argv,
             theTclDomain, eleArgStart);
         return result;
     }

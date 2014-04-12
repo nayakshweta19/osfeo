@@ -766,7 +766,7 @@ extern "C" int ELMT05(double *d, double *ul, double *xl, int *ix,
 #define elmt01_		ELMT01
 #define elmt02_		ELMT02
 #define elmt03_		ELMT03
-#define elmt04_		ELMT03
+#define elmt04_		ELMT04
 #define elmt05_		ELMT05
 
 #else

@@ -116,6 +116,7 @@
 #include <Element.h>
 ////////////////////////////////////////////
 
+extern void TCL_OPS_setModelBuilder(TclModelBuilder *theNewBuilder);
 
 #include <packages.h>
 
@@ -711,6 +712,8 @@ TclModelBuilder::TclModelBuilder(Domain &theDomain, Tcl_Interp *interp, int NDM,
   theTclDomain = &theDomain;
   theTclLoadPattern = 0;
   theTclMultiSupportPattern = 0;  
+
+  TCL_OPS_setModelBuilder(this);
 
   nodeLoadTag = 0;
   eleArgStart = 0;

@@ -1501,7 +1501,7 @@ CSMMRCPlaneStress::determineConcreteStatus(int nowStatus)
       break;
 
     case 1:
-      if (nowStatus == 3 || nowStatus == 4) {
+      if (nowStatus == 3 || nowStatus == 5) { //|| nowStatus == 4
         if (isSwapped)
           temp = 0;
         else
@@ -1537,7 +1537,7 @@ CSMMRCPlaneStress::determineConcreteStatus(int nowStatus)
       break;
 
     case 4:
-      if (nowStatus == 1 || nowStatus == 3 || nowStatus == 5) {
+      if (nowStatus == 3 || nowStatus == 5) { //nowStatus == 1 || 
         if (isSwapped)
           temp = 0;
         else
@@ -1549,7 +1549,7 @@ CSMMRCPlaneStress::determineConcreteStatus(int nowStatus)
       break;
 
     case 5:
-      if (nowStatus == 4) {
+      if (nowStatus == 1 || nowStatus == 4) {
         if (isSwapped)
           temp = 0;
         else

@@ -41,6 +41,8 @@
 
 #include <fElmt01.h>
 #include <fElmt02.h>
+#include <fElmt03.h>
+
 #include <TclModelBuilder.h>
 
 extern void printCommand(int argc, TCL_Char **argv);
@@ -193,5 +195,88 @@ TclModelBuilder_addFeapFrame2D(ClientData clientData, Tcl_Interp *interp, int ar
    return TCL_OK;
 }
   
- 
+int
+TclModelBuilder_addFeapShell(ClientData clientData, Tcl_Interp *interp, int argc,
+TCL_Char **argv, Domain *theTclDomain, TclModelBuilder *theTclBuilder,
+int eleArgStart)
+{
+  // ensure the destructor has not been called - 
+  if (theTclBuilder == 0) {
+    opserr << "WARNING builder has been destroyed\n";
+    return TCL_ERROR;
+  }
 
+  int ndm = theTclBuilder->getNDM();
+  int ndf = theTclBuilder->getNDF();
+
+  if (ndf != 3) {
+    opserr << "WARNING - fShell eleTag? iNode? jNode? kNode? lNode? secTag? needs ndf=3\n";
+    return TCL_ERROR;
+  }
+
+  // check the number of arguments is correct
+  if ((argc - eleArgStart) < 5) {
+    opserr << "WARNING insufficient arguments\n";
+    printCommand(argc, argv);
+    opserr << "Want: element fShell eleTag? iNode? jNode? kNode? lNode? secTag?\n";
+
+    return TCL_ERROR;
+  }
+
+  // get the id and end nodes 
+  int eleId, iNode, jNode, kNode, lNode, secTag;
+
+  if (Tcl_GetInt(interp, argv[1 + eleArgStart], &eleId) != TCL_OK) {
+    opserr << "WARNING invalid fShell eleTag" << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[2 + eleArgStart], &iNode) != TCL_OK) {
+    opserr << "WARNING invalid iNode\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[3 + eleArgStart], &jNode) != TCL_OK) {
+    opserr << "WARNING invalid jNode\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[4 + eleArgStart], &kNode) != TCL_OK) {
+    opserr << "WARNING invalid kNode\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[5 + eleArgStart], &lNode) != TCL_OK) {
+    opserr << "WARNING invalid lNode\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+  //if (Tcl_GetDouble(interp, argv[5 + eleArgStart], &E) != TCL_OK) {
+  //  opserr << "WARNING invalid E\n";
+  //  opserr << "fShell element: " << eleId << endln;
+  //  return TCL_ERROR;
+  //}
+  if (Tcl_GetInt(interp, argv[6 + eleArgStart], &secTag) != TCL_OK) {
+    opserr << "WARNING invalid secTag\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+
+  SectionForceDeformation *theSection = theTclBuilder->getSection(secTag);
+
+  // now create the truss and add it to the Domain
+  fElmt03 *theEle = new fElmt03(eleId, iNode, jNode, kNode, lNode, secTag, 0.0, 1);
+
+  if (theEle == 0) {
+    opserr << "WARNING ran out of memory creating element\n";
+    opserr << "fShell element: " << eleId << endln;
+    return TCL_ERROR;
+  }
+
+  if (theTclDomain->addElement(theEle) == false) {
+    opserr << "WARNING could not add element to the domain\n";
+    opserr << "fShell element: " << eleId << endln;
+    delete theEle;
+    return TCL_ERROR;
+  }
+  return TCL_OK;
+}

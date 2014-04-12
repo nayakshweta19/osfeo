@@ -684,7 +684,8 @@
 #define ELE_TAG_ShellMITC4GeoNonlinearThermal   203
 #define ELE_TAG_ShellMITC4Thermal   204
 #define ELE_TAG_fElmt01   205
-
+#define ELE_TAG_fElmt03   206 // neallee
+#define ELE_TAG_fElmt04   207 // neallee
 
 #define FRN_TAG_Coulomb            1
 #define FRN_TAG_VelDependent       2

@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 350 $
-// $Date: 2013-10-02 13:57:08 +0800 (星期三, 02 十月 2013) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECdSpace.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -189,12 +189,12 @@ int ECdSpace::setup()
         for (int i=0; i<(*sizeCtrl)(OF_Resp_Disp); i++)
             ctrlDisp[i] = 0.0;
     }
-    if ((*sizeCtrl)(OF_Resp_Disp) != 0)  {
+    if ((*sizeCtrl)(OF_Resp_Vel) != 0)  {
         ctrlVel = new double [(*sizeCtrl)(OF_Resp_Vel)];
         for (int i=0; i<(*sizeCtrl)(OF_Resp_Vel); i++)
             ctrlVel[i] = 0.0;
     }
-    if ((*sizeCtrl)(OF_Resp_Disp) != 0)  {
+    if ((*sizeCtrl)(OF_Resp_Accel) != 0)  {
         ctrlAccel = new double [(*sizeCtrl)(OF_Resp_Accel)];
         for (int i=0; i<(*sizeCtrl)(OF_Resp_Accel); i++)
             ctrlAccel[i] = 0.0;

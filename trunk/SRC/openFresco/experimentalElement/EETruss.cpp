@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 357 $
-// $Date: 2013-12-06 07:25:25 +0800 (星期五, 06 十二月 2013) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EETruss.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -546,7 +546,7 @@ int EETruss::setInitialStiff(const Matrix& kbinit)
 
 const Matrix& EETruss::getDamp()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix->Zero();
     
     // call base class to setup Rayleigh damping
@@ -560,7 +560,7 @@ const Matrix& EETruss::getDamp()
 
 const Matrix& EETruss::getMass()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix->Zero();
     
     // form mass matrix
@@ -632,7 +632,7 @@ int EETruss::addInertiaLoadToUnbalance(const Vector &accel)
 
 const Vector& EETruss::getResistingForce()
 {
-    // zero the residual
+    // zero the global residual
     theVector->Zero();
     
     // get daq resisting forces
@@ -683,7 +683,7 @@ const Vector& EETruss::getResistingForce()
 const Vector& EETruss::getResistingForceIncInertia()
 {
     // this already includes damping forces from specimen
-    this->getResistingForce();
+    *theVector = this->getResistingForce();
     
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {

@@ -11,10 +11,10 @@ function [f,MX] = getFFT(data,dt,figTitle)
 % written by Tony Yang (yangtony2004@gmail.com) 08/2003
 % modified by Andreas Schellenberg (andreas.schellenberg@gmx.net) 04/2005
 
-Fs = 1/dt;                       % sampling frequency
-Fn = Fs/2;                       % Nyquist frequency
-npts = size(data,1);             % number of points
-t = dt*(0:npts-1)';    % time vector
+Fs = 1/dt;            	% sampling frequency
+Fn = Fs/2;             	% Nyquist frequency
+npts = size(data,1);  	% number of points
+t = dt*(0:npts-1)';     % time vector
 
 % next highest power of 2 greater than or equal to length(x):
 NFFT = 2.^(ceil(log(npts)/log(2)));
@@ -43,14 +43,14 @@ f = 2*Fn/NFFT*(0:NumUniquePts-1)';
 % plot the results
 if (nargin==3)
     subplot(2,1,1)
-    plot(t,data,'-');
+    plot(t,data,'-','LineWidth',1.0);
     hold('on');
     grid('on');
     xlabel('Time [sec]');
     ylabel('P(time)');
     title([figTitle,': Time domain']);
     subplot(2,1,2)
-    plot(f,MX,'-');
+    plot(f,MX,'-','LineWidth',1.0);
     hold('on');
     grid('on');
     xlabel('Frequency [Hz]');

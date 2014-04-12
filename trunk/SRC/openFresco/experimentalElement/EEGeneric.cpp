@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 357 $
-// $Date: 2013-12-06 07:25:25 +0800 (星期五, 06 十二月 2013) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEGeneric.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 10/06
 // Revision: A
 //
@@ -256,13 +256,13 @@ EEGeneric::EEGeneric(int tag, ID nodes, ID *dof,
     id = 0;
     rData = new double [dataSize];
     recvData = new Vector(rData, dataSize);
-    dbDaq = new Vector(&rData[id], 1);
+    dbDaq = new Vector(&rData[id], numBasicDOF);
     id += numBasicDOF;
-    vbDaq = new Vector(&rData[id], 1);
+    vbDaq = new Vector(&rData[id], numBasicDOF);
     id += numBasicDOF;
-    abDaq = new Vector(&rData[id], 1);
+    abDaq = new Vector(&rData[id], numBasicDOF);
     id += numBasicDOF;
-    qDaq = new Vector(&rData[id], 1);
+    qDaq = new Vector(&rData[id], numBasicDOF);
     id += numBasicDOF;
     tDaq = new Vector(&rData[id], 1);
     recvData->Zero();
@@ -498,7 +498,7 @@ int EEGeneric::setInitialStiff(const Matrix &kbinit)
 
 const Matrix& EEGeneric::getDamp()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix.Zero();
     
     // call base class to setup Rayleigh damping
@@ -512,7 +512,7 @@ const Matrix& EEGeneric::getDamp()
 
 const Matrix& EEGeneric::getMass()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix.Zero();
     
     // assemble mass matrix
@@ -567,7 +567,7 @@ int EEGeneric::addInertiaLoadToUnbalance(const Vector &accel)
 
 const Vector& EEGeneric::getResistingForce()
 {
-    // zero the residual
+    // zero the global residual
     theVector.Zero();
     
     // get daq resisting forces
