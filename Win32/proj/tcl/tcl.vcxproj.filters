@@ -32,6 +32,12 @@
     <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\Block3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\TclNDMaterialTester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\modelbuilder\tcl\Tcl2DMaterialTester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\tcl\TclFeViewer.h">
@@ -53,6 +59,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\modelbuilder\tcl\Block3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\modelbuilder\tcl\TclNDMaterialTester.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\modelbuilder\tcl\Tcl2DMaterialTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

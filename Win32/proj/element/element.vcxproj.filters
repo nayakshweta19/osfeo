@@ -938,6 +938,18 @@
     <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingUFRPCommand.cpp">
       <Filter>elastomericBearing</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS2d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS3d.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclRJWatsonEQSCommand.cpp">
+      <Filter>fictionBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\feap\fElmt03.cpp">
+      <Filter>feap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1560,6 +1572,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingUFRP2d.h">
       <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS2d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS3d.h">
+      <Filter>fictionBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\feap\fElmt03.h">
+      <Filter>feap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

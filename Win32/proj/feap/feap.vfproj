@@ -42,13 +42,14 @@
 				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
 	<Files>
 		<Filter Name="element" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath="..\..\..\SRC\element\feap\dot.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\dummyFeap.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elas1d.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elmt01.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elmt02.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elmt03.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elmt04.f"/>
-		<File RelativePath="..\..\..\SRC\element\feap\elmt06.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\elmt05.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\elmt11.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\fbody2d.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\fillCommon.f"/>
@@ -61,6 +62,7 @@
 		<File RelativePath="..\..\..\SRC\element\feap\plas1d.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\sbodyf.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\shp1d.f"/>
+		<File RelativePath="..\..\..\SRC\element\feap\vecp.f"/>
 		<File RelativePath="..\..\..\SRC\element\feap\visc1d.f"/></Filter>
 		<Filter Name="material" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		<File RelativePath="..\..\..\SRC\material\nD\feap\feapCommon.f"/>

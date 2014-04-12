@@ -1505,6 +1505,15 @@
     <ClCompile Include="..\..\..\SRC\material\uniaxial\SteelECThermal.cpp">
       <Filter>uniaxial</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FASTMRCPlateFiber.cpp">
+      <Filter>nD\reinforcedConcretePlaneStress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RASTMRCPlateFiber.cpp">
+      <Filter>nD\reinforcedConcretePlaneStress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\CircSectionCell.cpp">
+      <Filter>section\repres\cell</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\BackboneMaterial.h">
@@ -2821,6 +2830,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\material\uniaxial\Steel01PThermal.h">
       <Filter>uniaxial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FASTMRCPlateFiber.h">
+      <Filter>nD\reinforcedConcretePlaneStress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RASTMRCPlateFiber.h">
+      <Filter>nD\reinforcedConcretePlaneStress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\CircSectionCell.h">
+      <Filter>section\repres\cell</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
