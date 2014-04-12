@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 334 $
-// $Date: 2012-07-19 08:02:58 +0800 (星期四, 19 七月 2012) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimDomain.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 07/07
 // Revision: A
 //
@@ -266,7 +266,7 @@ int ECSimDomain::setup()
     
     // define load pattern
     theSeries  = new LinearSeries(1,1.0);
-    thePattern = new LoadPattern(1);
+    thePattern = new LoadPattern(1,1.0);
     thePattern->setTimeSeries(theSeries);
     theDomain->addLoadPattern(thePattern);
     

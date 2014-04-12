@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 357 $
-// $Date: 2013-12-06 07:25:25 +0800 (星期五, 06 十二月 2013) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEBeamColumn3d.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -239,13 +239,13 @@ EEBeamColumn3d::EEBeamColumn3d(int tag, int Nd1, int Nd2,
     id = 0;
     rData = new double [dataSize];
     recvData = new Vector(rData, dataSize);
-    dbDaq = new Vector(&rData[id], 1);
+    dbDaq = new Vector(&rData[id], 6);
     id += 6;
-    vbDaq = new Vector(&rData[id], 1);
+    vbDaq = new Vector(&rData[id], 6);
     id += 6;
-    abDaq = new Vector(&rData[id], 1);
+    abDaq = new Vector(&rData[id], 6);
     id += 6;
-    qDaq = new Vector(&rData[id], 1);
+    qDaq = new Vector(&rData[id], 6);
     id += 6;
     tDaq = new Vector(&rData[id], 1);
     recvData->Zero();
@@ -623,7 +623,7 @@ const Matrix& EEBeamColumn3d::getTangentStiff()
 
 const Matrix& EEBeamColumn3d::getDamp()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix.Zero();
     
     // call base class to setup Rayleigh damping
@@ -637,7 +637,7 @@ const Matrix& EEBeamColumn3d::getDamp()
 
 const Matrix& EEBeamColumn3d::getMass()
 {
-    // zero the matrix
+    // zero the global matrix
     theMatrix.Zero();
     
     // form mass matrix
@@ -784,7 +784,7 @@ const Vector& EEBeamColumn3d::getResistingForce()
     // make sure the coordinate transformation is updated
     theCoordTransf->update();
     
-    // zero the residual
+    // zero the global residual
     theVector.Zero();
     
     // get daq resisting forces

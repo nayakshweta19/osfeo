@@ -921,8 +921,8 @@ RASTMRCPlateFiber::determineTrialStress(void)
   TST_One[2][1] = cos(citaT-citaR)*sin(citaT-citaR);
   TST_One[2][2] = pow(cos(citaT-citaR),2)-pow(sin(citaT-citaR),2);
   
-  //calculate tempStrain: epslon1,epslon2, 0.5*gamma12
   int i, j, k;
+  //calculate tempStrain: epslon1,epslon2, 0.5*gamma12
   for (i = 0; i < 3; i++)  {
     tempStrain[i] = 0.0;
     for (k = 0; k < 3; k++)
@@ -1216,28 +1216,28 @@ RASTMRCPlateFiber::determineTrialStress(void)
   Information &theInfoC03 = theResponses[3]->getInformation();
   
   // set beta to 1.0 for simplification, previously
-  if (fabs(epslonOne - epslonTwo) < SMALL_STRAIN && fabs(halfGammaOneTwo) > SMALL_STRAIN) {
-    beta = 0.25*PI;
-  }
-  else {// epslonOne != epslonTwo
-    double temp_beta = 0.5*atan2(fabs(2.e6*halfGammaOneTwo), fabs(1.e6*epslonOne - 1.e6*epslonTwo));
-    if (fabs(halfGammaOneTwo) < SMALL_STRAIN)
-      beta = 0;
-    else
-      beta = temp_beta;
-  }
+  //if (fabs(epslonOne - epslonTwo) < SMALL_STRAIN && fabs(halfGammaOneTwo) > SMALL_STRAIN) {
+  //  beta = 0.25*PI;
+  //}
+  //else {// epslonOne != epslonTwo
+  //  double temp_beta = 0.5*atan2(fabs(2.e6*halfGammaOneTwo), fabs(1.e6*epslonOne - 1.e6*epslonTwo));
+  //  if (fabs(halfGammaOneTwo) < SMALL_STRAIN)
+  //    beta = 0;
+  //  else
+  //    beta = temp_beta;
+  //}
 
   Vector theData(5);
 
   theData(0) = xx;
   theData(1) = kk;
 
-  if (fabs(beta) >= 24. / 180.*PI)
-    theData(3) = 23.9 / PI*180.;
-  else
-    theData(3) = fabs(beta) / PI*180.;
-  // for plate fiber
-  theData(3) = 1.;
+  //if (fabs(beta) >= 24. / 180.*PI)
+  //  theData(3) = 23.9 / PI*180.;
+  //else
+  //  theData(3) = fabs(beta) / PI*180.;
+  // for plate fiber and plane stress mat, RA-STM alpha_1=alpha_r
+  theData(3) = 0.0;
 
   if (isSwapped) {
     theData(2) = DTwo;
@@ -1296,16 +1296,27 @@ RASTMRCPlateFiber::determineTrialStress(void)
   theResponses[5]->getResponse();
   Information &theInfoC2 = theResponses[5]->getInformation();
 
-  DC_bar[0][0] = theMaterial[2]->getTangent();
-  DC_bar[0][1] = theInfoC1.theDouble;
-  DC_bar[0][2] = 0.0;
+  if (isSwapped) {
+    DC_bar[0][0] = theMaterial[3]->getTangent();
+    DC_bar[0][1] = theInfoC2.theDouble;
+    DC_bar[0][2] = 0.0;
 
-  DC_bar[1][0] = theInfoC2.theDouble;
-  DC_bar[1][1] = theMaterial[3]->getTangent();
-  DC_bar[1][2] = 0.0;
-  
+    DC_bar[1][0] = theInfoC1.theDouble;
+    DC_bar[1][1] = theMaterial[2]->getTangent();
+    DC_bar[1][2] = 0.0;
+  }
+  else {
+    DC_bar[0][0] = theMaterial[2]->getTangent();
+    DC_bar[0][1] = theInfoC1.theDouble;
+    DC_bar[0][2] = 0.0;
+
+    DC_bar[1][0] = theInfoC2.theDouble;
+    DC_bar[1][1] = theMaterial[3]->getTangent();
+    DC_bar[1][2] = 0.0;
+  }
+
   DC_bar[2][0] = 0.0;
-  DC_bar[2][1] = 0.0;	
+  DC_bar[2][1] = 0.0;
   DC_bar[2][2] = GOneTwoC;
   
   //before [DC]=[v]*[TOne], now update [DC]=[Dc_bar]*[V]*[TOne]
@@ -1455,8 +1466,8 @@ RASTMRCPlateFiber::determineTrialStress(void)
   //tangent_matrix(2, 2) = 0.5*D[2][2];
 
   //added by neallee@tju.edu.cn for membrane out of plane stress
-  tangent_matrix(3, 3) = D[2][2]; //0.5*
-  tangent_matrix(4, 4) = D[2][2];
+  tangent_matrix(3, 3) = 0.5*D[2][2]; //
+  tangent_matrix(4, 4) = 0.5*D[2][2];
   //end by neallee@tju.edu.cn
 
   //**************** get Tstress and stress_vec ****************
@@ -1475,25 +1486,23 @@ RASTMRCPlateFiber::determineTrialStress(void)
   stress_vec(0) = Tstress[0];
   stress_vec(1) = Tstress[1];
   stress_vec(2) = Tstress[2];
-  //added by neallee@tju.edu.cn
   stress_vec(3) = Tstress[3] = tangent_matrix(3, 3)*Tstrain[3];
   stress_vec(4) = Tstress[4] = tangent_matrix(4, 4)*Tstrain[4];
-  //end by neallee@tju.edu.cn
 
   // get principal stress direction
-
   double citaP;
   double temp_citaP;
-
-  if (fabs(Tstress[0] - Tstress[1]) < SMALL_STRESS)        
-    citaP = 0.25*PI;
+  if (fabs(Tstress[0] - Tstress[1]) < SMALL_STRESS && fabs(Tstress[2]) > SMALL_STRESS) {
+                                                                         citaP = 0.25*PI;
+  }
   else { // Tstrain(0) != Tstrain(1)
     temp_citaP = 0.5 * atan(fabs(2.0e6*Tstress[2] / (1.0e6*Tstress[0] - 1.0e6*Tstress[1])));
-         if (fabs(Tstress[2]) < SMALL_STRESS)               citaP = 0;
-    else if ((Tstress[0] > Tstress[1]) && (Tstress[2] > 0))	citaP = temp_citaP;
-    else if ((Tstress[0] > Tstress[1]) && (Tstress[2] < 0)) citaP = PI - temp_citaP;
-    else if ((Tstress[0] < Tstress[1]) && (Tstress[2] > 0)) citaP = 0.5*PI - temp_citaP;
-    else if ((Tstress[0] < Tstress[1]) && (Tstress[2] < 0)) citaP = 0.5*PI + temp_citaP;
+    if (fabs(Tstress[2]) < SMALL_STRESS && Tstress[0] > Tstress[1])      citaP = 0;
+    else if (fabs(Tstress[2]) < SMALL_STRESS && Tstress[0] < Tstress[1]) citaP = 0.5*PI;
+    else if ((Tstress[0] > Tstress[1]) && (Tstress[2] > 0))	             citaP = temp_citaP;
+    else if ((Tstress[0] > Tstress[1]) && (Tstress[2] < 0))              citaP = PI - temp_citaP;
+    else if ((Tstress[0] < Tstress[1]) && (Tstress[2] > 0))              citaP = 0.5*PI - temp_citaP;
+    else if ((Tstress[0] < Tstress[1]) && (Tstress[2] < 0))              citaP = 0.5*PI + temp_citaP;
     else {
       opserr << "RASTMRCPlateFiber::getPrincipalStressAngle: Failure to calculate principal stress direction\n";
       opserr << " Tstress(0) = " << Tstress[0] << endln;
