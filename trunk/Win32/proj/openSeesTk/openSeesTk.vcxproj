@@ -74,6 +74,10 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\MPICH2\include;C:\Program Files (x86)\Intel\Composer XE 2013\compiler\include\ia32;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\MPICH2\lib;C:\Program Files (x86)\Intel\Composer XE 2013\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\..\bin64\</OutDir>
+    <IntDir>..\..\obj\openSeesTk\debug\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
       <TypeLibraryName>.\..\..\bin/openSeesTk.tlb</TypeLibraryName>

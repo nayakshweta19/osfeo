@@ -67,7 +67,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\bin\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\obj\openFrescoDll\release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">OpenFresco</TargetName>
@@ -81,12 +81,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <OutDir>.\..\..\lib64\$(Configuration)\</OutDir>
-    <IntDir>.\..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>.\..\..\bin64\</OutDir>
+    <IntDir>.\..\..\obj\openFrescoDll\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\..\lib64\$(Configuration)\</OutDir>
-    <IntDir>.\..\..\obj\$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir>.\..\..\bin\</OutDir>
+    <IntDir>.\..\..\obj\openFrescoDll\release\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\Program Files %28x86%29\Intel\Composer XE 2013 SP1\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
@@ -95,8 +95,8 @@
     <ClCompile>
       <AdditionalOptions>/D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl;c:\tcl\include;c:\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_TCL85;_WIN32;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\SRC\domain\subdomain;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\src\material\uniaxial\limitstate\limitcurve;..\..\..\src\element\forceBeamColumn;..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\element\compositePackages;..\..\..\other\csparse;..\..\..\src\actor\machineBroker;..\..\..\src\optimization;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\recorder\response;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\analysis\algorithm\ritzAlgo;..\..\..\src\material\uniaxial\backbone;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\material\uniaxial\py;..\..\..\src\reliability\analysis\telm;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\optimization;..\..\..\src\reliability\tcl;..\..\..\src\coordTransformation;..\..\..\src\material\section\repres\section;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\material\nD;..\..\..\src\material\uniaxial;..\..\..\src\handler;..\..\..\src\tcl;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\matrix;..\..\..\src\recorder;..\..\..\src\graph\numberer;..\..\..\src\material\section;..\..\..\src\graph\graph;..\..\..\src\element\beam2d;..\..\..\src\element\beam3d;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\domain\pattern;..\..\..\src\analysis\analysis;..\..\..\src\analysis\integrator;..\..\..\src\analysis\numberer;..\..\..\src\analysis\handler;..\..\..\src\renderer;..\..\..\src\material;..\..\..\src\analysis\algorithm;..\..\..\src\convergenceTest;..\..\..\src\analysis\model\simple;..\..\..\src\domain\load;..\..\..\src\analysis\model;..\..\..\src\element\truss;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\actor\actor;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\domain\node;..\..\..\src\domain\domain;..\..\..\src\tagged\storage;..\..\..\src;..\..\..\src\tagged;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\other\SuperLU_4.1\SRC;..\..\..\src\database;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\rootFinding;..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl;c:\tcl\include;c:\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_TCL85;_WIN32;WIN32;_DEBUG;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -111,9 +111,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;scgtapi.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)OpenFresco.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\win32\lib;..\..\..\win32\lib\debug;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet\lib32;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT\lib32;..\..\..\SRC\openFresco\experimentalControl\xPCtarget\lib32;..\..\..\win32\lib;..\..\..\win32\lib\debug;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,8 +132,8 @@
     <ClCompile>
       <AdditionalOptions>/D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl64;c:\tcl64\include;c:\OpenSSL64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_TCL85;DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\SRC\domain\subdomain;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\src\material\uniaxial\limitstate\limitcurve;..\..\..\src\element\forceBeamColumn;..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\element\compositePackages;..\..\..\other\csparse;..\..\..\src\actor\machineBroker;..\..\..\src\optimization;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\recorder\response;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\analysis\algorithm\ritzAlgo;..\..\..\src\material\uniaxial\backbone;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\material\uniaxial\py;..\..\..\src\reliability\analysis\telm;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\optimization;..\..\..\src\reliability\tcl;..\..\..\src\coordTransformation;..\..\..\src\material\section\repres\section;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\material\nD;..\..\..\src\material\uniaxial;..\..\..\src\handler;..\..\..\src\tcl;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\matrix;..\..\..\src\recorder;..\..\..\src\graph\numberer;..\..\..\src\material\section;..\..\..\src\graph\graph;..\..\..\src\element\beam2d;..\..\..\src\element\beam3d;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\domain\pattern;..\..\..\src\analysis\analysis;..\..\..\src\analysis\integrator;..\..\..\src\analysis\numberer;..\..\..\src\analysis\handler;..\..\..\src\renderer;..\..\..\src\material;..\..\..\src\analysis\algorithm;..\..\..\src\convergenceTest;..\..\..\src\analysis\model\simple;..\..\..\src\domain\load;..\..\..\src\analysis\model;..\..\..\src\element\truss;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\actor\actor;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\domain\node;..\..\..\src\domain\domain;..\..\..\src\tagged\storage;..\..\..\src;..\..\..\src\tagged;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\other\SuperLU_4.1\SRC;..\..\..\src\database;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\rootFinding;..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl64;c:\tcl64\include;c:\OpenSSL64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_TCL85;DEBUG;_DEBUG;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -142,18 +142,18 @@
       <CompileAs>Default</CompileAs>
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AssemblerListingLocation>.\..\..\obj\openFrescoDll\debug/</AssemblerListingLocation>
-      <ObjectFileName>.\..\..\obj\openFrescoDll\debug/</ObjectFileName>
-      <ProgramDataBaseFileName>.\..\..\obj\openFrescoDll\debug/</ProgramDataBaseFileName>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <ResourceOutputFileName>$(IntDir)$(ProjectName).res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
       <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;ws2_32.lib;MtsCsiCom.lib;scgtapi.lib;CLib32.lib;pnpscrd.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)OpenFresco.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\win32\lib64;..\..\..\win32\lib64\debug;c:\Tcl64\lib;c:\OpenSSL64\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet\lib64;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT\lib64;..\..\..\SRC\openFresco\experimentalControl\xPCtarget\lib64;..\..\..\win32\lib64;..\..\..\win32\lib64\debug;c:\Tcl64\lib;c:\OpenSSL64\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -174,16 +174,15 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl;c:\tcl\include;c:\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_TCL85;_WIN32;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\SRC\domain\subdomain;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\src\material\uniaxial\limitstate\limitcurve;..\..\..\src\element\forceBeamColumn;..\..\..\src\material\uniaxial\compositePackages;..\..\..\src\element\compositePackages;..\..\..\other\csparse;..\..\..\src\actor\machineBroker;..\..\..\src\optimization;..\..\..\src\element\frictionBearing;..\..\..\src\element\frictionBearing\frictionModel;..\..\..\src\recorder\response;..\..\..\src\system_of_eqn\ritzSOE;..\..\..\src\analysis\algorithm\equiSolnAlgo\accelerator;..\..\..\src\analysis\algorithm\ritzAlgo;..\..\..\src\material\uniaxial\backbone;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\api;..\..\..\src\damage;..\..\..\src\material\uniaxial\py;..\..\..\src\reliability\analysis\telm;..\..\..\src\reliability\fesensitivity;..\..\..\src\reliability\optimization;..\..\..\src\reliability\tcl;..\..\..\src\coordTransformation;..\..\..\src\material\section\repres\section;..\..\..\src\analysis\algorithm\equiSolnAlgo;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\analysis\algorithm\eigenAlgo;..\..\..\src\material\nD;..\..\..\src\material\uniaxial;..\..\..\src\handler;..\..\..\src\tcl;..\..\..\src\actor\objectBroker;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\element\nonlinearBeamColumn\tcl\repres\section;..\..\..\src\matrix;..\..\..\src\recorder;..\..\..\src\graph\numberer;..\..\..\src\material\section;..\..\..\src\graph\graph;..\..\..\src\element\beam2d;..\..\..\src\element\beam3d;..\..\..\src\system_of_eqn;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\domain\pattern;..\..\..\src\analysis\analysis;..\..\..\src\analysis\integrator;..\..\..\src\analysis\numberer;..\..\..\src\analysis\handler;..\..\..\src\renderer;..\..\..\src\material;..\..\..\src\analysis\algorithm;..\..\..\src\convergenceTest;..\..\..\src\analysis\model\simple;..\..\..\src\domain\load;..\..\..\src\analysis\model;..\..\..\src\element\truss;..\..\..\src\actor\channel;..\..\..\src\utility;..\..\..\src\actor\actor;..\..\..\src\modelbuilder;..\..\..\src\modelbuilder\tcl;..\..\..\src\domain\constraints;..\..\..\src\domain\component;..\..\..\src\element;..\..\..\src\domain\node;..\..\..\src\domain\domain;..\..\..\src\tagged\storage;..\..\..\src;..\..\..\src\tagged;..\..\..\src\reliability\domain;..\..\..\src\reliability\domain\components;..\..\..\src\reliability\domain\distributions;..\..\..\src\reliability\analysis;..\..\..\src\reliability\analysis\analysis;..\..\..\src\reliability\analysis\curvature;..\..\..\src\reliability\analysis\designPoint;..\..\..\src\reliability\analysis\direction;..\..\..\src\reliability\analysis\gFunction;..\..\..\src\reliability\analysis\misc;..\..\..\src\reliability\analysis\randomNumber;..\..\..\src\reliability\analysis\sensitivity;..\..\..\src\reliability\analysis\stepSize;..\..\..\src\reliability\analysis\transformation;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\other\SuperLU_4.1\SRC;..\..\..\src\database;..\..\..\src\element\updatedLagrangianBeamColumn;..\..\..\src\material\yieldSurface\yieldSurfaceBC;..\..\..\src\material\yieldSurface\evolution;..\..\..\src\material\yieldSurface\plasticHardeningMaterial;..\..\..\src\reliability\domain\modulatingFunction;..\..\..\src\reliability\domain\spectrum;..\..\..\src\reliability\domain\filter;..\..\..\src\reliability\analysis\hessianApproximation;..\..\..\src\reliability\analysis\convergenceCheck;..\..\..\src\reliability\analysis\meritFunction;..\..\..\src\reliability\analysis\rootFinding;..\..\..\src\openFresco;..\..\..\src\openFresco\experimentalControl;..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\src\openFresco\experimentalControl\xPCtarget;..\..\..\src\openFresco\experimentalElement;..\..\..\src\openFresco\experimentalRecorder;..\..\..\src\openFresco\experimentalRecorder\response;..\..\..\src\openFresco\experimentalSetup;..\..\..\src\openFresco\experimentalSignalFilter;..\..\..\src\openFresco\experimentalSite;..\..\..\src\openFresco\openseesCore;..\..\..\src\openFresco\openseesExtra;..\..\..\src\openFresco\utility;c:\tcl;c:\tcl\include;c:\OpenSSL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_TCL85;_WIN32;WIN32;NDEBUG;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
     </ClCompile>
     <ResourceCompile>
@@ -191,9 +190,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions> /FORCE:MULTIPLE /FIXED:NO %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libeay32MT.lib;ssleay32MT.lib;ws2_32.lib;MtsCsiCom.lib;CLib32.lib;pnpscr.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MT.lib;ssleay32MT.lib;ws2_32.lib;MtsCsiCom.lib;scgtapi.lib;CLib32.lib;pnpscr.lib;tcl85.lib;tk85.lib;lapack.lib;blas.lib;ifconsol.lib;libifcoremt.lib;libm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)OpenFresco.dll</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet;..\..\..\win32\lib;..\..\..\win32\lib\release;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\src\openFresco\experimentalControl\dSpace;..\..\..\src\openFresco\experimentalControl\MTSCsi;..\..\..\src\openFresco\experimentalControl\NIEseries;..\..\..\src\openFresco\experimentalControl\SCRAMNet\lib32;..\..\..\SRC\openFresco\experimentalControl\SCRAMNetGT\lib32;..\..\..\SRC\openFresco\experimentalControl\xPCtarget\lib32;..\..\..\win32\lib;..\..\..\win32\lib\release;c:\Tcl\lib;c:\OpenSSL\lib\VC;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmtd.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -259,6 +258,21 @@
     <ClCompile Include="..\..\..\SRC\actor\channel\TCP_SocketSSL.cpp" />
     <ClCompile Include="..\..\..\SRC\actor\channel\UDP_Socket.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\analysis\Analysis.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\analysis\StaticAnalysis.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\model\AnalysisModel.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\constraints\MP_Constraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\constraints\Pressure_Constraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\constraints\SP_Constraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\domain\Domain.cpp" />
+    <ClCompile Include="..\..\..\SRC\domain\subdomain\Subdomain.cpp" />
+    <ClCompile Include="..\..\..\SRC\handler\BinaryFileStream.cpp" />
+    <ClCompile Include="..\..\..\SRC\handler\DataFileStream.cpp" />
+    <ClCompile Include="..\..\..\SRC\handler\StandardStream.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\BeamFiberMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\BeamFiberMaterial2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\NDMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\PlaneStressMaterial.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\PlateFiberMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\nDarray\straint.cpp" />
     <ClCompile Include="..\..\..\SRC\nDarray\stresst.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.cpp" />
@@ -266,6 +280,7 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNetGT.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.cpp" />
@@ -277,6 +292,8 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalControl\xPCtarget\xpcinitfree.c" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBearing2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEBearing3d.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.cpp" />
@@ -284,6 +301,7 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\EETwoNodeLink.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\ExperimentalElement.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEBeamColumnCommand.cpp" />
+    <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEBearingCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEGenericCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEEInvertedVBraceCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalElement\TclEETrussCommand.cpp" />
@@ -319,21 +337,15 @@
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\experimentalSite\TclExpSiteCommand.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\basics.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Channel.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ConstraintHandler.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DataFileStream.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DOF_Group.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DOF_GrpIter.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Domain.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\DomainComponent.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Element.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\ElementalLoad.cpp" />
@@ -362,9 +374,7 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Matrix.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Message.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MovableObject.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\nDarray.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Node.cpp" />
@@ -372,9 +382,6 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\OPS_Stream.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Parameter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlaneStrainMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlaneStressMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\PlateFiberMaterial.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Pressure_Constraint.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Recorder.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Renderer.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Response.cpp" />
@@ -387,11 +394,8 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomPC_Iter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SingleDomSP_Iter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SolutionAlgorithm.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SP_Constraint.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StandardStream.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StaticIntegrator.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\StringContainer.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\Subdomain.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\SubdomainNodIter.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\TaggedObject.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesCore\TransientIntegrator.cpp" />
@@ -423,7 +427,6 @@
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\RegulaFalsiLineSearch.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\Shadow.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\Socket.cpp" />
-    <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeries.cpp" />
     <ClCompile Include="..\..\..\SRC\openFresco\openseesExtra\XmlFileStream.cpp" />
@@ -440,6 +443,9 @@
     <ClInclude Include="..\..\..\SRC\actor\channel\TCP_SocketSSL.h" />
     <ClInclude Include="..\..\..\SRC\actor\channel\UDP_Socket.h" />
     <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h" />
+    <ClInclude Include="..\..\..\SRC\handler\BinaryFileStream.h" />
+    <ClInclude Include="..\..\..\SRC\handler\DataFileStream.h" />
+    <ClInclude Include="..\..\..\SRC\handler\StandardStream.h" />
     <ClInclude Include="..\..\..\SRC\nDarray\straint.h" />
     <ClInclude Include="..\..\..\SRC\nDarray\stresst.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECdSpace.h" />
@@ -447,6 +453,7 @@
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECLabVIEW.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECMtsCsi.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNet.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSCRAMNetGT.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimDomain.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimFEAdapter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ECSimSimulink.h" />
@@ -456,6 +463,8 @@
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalControl\ExperimentalControl.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn2d.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBeamColumn3d.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBearing2d.h" />
+    <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEBearing3d.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEGeneric.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EEInvertedVBrace2d.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalElement\EETruss.h" />
@@ -489,11 +498,8 @@
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\LocalExpSite.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\experimentalSite\ShadowExpSite.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\FrescoGlobals.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\AnalysisModel.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjects.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ArrayOfTaggedObjectsIter.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BeamFiberMaterial2d.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BinaryFileStream.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJmatrix.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\BJtensor.h" />
@@ -545,7 +551,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\MP_ConstraintIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\nDarray.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NDMaterial.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoad.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\NodalLoadIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Node.h" />
@@ -555,9 +560,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Parameter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\ParameterIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlaneStrainMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlaneStressMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\PlateFiberMaterial.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Pressure_Constraint.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Pressure_ConstraintIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Recorder.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Renderer.h" />
@@ -576,7 +578,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StandardStream.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StaticIntegrator.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\StringContainer.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\Subdomain.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\SubdomainNodIter.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TaggedObject.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesCore\TaggedObjectIter.h" />
@@ -617,7 +618,6 @@
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Shadow.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Socket.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\SocketAddress.h" />
-    <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\StaticAnalysis.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TCP_Stream.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\Timer.h" />
     <ClInclude Include="..\..\..\SRC\openFresco\openseesExtra\TimeSeries.h" />

@@ -237,6 +237,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\CSMMRCPlateFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\DSFMRCPlaneStress.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FAReinforcedConcretePlateFiber.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FASTMRCPlateFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ManderConcreteC01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ManderConcreteM01.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\MCFTConcrete01.cpp" />
@@ -250,6 +251,7 @@
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\NonlinearBS.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RARCPlaneStressFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RASTMRCPlateFiber.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\SimplifiedJ2.cpp" />
     <ClCompile Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay.cpp" />
@@ -282,6 +284,7 @@
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\Circ2dLayer.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\Straight2dLayer.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\2dLayer\TwoDLayer.cpp" />
+    <ClCompile Include="..\..\..\SRC\material\section\repres\cell\CircSectionCell.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\cell\coreCell.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\cell\icCell.cpp" />
     <ClCompile Include="..\..\..\SRC\material\section\repres\cell\iCell.cpp" />
@@ -700,6 +703,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\CSMMRCPlateFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\DSFMRCPlaneStress.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FAReinforcedConcretePlateFiber.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\FASTMRCPlateFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ManderConcreteC01.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\ManderConcreteM01.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\MCFTConcrete01.h" />
@@ -713,6 +717,7 @@
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\NonlinearBS.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RARCPlaneStressFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RAReinforcedConcretePlateFiber.h" />
+    <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\RASTMRCPlateFiber.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\reinforcedConcretePlaneStress\SteelZ02.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\SimplifiedJ2.h" />
     <ClInclude Include="..\..\..\SRC\material\nD\UWmaterials\BoundingCamClay.h" />
@@ -745,6 +750,7 @@
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\Circ2dLayer.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\Straight2dLayer.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\2dLayer\TwoDLayer.h" />
+    <ClInclude Include="..\..\..\SRC\material\section\repres\cell\CircSectionCell.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\cell\coreCell.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\cell\icCell.h" />
     <ClInclude Include="..\..\..\SRC\material\section\repres\cell\iCell.h" />

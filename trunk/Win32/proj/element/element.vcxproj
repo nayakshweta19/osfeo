@@ -241,6 +241,7 @@
     <ClCompile Include="..\..\..\SRC\element\Element.cpp" />
     <ClCompile Include="..\..\..\SRC\element\ElementalLoad.cpp" />
     <ClCompile Include="..\..\..\SRC\element\feap\fElmt01.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\feap\fElmt03.cpp" />
     <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\CompositeSimpsonBeamIntegration.cpp" />
     <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumnCBDI2d.cpp" />
     <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.cpp" />
@@ -250,6 +251,9 @@
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelDepMultiLinear.cpp" />
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelPressureDep.cpp" />
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\MultiFP2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS2d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS3d.cpp" />
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclRJWatsonEQSCommand.cpp" />
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing.cpp" />
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing2d.cpp" />
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TPB1D.cpp" />
@@ -500,6 +504,7 @@
     <ClInclude Include="..\..\..\SRC\element\Element.h" />
     <ClInclude Include="..\..\..\SRC\element\ElementalLoad.h" />
     <ClInclude Include="..\..\..\SRC\element\feap\fElmt01.h" />
+    <ClInclude Include="..\..\..\SRC\element\feap\fElmt03.h" />
     <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\CompositeSimpsonBeamIntegration.h" />
     <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\ForceBeamColumnCBDI2d.h" />
     <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\GaussQBeamIntegration.h" />
@@ -509,6 +514,8 @@
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelDepMultiLinear.h" />
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelPressureDep.h" />
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\MultiFP2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS2d.h" />
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\RJWatsonEQS3d.h" />
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing.h" />
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\TFP_Bearing2d.h" />
     <ClInclude Include="..\..\..\SRC\element\frictionBearing\TPB1D.h" />
