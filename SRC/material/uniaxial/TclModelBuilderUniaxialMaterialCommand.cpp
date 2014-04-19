@@ -158,8 +158,8 @@ extern void *OPS_ModIMKPeakOriented(void);
 extern void *OPS_ModIMKPinching(void);
 extern void *OPS_ConcretewBeta(void);
 extern void *OPS_PinchingLimitState(void);
-
-extern void *OPS_SteelBRB();
+extern void *OPS_NewOriginCentered(void);
+extern void *OPS_NewSteel2(void);
 
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
@@ -369,6 +369,20 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
     } else if ((strcmp(argv[1],"RambergOsgood") == 0) || (strcmp(argv[1],"RambergOsgoodSteel") == 0)) {
       void *theMat = OPS_RambergOsgoodSteel();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if (strcmp(argv[1],"Steel2") == 0) {
+      void *theMat = OPS_NewSteel2();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if (strcmp(argv[1],"OriginCentered") == 0) {
+      void *theMat = OPS_NewOriginCentered();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 

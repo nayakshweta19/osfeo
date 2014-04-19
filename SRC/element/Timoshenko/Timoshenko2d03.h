@@ -3,9 +3,15 @@
 // $Date: 2009/01/10 21:22:20 $
 
 // Created: 09/09
-// Modified by: Li Ning 
-// Description: This file contains the class implementation of TimoshenkoBeam.Based on Timoshenko2d03.cpp.
+// Created by: Li Ning (neallee@tju.edu.cn)
+// Description: This file contains the class implementation of Timoshenko2d.
+//              Make use of Neddy(1997) Interdependent Integration Element 
+//              procecess and fiber section model.
 
+// Reference: LI Ning, LI Zhong-Xian, XIE Li-Li. A Fiber-Section Model Based
+//            Timoshenko Beam Element Using Shear-Bending Interdependent Shape 
+//            Function. Earthquake Engineering & Engineering Vibration. 2013, 
+//            12(3): 421-432.
   
 #ifndef Timoshenko2d03_h
 #define Timoshenko2d03_h

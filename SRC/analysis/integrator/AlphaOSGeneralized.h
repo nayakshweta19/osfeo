@@ -19,13 +19,13 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2009/05/19 22:10:05 $
+// $Date: 2009-05-19 22:10:05 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/AlphaOSGeneralized.h,v $
 
 #ifndef AlphaOSGeneralized_h
 #define AlphaOSGeneralized_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 10/05
 // Revision: A
 //
@@ -49,15 +49,8 @@ public:
     AlphaOSGeneralized();
     AlphaOSGeneralized(double rhoInf,
         bool updDomFlag = false);
-    AlphaOSGeneralized(double rhoInf, 
-        double alphaM, double betaK, double betaKi, double betaKc,
-        bool updDomFlag = false);
     AlphaOSGeneralized(double alphaI, double alphaF,
         double beta, double gamma,
-        bool updDomFlag = false);
-    AlphaOSGeneralized(double alphaI, double alphaF,
-        double beta, double gamma,
-        double alphaM, double betaK, double betaKi, double betaKc,
         bool updDomFlag = false);
 
     // destructor
@@ -89,12 +82,6 @@ private:
     double gamma;
     bool updDomFlag;    // a flag indicating if updateDomain() is called
     double deltaT;
-    
-    // rayleigh damping factors
-    double alphaM;
-    double betaK;
-    double betaKi;
-    double betaKc;
     
     int updateCount;                            // method should only have one update per step
     double c1, c2, c3;                          // some constants we need to keep
