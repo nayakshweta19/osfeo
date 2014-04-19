@@ -66,8 +66,11 @@
 #include <Concrete02.h>
 #include <Concrete04.h>
 #include <Concrete06.h>
+#include <ConcretewBeta.h>
+#include <OriginCentered.h>
 #include <Steel01.h>
 #include <Steel02.h>
+#include <Steel2.h>
 #include <FatigueMaterial.h>
 #include <ReinforcingSteel.h>
 #include <HardeningMaterial.h>
@@ -199,6 +202,7 @@
 #include <beam3d01.h>
 #include <beam3d02.h>
 #include <Truss.h>
+#include <Truss2.h>
 #include <TrussSection.h>
 #include <CorotTruss.h>
 #include <CorotTrussSection.h>
@@ -215,6 +219,8 @@
 #include <ConstantPressureVolumeQuad.h>
 #include <ElasticBeam2d.h>
 #include <ElasticBeam3d.h>
+#include <ElasticTimoshenkoBeam2d.h>
+#include <ElasticTimoshenkoBeam3d.h>
 #include <ForceBeamColumn2d.h>
 #include <ForceBeamColumn3d.h>
 #include <Tri31.h>
@@ -251,12 +257,17 @@
 #include <ElastomericBearingPlasticity3d.h>
 #include <ElastomericBearingBoucWen2d.h>
 #include <ElastomericBearingBoucWen3d.h>
+#include <FlatSliderSimple2d.h>
+#include <FlatSliderSimple3d.h>
 #include <SingleFPSimple2d.h>
 #include <SingleFPSimple3d.h>
+#include <RJWatsonEQS2d.h>
+#include <RJWatsonEQS3d.h>
 
 #ifdef _PFEM
 #include <PFEMElement2D.h>
 #endif
+
 #include <LinearCrdTransf2d.h>
 #include <LinearCrdTransf3d.h>
 #include <PDeltaCrdTransf2d.h>
@@ -272,6 +283,7 @@
 #include <LegendreBeamIntegration.h>
 #include <RadauBeamIntegration.h>
 #include <NewtonCotesBeamIntegration.h>
+#include <UserDefinedBeamIntegration.h>
 
 // node header files
 #include <Node.h>
@@ -361,23 +373,42 @@
 #include <DomainDecompAlgo.h>
 
 // integrator header files
-#include <LoadControl.h>
 #include <ArcLength.h>
-#include <TransientIntegrator.h>
-#include <Newmark.h>
-#include <PFEMIntegrator.h>
-#include <HHT.h>
-#include <TRBDF2.h>
-#include <TRBDF3.h>
-#include <CentralDifference.h>
-
 #include <DisplacementControl.h>
-#include <CentralDifferenceNoDamping.h>
-#include <CentralDifferenceAlternative.h>
-
 #ifdef _PARALLEL_PROCESSING
 #include <DistributedDisplacementControl.h>
 #endif
+#include <LoadControl.h>
+
+#include <TransientIntegrator.h>
+#include <AlphaOS.h>
+#include <AlphaOSGeneralized.h>
+#include <CentralDifference.h>
+#include <CentralDifferenceAlternative.h>
+#include <CentralDifferenceNoDamping.h>
+#include <Collocation.h>
+#include <CollocationHSFixedNumIter.h>
+#include <CollocationHSIncrLimit.h>
+#include <CollocationHSIncrReduct.h>
+#include <HHT.h>
+#include <HHTExplicit.h>
+#include <HHTGeneralized.h>
+#include <HHTGeneralizedExplicit.h>
+#include <HHTHSFixedNumIter.h>
+#include <HHTHSIncrLimit.h>
+#include <HHTHSIncrReduct.h>
+#include <Newmark.h>
+#include <NewmarkExplicit.h>
+#include <NewmarkHSFixedNumIter.h>
+#include <NewmarkHSIncrLimit.h>
+#include <NewmarkHSIncrReduct.h>
+#ifdef _PFEM
+#include <PFEMIntegrator.h>
+#endif
+#include <TRBDF2.h>
+#include <TRBDF3.h>
+#include <WilsonTheta.h>
+
 // system of eqn header files
 #include <LinearSOE.h>
 #include <DomainSolver.h>
@@ -554,6 +585,9 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 	case ELE_TAG_Truss:  
 	     return new Truss(); 
 	     
+    case ELE_TAG_Truss2:
+	     return new Truss2();
+
 	case ELE_TAG_TrussSection:  
 	     return new TrussSection(); 	     
 	     
@@ -599,6 +633,12 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 	case ELE_TAG_ElasticBeam3d:
 		return new ElasticBeam3d();
 
+	case ELE_TAG_ElasticTimoshenkoBeam2d:
+		return new ElasticTimoshenkoBeam2d();
+
+	case ELE_TAG_ElasticTimoshenkoBeam3d:
+		return new ElasticTimoshenkoBeam3d();
+
 	case ELE_TAG_ForceBeamColumn2d:  
 	     return new ForceBeamColumn2d();					     
 
@@ -642,7 +682,13 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
     case ELE_TAG_SSPbrickUP:
       return new SSPbrickUP();
 
-	case ELE_TAG_BeamContact2D:
+    case ELE_TAG_FlatSliderSimple2d:
+      return new FlatSliderSimple2d();
+
+    case ELE_TAG_FlatSliderSimple3d:
+      return new FlatSliderSimple3d();
+
+    case ELE_TAG_BeamContact2D:
 	  return new BeamContact2D();
 
     case ELE_TAG_BeamContact2Dp:
@@ -717,6 +763,12 @@ FEM_ObjectBrokerAllClasses::getNewElement(int classTag)
 	case ELE_TAG_SingleFPSimple3d:
 		return new SingleFPSimple3d();
 		
+    case ELE_TAG_RJWatsonEQS2d:
+		return new RJWatsonEQS2d();
+
+    case ELE_TAG_RJWatsonEQS3d:
+		return new RJWatsonEQS3d();
+
 #ifdef _PFEM
 	case ELE_TAG_PFEMElement2D:
         return new PFEMElement2D();
@@ -899,6 +951,9 @@ FEM_ObjectBrokerAllClasses::getNewBeamIntegration(int classTag)
   case BEAM_INTEGRATION_TAG_NewtonCotes:        
     return new NewtonCotesBeamIntegration();
 
+  case BEAM_INTEGRATION_TAG_UserDefined:
+    return new UserDefinedBeamIntegration();
+
   case BEAM_INTEGRATION_TAG_HingeMidpoint:
     return new HingeMidpointBeamIntegration();
     
@@ -951,11 +1006,20 @@ FEM_ObjectBrokerAllClasses::getNewUniaxialMaterial(int classTag)
 	case MAT_TAG_Concrete06:  
 	     return new Concrete06();
 
+    case MAT_TAG_ConcretewBeta:
+	     return new ConcretewBeta();
+
 	case MAT_TAG_Steel01:  
 	     return new Steel01();
 
 	case MAT_TAG_Steel02:  
 	     return new Steel02();
+
+    case MAT_TAG_Steel2:
+	     return new Steel2();
+
+    case MAT_TAG_OriginCentered:
+	     return new OriginCentered();
 
 	case MAT_TAG_ReinforcingSteel:
 		 return new ReinforcingSteel(0);
@@ -1806,31 +1870,84 @@ TransientIntegrator *
 FEM_ObjectBrokerAllClasses::getNewTransientIntegrator(int classTag)
 {
     switch(classTag) {
-	case INTEGRATOR_TAGS_Newmark:  
-	     return new Newmark();
+    case INTEGRATOR_TAGS_AlphaOS:
+      return new AlphaOS();
 
-	case INTEGRATOR_TAGS_TRBDF2:  
-	     return new TRBDF2();
+    case INTEGRATOR_TAGS_AlphaOSGeneralized:
+      return new AlphaOSGeneralized();
 
-	case INTEGRATOR_TAGS_TRBDF3:  
-	     return new TRBDF3();
+    case INTEGRATOR_TAGS_CentralDifference:
+      return new CentralDifference();      // must recvSelf
+
+    case INTEGRATOR_TAGS_CentralDifferenceAlternative:
+      return new CentralDifferenceAlternative();      // must recvSelf
+
+    case INTEGRATOR_TAGS_CentralDifferenceNoDamping:
+      return new CentralDifferenceNoDamping();      // must recvSelf
+
+    case INTEGRATOR_TAGS_Collocation:
+      return new Collocation();
+
+    case INTEGRATOR_TAGS_CollocationHSFixedNumIter:
+      return new CollocationHSFixedNumIter();
+
+    case INTEGRATOR_TAGS_CollocationHSIncrLimit:
+      return new CollocationHSIncrLimit();
+
+    case INTEGRATOR_TAGS_CollocationHSIncrReduct:
+      return new CollocationHSIncrReduct();
 
 	case INTEGRATOR_TAGS_HHT:  
-	     return new HHT();
+	  return new HHT();
 
-	case INTEGRATOR_TAGS_CentralDifference:  
-	     return new CentralDifference();      // must recvSelf
+    case INTEGRATOR_TAGS_HHTExplicit:
+      return new HHTExplicit();
 
-	case INTEGRATOR_TAGS_CentralDifferenceNoDamping:  
-	     return new CentralDifferenceNoDamping();      // must recvSelf
+    case INTEGRATOR_TAGS_HHTGeneralized:
+      return new HHTGeneralized();
 
-	case INTEGRATOR_TAGS_CentralDifferenceAlternative:  
-	     return new CentralDifferenceAlternative();      // must recvSelf
+    case INTEGRATOR_TAGS_HHTGeneralizedExplicit:
+      return new HHTGeneralizedExplicit();
 
-	case INTEGRATOR_TAGS_PFEMIntegrator:
+    case INTEGRATOR_TAGS_HHTHSFixedNumIter:
+      return new HHTHSFixedNumIter();
+
+    case INTEGRATOR_TAGS_HHTHSIncrLimit:
+      return new HHTHSIncrLimit();
+
+    case INTEGRATOR_TAGS_HHTHSIncrReduct:
+      return new HHTHSIncrReduct();
+
+    case INTEGRATOR_TAGS_Newmark:
+      return new Newmark();
+
+    case INTEGRATOR_TAGS_NewmarkExplicit:
+      return new NewmarkExplicit();
+
+    case INTEGRATOR_TAGS_NewmarkHSFixedNumIter:
+      return new NewmarkHSFixedNumIter();
+
+    case INTEGRATOR_TAGS_NewmarkHSIncrLimit:
+      return new NewmarkHSIncrLimit();
+
+    case INTEGRATOR_TAGS_NewmarkHSIncrReduct:
+      return new NewmarkHSIncrReduct();
+
+#ifdef _PFEM
+    case INTEGRATOR_TAGS_PFEMIntegrator:
         return new PFEMIntegrator();
+#endif
 
-	default:
+    case INTEGRATOR_TAGS_TRBDF2:
+      return new TRBDF2();
+
+    case INTEGRATOR_TAGS_TRBDF3:
+      return new TRBDF3();
+
+    case INTEGRATOR_TAGS_WilsonTheta:
+      return new WilsonTheta();
+
+    default:
 	     opserr << "FEM_ObjectBrokerAllClasses::getNewTransientIntegrator - ";
 	     opserr << " - no TransientIntegrator type exists for class tag ";
 	     opserr << classTag << endln;

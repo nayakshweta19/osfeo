@@ -178,11 +178,12 @@
 #define MAT_TAG_PinchingLimitStateMaterial      73	
 #define MAT_TAG_BraceMaterial                   74
 #define MAT_TAG_ViscousDamper                   75
-#define MAT_TAG_ConcwBeta                       76
+#define MAT_TAG_ConcretewBeta                   76
 #define MAT_TAG_WrapperUniaxialMaterial         77
 #define MAT_TAG_UniaxialJ2Plasticity            78
 #define MAT_TAG_BWBN                            79
-
+#define MAT_TAG_OriginCentered                  80
+#define MAT_TAG_Steel2                          81
 
 // Neallee@tju.edu.cn
 #define MAT_TAG_ConcreteL02			60
@@ -932,6 +933,7 @@
 #define SOLVER_TAGS_PFEMCompressibleSolver 28
 #define SOLVER_TAGS_CulaSparseS4 29
 #define SOLVER_TAGS_CulaSparseS5 30
+#define SOLVER_TAGS_CuSP  31
 
 #define RECORDER_TAGS_ElementRecorder		1
 #define RECORDER_TAGS_NodeRecorder		2

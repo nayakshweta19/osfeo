@@ -24,7 +24,14 @@
 
 // Created: 09/09
 // Created by: Li Ning (neallee@tju.edu.cn)
-// Description: This file contains the class implementation of TclModelBuilder_addTimoshenkoBeam(). Based on TclModelBuilder_addDispBeamColumn().
+// Description: This file contains the class implementation of Timoshenko2d.
+//              Make use of Neddy(1997) Interdependent Integration Element 
+//              procecess and fiber section model.
+
+// Reference: LI Ning, LI Zhong-Xian, XIE Li-Li. A Fiber-Section Model Based
+//            Timoshenko Beam Element Using Shear-Bending Interdependent Shape 
+//            Function. Earthquake Engineering & Engineering Vibration. 2013, 
+//            12(3): 421-432.
 
 #include <stdlib.h>
 #include <string.h>

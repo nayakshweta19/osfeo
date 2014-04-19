@@ -24,10 +24,14 @@
 
 // Created: 09/09
 // Created by: Li Ning (neallee@tju.edu.cn)
-// Description: This file contains the class implementation of Timoshenko3d.
+// Description: This file contains the class implementation of Timoshenko2d.
 //              Make use of Neddy(1997) Interdependent Integration Element 
-//              procecess.
-// Referred to R.L. Taylor FEM 6th Ed. Timoshenko Rod Element with Constant STrain
+//              procecess and fiber section model.
+
+// Reference: LI Ning, LI Zhong-Xian, XIE Li-Li. A Fiber-Section Model Based
+//            Timoshenko Beam Element Using Shear-Bending Interdependent Shape 
+//            Function. Earthquake Engineering & Engineering Vibration. 2013, 
+//            12(3): 421-432.
 
 #include <Timoshenko3d.h>
 #include <Node.h>

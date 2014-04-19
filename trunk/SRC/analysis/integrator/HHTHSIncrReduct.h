@@ -19,13 +19,13 @@
 ** ****************************************************************** */
 
 // $Revision: 1.1 $
-// $Date: 2009/05/19 22:17:31 $
+// $Date: 2009-05-19 22:17:31 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/HHTHSIncrReduct.h,v $
 
 #ifndef HHTHSIncrReduct_h
 #define HHTHSIncrReduct_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 10/05
 // Revision: A
 //
@@ -50,13 +50,8 @@ public:
     // constructors
     HHTHSIncrReduct();
     HHTHSIncrReduct(double rhoInf, double reduct);
-    HHTHSIncrReduct(double rhoInf, double reduct,
-        double alphaM, double betaK, double betaKi, double betaKc);
     HHTHSIncrReduct(double alphaI, double alphaF,
         double beta, double gamma, double reduct);
-    HHTHSIncrReduct(double alphaI, double alphaF,
-        double beta, double gamma, double reduct,
-        double alphaM, double betaK, double betaKi, double betaKc);
     
     // destructor
     ~HHTHSIncrReduct();
@@ -86,12 +81,6 @@ private:
     double gamma;
     double reduct;   // disp increment reduction factor 0<reduct<=1
     double deltaT;
-    
-    // rayleigh damping factors
-    double alphaM;
-    double betaK;
-    double betaKi;
-    double betaKc;
     
     double c1, c2, c3;                          // some constants we need to keep
     Vector *Ut, *Utdot, *Utdotdot;              // response quantities at time t

@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.5 $
-// $Date: 2007/04/05 01:22:20 $
+// $Date: 2007-04-05 01:22:20 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/WilsonTheta.h,v $
 
 #ifndef WilsonTheta_h
@@ -47,8 +47,6 @@ public:
     // constructors
     WilsonTheta();
     WilsonTheta(double theta);
-    WilsonTheta(double theta,
-        double alphaM, double betaK, double betaKi, double betaKc);
 
     // destructor
     ~WilsonTheta();
@@ -75,12 +73,6 @@ private:
     double theta;    
     double deltaT;
     
-    // rayleigh damping factors
-    double alphaM;
-    double betaK;
-    double betaKi;
-    double betaKc;
-
     double c1, c2, c3;              // some constants we need to keep
     Vector *Ut, *Utdot, *Utdotdot;  // response quantities at time t
     Vector *U, *Udot, *Udotdot;     // response quantities at time t+deltaT
