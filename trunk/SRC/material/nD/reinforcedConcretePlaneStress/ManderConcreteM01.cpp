@@ -21,7 +21,10 @@
 // $Revision: 1.1 $
 // $Date: 2010-05-04 17:14:45 $
 // $Source: ManderConcreteM01.cpp,v $
-                                                                        
+
+// Modified by: Li Ning (neallee@tju.edu.cn)
+// for MCFT/DSFM model
+
 // Documentation: Chang and Mander Concrete Model
 // uniaxialMaterial ManderConcreteM01 $tag $fcc $ecc $Ec $rn_pre $rn_post $ft $et $rp $xp_cr <options>
 //

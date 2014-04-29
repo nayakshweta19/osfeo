@@ -1,4 +1,4 @@
-// Written: JZhong
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2004.11
 //
 // Description: This file contains the class definition for

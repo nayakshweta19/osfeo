@@ -119,14 +119,14 @@ TclSectionTester_setSection(ClientData clientData, Tcl_Interp *interp, int argc,
 
   // check number of arguments in command line
   if (argc < 2) {
-    Tcl_SetResult(interp, "WARNING bad command - want: uniaxialTest matID?", TCL_STATIC);
+    Tcl_SetResult(interp, "WARNING bad command - want: sectionTest secID?", TCL_STATIC);
     return TCL_ERROR;
   }    
 
   // get the matID form command line
   int sectionID;
   if (Tcl_GetInt(interp, argv[1], &sectionID) != TCL_OK) {
-    Tcl_SetResult(interp, "WARNING could not read sectionID: uniaxialTest sectionID?", TCL_STATIC);
+    Tcl_SetResult(interp, "WARNING could not read secID: sectionTest secID?", TCL_STATIC);
     return TCL_ERROR;
   }
 
@@ -140,7 +140,7 @@ TclSectionTester_setSection(ClientData clientData, Tcl_Interp *interp, int argc,
   // and set the testing material to point to a copy of it
   SectionForceDeformation *theOrigMaterial = theTclBuilder->getSection(sectionID);
   if (theOrigMaterial == 0) {
-    Tcl_SetResult(interp, "WARNING no material found with sectionID", TCL_STATIC);
+    Tcl_SetResult(interp, "WARNING no material found with secID", TCL_STATIC);
     return TCL_ERROR;
   }  else {
     theTestingSection = theOrigMaterial->getCopy();

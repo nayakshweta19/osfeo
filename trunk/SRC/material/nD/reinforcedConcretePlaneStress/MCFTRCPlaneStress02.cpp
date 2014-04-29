@@ -23,7 +23,7 @@
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/MCFTRCPlaneStress.cpp,v $
 // File: MCFTRCPlaneStress.cpp
 //
-// Written: Lining
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2011.8
 //
 // Description: This file contains the class definition for

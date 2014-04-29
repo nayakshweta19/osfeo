@@ -1,7 +1,13 @@
-
+// Written: Li Ning (neallee@tju.edu.cn)
+// Created: 2004.5
 //
-// Description: This file contains the class definition for
-// FAReinforcedConcretePlateFiber
+// Description: This file contains the class definition for 
+// FAReinforcedConcretePlateFiber material.
+// Hsu's Model 2002
+// For Detailed explanation of the model, please refer to the book
+// entitled "Unified Theory of Concrete Structures,"
+// by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
+
 
 #include "FAReinforcedConcretePlateFiber.h"
 #include <UniaxialMaterial.h>

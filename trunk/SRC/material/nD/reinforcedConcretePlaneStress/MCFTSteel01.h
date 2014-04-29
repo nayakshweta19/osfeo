@@ -1,9 +1,8 @@
 #ifndef MCFTSteel01_h
 #define MCFTSteel01_h
 
-//MCFTSteel01.h
-//Written:  neallee@tju.edu.cn
-//Created:  2003.7
+// MCFTSteel01.h
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Description: This file contains the class definition for MCFTSteel01.h
 
 #include <UniaxialMaterial.h>

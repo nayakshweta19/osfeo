@@ -23,7 +23,7 @@
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/DSFMRCPlaneStress.cpp,v $
 // File: DSFMRCPlaneStress.cpp
 //
-// Written: Lining
+// Written: Li Ning (neallee@tju.edu.cn)
 // Created: 2011.8
 //
 // Description: This file contains the class definition for

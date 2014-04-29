@@ -26,7 +26,7 @@
 #define MCFTSteel03_h
 
 //MCFTSteel03.h
-//Written:  neallee@tju.edu.cn
+// Written: Li Ning (Neallee@tju.edu.cn)
 //Created:  2010.7
 // Description: This file contains the class definition for MCFTSteel03.h
 // 1.) 	Menegotto, M., and Pinto, P.E. (1973). Method of analysis of cyclically loaded 

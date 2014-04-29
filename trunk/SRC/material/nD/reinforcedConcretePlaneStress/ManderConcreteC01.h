@@ -27,6 +27,9 @@
 
 // Written: Mark D. Denavit 
 //
+// Modified by: Li Ning (neallee@tju.edu.cn)
+// for FASTM/RASTM/CSMM model
+//
 // Description: This file contains the class definition for 
 // ManderConcreteC01. ManderConcreteC01 provides the abstraction
 // of the Chang and Mander cyclic uniaxial concrete material, 

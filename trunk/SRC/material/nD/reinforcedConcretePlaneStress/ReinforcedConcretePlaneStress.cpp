@@ -21,7 +21,7 @@
 // Written: JZhong
 // Created: 2003.10
 //
-// Written: Lining
+// Written: Lining (neallee@tju.edu.cn)
 // Created: 2010.11
 // RASTM
 
@@ -57,7 +57,7 @@ double ReinforcedConcretePlaneStress::sigmaTwoC = 0.0;
 double ReinforcedConcretePlaneStress::citaR = 0.0;      // principal strain direction
 double ReinforcedConcretePlaneStress::lastCitaR = 0.0;  // last converged principle strain direction
 int    ReinforcedConcretePlaneStress::steelStatus = 0;  // check if steel yield, 0 not yield, 1 yield
-int    ReinforcedConcretePlaneStress::dirStatus = 0; // check if principle direction has exceed 90 degree, 1 yes, 0 no
+int    ReinforcedConcretePlaneStress::dirStatus = 0; // check if principle direction: 0, 1, 2, 3, 4, 5
 bool   ReinforcedConcretePlaneStress::isSwapped = 0; // counter-clockwise = 0; clockwise = 1;
 int    ReinforcedConcretePlaneStress::lastDirStatus = 0; // 0, 1, 2, 3, 4, 5
 double ReinforcedConcretePlaneStress::beta = 0.0;
@@ -399,17 +399,18 @@ ReinforcedConcretePlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
 
-  char buffer[240];
+  char buffer[256];
   //sprintf(buffer, "e%d=%7.5f, e%d=%7.5f, e%d=%7.5f, e%d=%7.5f, gxy=%7.5f; ThetaE=%4.2f, ThetaS=%4.2f, beta=%4.2f; |S(i)|-|S(i-1)|=%7.5f. e1=%7.5f, e2=%7.5f, g12/2=%7.5f. dir=%d, swap=%d.\n",
   //  theMaterial[0]->getTag(), theMaterial[0]->getStrain(), theMaterial[1]->getTag(), theMaterial[1]->getStrain(),
   //  theMaterial[2]->getTag(), theMaterial[2]->getStrain(), theMaterial[3]->getTag(), theMaterial[3]->getStrain(), strain_vec(2), //strain_vec(0), strain_vec(1),
   //  citaStrain / PI * 180, citaStress / PI * 180, beta / PI * 180, fabs(sqrt(pow(lastStress[0], 2) + pow(lastStress[1], 2) + pow(lastStress[2], 2)) - stress_vec.Norm()),
   //  epslonOne, epslonTwo, halfGammaOneTwo, dirStatus, int(isSwapped));
   //opserr << buffer;
-  sprintf(buffer, "eC1=%7.5f, eC2=%7.5f, e1=%7.5f, e2=%7.5f, g12/2=%7.5f.\tdir=%d, swap=%d. DC0=%7.1f, DC1=%7.1f; Dc_bar0=%7.1f; Dc_bar1=%7.1f, D0=%7.1f, D1=%7.1f.\n",
-    theMaterial[2]->getStrain(), theMaterial[3]->getStrain(),
-    epslonOne, epslonTwo, halfGammaOneTwo, dirStatus, int(isSwapped), //90. / PI*atan2(2.0*Tstrain[2], Tstrain[1] - Tstrain[0]), 90. / PI*atan2(2.0*Tstress[2], Tstress[1] - Tstress[0]));
-    DC[0][0], DC[1][1], DC_bar[0][0], DC_bar[1][1], tangent_matrix(0,0),tangent_matrix(1,1));
+  sprintf(buffer, "T1=%7.5f T2=%7.5f T12=%7.5f; e1=%7.5f e2=%7.5f g12/2=%7.5f; ce1=%7.5f ce2=%7.5f; ThetaE=%4.2f ThetaS=%4.2f beta=%4.2f dir=%d swap=%d DC0=%7.1f DC1=%7.1f Dc_bar0=%7.1f Dc_bar1=%7.1f E00=%7.1f E11=%7.1f E22=%7.1f\n",
+    Tstrain[0], Tstrain[1], Tstrain[2], epslonOne, epslonTwo, halfGammaOneTwo, theMaterial[2]->getStrain(), theMaterial[3]->getStrain(),
+    citaStrain / PI * 180, citaStress / PI * 180, beta / PI * 180,
+    dirStatus, int(isSwapped), //90. / PI*atan2(2.0*Tstrain[2], Tstrain[1] - Tstrain[0]), 90. / PI*atan2(2.0*Tstress[2], Tstress[1] - Tstress[0]));
+    DC[0][0], DC[1][1], DC_bar[0][0], DC_bar[1][1], tangent_matrix(0, 0), tangent_matrix(1, 1), tangent_matrix(2, 2));
   opserr << buffer;
 
   /*if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
@@ -811,17 +812,33 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   double temp_citaR;
   //double eps = 1e-12;
 
-  if (fabs(Tstrain[0] - Tstrain[1]) < SMALL_STRAIN) {// && fabs(Tstrain[2]) > SMALL_STRAIN
-    citaR = 0.25*PI;  dirStatus = 0;
-  }
+  if (fabs(Tstrain[0] - Tstrain[1]) < SMALL_STRAIN ) {
+    if (fabs(Tstrain[2]) > SMALL_STRAIN) {
+      citaR = 0.25*PI;                                                        dirStatus = 0; 
+    } 
+    else {
+    }
+  } 
   else {// Tstrain[0] != Tstrain[1]
     temp_citaR = 0.5 * atan(fabs(2.0e6*Tstrain[2] / (1.0e6*Tstrain[0] - 1.0e6*Tstrain[1])));
-    if (fabs(Tstrain[2]) < SMALL_STRAIN && Tstrain[0] > Tstrain[1])      { citaR = 0;      dirStatus = 1; }
-    else if (fabs(Tstrain[2]) < SMALL_STRAIN && Tstrain[0] < Tstrain[1]) { citaR = 0.5*PI; dirStatus = 1; }
-    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] < 0)) { citaR = PI - temp_citaR;     dirStatus = 3; }
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] > 0)) { citaR = 0.5*PI - temp_citaR; dirStatus = 4; }
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] < 0)) { citaR = 0.5*PI + temp_citaR; dirStatus = 5; }
-    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] > 0)) { citaR = temp_citaR;          dirStatus = 2; }
+    if (fabs(Tstrain[2]) < SMALL_STRAIN) {  //&& Tstrain[0] > Tstrain[1]
+      citaR = 0;                                                              dirStatus = 1; 
+    } 
+//    else if (fabs(Tstrain[2]) < SMALL_STRAIN && Tstrain[0] < Tstrain[1]) {
+//      citaR = 0.5*PI;                                                         dirStatus = 1; 
+//    } 
+    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] < 0)) {
+      citaR = PI - temp_citaR;                                                dirStatus = 3; 
+    } 
+    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] > 0)) { 
+      citaR = 0.5*PI - temp_citaR;                                            dirStatus = 4; 
+    } 
+    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] < 0)) {
+      citaR = 0.5*PI + temp_citaR;                                            dirStatus = 5;
+    }
+    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] > 0)) {
+      citaR = temp_citaR;                                                     dirStatus = 2;
+    }
     else {
       opserr << "ReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate citaR\n";
       opserr << " Tstrain(0) = " << Tstrain[0] << endln;
@@ -1533,7 +1550,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int nowStatus)
       break;
 
     case 1:
-      if (nowStatus == 3 || nowStatus ==5) { //|| nowStatus == 4
+      if (nowStatus == 3 || nowStatus == 4 || nowStatus ==5) { //
         if (isSwapped)
           temp = 0;
         else
@@ -1569,7 +1586,7 @@ ReinforcedConcretePlaneStress::determineConcreteStatus(int nowStatus)
       break;
 
     case 4:
-      if (nowStatus == 3 || nowStatus == 5) { //nowStatus == 1 || 
+      if (nowStatus == 1 || nowStatus == 3 || nowStatus == 5) { //
         if (isSwapped)
           temp = 0;
         else

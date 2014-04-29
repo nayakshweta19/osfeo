@@ -21,7 +21,7 @@
 // Description: This file contains the class definition for
 // FASTMRCPlateFiber
 
-// Written: Lining
+// Written:  Li Ning (neallee@tju.edu.cn)
 // Created: 2010.11
 //
 // Description: This file contains the class definition for

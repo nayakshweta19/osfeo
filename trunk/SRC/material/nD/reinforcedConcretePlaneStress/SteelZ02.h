@@ -1,13 +1,14 @@
 #ifndef SteelZ02_h
 #define SteelZ02_h
 
-//SteelZ02.h, Hsu and Mansour's Model
-//Written:  Ning Li
-//Created:  2011.4
-//Description: This file contains the class definition for SteelZ02.h
+// SteelZ02.h, Hsu and Mansour's Model
+// Written: Li Ning (Neallee@tju.edu.cn)
+// Created:  2011.4
+// Description: This file contains the class definition for SteelZ02.h
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"
 // by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
+
 #include <UniaxialMaterial.h>
 
 // Default values for reloading/unloading path parameters AC, RC

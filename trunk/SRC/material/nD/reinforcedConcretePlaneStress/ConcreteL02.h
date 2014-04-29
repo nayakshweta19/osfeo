@@ -3,7 +3,7 @@
 
 // File ConcreteL02.h
 // Hsu and Mansour's Model
-// Written: N Lee
+// Written: Li Ning (neallee@tju.edu.cn)
 // Created: 2010.10
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"

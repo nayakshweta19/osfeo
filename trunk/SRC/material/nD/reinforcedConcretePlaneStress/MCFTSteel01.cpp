@@ -1,5 +1,5 @@
 // MCFTSteel01.cpp
-// Written: neallee@tju.edu.cn
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2011.7
 //
 // Description: This file contains the class implementation for

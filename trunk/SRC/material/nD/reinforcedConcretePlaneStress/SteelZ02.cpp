@@ -1,12 +1,11 @@
 // SteelZ02.cpp
-// Written: N. Li
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2010/10/06
 // Description: This file contains the class implementation for SteelZ02
 // For Detailed explanation of the model, please refer to the book
 // entitled "Unified Theory of Concrete Structures,"
 // by Thomas T.C. Hsu and Y.L. Mo, John Wiley & Sons, April 2010.
 // N. Li at TJU try to overcome some issues:
-// neallee@tju.edu.cn
 
 #include "SteelZ02.h"
 #include <Vector.h>
