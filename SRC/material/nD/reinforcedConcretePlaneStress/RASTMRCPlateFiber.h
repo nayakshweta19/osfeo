@@ -26,7 +26,7 @@
 // Written: JZhong
 // Created: 2003.10
 //
-// Written: Lining
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2010.11
 //
 // Description: This file contains the class definition for 

@@ -3,7 +3,7 @@
 
 // File: FAReinforcedConcretePlateFiber.h
 //
-// Written: JZhong
+// Written: Li Ning (neallee@tju.edu.cn)
 // Created: 2004.5
 //
 // Description: This file contains the class definition for 

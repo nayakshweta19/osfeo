@@ -23,7 +23,7 @@
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/CSMMRCPlaneStressFiber.cpp,v $
 // File: CSMMRCPlaneStressFiber.cpp
 //
-// Written: Lining
+// Written: Li Ning (neallee@tju.edu.cn)
 // Created: 2010.11
 //
 // Description: This file contains the class definition for

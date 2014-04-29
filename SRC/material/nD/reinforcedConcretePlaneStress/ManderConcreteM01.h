@@ -27,6 +27,9 @@
 
 // Written: Mark D. Denavit 
 //
+// Modified by: Li Ning (neallee@tju.edu.cn)
+// for MCFT/DSFM model
+//
 // Description: This file contains the class definition for 
 // ManderConcreteM01. ManderConcreteM01 provides the abstraction
 // of the Chang and Mander cyclic uniaxial concrete material, 

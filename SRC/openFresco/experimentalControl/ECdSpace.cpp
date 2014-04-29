@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 359 $
-// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
+// $Revision: 362 $
+// $Date: 2014-04-21 13:07:54 +0800 (星期一, 21 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECdSpace.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -330,6 +330,8 @@ int ECdSpace::setup()
         c = getchar();
         if (c == 'c')  {
             getchar();
+            simState = 0;
+            DS_write_32(board_index, simStateId, 1, (UInt32 *)&simState);
             DS_unregister_host_app();
             exit(OF_ReturnType_failed);
         } else if (c == 'r')  {

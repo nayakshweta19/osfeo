@@ -22,7 +22,7 @@
 // $Date: 2007/06/08 00:38:39 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nd/reinforcedConcretePlaneStress/MCFTConcrete02.cpp,v $
 
-// Written: neal(neallee@tju.edu.cn)
+// Written: Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 07/11
 //
 // Description: This file contains the class definition for 

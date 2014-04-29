@@ -184,6 +184,7 @@
 #define MAT_TAG_BWBN                            79
 #define MAT_TAG_OriginCentered                  80
 #define MAT_TAG_Steel2                          81
+#define MAT_TAG_DoddRestr                       82
 
 // Neallee@tju.edu.cn
 #define MAT_TAG_ConcreteL02			60

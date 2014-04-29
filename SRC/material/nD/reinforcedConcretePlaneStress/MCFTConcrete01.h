@@ -2,9 +2,8 @@
 #define MCFTConcrete01_h
 
 // File MCFTConcrete01.h
-// Written: Neallee@tju.edu.cn
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2011.7
-// 
 
 #include <UniaxialMaterial.h>
 

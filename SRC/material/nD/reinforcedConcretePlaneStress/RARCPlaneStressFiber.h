@@ -3,7 +3,7 @@
 
 // File: RARCPlaneStressFiber.h
 //
-// Written: JZhong
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2003.10
 //
 // Description: This file contains the class definition for 

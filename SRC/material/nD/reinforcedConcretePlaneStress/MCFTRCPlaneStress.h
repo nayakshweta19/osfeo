@@ -26,7 +26,7 @@
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/MCFTRCPlaneStress.h,v $
 // File: MCFTRCPlaneStress.h
 //
-// Written: Lining
+// Written: Li Ning (Neallee@tju.edu.cn)
 // Created: 2011.8
 //
 // Description: This file contains the class definition for 

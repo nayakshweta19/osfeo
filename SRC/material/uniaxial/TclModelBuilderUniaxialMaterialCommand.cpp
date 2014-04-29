@@ -139,6 +139,7 @@ extern void *OPS_Cast(void);
 extern void *OPS_Brace(void);                     // neallee
 extern void *OPS_NewReinforcingSteel(void);
 extern void *OPS_Dodd_Restrepo(void);
+extern void *OPS_DoddRestr(void);
 extern void *OPS_NewElasticMultiLinear(void);
 extern void *OPS_ImpactMaterial(void);
 extern void *OPS_SteelBRB(void);
@@ -353,7 +354,15 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	  else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"ElasticMultiLinear") == 0) {
+    } else if ((strcmp(argv[1], "DoddRestr") == 0)) {
+
+      void *theMat = OPS_DoddRestr();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+
+    } else if (strcmp(argv[1], "ElasticMultiLinear") == 0) {
       void *theMat = OPS_NewElasticMultiLinear();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;

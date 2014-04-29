@@ -22,8 +22,8 @@
 // $Date: 2007/06/08 00:38:39 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/Concrete09.cpp,v $
                                                                       
-// Written: fmk
-// Created: 03/06
+// Written: Li Ning (neallee@tju.edu.cn)
+// Created: 03/07
 //
 // Description: This file contains the class implementation of Concrete09. 
 // This Concrete09 is based on an f2c of the FEDEAS material

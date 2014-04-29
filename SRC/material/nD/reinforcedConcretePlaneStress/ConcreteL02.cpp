@@ -22,7 +22,7 @@
 // $Date: 2010/10/08 00:38:39 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/nD/reinforcedConcretePlaneStress/ConcreteL02.cpp,v $
 
-// Written: N. Li
+// Written: Li Ning (neallee@tju.edu.cn)
 // Created: 2010/10/06
 // Description: This file contains the class implementation for ConcreteL02
 // For Detailed explanation of the model, please refer to the book
