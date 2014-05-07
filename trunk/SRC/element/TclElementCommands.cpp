@@ -124,6 +124,9 @@ extern void *OPS_TripleFrictionPendulum(void);
 extern void *OPS_Truss2(void);
 extern void *OPS_CorotTruss2(void);
 extern void *OPS_ZeroLengthImpact3D(void);
+extern void *OPS_HDR(void);
+extern void *OPS_LeadRubberX(void);
+extern void *OPS_ElastomericX(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
@@ -889,6 +892,39 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
     }
   }
 
+  else if (strcmp(argv[1],"HDR") == 0) {
+    
+    void *theEle = OPS_HDR();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+
+  } 
+  else if (strcmp(argv[1],"LeadRubberX") == 0) {
+    
+    void *theEle = OPS_LeadRubberX();
+    if (theEle != 0) 
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+
+  }
+  else if (strcmp(argv[1], "ElastomericX") == 0) {
+
+    void *theEle = OPS_ElastomericX();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+
+  }
   else if ((strcmp(argv[1], "MultiFP2d") == 0) || (strcmp(argv[1], "MultiFPB2d") == 0)){
 
     void *theEle = OPS_MultiFP2d();
