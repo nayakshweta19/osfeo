@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2003/05/15 21:42:43 $
+// $Date: 2003-05-15 21:42:43 $
 // $Source: /usr/local/cvs/OpenSees/SRC/renderer/Renderer.h,v $
                                                                         
                                                                         
@@ -74,6 +74,8 @@ class Renderer
 			 const Vector &rgb1, const Vector &rgb2,
 			 int width = 1, int style = 1) =0;
     
+    virtual int drawCube(const Matrix &points, const Vector &values);
+
     virtual int drawPolygon(const Matrix &points, const Vector &values) =0;
     virtual int drawPolygon(const Matrix &points, const Matrix &rgbValues) =0;
 
