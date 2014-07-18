@@ -18,7 +18,7 @@ c
       integer ist
       real*8 d(10),hstvp(11),hstv(11),delt,xl(2,2),eps,str,dd
       real*8 oldeps,phibound
-	  real*8 epsp,sigp,deps
+      real*8 epsp,sigp,deps
 
 c  Local Variables ----------------------------------------------
 

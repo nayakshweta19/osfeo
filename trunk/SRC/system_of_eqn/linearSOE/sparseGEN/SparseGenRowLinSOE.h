@@ -70,7 +70,8 @@ class SparseGenRowLinSOE : public LinearSOE
     friend class PetscSparseSeqSolver;    
     friend class CulaSparseSolverS4;    
     friend class CulaSparseSolverS5;    
-	friend class CuSPSolver;
+    friend class CulaSparseSolverS6;
+    friend class CuSPSolver;
 
   protected:
     

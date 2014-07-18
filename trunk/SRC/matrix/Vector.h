@@ -70,7 +70,17 @@ class Vector
     int addMatrixVector(double factThis, const Matrix &m, const Vector &v, double factOther); 
     int addMatrixTransposeVector(double factThis, const Matrix &m, const Vector &v, double factOther);
 
-    
+    void computePrincipalValues(Vector &answer);
+    void cubic3r(double a, double b, double c, double d, double *r1, double *r2, double *r3, int *num);
+    void computePrincipalValDir(Vector &answer, Matrix &dir) const;
+    void computeDeviatoricVolumetricSplit(Vector &dev, double &vol) const;
+    double computeSecondCoordinate() const;
+    double computeSecondInvariant() const;
+    double computeStrainNorm() const;
+    //bool jaco_(Vector &eval, Matrix &v, int nf); // move to Matrix Class Implementation
+    double computeThirdCoordinate() const;
+    double computeThirdInvariant() const;
+
     // overloaded operators
     inline double operator()(int x) const;
     inline double &operator()(int x);

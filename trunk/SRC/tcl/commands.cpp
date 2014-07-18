@@ -281,6 +281,10 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 #include <CulaSparseSolverS5.h>
 #endif
 
+#ifdef _CULAS6
+#include <CulaSparseSolverS6.h>
+#endif
+
 #ifdef _MUMPS
 #ifdef _PARALLEL_PROCESSING
 #include <MumpsParallelSOE.h>
@@ -1841,7 +1845,8 @@ printModel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 
   while (done == false) {
     // if 'print ele i j k..' print out some elements
-    if ((strcmp(argv[currentArg], "-ele") == 0) || (strcmp(argv[currentArg], "ele") == 0)) {
+    if ((strcmp(argv[currentArg], "-ele") == 0) || (strcmp(argv[currentArg], "ele") == 0)
+      || (strcmp(argv[currentArg], "-element") == 0) || (strcmp(argv[currentArg], "element") == 0)) {
       currentArg++;
       res = printElement(clientData, interp, argc - currentArg, argv + currentArg, *output);
       done = true;
@@ -2819,16 +2824,13 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 #ifdef _WIN32
   else if ((_stricmp(argv[1], "CuSP") == 0)) {
 
-
     double relTol = 1e-6;
     int maxInteration = 100000;
     int preCond = 1;			//diagonal
     int solver = 0;				//Bicg
     int count = 2;
 
-
     while (count < argc) {
-
       if (_stricmp(argv[count], "-rTol") == 0) {
         count++;
         if (count < argc)
@@ -2876,7 +2878,7 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
   }
 #endif
 
-#if defined(_CULAS4) || defined(_CULAS5)
+#if defined(_CULAS4) || defined(_CULAS5) || defined(_CULAS6)
   // CULA SPARSE
   else if ((strcmp(argv[1],"CulaSparse")==0))
   {
@@ -2952,6 +2954,12 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
       count++;
     }
 
+#ifdef _CULAS4
+    CulaSparseSolverS4* theSolver = new CulaSparseSolverS4(relTol,
+      maxInteration,
+      preCond,
+      solver);
+#endif
 #ifdef _CULAS5
     CulaSparseSolverS5* theSolver = new CulaSparseSolverS5(relTol,
       maxInteration,
@@ -2959,11 +2967,14 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
       solver,
       single,
       host);
-#else
-    CulaSparseSolverS4* theSolver = new CulaSparseSolverS4(relTol,
+#endif
+#ifdef _CULAS6
+    CulaSparseSolverS6* theSolver = new CulaSparseSolverS6(relTol,
       maxInteration,
       preCond,
-      solver);
+      solver,
+      single,
+      host);
 #endif
 
     theSOE = new SparseGenRowLinSOE(*theSolver);
@@ -8872,7 +8883,7 @@ defaultUnits(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
   }
 
   ft = in * 12.0;
-  mm = in / 25.44;
+  mm = in / 25.4;
   cm = in / 2.54;
   m = in / 0.0254;
 
@@ -8922,6 +8933,9 @@ defaultUnits(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
   sprintf(string, "set m4 %.18e", m*m*m*m);   Tcl_Eval(interp, string);
   sprintf(string, "set pi %.18e", 2.0*asin(1.0));   Tcl_Eval(interp, string);
   sprintf(string, "set PI %.18e", 2.0*asin(1.0));   Tcl_Eval(interp, string);
+
+  sprintf(string, "set kg %.18e", n / g);   Tcl_Eval(interp, string);
+  sprintf(string, "set ton %.18e", 1.e3*n / g);   Tcl_Eval(interp, string);
 
   int res = simulationInfo.setLengthUnit(length);
   res += simulationInfo.setTimeUnit(time);

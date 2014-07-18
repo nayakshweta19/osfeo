@@ -2025,3 +2025,177 @@ Matrix::Eigen3(const Matrix &M)
 
   return 0;
 }
+
+//added by neallee@tju.edu.cn
+bool
+Matrix::jaco_(Vector &eval, Matrix &v, int nf)
+{
+  /*
+  * Solves the eigenvalues and eigenvectors of real
+  * symmetric matrix by jacobi method.
+  *  Written by bp. Inspired by ED WILSON jaco_ procedure.
+  *
+  * Parameters (input):
+  * nf - number of significant figures
+  *
+  * Output params:
+  * eval - eigen values (not sorted)
+  * v    - eigenvectors (stored columvise)
+  */
+
+
+  /* Local variables */
+  double ssum, aa, co, si, tt, tol, sum, aij, aji;
+  int ite, i, j, k, ih;
+  int neq = numRows;
+
+  double c_b2 = .10;
+  //double c_b27 = .01;
+
+  /* Function Body */
+#ifdef DEBUG
+  if (!isSquare()) {
+    opserr << "Not square matrix" << endln;
+  }
+  // check for symmetry
+  for (i = 1; i <= neq; i++) {
+    for (j = i + 1; j <= neq; j++) {
+      //if ( this->at(i, j) != this->at(j, i) ) {
+      if (fabs(this->at(i, j) - this->at(j, i)) > 1.0e-6) {
+        opserr << "Not Symmetric matrix" << endln;
+      }
+    }
+  }
+
+#endif
+
+  eval.resize(neq);
+  v.resize(neq, neq);
+
+  for (i = 0; i < neq; i++) {
+    eval(i) = data[i*neq + i]; // this->at(i, i)
+  }
+
+  tol = pow(c_b2, nf);
+  sum = 0.0;
+  for (i = 0; i < neq; ++i) {
+    for (j = 0; j < neq; ++j) { // ?? ++j , j++
+      sum += fabs(data[i*neq + j]);
+      v(i, j) = 0.0;
+    }
+
+    v(i, i) = 1.0;
+  }
+
+  if (sum <= 0.0) {
+    return 0;
+  }
+
+
+  /* ---- REDUCE MATRIX TO DIAGONAL ---------------- */
+  ite = 0;
+  do {
+    ssum = 0.0;
+    for (j = 1; j < neq; ++j) {
+      ih = j - 1;
+      for (i = 0; i < ih; ++i) {
+        if ((fabs(data[i*neq + j]) / sum) > tol) {
+          ssum += fabs(data[i*neq + j]);
+          /* ---- CALCULATE ROTATION ANGLE ----------------- */
+          aa = atan2(data[i*neq + j] * 2.0, eval(i) - eval(j)) / 2.0;
+          si = sin(aa);
+          co = cos(aa);
+          /*
+          *   // ---- MODIFY "I" AND "J" COLUMNS OF "A" AND "V"
+          *   for (k = 1; k <= neq; ++k) {
+          *    tt = this->at(k, i);
+          *    this->at(k, i) = co * tt + si * this->at(k, j);
+          *    this->at(k, j) = -si * tt + co * this->at(k, j);
+          *    tt = v.at(k, i);
+          *    v.at(k, i) = co * tt + si * v.at(k, j);
+          *    // L500:
+          *    v.at(k, j) = -si * tt + co * v.at(k, j);
+          *   }
+          *   // ---- MODIFY DIAGONAL TERMS --------------------
+          *   this->at(i, i) = co * this->at(i, i) + si * this->at(j, i);
+          *   this->at(j, j) = -si * this->at(i, j) + co * this->at(j, j);
+          *   this->at(i, j) = 0.0;
+          *   // ---- MAKE "A" MATRIX SYMMETRICAL --------------
+          *   for (k = 1; k <= neq; ++k) {
+          *    this->at(i, k) = this->at(k, i);
+          *    this->at(j, k) = this->at(k, j);
+          *    // L600:
+          *   }
+          */
+          // ---- MODIFY "I" AND "J" COLUMNS OF "A" AND "V"
+          for (k = 0; k < i-1; ++k) {
+            tt = data[k*neq + i];
+            data[k*neq + i] = co * tt + si *data[k*neq + j];
+            data[k*neq + j] = -si * tt + co *data[k*neq + j];
+            tt = v(k, i);
+            v(k, i) = co * tt + si *v(k, j);
+            v(k, j) = -si * tt + co *v(k, j);
+          }
+
+          // diagonal term (i,i)
+          tt = eval(i);
+          eval(i) = co * tt + si *data[i*neq + j];
+          aij = -si * tt + co *data[i*neq + j];
+          tt = v(i, i);
+          v(i, i) = co * tt + si *v(i, j);
+          v(i, j) = -si * tt + co *v(i, j);
+
+          for (k = i; k < j-1; ++k) {
+            tt = data[i*neq + k];
+            data[i*neq + k] = co * tt + si *data[k*neq + j];
+            data[k*neq + j] = -si * tt + co *data[k*neq + j];
+            tt = v(k, i);
+            v(k, i) = co * tt + si *v(k, j);
+            v(k, j) = -si * tt + co *v(k, j);
+          }
+
+          // diagonal term (j,j)
+          tt = data[i*neq + j];
+          aji = co * tt + si *eval(j);
+          eval(j) = -si * tt + co *eval(j);
+
+          tt = v(j, i);
+          v(j, i) = co * tt + si *v(j, j);
+          v(j, j) = -si * tt + co *v(j, j);
+          //
+          for (k = j ; k < neq; ++k) {
+            tt = data[i*neq + k];
+            data[i*neq + k] = co * tt + si *data[j*neq + k];
+            data[j*neq + k] = -si * tt + co *data[j*neq + k];
+            tt = v(k, i);
+            v(k, i) = co * tt + si *v(k, j);
+            v(k, j) = -si * tt + co *v(k, j);
+          }
+
+          // ---- MODIFY DIAGONAL TERMS --------------------
+          eval(i) = co * eval(i) + si * aji;
+          eval(j) = -si * aij + co *eval(j);
+          data[i*neq + j] = 0.0;
+        }
+        else {
+          /* ---- A(I,J) MADE ZERO BY ROTATION ------------- */
+          ;
+        }
+      }
+    }
+
+    /* ---- CHECK FOR CONVERGENCE -------------------- */
+    if (++ite > 50) {
+      opserr << "Matrix::jaco_() -- too many iterations" << endln;
+    }
+  } while (fabs(ssum) / sum > tol);
+
+  // restore original matrix
+  for (i = 0; i < neq; i++) {
+    for (j = i-1; j < neq; j++) {
+      data[i*neq + j] = data[j*neq + i];
+    }
+  }
+
+  return 0;
+} /* jaco_ */

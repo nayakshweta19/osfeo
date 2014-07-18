@@ -102,6 +102,7 @@
 #define TSERIES_TAG_TriangleSeries       10
 #define TSERIES_TAG_PeerMotion       11
 #define TSERIES_TAG_PeerNGAMotion       12
+#define TSERIES_TAG_PathTimeSeriesThermal 13
 
 #define PARAMETER_TAG_Parameter			   1
 #define PARAMETER_TAG_MaterialStageParameter       2
@@ -185,6 +186,7 @@
 #define MAT_TAG_OriginCentered                  80
 #define MAT_TAG_Steel2                          81
 #define MAT_TAG_DoddRestr                       82
+#define MAT_TAG_ConcreteSakaiKawashima          83
 
 // Neallee@tju.edu.cn
 #define MAT_TAG_ConcreteL02			60
@@ -198,6 +200,8 @@
 #define MAT_TAG_MCFTConcrete03      67
 #define MAT_TAG_BoucWen3D           68
 #define MAT_TAG_BoucWen2D           69
+#define MAT_TAG_ConcreteDPM1        70
+#define MAT_TAG_ConcreteDPM2        71
 // neallee ended
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
@@ -499,6 +503,7 @@
 #define LOAD_TAG_Beam2dThermalAction     11
 #define LOAD_TAG_Beam3dThermalAction     12
 #define LOAD_TAG_ShellThermalAction      13
+#define LOAD_TAG_NodalThermalAction 14
 
 #define MAT_TAG_IsotropicLinElastic         1001
 #define MAT_TAG_IsotropicLinElasticPoint    1002
@@ -638,6 +643,11 @@
 #define ELE_TAG_Quad4FiberOverlay      126
 #define ELE_TAG_Brick8FiberOverlay     127
 #define ELE_TAG_DispBeamColumn2dThermal 128
+#define ELE_TAG_DispBeamColumn3dThermal    202
+#define ELE_TAG_ShellMITC4GeoNonlinearThermal   203
+#define ELE_TAG_ShellMITC4Thermal   204
+#define ELE_TAG_DispBeamColumn2dThermalNUT 205
+#define ELE_TAG_DispBeamColumn3dThermalNUT 206
 #define ELE_TAG_TPB1D                  129
 #define ELE_TAG_TFP_Bearing            130
 #define ELE_TAG_TFP_Bearing2d          131
@@ -685,9 +695,6 @@
 // Adding HAJJAR_COMPOSITE: End /////////
 
 #define ELE_TAG_Shell02                 201 // neallee
-#define ELE_TAG_DispBeamColumn3dThermal    202
-#define ELE_TAG_ShellMITC4GeoNonlinearThermal   203
-#define ELE_TAG_ShellMITC4Thermal   204
 #define ELE_TAG_fElmt01   205
 #define ELE_TAG_fElmt03   206 // neallee
 #define ELE_TAG_fElmt04   207 // neallee
@@ -937,7 +944,8 @@
 #define SOLVER_TAGS_PFEMCompressibleSolver 28
 #define SOLVER_TAGS_CulaSparseS4 29
 #define SOLVER_TAGS_CulaSparseS5 30
-#define SOLVER_TAGS_CuSP  31
+#define SOLVER_TAGS_CulaSparseS6 31
+#define SOLVER_TAGS_CuSP  32
 
 #define RECORDER_TAGS_ElementRecorder		1
 #define RECORDER_TAGS_NodeRecorder		2

@@ -65,8 +65,7 @@ class Matrix
     void Zero(void);
     int resize(int numRow, int numCol);
     
-    int  Assemble(const Matrix &,const ID &rows, const ID &cols, 
-		  double fact = 1.0);  
+    int Assemble(const Matrix &,const ID &rows, const ID &cols, double fact = 1.0);  
     
     int Solve(const Vector &V, Vector &res) const;
     int Solve(const Matrix &M, Matrix &res) const;
@@ -131,9 +130,9 @@ class Matrix
     int  AssembleTranspose(const Vector &V, int init_row, int init_col, double fact = 1.0);
 	int  Extract(const Matrix &V, int init_row, int init_col, double fact = 1.0);
 	double Norm(void) const; // neallee@tju.edu.cn
-
+    bool jaco_(Vector &eval, Matrix &v, int nf); // neallee@tju.edu.cn
     int Eigen3(const Matrix &M);
-    
+
     friend OPS_Stream &operator<<(OPS_Stream &s, const Matrix &M);
     //    friend istream &operator>>(istream &s, Matrix &M);    
     friend Matrix operator*(double a, const Matrix &M);

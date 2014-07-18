@@ -1,7 +1,7 @@
 #ifndef _CULASPARSESOLVERS5
 #define _CULASPARSESOLVERS5
 
-#include <cula_sparse.h>
+#include <S5\include\cula_sparse.h>
 #include <SparseGenRowLinSolver.h>
 #include <SparseGenRowLinSOE.h>
 #include <SparseGenColLinSOE.h>

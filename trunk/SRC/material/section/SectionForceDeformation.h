@@ -52,22 +52,25 @@ class Response;
 #define SECTION_RESPONSE_VY		3
 #define SECTION_RESPONSE_MY		4
 #define SECTION_RESPONSE_VZ		5
-#define SECTION_RESPONSE_T		6	
-#define SECTION_RESPONSE_S              7
+#define SECTION_RESPONSE_T		6
+#define SECTION_RESPONSE_R              7
+#define SECTION_RESPONSE_Q              8
 
-#define SECTION_RESPONSE_Pc             8
-#define SECTION_RESPONSE_MYc            9
-#define SECTION_RESPONSE_MZc            10
-#define SECTION_RESPONSE_LYYc           11
-#define SECTION_RESPONSE_LZZc           12
-#define SECTION_RESPONSE_LYZc           13
+#define SECTION_RESPONSE_S              17
 
-#define SECTION_RESPONSE_Ps             14
-#define SECTION_RESPONSE_MYs            15
-#define SECTION_RESPONSE_MZs            16
-#define SECTION_RESPONSE_LYYs           17
-#define SECTION_RESPONSE_LZZs           18
-#define SECTION_RESPONSE_LYZs           19
+#define SECTION_RESPONSE_Pc             18
+#define SECTION_RESPONSE_MYc            19
+#define SECTION_RESPONSE_MZc            20
+#define SECTION_RESPONSE_LYYc           21
+#define SECTION_RESPONSE_LZZc           22
+#define SECTION_RESPONSE_LYZc           23
+
+#define SECTION_RESPONSE_Ps             24
+#define SECTION_RESPONSE_MYs            25
+#define SECTION_RESPONSE_MZs            26
+#define SECTION_RESPONSE_LYYs           27
+#define SECTION_RESPONSE_LZZs           28
+#define SECTION_RESPONSE_LYZs           29
 
 class SectionForceDeformation : public Material
 {
@@ -127,6 +130,7 @@ class SectionForceDeformation : public Material
   //--- Adding Thermal Materials:[BEGIN]   by UoE OpenSees Group ----//  
   virtual int setTrialSectionDeformation(const Vector&, const Vector &); //JZ
   virtual const Vector &getTemperatureStress(const Vector &tData);//27 is for 'FireLoadPattern'
+  virtual int setTrialSectionDeformationTemperature(const Vector&, double *); //JZ
   //--- Adding Thermal Functions:[END]   by UoE OpenSees Group ----//
 
  protected:

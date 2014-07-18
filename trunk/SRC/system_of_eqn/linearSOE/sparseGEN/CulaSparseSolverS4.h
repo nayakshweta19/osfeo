@@ -28,7 +28,7 @@
 #define _CULASPARSESOLVER4
 
 #include <SparseGenRowLinSolver.h>
-#include <cula_sparse.h>
+#include <S4\include\cula_sparse.h>
 class SparseGenRowLinSOE;
 
 

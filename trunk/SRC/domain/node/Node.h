@@ -46,7 +46,7 @@ class Vector;
 class Matrix;
 class Channel;
 class Renderer;
-
+class NodalLoad; //Added by Liming Jiang,UOE2013
 class DOF_Group;
 
 class Node : public DomainComponent
@@ -146,6 +146,11 @@ class Node : public DomainComponent
 
     // AddingSensitivity:END ///////////////////////////////////////////
 
+    //Add Pointer to NodalThermalAction id applicable------begin-----Liming, UoE,2013
+    virtual NodalLoad* getNodalLoadPtr(void);
+    virtual void setNodalLoadPtr(NodalLoad* theLoad);
+    //Add Pointer to NodalThermalAction id applicable-----end------Liming, UoE,2013
+
     virtual const Vector &getReaction();
     virtual int   addReactionForce(const Vector &, double factor);
     virtual int   resetReactionForce(int flag);
@@ -174,6 +179,8 @@ class Node : public DomainComponent
     Vector *incrDisp;
     Vector *incrDeltaDisp;
     
+    NodalLoad *theNodalLoadPtr; //Added by Liming Jiang for pointer to nodalThermalAction, UOE2013
+
     double *disp, *vel, *accel; // double arrays holding the displ, 
                                 // vel and accel values
 

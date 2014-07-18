@@ -50,7 +50,7 @@
 #include <Element.h>
 #include <ElementIter.h>
 // AddingSensitivity:END ////////////////////////////
-
+#include <NodalLoad.h> //Added by Liming Jiang for link NodalLoadPtr, UOE2013
 #include <OPS_Globals.h>
 
 Matrix **Node::theMatrices = 0;
@@ -97,6 +97,7 @@ Node::Node(int tag, int theClassTag)
   accSensitivity = 0;
   parameterID = 0;
   // AddingSensitivity:END ///////////////////////////////////////////
+  theNodalLoadPtr = 0;//Added by Liming for initializing NodalLoadPointer,UOE2013
 }
 
 Node::Node(int tag, int ndof, double Crd1)
@@ -115,7 +116,8 @@ Node::Node(int tag, int ndof, double Crd1)
   accSensitivity = 0;
   parameterID = 0;
   // AddingSensitivity:END ///////////////////////////////////////////
-  
+  theNodalLoadPtr = 0;//Added by Liming for initializing NodalLoadPointer,UOE2013
+
   Crd = new Vector(1);
   (*Crd)(0) = Crd1;
   
@@ -168,6 +170,7 @@ Node::Node(int tag, int ndof, double Crd1, double Crd2)
   accSensitivity = 0;
   parameterID = 0;
   // AddingSensitivity:END ///////////////////////////////////////////
+  theNodalLoadPtr = 0;//Added by Liming for initializing NodalLoadPointer,UOE2013
 
   Crd = new Vector(2);
   (*Crd)(0) = Crd1;
@@ -223,7 +226,8 @@ Node::Node(int tag, int ndof, double Crd1, double Crd2, double Crd3)
   accSensitivity = 0;
   parameterID = 0;
   // AddingSensitivity:END ///////////////////////////////////////////
-  
+  theNodalLoadPtr = 0;//Added by Liming for initializing NodalLoadPointer,UOE2013
+
   Crd = new Vector(3);
   (*Crd)(0) = Crd1;
   (*Crd)(1) = Crd2;
@@ -279,6 +283,7 @@ Node::Node(const Node &otherNode, bool copyMass)
   accSensitivity = 0;
   parameterID = 0;
   // AddingSensitivity:END ///////////////////////////////////////////
+  theNodalLoadPtr = 0;//Added by Liming for initializing NodalLoadPointer,UOE2013
 
   Crd = new Vector(otherNode.getCrds());
   if (Crd == 0) {
@@ -2069,3 +2074,16 @@ Node::setCrds(const Vector &newCrds)
     (*Crd) = newCrds;
   }
 }
+
+//Add Pointer to NodalThermalAction id applicable------begin-----Liming, UoE,2013
+NodalLoad*
+Node::getNodalLoadPtr(void)
+{
+  return theNodalLoadPtr;
+}
+void
+Node::setNodalLoadPtr(NodalLoad* theLoad)
+{
+  theNodalLoadPtr = theLoad;
+}
+//Add Pointer to NodalThermalAction id applicable-----end------Liming, UoE,2013

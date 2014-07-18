@@ -47,8 +47,14 @@
 #include <FEM_ObjectBroker.h>
 #include <ElementResponse.h>
 #include <ElementalLoad.h>
+#include <NodalLoad.h>
+//#include <NodalThermalAction.h>
 
 #include <math.h>
+#include <StandardStream.h>
+#include <fstream>
+#include <stdlib.h>
+#include <FiberSection2dThermal.h>
 
 Matrix DispBeamColumn2dThermal::K(6,6);
 Vector DispBeamColumn2dThermal::P(6);
@@ -377,14 +383,14 @@ DispBeamColumn2dThermal::revertToStart()
 int
 DispBeamColumn2dThermal::update(void)
 {
+  //opserr<<"**Now Update: Ele "<< this->getTag()<<" **"<<endln;
   int err = 0;
 
   // Update the transformation
   crdTransf->update();
-  
+   
   // Get basic deformations
   const Vector &v = crdTransf->getBasicTrialDisp();
-  
   double L = crdTransf->getInitialLength();
   double oneOverL = 1.0/L;
 
@@ -392,12 +398,12 @@ DispBeamColumn2dThermal::update(void)
   double xi[maxNumSections];
   beamInt->getSectionLocations(numSections, L, xi);
   
-
+  //opserr<< "Basic Deformation: "<<v<<endln;
   // Loop over the integration points
   for (int i = 0; i < numSections; i++) {
     
-    int order = theSections[i]->getOrder();
-    const ID &code = theSections[i]->getType();
+    int order = theSections[i]->getOrder();   // return 2
+    const ID &code = theSections[i]->getType();   // code: Section_Response_P, Section_Response_MZ
     
     Vector e(workArea, order);
     
@@ -417,12 +423,13 @@ DispBeamColumn2dThermal::update(void)
     }
     
     // Set the section deformations	
-    //err += theSections[i]->setTrialSectionDeformation(e);
+    err += theSections[i]->setTrialSectionDeformation(e);
     //J.Z
 
-    // FMK err += theSections[i]->setTrialSectionDeformationTemperature(e,dataMix);    
-    Vector dataMixV(dataMix, 27);
-    err += theSections[i]->setTrialSectionDeformation(e,dataMixV);    
+     //FMK 
+    //err += theSections[i]->setTrialSectionDeformationTemperature(e,dataMix); 
+	//Vector dataMixV(dataMix,27);
+    //err += theSections[i]->setTrialSectionDeformation(e);  
 
   }
   
@@ -466,9 +473,9 @@ DispBeamColumn2dThermal::getTangentStiff()
     double xi6 = 6.0*xi[i];
 
     // Get the section tangent stiffness and stress resultant
+
     const Matrix &ks = theSections[i]->getSectionTangent();
-    const Vector &s = theSections[i]->getStressResultant();
-        
+	const Vector &s = theSections[i]->getStressResultant();
     // Perform numerical integration
     //kb.addMatrixTripleProduct(1.0, *B, ks, wts(i)/L);
     //double wti = wts(i)*oneOverL;
@@ -531,10 +538,25 @@ DispBeamColumn2dThermal::getTangentStiff()
   q(0) += q0[0];
   q(1) += q0[1];
   q(2) += q0[2];
+/*For debugging --Liming
+	std::ofstream ResultOutput;
+	ResultOutput.open("mainOutPut.dat",std::ios::out | std::ios::binary | std::ios::app );
+	if(!ResultOutput.is_open())
+	{
+			opserr<<"could not open output file"<<endln;
+	}
+  // ResultOutput<<"Stiff "<<kb(0,0)<<"," <<kb(0,1)<<" , "<<kb(0,2)<<" , "<<kb(1,1) <<" , "<<kb(1,2)<< " , "<<kb(2,2)<<endln;
+  
+  ResultOutput<<"Tangent "<<ks3(0,0)<<"," <<ks3(0,1)<<" , "<<ks3(1,0)<<" , "<<ks3(1,1)<<endln;
+   ResultOutput.close();
+
+*/
+  //For debugging-- Liming
+
 
   // Transform to global stiffness
   K = crdTransf->getGlobalStiffMatrix(kb, q);
-
+  
   return K;
 }
 
@@ -666,13 +688,13 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, double loadFactor)
   int type;
   const Vector &data = theLoad->getData(type, loadFactor);
   double L = crdTransf->getInitialLength();
-  
+
   if (type == LOAD_TAG_Beam2dUniformLoad) {
     double wt = data(0)*loadFactor;  // Transverse (+ve upward)
     double wa = data(1)*loadFactor;  // Axial (+ve from node I to J)
 
     double V = 0.5*wt*L;
-    double M = V*L/6.0; // wt*L*L/12
+    double M = V*L / 6.0; // wt*L*L/12
     double P = wa*L;
 
     // Reactions in basic system
@@ -694,16 +716,16 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, double loadFactor)
       return 0;
 
     double a = aOverL*L;
-    double b = L-a;
+    double b = L - a;
 
     // Reactions in basic system
     p0[0] -= N;
-    double V1 = P*(1.0-aOverL);
+    double V1 = P*(1.0 - aOverL);
     double V2 = P*aOverL;
     p0[1] -= V1;
     p0[2] -= V2;
 
-    double L2 = 1.0/(L*L);
+    double L2 = 1.0 / (L*L);
     double a2 = a*a;
     double b2 = b*b;
 
@@ -715,13 +737,152 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, double loadFactor)
     q0[2] += M2;
   }
 
+  else if (type == LOAD_TAG_Beam2dThermalAction) {
+    //******Notice: Liming has restructured the appliaciton of Beam2dThermalAction----Dec2013  ,UoE 
+    // load not applied through fire load pattern
+    //static Vector factors(9);
+    //factors.Zero();
+    //factors += loadFactor;
+    //return this->addLoad(theLoad, factors);
+
+    /// This code block is added by LJ and copied from DispBeamColumn2d(Modified edition) for 'FireLoadPattern'--08-May-2012--//[END]
+    counterTemperature = 1;
+
+    q0Temperature[0] = 0.0;
+    q0Temperature[1] = 0.0;
+    q0Temperature[2] = 0.0;
+
+    double oneOverL = 1.0 / L;
+
+    //const Matrix &pts = quadRule.getIntegrPointCoords(numSections);
+    //const Vector &wts = quadRule.getIntegrPointWeights(numSections);  
+    double xi[maxNumSections];
+    beamInt->getSectionLocations(numSections, L, xi);
+    double wt[maxNumSections];
+    beamInt->getSectionWeights(numSections, L, wt);
+
+    Vector dataMixV(27);
+    for (int m = 0; m < 9; m++){
+      dataMixV(2 * m) = data(2 * m); //Linear temperature interpolation
+      dataMixV(2 * m + 1) = data(2 * m + 1);
+      dataMixV(18 + m) = 1000;
+    }
+    //opserr<<"dataMix"<<dataMixV<<endln;
+
+    // Loop over the integration points
+    for (int i = 0; i < numSections; i++) {
+
+      int order = theSections[i]->getOrder();
+      const ID &code = theSections[i]->getType();
+
+      double xi6 = 6.0*xi[i];
+
+      // Get section stress resultant 
+      const Vector &s = theSections[i]->getTemperatureStress(dataMixV);    //contribuited by ThermalElongation
+      //opserr<<"Thermal Stress "<<s<<endln;
+      double si;
+      for (int j = 0; j < order; j++) {
+        si = s(j)*wt[i];
+        switch (code(j)) {
+        case SECTION_RESPONSE_P:
+          q0Temperature[0] += si; break;
+        case SECTION_RESPONSE_MZ:
+          q0Temperature[1] += (xi6 - 4.0)*si;
+          q0Temperature[2] += (xi6 - 2.0)*si; break;
+        default:
+          break;
+        }
+      }
+    }
+
+    q0[0] -= 0;
+    q0[1] -= 0;
+    q0[2] -= 0;
+
+  }
+  //Added by Liming for NodalThermalAction input-------BEGIN----------UOE2013
+  else if (type == LOAD_TAG_NodalThermalAction) {
+    NodalLoad* theNodalThermal0 = theNodes[0]->getNodalLoadPtr();
+    NodalLoad* theNodalThermal1 = theNodes[1]->getNodalLoadPtr();
+    int type;
+    Vector data0 = theNodalThermal0->getData(type);
+    Vector data1 = theNodalThermal1->getData(type);
+    Vector Loc(9);
+    Vector NodalT0(9);
+    Vector NodalT1(9);
+    for (int i = 0; i < 9; i++){
+      if (data0(2 * i + 1) - data1(2 * i + 1) > 1e-8 || data0(2 * i + 1) - data1(2 * i + 1) < -1e-8){
+        opserr << "Warning:The NodalThermalAction in dispBeamColumn2dThermalNUT " << this->getTag()
+          << "incompatiable loc input for datapoint " << i << endln;
+      }
+      else{
+        Loc(i) = data0(2 * i + 1);
+        NodalT0(i) = data0(2 * i);
+        NodalT1(i) = data1(2 * i);
+      }
+    }
+    //opserr<<"Nodal0 "<<NodalT0<<endln;
+    //opserr<<"Nodal1 "<<NodalT1<<endln;
+    double L = crdTransf->getInitialLength();
+    counterTemperature = 1;
+
+    q0Temperature[0] = 0.0;
+    q0Temperature[1] = 0.0;
+    q0Temperature[2] = 0.0;
+
+    double oneOverL = 1.0 / L;
+
+    //const Matrix &pts = quadRule.getIntegrPointCoords(numSections);
+    //const Vector &wts = quadRule.getIntegrPointWeights(numSections);  
+    double xi[maxNumSections];
+    beamInt->getSectionLocations(numSections, L, xi);
+    double wt[maxNumSections];
+    beamInt->getSectionWeights(numSections, L, wt);
+
+    // Loop over the integration points
+    for (int i = 0; i < numSections; i++) {
+
+      int order = theSections[i]->getOrder();
+      const ID &code = theSections[i]->getType();
+
+      double xi6 = 6.0*xi[i];
+
+      // Get section stress resultant 
+      // FMk const Vector &s = theSections[i]->getTemperatureStress(dataMix);
+      Vector dataMixV(27);
+      for (int m = 0; m < 9; m++){
+        dataMixV(2 * m) = NodalT0(m) + xi[i] * (NodalT1(m) - NodalT0(m)); //Linear temperature interpolation
+        dataMixV(2 * m + 1) = Loc(m);
+        dataMixV(18 + m) = 1000;
+      }
+      opserr << "dataMix" << dataMixV << endln;
+      const Vector &s = theSections[i]->getTemperatureStress(dataMixV);    //contribuited by ThermalElongation
+      //opserr<<"Thermal Stress "<<s<<endln;
+      double si;
+      for (int j = 0; j < order; j++) {
+        si = s(j)*wt[i];
+        switch (code(j)) {
+        case SECTION_RESPONSE_P:
+          q0Temperature[0] += si; break;
+        case SECTION_RESPONSE_MZ:
+          q0Temperature[1] += (xi6 - 4.0)*si;
+          q0Temperature[2] += (xi6 - 2.0)*si; break;
+        default:
+          break;
+        }
+      }
+    }
+
+    q0[0] -= 0;
+    q0[1] -= 0;
+    q0[2] -= 0;
+  }
+  //Added by Liming for NodalThermalAction input-------END----------UOE2013
   else {
-    opserr << "DispBeamColumn2dThermal::DispBeamColumn2dThermal -- load type unknown for element with tag: "
-	   << this->getTag() << "DispBeamColumn2dThermal::addLoad()\n"; 
-    
+    opserr << "DispBeamColumn2dThermal::addLoad(double) -- load type " << theLoad->getClassType()
+      << "unknown for element with tag: " << this->getTag() << "\n";
     return -1;
   }
-  
   return 0;
 }
 
@@ -734,9 +895,9 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, const Vector &factors)
   double L = crdTransf->getInitialLength();
 
   /// This code block is added by LJ and copied from DispBeamColumn2d(Modified edition) for 'FireLoadPattern'--08-May-2012--//[BEGIN]
- //JZ 07/10 /////////////////////////////////////////////////////////////start
+  //JZ 07/10 /////////////////////////////////////////////////////////////start
   if (type == LOAD_TAG_Beam2dThermalAction) {
-  //PK
+    //PK
     //  Vector &factors = theLoad->getfactors();
     
     double loadFactor = factors(0);
@@ -748,14 +909,6 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, const Vector &factors)
     loadFactor7=factors(6);
     loadFactor8=factors(7);
     loadFactor9=factors(8);
-
-  
-    //opserr << "loadfactor: "
-    //<< loadFactor << "     DispBeamColumn2dThermal::addLoad()\n";
-    //opserr << "loadfactor2: "
-    //<< loadFactor2 << "     DispBeamColumn2dThermal::addLoad()\n";
-    //opserr << "loadfactor3: "
-    //<< loadFactor3 << "     DispBeamColumn2dThermal::addLoad()\n";
     
     dataMix[0] = data(0)*loadFactor;
     dataMix[2] = data(2)*loadFactor2;
@@ -791,7 +944,8 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, const Vector &factors)
     //PK end of change
     
     /// This code block is added by LJ and copied from DispBeamColumn2d(Modified edition) for 'FireLoadPattern'--08-May-2012--//[END]
-    counterTemperature = 0;
+    counterTemperature = 1;
+
     q0Temperature[0] = 0.0; 
     q0Temperature[1] = 0.0; 
     q0Temperature[2] = 0.0; 
@@ -814,36 +968,35 @@ DispBeamColumn2dThermal::addLoad(ElementalLoad *theLoad, const Vector &factors)
       
       double xi6 = 6.0*xi[i];
       
-      // Get section stress resultant
-      
+      // Get section stress resultant 
       // FMk const Vector &s = theSections[i]->getTemperatureStress(dataMix);
       Vector dataMixV(dataMix, 27);
-      const Vector &s = theSections[i]->getTemperatureStress(dataMixV);    
-      
+      const Vector &s = theSections[i]->getTemperatureStress(dataMixV);    //contribuited by ThermalElongation
+	  //opserr<<"Thermal Stress "<<s<<endln;
       double si;
       for (int j = 0; j < order; j++) {
-	si = s(j)*wt[i];
-	switch(code(j)) {
-	case SECTION_RESPONSE_P:
-	  q0Temperature[0] += si; break;
-	case SECTION_RESPONSE_MZ:
-	  q0Temperature[1] += (xi6-4.0)*si; 
-	  q0Temperature[2] += (xi6-2.0)*si; break;
-	default:
-	  break;
-	}
+		si = s(j)*wt[i];
+		switch(code(j)) {
+		case SECTION_RESPONSE_P:
+		q0Temperature[0] += si; break;
+		case SECTION_RESPONSE_MZ:
+		q0Temperature[1] += (xi6-4.0)*si; 
+		q0Temperature[2] += (xi6-2.0)*si; break;
+		default:
+		break;
+		}
       }   
     }
     
     q0[0] -= 0;
     q0[1] -= 0;
     q0[2] -= 0;
+	
   }
   
   else {
-    opserr << "DispBeamColumn2dThermal::DispBeamColumn2dThermal -- load type unknown for element with tag: "
-	   << this->getTag() << "DispBeamColumn2dThermal::addLoad()\n"; 
-    
+	  opserr << "DispBeamColumn2dThermal::addLoad(Vector) -- load type " << theLoad->getClassType() 
+		  << "unknown for element with tag: " << this->getTag() << "\n"; 
     return -1;
   }
   
@@ -894,8 +1047,9 @@ DispBeamColumn2dThermal::getResistingForce()
 
   // Zero for integration
   q.Zero();
-  if (counterTemperature == 0) {// to consider material softening
-  this->update();
+  
+  if (counterTemperature ==2 ) {
+	  this->update();
   }
   // Loop over the integration points
   for (int i = 0; i < numSections; i++) {
@@ -908,10 +1062,10 @@ DispBeamColumn2dThermal::getResistingForce()
     
     // Get section stress resultant
     const Vector &s = theSections[i]->getStressResultant();
-    
+
     // Perform numerical integration on internal force
     //q.addMatrixTransposeVector(1.0, *B, s, wts(i));
-
+ 
     double si;
     for (int j = 0; j < order; j++) {
       si = s(j)*wt[i];
@@ -926,19 +1080,21 @@ DispBeamColumn2dThermal::getResistingForce()
     }
     
   }
- 
-	if (counterTemperature == 0) { 
 
-		q(0) -= (q0Temperature[0] - q0TemperatureP[0]);
-		q(1) -= (q0Temperature[1] - q0TemperatureP[1]);
-		q(2) -= (q0Temperature[2] - q0TemperatureP[2]);
+   //opserr <<"q before Thermal force"<<q<<endln;
 
-		q0TemperatureP[0] = q0Temperature[0];
-		q0TemperatureP[1] = q0Temperature[1];
-		q0TemperatureP[2] = q0Temperature[2];
+	if (counterTemperature == 1) { 
+		q(0) -= (q0Temperature[0]);
+		q(1) -= (q0Temperature[1]);
+		q(2) -= (q0Temperature[2]);
+		//q0TemperatureP[0]= q0Temperature[0];
+		//q0TemperatureP[1]= q0Temperature[1];
+		//q0TemperatureP[2]= q0Temperature[2];
+		counterTemperature++;
 	}
-	counterTemperature++;
 
+
+	//opserr <<"q after Thermal force"<<q<<endln;
   // Add effects of element loads, q = q(v) + q0
   q(0) += q0[0];
   q(1) += q0[1];
@@ -951,14 +1107,14 @@ DispBeamColumn2dThermal::getResistingForce()
   
   // Subtract other external nodal loads ... P_res = P_int - P_ext
   //P.addVector(1.0, Q, -1.0);
+ 
   P(0) -= Q(0);
   P(1) -= Q(1);
   P(2) -= Q(2);
   P(3) -= Q(3);
   P(4) -= Q(4);
   P(5) -= Q(5);
-
-  return P;
+  return P; 
 }
 
 const Vector&
@@ -1054,7 +1210,7 @@ DispBeamColumn2dThermal::sendSelf(int commitTag, Channel &theChannel)
   // if section ha no dbTag get one and assign it
   //
 
-  ID idSections(2*numSections);
+  ID idSections(2*numSections);  
   loc = 0;
   for (i = 0; i<numSections; i++) {
     int sectClassTag = theSections[i]->getClassTag();
@@ -1864,4 +2020,3 @@ DispBeamColumn2dThermal::commitSensitivity(int gradNumber, int numGrads)
 
 
 // AddingSensitivity:END /////////////////////////////////////////////
-

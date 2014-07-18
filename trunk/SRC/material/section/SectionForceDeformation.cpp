@@ -488,4 +488,10 @@ SectionForceDeformation::getTemperatureStress(const Vector &tData) //PK
   opserr << "SectionForceDeformation::getTemperatureStress(double *dataMixed) - should not be called\n";
   return this->getStressResultant();
 }
+
+int
+SectionForceDeformation::setTrialSectionDeformationTemperature(const Vector& nouse, double *noneuse) //JZ
+{
+  return 0;
+}
 //--- Adding Thermal Functions:[END]   by UoE OpenSees Group ----//

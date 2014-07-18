@@ -111,6 +111,8 @@ extern  void *OPS_NewConcreteMcftNonlinear7Material(void);
 extern  void *OPS_NewBoucWen3DMaterial(void);
 extern  void *OPS_NewRASTMRCPlateFiberMaterial(void);
 extern  void *OPS_NewFASTMRCPlateFiberMaterial(void);
+extern  void *OPS_NewConcreteDPM1(void);
+extern  void *OPS_NewConcreteDPM2(void);
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -421,17 +423,22 @@ TCL_Char **argv, TclModelBuilder *theTclBuilder)
 			return TCL_ERROR;
 	}
 	// added by neallee@tju.edu.cn
+    else if ((strcmp(argv[1], "ConcreteDPM1") == 0) || (strcmp(argv[1], "cdpm1") == 0)){
 
-#ifdef _DAMAGE2P
-	else if ((strcmp(argv[1],"Damage2p") == 0)){
+      void *theMat = OPS_NewConcreteDPM1();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
+    else if ((strcmp(argv[1], "ConcreteDPM2") == 0) || (strcmp(argv[1], "cdpm2") == 0)){
 
-		void *theMat = OPS_Damage2p();
-		if (theMat != 0) 
-			theMaterial = (NDMaterial *)theMat;
-		else 
-			return TCL_ERROR;
-	}
-#endif
+      void *theMat = OPS_NewConcreteDPM2();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
 
 	else if ((strcmp(argv[1], "DruckerPrager") == 0)){
 
