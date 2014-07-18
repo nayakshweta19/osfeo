@@ -124,10 +124,6 @@ Vector::Vector(const Vector &other)
 }	
 
 
-
-
-
-
 // ~Vector():
 // 	destructor, deletes the [] data
 
@@ -1236,4 +1232,440 @@ Matrix Vector::operator%(const Vector &V) const
 
   return result;
 
+}
+
+//added by neallee@tju.edu.cn
+void
+Vector::computePrincipalValues(Vector &answer)
+{
+  //
+  // This function computes sorted principal values of a strain vector.
+  // Engineering notation is used.
+  //
+
+  if (sz == 1) {
+    answer.resize(1);
+    answer.Zero();
+    answer.setData(theData, 1);
+  }
+  else if (sz == 3) {
+    answer.resize(2);
+    answer.Zero();
+    // 2D problem
+    double ast, dst, D;
+
+    ast = theData[0] + theData[1];
+    dst = theData[0] - theData[1];
+    D = sqrt(dst * dst + theData[2] * theData[2]);
+    answer(1) = 0.5 * (ast + D);
+    answer(2) = 0.5 * (ast - D);
+  }
+  else {
+    answer.resize(3);
+    answer.Zero();
+    // 3D problem
+    double I1 = 0.0, I2 = 0.0, I3 = 0.0, s1, s2, s3;
+    Matrix s;
+    int nonzeroFlag = 0;
+
+    /*this->convertToFullForm(s);
+    for (int i = 1; i <= size; i++) {
+    if (fabs(s.at(i)) > 1.e-20) {
+    nonzeroFlag = 1;
+    }
+    }*/
+    if (sz == 6) {
+      I1 = theData[0] + theData[1] + theData[2];
+      I2 = theData[0] * theData[1] + theData[1] * theData[2] + theData[2] * theData[0] -
+        0.25 * (theData[3] * theData[3] + theData[4] * theData[4] + theData[5] * theData[5]);
+      I3 = theData[0] * theData[1] * theData[2] +
+        0.25 * (theData[3] * theData[4] * theData[5] - theData[0] * theData[3] * theData[3] -
+        theData[1] * theData[4] * theData[4] - theData[2] * theData[5] * theData[5]);
+
+      /*
+      * Call cubic3r to ensure, that all three real eigenvalues will be found, because we have symmetric tensor.
+      * This allows to overcome various rounding errors when solving general cubic equation.
+      */
+      int i;
+      cubic3r((double)-1., I1, -I2, I3, &s1, &s2, &s3, &i);
+
+      if (i > 0) {
+        answer(0) = s1;
+      }
+
+      if (i > 1) {
+        answer(1) = s2;
+      }
+
+      if (i > 2) {
+        answer(2) = s3;
+      }
+
+      // sort results
+      for (int i = 1; i < 3; i++) {
+        for (int j = 1; j < 3; j++) {
+          if (answer(j) > answer(j-1)) {
+            std::swap(answer(j), answer(j-1));
+          }
+        }
+      }
+    }
+    else {
+      opserr << "Vector::computePrincipalValues(), 3D mat principle value error!!" << endln;
+    }
+  }
+}
+
+#define CUBIC_ZERO 1.0e-100
+#define sgn(x) ((x) < 0 ? -1.0 : 1.0)
+void
+Vector::cubic3r(double a, double b, double c, double d, double *r1, double *r2, double *r3, int *num)
+//
+//   solves cubic equation for real roots
+//
+//   input:
+//     a,b,c,d - coefficients of equation in form:
+//     ax^3 + bx^2 + cx + d = 0
+//
+//   output:
+//     r1,r2,r3 - roots (only first num roots is valid)
+//     num      - number of roots resolved
+//
+{
+  double aa, r, q, p, D, phi;
+  double help;
+
+  if (fabs(a) < CUBIC_ZERO) {
+    if (fabs(b) < CUBIC_ZERO) {
+      if (fabs(c) < CUBIC_ZERO) {
+        *num = 0;
+        return;
+      }
+      else {
+        *r1 = -d / c;
+        *num = 1;
+        return;
+      }
+    }
+    else { //fabs(b) < CUBIC_ZERO
+      if ((D = c * c - 4.0 * b * d) < 0.0) {
+        *num = 0;
+        return;
+      }
+      else {
+        //*r1 = (-c + sqrt(D)) / 2.0 / b;
+        //*r2 = (-c - sqrt(D)) / 2.0 / b;
+        if (fabs(c) < CUBIC_ZERO) {
+          help = -d / b;
+          if (help >= 0.) {
+            *r1 = sqrt(help);
+            *r2 = -sqrt(help);
+            *num = 2;
+            return;
+          }
+          else {
+            *num = 0;
+            return;
+          }
+        }
+        else {
+          help = -(c + sgn(c) * sqrt(D)) / 2.0;
+          *r1 = help / b;
+          *r2 = d / help;
+          *num = 2;
+          return;
+        }
+      }
+    }
+  }
+  else {
+    aa = a;
+    a = b / aa;
+    b = c / aa;
+    c = d / aa;
+
+    q = (a * a - 3.0 * b) / 9.0;
+    r = (2.0 * a * a * a - 9.0 * a * b + 27.0 * c) / 54.0;
+
+    D = q * q * q - r * r;
+    //  if (D > 0.) {
+    // three real roots
+    help = r / sqrt(q * q * q);
+    if (fabs(help) > 1.0) {
+      help = sgn(help);                // prevent rounding errors
+    }
+
+    phi = acos(help);
+    p = sqrt(q);
+
+    *r1 = -2.0 *p *cos(phi / 3.0) - a / 3.0;
+    *r2 = -2.0 *p *cos((phi + 2.0 *PI) / 3.0) - a / 3.0;
+    *r3 = -2.0 *p *cos((phi - 2.0 *PI) / 3.0) - a / 3.0;
+    *num = 3;
+    /*  } else {
+    *
+    * help = fabs(r) + sqrt(-D);
+    * A = -sgn(r)*pow(D, 1./3.);
+    * if (fabs(A) > CUBIC_ZERO)
+    * B = q/A;
+    * else
+    * B = 0.0;
+    *
+    *****r1 = (A+B) - a/3.0;
+    *****num = 1;
+    * }
+    */
+    return;
+  }
+}
+
+void
+Vector::computePrincipalValDir(Vector &answer, Matrix &dir) const
+{
+  //
+  // This function cumputes Principal values & directions corresponding to receiver.
+  //
+  // Return Values:
+  //
+  // matrix dir -> principal directions of strains or stresses
+  // array sp -> principal strains or stresses
+  //
+
+  Matrix ss;
+  Vector sp;
+  int nval;
+  int nonzeroFlag = 0;
+  int size = sz;
+
+
+  if (sz == 1) { // _1dMat
+    answer = *this;
+    dir.resize(1, 1);
+    dir(0, 0) = 1.0;
+    return;
+  }
+  else if (sz == 3) { // _PlaneStress
+    // 2D problem
+    ss.resize(2, 2);
+    answer.resize(2);
+
+    for (int i = 0; i < size; i++) {
+      if (fabs(theData[i]) > 1.e-20) {
+        nonzeroFlag = 1;
+      }
+    }
+
+    if (nonzeroFlag == 0) {
+      answer.Zero();
+      ss.Zero();
+      return;
+    }
+
+    ss(0, 0) = theData[0];
+    ss(1, 1) = theData[1];
+    ss(0, 1) = ss(1, 0) = theData[2];
+  }
+  else {
+    // 3D problem
+    ss.resize(3, 3);
+    //Vector s;
+
+    answer.resize(3);
+
+    if (sz == 6) {
+      //this->convertToFullForm(s);
+      for (int i = 0; i < size; i++) {
+        if (fabs(theData[i]) > 1.e-20) {
+          nonzeroFlag = 1;
+        }
+      }
+
+      if (nonzeroFlag == 0) {
+        answer.Zero();
+        ss.Zero();
+        return;
+      }
+
+      ss(0, 0) = theData[0];
+      ss(1, 1) = theData[1];
+      ss(2, 2) = theData[2];
+      ss(0, 1) = ss(1, 0) = theData[5];
+      ss(0, 2) = ss(2, 0) = theData[4];
+      ss(1, 2) = ss(2, 1) = theData[3];
+    }
+    else {
+      opserr << "Vector::computePrincipalValDir(), 3D mat principle value error!!" << endln;
+    }
+  }
+
+  ss.jaco_(answer, dir, 10);
+
+  // sort results
+  nval = 3;
+  if (sz == 3) {
+    nval = 2;
+  }
+
+  for (int ii = 0; ii < nval-1; ii++) {
+    for (int jj = 0; jj < nval-1; jj++) {
+      if (answer(jj + 1) > answer(jj)) {
+        // swap eigen values and eigen vectors
+        std::swap(answer(jj + 1), answer(jj));
+        for (int kk = 0; kk < nval; kk++) {
+          std::swap(dir(kk, jj + 1), dir(kk, jj));
+        }
+      }
+    }
+  }
+}
+
+void
+Vector::computeDeviatoricVolumetricSplit(Vector &dev, double &vol) const
+{
+
+  if (sz == 1) { //_1dMat
+    // 1D model
+    opserr << "Vector::computeDeviatoricVolumetricSplit: No Split for 1D!" << endln;
+    //  dev.resize(1); dev.at(1) = 0.0;
+    // vol = this->at (1);
+  }
+  else if (sz == 3) {
+    // plane stress problem
+    opserr << "Vector::computeDeviatoricVolumetricSplit: No Split for plane stress!" << endln;
+    //  dev = *this;
+    // vol = (this->at(1)+this->at(2))/2.0;
+    //    dev.at(1) -= vol;
+    // dev.at(2) -= vol;
+  }
+  else {
+    // 3d, plane strain or axisymmetric problem
+    dev = *this;
+    vol = (theData[0] + theData[1] + theData[2]) / 3.0;
+    dev(1) -= vol;
+    dev(2) -= vol;
+    dev(3) -= vol;
+  }
+}
+
+double
+Vector::computeSecondCoordinate() const
+{
+  //
+  // This function computes the second Haigh-Westergaard coordinate
+  // from the deviatoric stress state
+  //
+  ;
+  return sqrt(2. * computeSecondInvariant());
+}
+
+double
+Vector::computeSecondInvariant() const
+{
+  //
+  // This function computes the second invariant of
+  // of the deviatoric stress vector
+  //
+  if (sz == 1) { //_1dMat
+    // 1d problem
+    return .5 * theData[0] * theData[0];
+  }
+  else if (sz == 3) { //_PlaneStress
+    // 2d problem: plane stress
+    return .5 * (theData[0] * theData[0] + theData[1] * theData[1]) + theData[2] * theData[2];
+  }
+  else if (sz == 4) { //_PlaneStrain
+    //  plane strain or axisymmetry
+    return .5 * (theData[0] * theData[0] + theData[1] * theData[1] + theData[2] * theData[2]) +
+      theData[3] * theData[3];
+  }
+  else {
+    // 3d problem
+    return .5 * (theData[0] * theData[0] + theData[1] * theData[1] + theData[2] * theData[2]) +
+      theData[3] * theData[3] + theData[4] * theData[4] + theData[5] * theData[5];
+  }
+}
+
+double
+Vector::computeStrainNorm() const
+{
+  //
+  // This function computes the tensorial Norm of the strain in engineering notation
+  //
+  if (sz == 1) { //_1dMat
+    // 1d problem
+    return sqrt(theData[0] * theData[0]);
+  }
+  else if (sz == 3) { //_PlaneStress
+    // 2d problem: plane stress
+    return sqrt(.5 * (2. * theData[0] * theData[0] + 2 * theData[1] * theData[1] + theData[2] * theData[2]));
+  }
+  else if (sz == 4) { //_PlaneStrain
+    //  plane strain or axisymmetry
+    return sqrt(.5 * (2. * theData[0] * theData[0] + 2. * theData[1] * theData[1] + 2. * theData[2] * theData[2] +
+      theData[3] * theData[3]));
+  }
+  else {
+    // 3d problem
+    return sqrt(.5 * (2. * theData[0] * theData[0] + 2. * theData[1] * theData[1] + 2. * theData[2] * theData[2] +
+      theData[3] * theData[3] + theData[4] * theData[4] + theData[5] * theData[5]));
+  }
+}
+
+
+double
+Vector::computeThirdCoordinate() const
+{
+  //
+  // This function computes the third Haigh-Westergaard coordinate
+  // from the deviatoric stress state
+  //
+  double c1 = 0.0;
+  if (computeSecondInvariant() == 0.) {
+    c1 = 0.0;
+  }
+  else {
+    c1 = (3. * sqrt(3.) / 2.) * computeThirdInvariant() / (pow(computeSecondInvariant(), (3. / 2.)));
+  }
+
+  if (c1 > 1.0) {
+    c1 = 1.0;
+  }
+
+  if (c1 < -1.0) {
+    c1 = -1.0;
+  }
+
+  return 1. / 3. * acos(c1);
+}
+
+double
+Vector::computeThirdInvariant() const
+{
+  //
+  // This function computes the third invariant
+  // of the deviatoric stress vector.
+  //
+  if (sz == 1) { //_1dMat
+    // 1d problem
+    return (1. / 3.) * theData[0] * theData[0] * theData[0];
+  }
+  else if (sz == 3) { //_PlaneStress
+    // 2d problem: plane stress
+    return (1. / 3.) * (theData[0] * theData[0] * theData[0] + 3. * theData[1] * theData[2] * theData[2]
+      + 3. * theData[0] * theData[2] * theData[2] + theData[1] * theData[1] * theData[1]);
+  }
+  else if (sz == 4) { //_PlaneStrain
+    // plane strain or axisymmetry
+    return (1. / 3.) * (theData[0] * theData[0] * theData[0] + 3. * theData[0] * theData[3] * theData[3] +
+      3. * theData[1] * theData[3] * theData[3] + theData[1] * theData[1] * theData[1] +
+      theData[2] * theData[2] * theData[2]);
+  }
+  else {
+    // 3d problem
+    return (1. / 3.) * (theData[0] * theData[0] * theData[0] + 3. * theData[0] * theData[5] * theData[5] +
+      3. * theData[0] * theData[4] * theData[4] + 6. * theData[3] * theData[5] * theData[4] +
+      3. * theData[1] * theData[5] * theData[5] + 3 * theData[2] * theData[4] * theData[4] +
+      theData[1] * theData[1] * theData[1] + 3. * theData[1] * theData[3] * theData[3] +
+      3. * theData[2] * theData[3] * theData[3] + theData[2] * theData[2] * theData[2]);
+  }
 }

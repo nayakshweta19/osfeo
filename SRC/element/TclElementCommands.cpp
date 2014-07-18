@@ -902,8 +902,7 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
       return TCL_ERROR;
     }
 
-  } 
-  else if (strcmp(argv[1],"LeadRubberX") == 0) {
+  } else if (strcmp(argv[1],"LeadRubberX") == 0) {
     
     void *theEle = OPS_LeadRubberX();
     if (theEle != 0) 
@@ -913,17 +912,15 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
       return TCL_ERROR;
     }
 
-  }
-  else if (strcmp(argv[1], "ElastomericX") == 0) {
-
+  } else if (strcmp(argv[1],"ElastomericX") == 0) {
+    
     void *theEle = OPS_ElastomericX();
-    if (theEle != 0)
+    if (theEle != 0) 
       theElement = (Element *)theEle;
     else {
       opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
       return TCL_ERROR;
     }
-
   }
   else if ((strcmp(argv[1], "MultiFP2d") == 0) || (strcmp(argv[1], "MultiFPB2d") == 0)){
 

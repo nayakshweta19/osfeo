@@ -59,6 +59,8 @@ class FiberSection3dThermal : public SectionForceDeformation
     const Matrix &getSectionTangent(void);
     const Matrix &getInitialTangent(void);
 
+    double getThermalElong(void);
+
     int   commitState(void);
     int   revertToLastCommit(void);    
     int   revertToStart(void);
@@ -88,14 +90,12 @@ class FiberSection3dThermal : public SectionForceDeformation
     const Vector & getSectionDeformationSensitivity(int gradIndex);
     // AddingSensitivity:END ///////////////////////////////////////////
 
-
-
   protected:
     
   private:
     int numFibers;                   // number of fibers in the section
     UniaxialMaterial **theMaterials; // array of pointers to materials
-    double   *matData;               // data for the materials [yloc and area]
+    double   *matData;               // data for the materials [zloc, yloc and area]
     double   kData[9];               // data for ks matrix 
     double   sData[3];               // data for s vector 
     
@@ -115,12 +115,12 @@ class FiberSection3dThermal : public SectionForceDeformation
     // AddingSensitivity:END ///////////////////////////////////////////
 
 
-    double   sTData[3];               //JZ data for s vector 
+    double sTData[3];               //JZ data for s vector 
 	Vector *sT;  // JZ  section resisting forces, caused by the temperature
-	double  *TemperatureTangent; // JZ  the E of E*A*alpha*DeltaT
+	//double  *TemperatureTangent; // JZ  the E of E*A*alpha*DeltaT
     double *Fiber_T;  //An array storing the TempT of the fibers.
 	double *Fiber_TMax; //An array storing the TempTMax of the fibers.
-
+    double AverageThermalElong;
 };
 
 #endif

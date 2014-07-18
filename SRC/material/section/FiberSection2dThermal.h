@@ -53,17 +53,19 @@ class FiberSection2dThermal : public SectionForceDeformation
     ~FiberSection2dThermal();
 
     const char *getClassType(void) const {return "FiberSection2dThermal";};
-    int   setTrialSectionDeformation(const Vector &deforms, const Vector&); //PK changed 18 to 27
+    //virtual int   setTrialSectionDeformation(const Vector &deforms, const Vector&); //PK changed 18 to 27
+    virtual int   setTrialSectionDeformation(const Vector &deforms); 
     const Vector &getSectionDeformation(void);
 
     const Vector &getStressResultant(void);
     const Matrix &getSectionTangent(void);
     const Matrix &getInitialTangent(void);
-    const Vector &getTemperatureStress(const Vector &tData); 
-
+    const Vector &getTemperatureStress(const Vector &tData);
+	
+	double getThermalElong(void);
 
     int   commitState(void);
-    int   revertToLastCommit(void);    
+    int   revertToLastCommit(void);
     int   revertToStart(void);
  
     SectionForceDeformation *getCopy(void);
@@ -80,7 +82,7 @@ class FiberSection2dThermal : public SectionForceDeformation
     int getResponse(int responseID, Information &info);
 
     int addFiber(Fiber &theFiber);
-
+    //double getMaterialPara(void);
    
 
     // AddingSensitivity:BEGIN //////////////////////////////////////////
@@ -93,6 +95,9 @@ class FiberSection2dThermal : public SectionForceDeformation
 			  int gradIndex, int numGrads);
     // AddingSensitivity:END ///////////////////////////////////////////
 
+    const Vector& determineFiberTemperature(const Vector& , double );  //Added by Liming (UoE)
+    int setTrialSectionDeformationTemperature(const Vector&);
+
   protected:
     
     //  private:
@@ -100,28 +105,26 @@ class FiberSection2dThermal : public SectionForceDeformation
     UniaxialMaterial **theMaterials; // array of pointers to materials
     double   *matData;               // data for the materials [yloc and area]
     double   kData[4];               // data for ks matrix 
-    double   sData[2];               // data for s vector 
-    
- //    ThermalField *theTemperatures;   // array of pointers to temperatures  //***JZ
-	double theTemperatureFactor;
-    
+    double   sData[2];               // data for s vector
+
     double yBar;       // Section centroid
 
-	//ThermalField *theTemperature ; //***JZ
-  
     SectionIntegration *sectionIntegr;
 
     static ID code;
 
     Vector e;          // trial section deformations 
+    Vector eCommit;    // committed section deformations 
     Vector *s;         // section resisting forces  (axial force, bending moment)
     Matrix *ks;        // section stiffness
+    Vector DataMixed;
 
     double   sTData[2];   //Data for section resisting force due to thermal load 
     Vector  *sT;  //  Pointer to sTData
-    double  *TemperatureTangent; // JZ  the E of E*A*alpha*DeltaT
-    double *LocElong; // JZ  thermal strain in getTemperatureStress(double *)
-    
+    double *Fiber_Tangent;
+    double *Fiber_ElongP;
+    double AverageThermalElong;
+	//Basiclly this data stores the last committed fiber tangent for calculating thermal foreces
 // AddingSensitivity:BEGIN //////////////////////////////////////////
     Vector dedh; // MHS hack
 // AddingSensitivity:END ///////////////////////////////////////////

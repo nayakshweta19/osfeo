@@ -126,7 +126,8 @@ extern void *OPS_NewConcrete09Material(void);     //
 extern void *OPS_NewConcrete10Material(void);     //
 extern void *OPS_ManderConcreteC01(void);         // for CSMM 
 extern void *OPS_ManderConcreteM01(void);         // for MCFT/DFSM
-extern void *OPS_NewTendonL01Material(void);
+extern void *OPS_NewTendonL01Material(void);      // for CSMM 
+extern void *OPS_NewConcreteDPM01(void);         // ConcreteDamagePlasticMaterial
 extern void *OPS_NewConfinedConcrete01Material(void);
 extern void *OPS_NewElasticBilin(void);
 extern void *OPS_NewMinMaxMaterial(void);
@@ -161,6 +162,8 @@ extern void *OPS_ConcretewBeta(void);
 extern void *OPS_PinchingLimitState(void);
 extern void *OPS_NewOriginCentered(void);
 extern void *OPS_NewSteel2(void);
+extern void *OPS_ConcreteSakaiKawashima(void);
+extern void *OPS_FRPConfinedConcrete(void);
 
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
@@ -354,6 +357,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	  else 
 	return TCL_ERROR;
 
+#ifndef _NO_NEW_RESTREPO
     } else if ((strcmp(argv[1], "DoddRestr") == 0)) {
 
       void *theMat = OPS_DoddRestr();
@@ -361,7 +365,7 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
         theMaterial = (UniaxialMaterial *)theMat;
       else
         return TCL_ERROR;
-
+#endif
     } else if (strcmp(argv[1], "ElasticMultiLinear") == 0) {
       void *theMat = OPS_NewElasticMultiLinear();
       if (theMat != 0) 
@@ -390,7 +394,16 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"OriginCentered") == 0) {
+    }
+    else if (strcmp(argv[1], "FRPConfinedConcrete") == 0) {
+      void *theMat = OPS_FRPConfinedConcrete();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+    }
+
+    else if (strcmp(argv[1], "OriginCentered") == 0) {
       void *theMat = OPS_NewOriginCentered();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
@@ -504,6 +517,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
 	} else if (strcmp(argv[1],"ConcretewBeta") == 0) {
       void *theMat = OPS_ConcretewBeta();
+      if (theMat != 0) 
+	theMaterial = (UniaxialMaterial *)theMat;
+      else 
+	return TCL_ERROR;
+
+    } else if (strcmp(argv[1],"ConcreteSakaiKawashima") == 0) {
+      void *theMat = OPS_ConcreteSakaiKawashima();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
@@ -2262,6 +2282,13 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	return TCL_ERROR;
     }
 
+    else if ((strcmp(argv[1], "ConcreteDPM01") == 0) || (strcmp(argv[1], "cdpm01") == 0)) {
+      void *theMat = OPS_NewConcreteDPM01();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
 
     else if ((strcmp(argv[1],"ConfinedConcrete01") == 0) || (strcmp(argv[1],"ConfinedConcrete") == 0)) {
       void *theMat = OPS_NewConfinedConcrete01Material();

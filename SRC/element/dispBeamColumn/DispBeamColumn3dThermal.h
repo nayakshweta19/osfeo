@@ -79,7 +79,7 @@ class DispBeamColumn3dThermal : public Element
 
     void zeroLoad();
     int addLoad(ElementalLoad *theLoad, double loadFactor);
-    int addLoad(ElementalLoad *theLoad, const Vector &loadFactors);
+    //int addLoad(ElementalLoad *theLoad, const Vector &loadFactors);
     int addInertiaLoadToUnbalance(const Vector &accel);
 
     const Vector &getResistingForce(void);
@@ -130,27 +130,18 @@ class DispBeamColumn3dThermal : public Element
 
     double rho;			// Mass density per unit length
 
-	double *dataMix; //J.Jiang
+	//double *dataMix; //J.Jiang
 	int counterTemperature;//J.Jiang
 	double residThermal[5];//J.Jiang
 	double residThermalP[5]; //Liming
 	int parameterID;
 
     enum {maxNumSections = 20};
-
     static double workArea[];
+
+	double SectionThermalElong[20];
+    double AverageThermalElong;
     
-	//Adding loadfactors to 'dispbeam2dThermal' for'FireLoadPattern' [-BEGIN-]: by L.J&P.K--8-May-2012--//
-	double loadFactor2;
-	double loadFactor3;
-	double loadFactor4;
-	double loadFactor5;
-	double loadFactor6;
-	double loadFactor7;
-	double loadFactor8;
-	double loadFactor9;
-	double loadFactor10;
-	//Adding loadfactors to 'dispbeam2dThermal' for'FireLoadPattern'  [-END-]: by L.J&P.K--8-May-2012--//
 
 };
 

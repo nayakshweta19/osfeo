@@ -267,8 +267,8 @@ FiberSection3dThermal::~FiberSection3dThermal()
     delete ks;
   if (sT != 0)
     delete sT;
-  if (TemperatureTangent != 0)
-    delete [] TemperatureTangent;
+  //if (TemperatureTangent != 0)
+    //delete [] TemperatureTangent;
 }
 
 int
@@ -427,13 +427,15 @@ FiberSection3dThermal::getStressResultant(void)
 const Vector&
 FiberSection3dThermal::getTemperatureStress(const Vector& dataMixed)
 {
-   double dataTempe[20]; //
-   for (int i = 0; i < 20; i++) { //
-	  dataTempe[i] = dataMixed[i];
+   double dataTempe[25]; //
+   for (int i = 0; i < 25; i++) { //
+	  dataTempe[i] = dataMixed(i);
    }          
-             
+   sTData[0]=0;
+   sTData[1]=0;
+   sTData[2]=0;
 
-  //JJadd, 12/2010, updata yBar = Ai*Ei*yi/(Ai*E*)  start 
+   //JJadd, 12/2010, updata yBar = Ai*Ei*yi/(Ai*E*)  start 
   double ThermalTangent[1000];
   double ThermalElong[1000];
   for (int i = 0; i < numFibers; i++) {
@@ -460,16 +462,34 @@ FiberSection3dThermal::getTemperatureStress(const Vector& dataMixed)
 	double FiberTempMax=0; //PK add for max temp
 
 	//if locY1 and locY9 are not less than zero
-	if ( fabs(dataTempe[0]) <= 1e-10 && fabs(dataTempe[10]) <= 1e-10 ) //no tempe load
+	if ( fabs(dataTempe[0]) <= 1e-10 && fabs(dataTempe[10]) <= 1e-10 &&fabs(dataTempe[11]) <= 1e-10) //no tempe load
 	{
 		FiberTemperature = 0;
 	}
 	else
 	{
 		//caculate the fiber tempe, T=T1-(Y-Y1)*(T1-T2)/(Y1-Y2)
+		//first for bottom flange if existing
 		if (  yi <= dataTempe[1]) 
 		{
-			opserr <<"FiberSection2dTemperature::setTrialSectionDeformationTemperatureup -- fiber loc yi" <<yi<<"  is out of the section";
+			if (zi <= dataTempe[12]){
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+			else if (zi<= dataTempe[15]){
+				FiberTemperature = dataTempe[10] - (dataTempe[10] - dataTempe[13])*(dataTempe[12] - zi) /(dataTempe[12] - dataTempe[15]);
+			}
+			else if (zi<= dataTempe[18]){
+				FiberTemperature = dataTempe[13] - (dataTempe[13] - dataTempe[16])*(dataTempe[15] - zi) /(dataTempe[15] - dataTempe[18]);
+			}
+			else if (zi<= dataTempe[21]){
+				FiberTemperature = dataTempe[16] - (dataTempe[16] - dataTempe[19])*(dataTempe[18] - zi) /(dataTempe[18] - dataTempe[21]);
+			}
+			else if (zi<= dataTempe[24]){
+				FiberTemperature = dataTempe[19] - (dataTempe[19] - dataTempe[22])*(dataTempe[21] - zi) /(dataTempe[21] - dataTempe[24]);
+			}
+			else {
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
 		}
 		else if (yi <= dataTempe[3])
 		{
@@ -487,32 +507,25 @@ FiberSection3dThermal::getTemperatureStress(const Vector& dataMixed)
 		{
 			FiberTemperature = dataTempe[6] - (dataTempe[7] - yi) * (dataTempe[6] - dataTempe[8])/(dataTempe[7] - dataTempe[9]);
 		}
-	}
-	
-	if (  FiberTemperature > 0.0) 
-	{
-	//opserr<<"FiberTemperature: "<<FiberTemperature<<endln;
-	}
-	else {
-		if (  zi <= dataTempe[11]) 
-		{
-			opserr <<"FiberSection2dTemperature::setTrialSectionDeformationTemperatureup -- fiber loc zi" <<zi<<" is out of the section";
-		}
-		else if (zi <= dataTempe[13])
-		{
-			FiberTemperature = dataTempe[10] - (dataTempe[11] - zi) * (dataTempe[10] - dataTempe[12])/(dataTempe[11] - dataTempe[13]);
-		}
-		else if (   zi <= dataTempe[15])
-		{
-			FiberTemperature = dataTempe[12] - (dataTempe[13] - zi) * (dataTempe[12] - dataTempe[14])/(dataTempe[13] - dataTempe[15]);
-		}
-		else if ( zi <= dataTempe[17])
-		{
-			FiberTemperature = dataTempe[14] - (dataTempe[15] - zi) * (dataTempe[14] - dataTempe[16])/(dataTempe[15] - dataTempe[17]);
-		}
-		else if ( zi <= dataTempe[19])
-		{
-			FiberTemperature = dataTempe[16] - (dataTempe[17] - zi) * (dataTempe[16] - dataTempe[18])/(dataTempe[17] - dataTempe[19]);
+		else {
+			if (zi <= dataTempe[12]){
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+			else if (zi<= dataTempe[15]){
+				FiberTemperature = dataTempe[11] - (dataTempe[11] - dataTempe[14])*(dataTempe[12] - zi) /(dataTempe[12] - dataTempe[15]);
+			}
+			else if (zi<= dataTempe[18]){
+				FiberTemperature = dataTempe[14] - (dataTempe[14] - dataTempe[17])*(dataTempe[15] - zi) /(dataTempe[15] - dataTempe[18]);
+			}
+			else if (zi<= dataTempe[21]){
+				FiberTemperature = dataTempe[17] - (dataTempe[17] - dataTempe[20])*(dataTempe[18] - zi) /(dataTempe[18] - dataTempe[21]);
+			}
+			else if (zi<= dataTempe[24]){
+				FiberTemperature = dataTempe[20] - (dataTempe[20] - dataTempe[23])*(dataTempe[21] - zi) /(dataTempe[21] - dataTempe[24]);
+			}
+			else {
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
 		}
 	}
     // determine material strain and set it
@@ -542,23 +555,33 @@ FiberSection3dThermal::getTemperatureStress(const Vector& dataMixed)
   }
 
  // calculate section resisting force due to thermal load
-
   double FiberForce;
+  double SectionArea = 0;
+  double ThermalElongMoment = 0;
   for (int i = 0; i < numFibers; i++) {
 	  FiberForce = ThermalTangent[i]*matData[3*i+2]*ThermalElong[i];
       sTData[0] += FiberForce;
       sTData[1] += FiberForce*(matData[3*i] - yBar);
 	  sTData[2] += FiberForce*(matData[3*i+1] - zBar);
+      SectionArea += matData[3*i+2];
+      //need to be revised by neallee
+      ThermalElongMoment += ThermalElong[i] * matData[3 * i + 2];
   }
   double ThermalMoment; 
   ThermalMoment = abs(sTData[1]);
-  sTData[1] = ThermalMoment;
-
+ // sTData[1] = ThermalMoment;
+  AverageThermalElong = ThermalElongMoment / SectionArea;
   return *sT;
 }
 //JJadd--12.2010---to get section force due to thermal load----end-----
 
-
+//UoE group///Calculating Thermal stresses at each /////////////////////////////////////////////////////end 
+double
+FiberSection3dThermal::getThermalElong(void)
+{
+  return AverageThermalElong;
+}
+//Retuning ThermalElongation
 
 SectionForceDeformation*
 FiberSection3dThermal::getCopy(void)

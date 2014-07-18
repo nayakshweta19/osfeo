@@ -6,6 +6,8 @@ include ../../../Makefile.def
 	Steel2.o \
 	OriginCentered.o \
 	ConcretewBeta.o \
+	ConcreteSakaiKawashima.o \
+	c14-SK-M.o \
 	ElasticMultiLinear.o \
         ElasticPPMaterial.o \
         ElasticBilin.o \
@@ -71,6 +73,7 @@ include ../../../Makefile.def
 	SecantMaterial.o \
 	Concrete01WithSITC.o \
 	ConcretewBeta.o \
+	FRPConfinedConcrete.o \
 	KikuchiAikenHDR.o \
 	KikuchiAikenLRB.o \
 	Concrete05.o \

@@ -31,6 +31,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef fmax
+#define fmax(a,b) (((a)>(b)) ? (a) : (b))
+#endif
+
+#ifndef fmin
+#define fmin(a,b) (((a)<(b)) ? (a) : (b))
+#endif
+
 #define INT_ForwardEuler  5
 #define INT_ModifiedEuler 1
 #define INT_BackwardEuler 2

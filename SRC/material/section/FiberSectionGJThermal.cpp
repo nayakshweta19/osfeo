@@ -50,7 +50,7 @@ Matrix FiberSectionGJThermal::ks(4,4);
 // constructors:
 FiberSectionGJThermal::FiberSectionGJThermal(int tag, int num, Fiber **fibers, double gj): 
   SectionForceDeformation(tag, SEC_TAG_FiberSectionGJThermal),
-  numFibers(num), theMaterials(0), matData(0),
+  numFibers(num), theMaterials(0), matData(0),dataMixed(25),
   yBar(0.0), zBar(0.0), e(4), eCommit(4), GJ(gj)
 {
   if (numFibers != 0) {
@@ -115,21 +115,17 @@ FiberSectionGJThermal::FiberSectionGJThermal(int tag, int num, Fiber **fibers, d
   sTData[1] = 0.0; 
   sTData[2] = 0.0;
   //An array storing the current fiber Temperature and Maximum Temperature and intializing it.
-  Fiber_T = new double [1000];
+  Fiber_ElongP = new double [1000];
   for (int i = 0;i<1000; i++) {
-	   Fiber_T[i] = 0;
-   } 
-  Fiber_TMax = new double [1000];
-  for (int i = 0;i<1000; i++) {
-	   Fiber_TMax[i] = 0;
+	   Fiber_ElongP[i] = 0;
    }  
-  
+  dataMixed.Zero();
 }
 
 // constructor for blank object that recvSelf needs to be invoked upon
 FiberSectionGJThermal::FiberSectionGJThermal():
   SectionForceDeformation(0, SEC_TAG_FiberSectionGJThermal),
-  numFibers(0), theMaterials(0), matData(0),
+  numFibers(0), theMaterials(0), matData(0),dataMixed(25),
   yBar(0.0), zBar(0.0), e(4), eCommit(4), GJ(1.0)
 {
   sData[0] = 0.0;
@@ -150,14 +146,11 @@ FiberSectionGJThermal::FiberSectionGJThermal():
   sTData[1] = 0.0; 
   sTData[2] = 0.0;
   //An array storing the current fiber Temperature and Maximum Temperature and intializing it.
-  Fiber_T = new double [1000];
+  Fiber_ElongP = new double [1000];
   for (int i = 0;i<1000; i++) {
-	   Fiber_T[i] = 0;
-   } 
-  Fiber_TMax = new double [1000];
-  for (int i = 0;i<1000; i++) {
-	   Fiber_TMax[i] = 0;
+	   Fiber_ElongP[i] = 0;
    }  
+   dataMixed.Zero();
  
 }
 
@@ -247,12 +240,9 @@ FiberSectionGJThermal::~FiberSectionGJThermal()
 
   if (matData != 0)
     delete [] matData;
-  
-  if(Fiber_T !=0)
-	  delete [] Fiber_T;
-  
-  if(Fiber_TMax != 0 )
-	  delete [] Fiber_TMax;
+
+  if(Fiber_ElongP != 0 )
+	  delete [] Fiber_ElongP;
 }
 
 int
@@ -274,16 +264,28 @@ FiberSectionGJThermal::setTrialSectionDeformation (const Vector &deforms)
 
   for (int i = 0; i < numFibers; i++) {
     UniaxialMaterial *theMat = theMaterials[i];
-    double y = matData[loc++] - yBar;
-    double z = matData[loc++] - zBar;
-    double A = matData[loc++];
+    double yi = matData[i*3]-yBar;
+	double zi = matData[i*3+1]-zBar;
+    double A = matData[i*3+2];
+	double FiberTemperature = 0 ; 
+	double FiberTempMax = 0;
+	//if Temperatures at Beam web and beam flange are not less than zero
+	if ( fabs(dataMixed(0)) <= 1e-10 && fabs(dataMixed(10)) <= 1e-10 ) //no tempe load
+	{
+		FiberTemperature = 0;
+	}
+	else
+	{
+		//caculate the fiber tempe, T=T1-(Y-Y1)*(T1-T2)/(Y1-Y2)
+		//first for bottom flange if existing
+		Vector TempV= this->determineFiberTemperature( dataMixed, -yi-yBar,zi+zBar);
+		FiberTemperature = TempV(0);FiberTempMax= TempV(1);
 
-	double FiberTemperature = Fiber_T[i];
-	double FiberTempMax = Fiber_TMax[i];
+	}
 	
 	//---Calculating the Fiber Temperature---end
 
-	double strain = d0 + y*d1 + z*d2;  //axial strain d0, rotational degree d1,d2;
+	double strain = d0 + yi*d1 + zi*d2;  //axial strain d0, rotational degree d1,d2;
     double tangent =0.0;
 	double stress = 0.0; 
 	double ThermalElongation = 0.0;
@@ -300,27 +302,27 @@ FiberSectionGJThermal::setTrialSectionDeformation (const Vector &deforms)
     ThermalElongation = tData(2);
 
     // determine material strain and set it
-    strain = d0 + y*d1 + z*d2 - ThermalElongation;
+    strain = d0 + yi*d1 + zi*d2 - ThermalElongation;
     res += theMat->setTrial(strain, FiberTemperature, stress, tangent, ThermalElongation);
 
     double value = tangent * A;
-    double vas1 = y*value;
-    double vas2 = z*value;
-    double vas1as2 = vas1*z;
+    double vas1 = yi*value;
+    double vas2 = zi*value;
+    double vas1as2 = vas1*zi;
 
     kData[0] += value;
     kData[1] += vas1;
     kData[2] += vas2;
     
-    kData[3] += vas1 * y;
+    kData[3] += vas1 * yi;
     kData[4] += vas1as2;
     
-    kData[5] += vas2 * z; 
+    kData[5] += vas2 * zi; 
 
     double fs0 = stress * A;
     sData[0] += fs0;
-    sData[1] += fs0 * y;
-    sData[2] += fs0 * z;
+    sData[1] += fs0 * yi;
+    sData[2] += fs0 * zi;
   }
   return res;
 }
@@ -401,22 +403,19 @@ FiberSectionGJThermal::getStressResultant(void)
   return s;
 }
 //JJadd--12.2010---to get section force due to thermal load----start-----
+//---Liming modified the following block---
 const Vector&
-FiberSectionGJThermal::getTemperatureStress(const Vector& dataMixed)
+FiberSectionGJThermal::getTemperatureStress(const Vector& DataMixed)
 {
                 
-  double dataTempe[20];
-  for (int i = 0; i < 20; i++) {
-	  dataTempe[i] = dataMixed[i];
-  }
+  dataMixed = DataMixed;
              
-
- //JJadd, 12/2010, updata yBar = Ai*Ei*yi/(Ai*E*)  start 
   double ThermalTangent[1000];
-  double ThermalElong[1000];
+  double DeltaThermalElong[1000];
+
   for (int i = 0; i < numFibers; i++) {
        ThermalTangent[i]=0;
-       ThermalElong[i]=0;
+      DeltaThermalElong[i]=0;
   }
  
   for (int i = 0; i < numFibers; i++) {
@@ -434,61 +433,19 @@ FiberSectionGJThermal::getTemperatureStress(const Vector& dataMixed)
 	double FiberTemperature = 0 ; //JZ
 	double FiberTempMax = 0;
 	
+	
 	//if locY1 and locY9 are not less than zero
-	if ( fabs(dataTempe[0]) <= 1e-10 && fabs(dataTempe[10]) <= 1e-10 ) //no tempe load
+	if ( fabs(dataMixed(0)) <= 1e-10 && fabs(dataMixed(10)) <= 1e-10 ) //no tempe load
 	{
 		FiberTemperature = 0;
 	}
 	else
 	{
 		//caculate the fiber tempe, T=T1-(Y-Y1)*(T1-T2)/(Y1-Y2)
-		if (  yi <= dataTempe[1]) 
-		{
-			opserr <<"FiberSection2dTemperature::setTrialSectionDeformationTemperatureup -- fiber loc yi" <<yi<<"  is out of the section";
-		}
-		else if (yi <= dataTempe[3])
-		{
-			FiberTemperature = dataTempe[0] - (dataTempe[1] - yi) * (dataTempe[0] - dataTempe[2])/(dataTempe[1] - dataTempe[3]);
-		}
-		else if (   yi <= dataTempe[5] )
-		{
-			FiberTemperature = dataTempe[2] - (dataTempe[3] - yi) * (dataTempe[2] - dataTempe[4])/(dataTempe[3] - dataTempe[5]);
-		}
-		else if ( yi <= dataTempe[7] )
-		{
-			FiberTemperature = dataTempe[4] - (dataTempe[5] - yi) * (dataTempe[4] - dataTempe[6])/(dataTempe[5] - dataTempe[7]);
-		}
-	    else if ( yi <= dataTempe[9] )
-		{
-			FiberTemperature = dataTempe[6] - (dataTempe[7] - yi) * (dataTempe[6] - dataTempe[8])/(dataTempe[7] - dataTempe[9]);
-		}
-	}
-	
-	if (  FiberTemperature > 0.0) 
-	{
-	//opserr<<"FiberTemperature: "<<FiberTemperature<<endln;
-	}
-	else {
-		if (  zi <= dataTempe[11]) 
-		{
-			opserr <<"FiberSection2dTemperature::setTrialSectionDeformationTemperatureup -- fiber loc zi" <<zi<<" is out of the section";
-		}
-		else if (zi <= dataTempe[13])
-		{
-			FiberTemperature = dataTempe[10] - (dataTempe[11] - zi) * (dataTempe[10] - dataTempe[12])/(dataTempe[11] - dataTempe[13]);
-		}
-		else if (   zi <= dataTempe[15])
-		{
-			FiberTemperature = dataTempe[12] - (dataTempe[13] - zi) * (dataTempe[12] - dataTempe[14])/(dataTempe[13] - dataTempe[15]);
-		}
-		else if ( zi <= dataTempe[17])
-		{
-			FiberTemperature = dataTempe[14] - (dataTempe[15] - zi) * (dataTempe[14] - dataTempe[16])/(dataTempe[15] - dataTempe[17]);
-		}
-		else if ( zi <= dataTempe[19])
-		{
-			FiberTemperature = dataTempe[16] - (dataTempe[17] - zi) * (dataTempe[16] - dataTempe[18])/(dataTempe[17] - dataTempe[19]);
-		}
+		//first for bottom flange if existing
+		Vector TempV= this->determineFiberTemperature( dataMixed, -yi,zi);
+		FiberTemperature = TempV(0);FiberTempMax= TempV(1);
+
 	}
     // determine material strain and set it
 	double tangent =0.0;
@@ -506,30 +463,42 @@ FiberSectionGJThermal::getTemperatureStress(const Vector& dataMixed)
     tangent = tData(1);
     ThermalElongation = tData(2);
 	FiberTempMax = tData(3);
+
+	DeltaThermalElong[i]= ThermalElongation-Fiber_ElongP[i];
+	Fiber_ElongP[i]= ThermalElongation;
     
     //  double strain = -ThermalElongation;
     //  theMat->setTrialTemperature(strain, FiberTemperature, stress, tangent, ThermalElongation);
-    Fiber_T[i] = FiberTemperature;
-	Fiber_TMax[i] = FiberTempMax;
-    ThermalTangent[i] = tangent;
-	ThermalElong[i] = ThermalElongation;
-    
+    ThermalTangent[i] = tangent;  
   }
 
  // calculate section resisting force due to thermal load
   double FiberForce;
+  double SectionArea=0; 
+  double ThermalElongMoment=0;//Liming add this for calculating average Thermal Elongation
   for (int i = 0; i < numFibers; i++) {
-	  FiberForce = ThermalTangent[i]*matData[3*i+2]*ThermalElong[i];
+	  FiberForce = ThermalTangent[i]*matData[3*i+2]*DeltaThermalElong[i];
+	  SectionArea +=matData[3*i+2];
+	  ThermalElongMoment += Fiber_ElongP[i]*(matData[3*i+2]);
       sTData[0] += FiberForce;
       sTData[1] += FiberForce*(matData[3*i] - yBar);
 	  sTData[2] += FiberForce*(matData[3*i+1] - zBar);
   }
+  AverageThermalElong = ThermalElongMoment/SectionArea;
   double ThermalMoment; 
   ThermalMoment = abs(sTData[1]);
   sTData[1] = ThermalMoment;
 
   return *sT;
 }
+
+double 
+FiberSectionGJThermal::getThermalElong(void)
+{
+  return AverageThermalElong;
+}
+
+//------Liming-Modified for beamThermalAction3d-----
 //JJadd--12.2010---to get section force due to thermal load----end-----
 SectionForceDeformation*
 FiberSectionGJThermal::getCopy(void)
@@ -1031,4 +1000,78 @@ FiberSectionGJThermal::setParameter (const char **argv, int argc, Parameter &par
   }
 
   return result;
+}
+
+const Vector&
+FiberSectionGJThermal::determineFiberTemperature(const Vector&DataMixed, double yi, double zi)
+{
+	double FiberTemperature = 0;
+	double FiberTempMax = 0;
+	
+	double dataTempe[25];
+	for(int i=0;i<25;i++){
+		dataTempe[i] = DataMixed(i);
+	}
+
+	if (  yi <= dataTempe[1]) 
+		{
+			if (zi <= dataTempe[12]){
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+			else if (zi<= dataTempe[15]){
+				FiberTemperature = dataTempe[10] - (dataTempe[10] - dataTempe[13])*(dataTempe[12] - zi) /(dataTempe[12] - dataTempe[15]);
+			}
+			else if (zi<= dataTempe[18]){
+				FiberTemperature = dataTempe[13] - (dataTempe[13] - dataTempe[16])*(dataTempe[15] - zi) /(dataTempe[15] - dataTempe[18]);
+			}
+			else if (zi<= dataTempe[21]){
+				FiberTemperature = dataTempe[16] - (dataTempe[16] - dataTempe[19])*(dataTempe[18] - zi) /(dataTempe[18] - dataTempe[21]);
+			}
+			else if (zi<= dataTempe[24]){
+				FiberTemperature = dataTempe[19] - (dataTempe[19] - dataTempe[22])*(dataTempe[21] - zi) /(dataTempe[21] - dataTempe[24]);
+			}
+			else {
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+		}
+		else if (yi <= dataTempe[3])
+		{
+			FiberTemperature = dataTempe[0] - (dataTempe[1] - yi) * (dataTempe[0] - dataTempe[2])/(dataTempe[1] - dataTempe[3]);
+		}
+		else if (   yi <= dataTempe[5] )
+		{
+			FiberTemperature = dataTempe[2] - (dataTempe[3] - yi) * (dataTempe[2] - dataTempe[4])/(dataTempe[3] - dataTempe[5]);
+		}
+		else if ( yi <= dataTempe[7] )
+		{
+			FiberTemperature = dataTempe[4] - (dataTempe[5] - yi) * (dataTempe[4] - dataTempe[6])/(dataTempe[5] - dataTempe[7]);
+		}
+	    else if ( yi <= dataTempe[9] )
+		{
+			FiberTemperature = dataTempe[6] - (dataTempe[7] - yi) * (dataTempe[6] - dataTempe[8])/(dataTempe[7] - dataTempe[9]);
+		}
+		else {
+			if (zi <= dataTempe[12]){
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+			else if (zi<= dataTempe[15]){
+				FiberTemperature = dataTempe[11] - (dataTempe[11] - dataTempe[14])*(dataTempe[12] - zi) /(dataTempe[12] - dataTempe[15]);
+			}
+			else if (zi<= dataTempe[18]){
+				FiberTemperature = dataTempe[14] - (dataTempe[14] - dataTempe[17])*(dataTempe[15] - zi) /(dataTempe[15] - dataTempe[18]);
+			}
+			else if (zi<= dataTempe[21]){
+				FiberTemperature = dataTempe[17] - (dataTempe[17] - dataTempe[20])*(dataTempe[18] - zi) /(dataTempe[18] - dataTempe[21]);
+			}
+			else if (zi<= dataTempe[24]){
+				FiberTemperature = dataTempe[20] - (dataTempe[20] - dataTempe[23])*(dataTempe[21] - zi) /(dataTempe[21] - dataTempe[24]);
+			}
+			else {
+				opserr<<"WARNING: FiberSection3dThermal failed to find the fiber with locy: "<<yi <<" , locZ: "<<zi <<endln;
+			}
+		}
+	static Vector returnedTemperature(2);
+	returnedTemperature(0)=FiberTemperature;
+	returnedTemperature(1)=FiberTempMax;
+	return returnedTemperature;
 }

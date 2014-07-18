@@ -3432,12 +3432,12 @@ TclCommand_doBlock2D(ClientData clientData, Tcl_Interp *interp, int argc,
   int ndm = theTclBuilder->getNDM();
   if (ndm < 2) {
     opserr << "WARNING block2D numX? numY? startNode? startEle? eleType? eleArgs?";
-    opserr << " : model dimension (ndm) must be at leat 2 " << endln;
+    opserr << " : model dimension (ndm) must be at least 2 " << endln;
     return TCL_ERROR;
   }
 
   if (argc < 8) {
-    opserr << "WARNING incorrect numer of args :block2D numX? numY? startNode? startEle? eleType? eleArgs?";
+    opserr << "WARNING incorrect number of args :block2D numX? numY? startNode? startEle? eleType? eleArgs?";
     return TCL_ERROR;
   }
   int numX, numY, startNodeNum, startEleNum;

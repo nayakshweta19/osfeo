@@ -290,3 +290,13 @@ NodalLoad::getExternalForceSensitivity(int gradNumber)
 
 // AddingSensitivity:END //////////////////////////////////////
 
+//Adding general function for using NodalThermalAction
+void
+NodalLoad::applyLoad(Vector& loadFactors){
+}
+
+const Vector&
+NodalLoad::getData(int& type){
+  Vector* Empty = new Vector();
+  return *Empty;
+}
