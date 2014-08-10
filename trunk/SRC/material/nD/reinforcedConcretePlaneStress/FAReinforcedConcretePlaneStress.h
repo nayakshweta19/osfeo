@@ -130,20 +130,20 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
 	static Vector stress_vec;
 	static Matrix tangent_matrix;
 
-    static double DC[3][3];
-    static double DC_bar[3][3];
+    static Matrix DC;
+    static Matrix DC_bar;
 
 	double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
-    double   rou1;      // steel ratio of the first steel layer
-    double   rou2;      // steel ratio of the second steel layer
+    double   rouL;      // steel ratio of the first steel layer
+    double   rouT;      // steel ratio of the second steel layer
     double   fpc;       // compressive strength of the concrete
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
-	double   Tstrain[3];   // Trial strains
-    double   Tstress[3];   // Trial stresses
-    double   lastStress[3];  // Last committed stresses, added for x, k
+	static Vector   Tstrain;   // Trial strains
+    static Vector   Tstress;   // Trial stresses
+    static Vector   lastStress;  // Last committed stresses, added for x, k
     
     double   citaStrain;      // principle strain direction
     double   citaStress;     // principle stress direction

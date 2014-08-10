@@ -5,9 +5,6 @@
 CulaSparseSolverS6::CulaSparseSolverS6(void)
 :SparseGenRowLinSolver(SOLVER_TAGS_CulaSparseS6)
 {
-  //config.debug = 1;
-
-  single = 0;
   status = culaSparseCreate(&handle);
 
   if (status != culaSparseNoError) {
@@ -71,7 +68,6 @@ CulaSparseSolverS6::CulaSparseSolverS6(double relTol,
   int maxInteration,
   int preCond,
   int solver,
-  int single,
   int host)
   :SparseGenRowLinSolver(SOLVER_TAGS_CulaSparseS6)
 {
@@ -81,7 +77,6 @@ CulaSparseSolverS6::CulaSparseSolverS6(double relTol,
   this->maxInteration = maxInteration;
   this->preCond = preCond;
   this->solver = solver;
-  this->single = single;
   this->host = host;
 
   status = culaSparseCreate(&handle);
@@ -100,7 +95,6 @@ CulaSparseSolverS6::CulaSparseSolverS6(double relTol,
       opserr << buf << "\n";
       return;
     }
-
   }
 
   status = culaSparseCreatePlan(handle, &plan);
@@ -216,11 +210,6 @@ CulaSparseSolverS6::~CulaSparseSolverS6(void)
 {
   culaSparseDestroyPlan(plan);
   culaSparseDestroy(handle);
-  if (single == 1) {
-    delete Xsingle;
-    delete Bsingle;
-    delete Asingle;
-  }
 }
 
 int
@@ -228,12 +217,6 @@ CulaSparseSolverS6::setSize()
 {
   int n = theSOE->size;
   int nnz = theSOE->nnz;
-
-  if (single == 1) {
-    Xsingle = new float[n];
-    Bsingle = new float[n];
-    Asingle = new float[nnz];
-  }
 
   return 0;
 }
@@ -286,24 +269,7 @@ int CulaSparseSolverS6::solve(void)
   int *rowPtr = theSOE->rowStartA;
   int *colInd = theSOE->colA;
 
-  if (single == 0) {
-    culaSparseSetDcsrData(handle, plan, &CsrOpt, n, nnz, Aptr, rowPtr, colInd, Xptr, Bptr);
-  }
-  else if (single == 1) {
-    for (int i = 0; i < n; ++i) {
-      Xsingle[i] = Xptr[i];
-      Bsingle[i] = Bptr[i];
-      Asingle[i] = Aptr[i];
-    }
-    for (int i = n; i < nnz; ++i) {
-      Asingle[i] = Aptr[i];
-    }
-    culaSparseSetScsrData(handle, plan, &CsrOpt, n, nnz, Asingle, rowPtr, colInd, Xsingle, Bsingle);
-  }
-  else {
-    opserr << "CulaSparseDataError!\n";
-    return -1;
-  }
+  culaSparseSetDcsrData(handle, plan, &CsrOpt, n, nnz, Aptr, rowPtr, colInd, Xptr, Bptr);
 
   // execute plan
   status = culaSparseExecutePlan(handle, plan, &config, &result);
@@ -319,11 +285,6 @@ int CulaSparseSolverS6::solve(void)
   culaSparseGetResultString(handle,&result, buf, sizeof(buf) );
   opserr<<buf<<"\n";
   */
-  if (single == 1) {
-    for (int i = 0; i < n; ++i) {
-      Xptr[i] = Xsingle[i];
-    }
-  }
 
   return 0;
 }

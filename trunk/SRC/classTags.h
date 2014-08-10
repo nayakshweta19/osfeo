@@ -187,21 +187,25 @@
 #define MAT_TAG_Steel2                          81
 #define MAT_TAG_DoddRestr                       82
 #define MAT_TAG_ConcreteSakaiKawashima          83
-
+#define MAT_TAG_ResilienceMaterialHR            84
+#define MAT_TAG_CFSSSWP                         81
+#define MAT_TAG_CFSWSWP                         82
 // Neallee@tju.edu.cn
-#define MAT_TAG_ConcreteL02			60
-#define MAT_TAG_SteelZ02			61
-#define MAT_TAG_ConcreteZ02			62
-#define MAT_TAG_MCFTSteel01         63
-#define MAT_TAG_MCFTConcrete01      64
-#define MAT_TAG_MCFTSteel02         65
-#define MAT_TAG_MCFTConcrete02      65
-#define MAT_TAG_MCFTSteel03         66
-#define MAT_TAG_MCFTConcrete03      67
-#define MAT_TAG_BoucWen3D           68
-#define MAT_TAG_BoucWen2D           69
-#define MAT_TAG_ConcreteDPM1        70
-#define MAT_TAG_ConcreteDPM2        71
+#define MAT_TAG_Concrete09			1024081
+#define MAT_TAG_Concrete10			1024082
+#define MAT_TAG_ConcreteL02			1024083
+#define MAT_TAG_SteelZ02			1024084
+#define MAT_TAG_ConcreteZ02			1024085
+#define MAT_TAG_MCFTSteel01         1024086
+#define MAT_TAG_MCFTConcrete01      1024087
+#define MAT_TAG_MCFTSteel02         1024088
+#define MAT_TAG_MCFTConcrete02      1024089
+#define MAT_TAG_MCFTSteel03         1024090
+#define MAT_TAG_MCFTConcrete03      1024091
+#define MAT_TAG_BoucWen3D           1024092
+#define MAT_TAG_BoucWen2D           1024093
+#define MAT_TAG_ConcreteDPM1        1024094
+#define MAT_TAG_ConcreteDPM2        1024095
 // neallee ended
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
@@ -420,24 +424,24 @@
 #define ND_TAG_FAFourSteelPCPlaneStress  110
 #define ND_TAG_RAFourSteelPCPlaneStress  111
 //added by  - Ning Li. neallee@tju.edu.cn
-#define FIBER_TAG_Biaxial2d       3
-#define FIBER_TAG_Biaxial3d       4
-#define FIBER_TAG_Triaxial        5
-#define ND_TAG_CSMMRCPlaneStress  112
-#define ND_TAG_CSMMRCPlateFiber   113
-#define ND_TAG_RAReinforcedConcretePlateFiber  114
-#define ND_TAG_FAReinforcedConcretePlateFiber  115
-#define ND_TAG_MCFTRCPlaneStress  116
-#define ND_TAG_MCFTRCPlateFiber   117
-#define ND_TAG_MCFTRCPlaneStress02  118
-#define ND_TAG_DSFMRCPlaneStress    119
-#define ND_TAG_DruckerPragerThermal    120
-#define ND_TAG_DruckerPrager3DThermal    121
-#define ND_TAG_DruckerPragerSteelThermal    122
-#define ND_TAG_ElasticIsotropic3DThermal    123
-#define ND_TAG_ElasticIsotropic3DThermalSteel    124
-#define ND_TAG_RASTMRCPlateFiber  126
-#define ND_TAG_FASTMRCPlateFiber  127
+#define FIBER_TAG_Biaxial2d       1024011
+#define FIBER_TAG_Biaxial3d       1024012
+#define FIBER_TAG_Triaxial        1024013
+#define ND_TAG_CSMMRCPlaneStress  10240101
+#define ND_TAG_CSMMRCPlateFiber   10240102
+#define ND_TAG_RAReinforcedConcretePlateFiber  10240103
+#define ND_TAG_FAReinforcedConcretePlateFiber  10240104
+#define ND_TAG_MCFTRCPlaneStress  10240105
+#define ND_TAG_MCFTRCPlateFiber   10240106
+#define ND_TAG_MCFTRCPlaneStress02  10240107
+#define ND_TAG_DSFMRCPlaneStress    10240108
+#define ND_TAG_DruckerPragerThermal    10240109
+#define ND_TAG_DruckerPrager3DThermal    10240110
+#define ND_TAG_DruckerPragerSteelThermal    10240111
+#define ND_TAG_ElasticIsotropic3DThermal    10240112
+#define ND_TAG_ElasticIsotropic3DThermalSteel    10240113
+#define ND_TAG_RASTMRCPlateFiber  10240114
+#define ND_TAG_FASTMRCPlateFiber  10240115
 //end by  - Ning Li. neallee@tju.edu.cn
 
 // MultiaxialCyclicPlasticity, add by Gang Wang
@@ -694,10 +698,10 @@
 #define ELE_TAG_RCFTSTLGMBeamColumn3D 9892
 // Adding HAJJAR_COMPOSITE: End /////////
 
-#define ELE_TAG_Shell02                 201 // neallee
+#define ELE_TAG_Shell02   10240201 // neallee
 #define ELE_TAG_fElmt01   205
-#define ELE_TAG_fElmt03   206 // neallee
-#define ELE_TAG_fElmt04   207 // neallee
+#define ELE_TAG_fElmt03   10240202 // neallee
+#define ELE_TAG_fElmt04   10240203 // neallee
 
 #define FRN_TAG_Coulomb            1
 #define FRN_TAG_VelDependent       2
@@ -1032,38 +1036,34 @@
 #define CHANNEL_TAGS_FileDatastore	  1
 
 //////////////////////////////////////////////////////////////////////////
-#define ND_TAG_NonlinearBS 198112
+#define ND_TAG_NonlinearBS 10240301
 
-#define SEC_TAG_RASTMFiberSection2d 102003
-#define SEC_TAG_FASTMFiberSection2d 102004
-#define SEC_TAG_CSMMFiberSection2d 102005
-#define SEC_TAG_MCFTFiberSection2d 102006
+#define SEC_TAG_RASTMFiberSection2d 10240302
+#define SEC_TAG_FASTMFiberSection2d 10240303
+#define SEC_TAG_CSMMFiberSection2d 10240304
+#define SEC_TAG_MCFTFiberSection2d 10240305
 
-#define SEC_TAG_TimoshenkoSection2d 191275
-#define SEC_TAG_TimoshenkoSection3d 191276
+#define SEC_TAG_TimoshenkoSection2d 10240306
+#define SEC_TAG_TimoshenkoSection3d 10240307
 
-#define ELE_TAG_Timoshenko2d 103001
-#define ELE_TAG_Timoshenko3d 103002
+#define ELE_TAG_Timoshenko2d 10240308
+#define ELE_TAG_Timoshenko3d 10240309
 
-#define ELE_TAG_Timoshenko2d01 102007
-#define ELE_TAG_Timoshenko2d02 102008
-#define ELE_TAG_Timoshenko2d03 102009
-#define ELE_TAG_Timoshenko2d04 102010
-#define ELE_TAG_Timoshenko3d01 102011
-#define ELE_TAG_Timoshenko3d02 102012
-#define ELE_TAG_Timoshenko3d03 102013
-#define ELE_TAG_Timoshenko3d04 102014
+#define ELE_TAG_Timoshenko2d01 10240407
+#define ELE_TAG_Timoshenko2d02 10240408
+#define ELE_TAG_Timoshenko2d03 10240409
+#define ELE_TAG_Timoshenko2d04 10240400
+#define ELE_TAG_Timoshenko3d01 10240401
+#define ELE_TAG_Timoshenko3d02 10240402
+#define ELE_TAG_Timoshenko3d03 10240403
+#define ELE_TAG_Timoshenko3d04 10240404
 
-#define ELE_TAG_TimoshenkoBeam2d 102001
+#define ELE_TAG_TimoshenkoBeam2d 10240405
 
-#define CRDTR_TAG_TimoshenkoLinearCrdTransf2d 102002
+#define CRDTR_TAG_TimoshenkoLinearCrdTransf2d 10240406
 
-#define ELE_TAG_mixedBeamColumn3d 30765
-#define ELE_TAG_mixedBeamColumn2d 30766
-
-
-
-
+#define ELE_TAG_mixedBeamColumn3d 10240501
+#define ELE_TAG_mixedBeamColumn2d 10240502
 
 //////////////////////////////////////////////////////////////////////////
 #endif

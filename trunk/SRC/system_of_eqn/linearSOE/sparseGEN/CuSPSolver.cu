@@ -28,7 +28,7 @@
 //
 // Description: This file contains the implementation for CuSPSolver
 
-#include "CuSPSolver.h"
+#include <CuSPSolver.h>
 #include <cusp/blas.h>
 #include <cusp/format.h>
 #include <cusp/linear_operator.h>
@@ -41,7 +41,6 @@
 #include <cusp/krylov/bicgstab.h>
 #include <cusp/precond/ainv.h>
 #include <cusp/precond/aggregation/smoothed_aggregation.h>
-//#include <cusp/precond/detail/ainv.inl>
 #include <cusp/precond/diagonal.h>
 
 #include <Windows.h>

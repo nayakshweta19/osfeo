@@ -83,7 +83,7 @@ SProfileSPDLinSOE::SProfileSPDLinSOE(int N, int *iLoc,
     size = N;
     profileSize = iLoc[N-1];
     
-    A = new (nothrow) float[iLoc[N-1]];
+    A = new (nothrow) float [iLoc[N-1]];
 	
     if (A == 0) {
 	opserr << "FATAL:BandSPDLinSOE::BandSPDLinSOE :";
@@ -98,7 +98,7 @@ SProfileSPDLinSOE::SProfileSPDLinSOE(int N, int *iLoc,
 	    A[k] = 0;
     
 	B = new (nothrow) float[size];
-	X = new (nothrow) float[size];
+    X = new (nothrow) float[size];
 	doubleB = new (nothrow) double[size];
 	doubleX = new (nothrow) double[size];
 	iDiagLoc = new (nothrow) int[size];

@@ -60,6 +60,7 @@ class ConcretewBeta : public UniaxialMaterial {
 				   OPS_Stream &theOutputStream);
 	int getResponse (int responseID, Information &matInformation);    
 
+    double getPD(void); // Get partial differentiation of stress to epslonTP (strain in perpendicular direction)
 
 private:
 	// material properties
@@ -128,6 +129,13 @@ private:
 
 	int setValues(double newStrain, double beta, double & newStress, double & newStressPure, double & newTangent);
 	double computeBeta(double newStrain, double et);
+
+    double Wp;       // prestressing factor
+    double beta;     // Parameter needed for calculating zeta
+    double epslonTP; // Strain in the perpendicular direction, needed to get the zeta
+    double D;        // Damage factor for strength, get from parameter
+    double X;        // for normal stresses 
+    double K;        // for normal stresses
 };
 
 #endif

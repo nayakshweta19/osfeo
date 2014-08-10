@@ -67,6 +67,18 @@ class ConcreteDPM2 : public NDMaterial
     ConcreteDPM2();
     ~ConcreteDPM2();
 
+    enum state_flag_values {
+      ConcreteDPM2_Elastic,
+      ConcreteDPM2_Unloading,
+      ConcreteDPM2_Plastic,
+      ConcreteDPM2_Damage,
+      ConcreteDPM2_PlasticDamage,
+      ConcreteDPM2_VertexCompression,
+      ConcreteDPM2_VertexTension,
+      ConcreteDPM2_VertexCompressionDamage,
+      ConcreteDPM2_VertexTensionDamage
+    };
+
     const char *  getClassType(void) const {return "ConcreteDPM2";};
 
     int           setTrialStrain(const Vector &v);

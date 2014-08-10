@@ -66,10 +66,11 @@ class Vector
     inline void Zero(void);
     int Normalize(void);
     
-    int addVector(double factThis, const Vector &other, double factOther);
-    int addMatrixVector(double factThis, const Matrix &m, const Vector &v, double factOther); 
-    int addMatrixTransposeVector(double factThis, const Matrix &m, const Vector &v, double factOther);
+    int addVector(double factThis, const Vector &other, double factOther); //this += other * otherFact
+    int addMatrixVector(double factThis, const Matrix &m, const Vector &v, double factOther); //this += m * v * otherFact
+    int addMatrixTransposeVector(double factThis, const Matrix &m, const Vector &v, double factOther); //this += m^t * v * otherFact
 
+    //added by neallee@tju.edu.cn
     void computePrincipalValues(Vector &answer);
     void cubic3r(double a, double b, double c, double d, double *r1, double *r2, double *r3, int *num);
     void computePrincipalValDir(Vector &answer, Matrix &dir) const;

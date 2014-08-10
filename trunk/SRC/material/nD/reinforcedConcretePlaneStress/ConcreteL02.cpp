@@ -130,7 +130,8 @@ ConcreteL02::setTrialStrain(double strain, double strainRate)
   //Calculate softening effect: zeta if epslonTP >0 
   if (epslonTP > 0.0) {
     // add K into zeta, K is delta
-    zeta = (K)* 5.8 / sqrt(-fpc * (1.0 + 250.0 * epslonTP)) * fbeta * Wp;
+    zeta = 5.8 / sqrt(-fpc) < 0.9 ? 5.8 / sqrt(-fpc) : 0.9;
+    zeta *= (K * 1./sqrt(1.0 + 250.0 * epslonTP) * fbeta * Wp);
     if (zeta >= 0.9)  zeta = 0.9;
     if (zeta <= 0.25) zeta = 0.25; //min zeta
   }

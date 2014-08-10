@@ -164,7 +164,9 @@ extern void *OPS_NewOriginCentered(void);
 extern void *OPS_NewSteel2(void);
 extern void *OPS_ConcreteSakaiKawashima(void);
 extern void *OPS_FRPConfinedConcrete(void);
-
+extern void *OPS_ResilienceMaterialHR(void);
+extern void *OPS_CFSSSWP(void);
+extern void *OPS_CFSWSWP(void);
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
 
@@ -529,27 +531,54 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"Concrete02Thermal") == 0) {
+    }
+    else if (strcmp(argv[1], "ResilienceMaterialHR") == 0) {
+      void *theMat = OPS_ResilienceMaterialHR();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "Concrete02Thermal") == 0) {
       void *theMat = OPS_NewConcrete02Thermal();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
 	return TCL_ERROR;
 
-	} else if (strcmp(argv[1], "ConcreteECThermal") == 0) {
+	} 
+    else if (strcmp(argv[1], "ConcreteECThermal") == 0) {
 		void *theMat = OPS_NewConcreteECThermal();
 		if (theMat != 0)
 			theMaterial = (UniaxialMaterial *)theMat;
 		else
 			return TCL_ERROR;
 
-	} else if (strcmp(argv[1], "Elastic2") == 0) {
-	if (argc < 4 || argc > 5) {
-	    opserr << "WARNING invalid number of arguments\n";
-	    printCommand(argc,argv);
-	    opserr << "Want: uniaxialMaterial Elastic tag? E? <eta?>" << endln;
-	    return TCL_ERROR;
-	}    
+    }
+    else if (strcmp(argv[1], "CFSWSWP") == 0) {
+      void *theMat = OPS_CFSWSWP();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "CFSSSWP") == 0) {
+      void *theMat = OPS_CFSSSWP();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "Elastic2") == 0) {
+      if (argc < 4 || argc > 5) {
+        opserr << "WARNING invalid number of arguments\n";
+        printCommand(argc, argv);
+        opserr << "Want: uniaxialMaterial Elastic tag? E? <eta?>" << endln;
+        return TCL_ERROR;
+      }
 
 	int tag;
 	double E;

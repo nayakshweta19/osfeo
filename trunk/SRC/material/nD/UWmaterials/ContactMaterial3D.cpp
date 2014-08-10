@@ -100,7 +100,7 @@ ContactMaterial3D::ContactMaterial3D (int tag, double mu, double Gmod, double c,
    stress_vec(4),
    tangent_matrix(4,4)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::ContactMaterial3D(...)" << endln;
 #endif
 
@@ -127,7 +127,7 @@ ContactMaterial3D::ContactMaterial3D (const ContactMaterial3D &other)
     stress_vec(4),
     tangent_matrix(4,4)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::ContactMaterial3D(...)" << endln;
 #endif
 
@@ -154,7 +154,7 @@ ContactMaterial3D::ContactMaterial3D ()
     stress_vec(4),
     tangent_matrix(4,4)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::ContactMaterial3D()" << endln;
 #endif
 
@@ -170,7 +170,7 @@ ContactMaterial3D::ContactMaterial3D ()
 //destructor
 ContactMaterial3D::~ContactMaterial3D ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial3D::~ContactMaterial3D()" << endln;
 #endif
 }
@@ -178,7 +178,7 @@ ContactMaterial3D::~ContactMaterial3D ()
 //zero internal variables
 void ContactMaterial3D::zero( )
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::zero( )" << endln;
 #endif
   s_e_n.Zero();         // elastic slip from previous increment
@@ -197,7 +197,7 @@ void ContactMaterial3D::zero( )
 
 int ContactMaterial3D::setTrialStrain (const Vector &strain_from_element)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::setTrialStrain (const Vector &strain_from_element)" << endln;
 #endif
   Vector t_s(2);          // tangential contact force
@@ -269,7 +269,7 @@ int ContactMaterial3D::setTrialStrain (const Vector &strain_from_element)
 
   }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
   if (DEBUG_LEVEL > 1) {
     if (inSlip) {
       opserr << "   ** SLIDING (material)" << endln;
@@ -292,7 +292,7 @@ int ContactMaterial3D::setTrialStrain (const Vector &strain_from_element)
 //unused trial strain functions
 int ContactMaterial3D::setTrialStrain (const Vector &v, const Vector &r)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::setTrialStrain (const Vector &v, const Vector &r)" << endln;
 #endif
   opserr << "YOU SHOULD NOT SEE THIS: ContactMaterial3D::setTrialStrain (const Vector &v, const Vector &r)" << endln;
@@ -302,7 +302,7 @@ int ContactMaterial3D::setTrialStrain (const Vector &v, const Vector &r)
 
 const Matrix & ContactMaterial3D::getTangent ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getTangent()\n";
 #endif
 
@@ -339,7 +339,7 @@ const Matrix & ContactMaterial3D::getTangent ()
     C_sl.Zero();
   }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
   if (DEBUG_LEVEL > 1) {
     opserr << "   strain_vec = " << strain_vec;
     opserr << "   is sliding? " << inSlip << endln;
@@ -371,7 +371,7 @@ const Matrix & ContactMaterial3D::getTangent ()
 
 const Matrix & ContactMaterial3D::getInitialTangent ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getInitialTangent ()" << endln;
 #endif
   return tangent_matrix;          //tangent is empty matrix
@@ -380,7 +380,7 @@ const Matrix & ContactMaterial3D::getInitialTangent ()
 
 const Vector & ContactMaterial3D::getStress ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getStress ()" << endln;
 #endif
   return stress_vec;
@@ -389,7 +389,7 @@ const Vector & ContactMaterial3D::getStress ()
 
 const Vector & ContactMaterial3D::getStrain ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getStrain ()" << endln;
 #endif
   return strain_vec;
@@ -398,7 +398,7 @@ const Vector & ContactMaterial3D::getStrain ()
 
 void ContactMaterial3D::setMetricTensor(Matrix &v)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::setMetricTensor(Matrix &v)" << endln;
 #endif
   g = v;
@@ -415,7 +415,7 @@ void ContactMaterial3D::setMetricTensor(Matrix &v)
 
 int ContactMaterial3D::commitState (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::commitState (void)" << endln;
 #endif
   s_e_n = s_e_nplus1;
@@ -426,7 +426,7 @@ int ContactMaterial3D::commitState (void)
 
 int ContactMaterial3D::revertToLastCommit (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::revertToLastCommit (void)" << endln;
 #endif
   return 0;
@@ -434,7 +434,7 @@ int ContactMaterial3D::revertToLastCommit (void)
 
 int ContactMaterial3D::revertToStart(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::revertToStart(void)" << endln;
 #endif
 
@@ -445,7 +445,7 @@ int ContactMaterial3D::revertToStart(void)
 
 NDMaterial * ContactMaterial3D::getCopy (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getCopy (void)" << endln;
 #endif
   ContactMaterial3D * copy = new ContactMaterial3D(*this);
@@ -454,7 +454,7 @@ NDMaterial * ContactMaterial3D::getCopy (void)
 
 NDMaterial * ContactMaterial3D::getCopy (const char *code)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getCopy (const char *code)" << endln;
 #endif
   if (strcmp(code,"ContactMaterial3D")==0) {
@@ -467,7 +467,7 @@ NDMaterial * ContactMaterial3D::getCopy (const char *code)
 
 const char * ContactMaterial3D::getType (void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getType (void) const" << endln;
 #endif
   return "ThreeDimensional";
@@ -476,7 +476,7 @@ const char * ContactMaterial3D::getType (void) const
 
 int ContactMaterial3D::getOrder (void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::getOrder (void) const" << endln;
 #endif
   return 6;
@@ -512,7 +512,7 @@ int ContactMaterial3D::setParameter(const char **argv, int argc, Parameter &para
 
 int ContactMaterial3D::sendSelf(int commitTag, Channel &theChannel)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::sendSelf(int commitTag, Channel &theChannel)" << endln;
 #endif
   // we place all the data needed to define material and it's state
@@ -560,7 +560,7 @@ int ContactMaterial3D::sendSelf(int commitTag, Channel &theChannel)
 
 int ContactMaterial3D::recvSelf(int commitTag, Channel &theChannel,FEM_ObjectBroker &theBroker)    
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::recvSelf(...)" << endln;
 #endif
   // recv the vector object from the channel which defines material param and state
@@ -610,7 +610,7 @@ int ContactMaterial3D::recvSelf(int commitTag, Channel &theChannel,FEM_ObjectBro
 
 void ContactMaterial3D::Print(OPS_Stream &s, int flag )
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ContactMaterial3D::Print(OPS_Stream &s, int flag )" << endln;
 #endif
   s << "ContactMaterial3D: " << endln;

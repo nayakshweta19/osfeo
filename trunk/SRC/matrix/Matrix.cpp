@@ -2047,13 +2047,13 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
   /* Local variables */
   double ssum, aa, co, si, tt, tol, sum, aij, aji;
   int ite, i, j, k, ih;
-  int neq = numRows;
+  int neq = this->numRows;
 
   double c_b2 = .10;
   //double c_b27 = .01;
 
   /* Function Body */
-#ifdef DEBUG
+#ifdef _G3DEBUG
   if (!isSquare()) {
     opserr << "Not square matrix" << endln;
   }
@@ -2061,7 +2061,7 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
   for (i = 1; i <= neq; i++) {
     for (j = i + 1; j <= neq; j++) {
       //if ( this->at(i, j) != this->at(j, i) ) {
-      if (fabs(this->at(i, j) - this->at(j, i)) > 1.0e-6) {
+      if (fabs(data[i*numCols+j] - data[j*numCols+i]) > 1.0e-6) {
         opserr << "Not Symmetric matrix" << endln;
       }
     }
@@ -2078,12 +2078,11 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
 
   tol = pow(c_b2, nf);
   sum = 0.0;
-  for (i = 0; i < neq; ++i) {
-    for (j = 0; j < neq; ++j) { // ?? ++j , j++
+  for (i = 0; i < neq; i++) {
+    for (j = 0; j < neq; j++) { // ?? ++j , j++
       sum += fabs(data[i*neq + j]);
       v(i, j) = 0.0;
     }
-
     v(i, i) = 1.0;
   }
 
@@ -2096,9 +2095,9 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
   ite = 0;
   do {
     ssum = 0.0;
-    for (j = 1; j < neq; ++j) {
+    for (j = 1; j < neq; j++) {
       ih = j - 1;
-      for (i = 0; i < ih; ++i) {
+      for (i = 0; i < ih; i++) {
         if ((fabs(data[i*neq + j]) / sum) > tol) {
           ssum += fabs(data[i*neq + j]);
           /* ---- CALCULATE ROTATION ANGLE ----------------- */
@@ -2128,7 +2127,7 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
           *   }
           */
           // ---- MODIFY "I" AND "J" COLUMNS OF "A" AND "V"
-          for (k = 0; k < i-1; ++k) {
+          for (k = 0; k < i-1; k++) {
             tt = data[k*neq + i];
             data[k*neq + i] = co * tt + si *data[k*neq + j];
             data[k*neq + j] = -si * tt + co *data[k*neq + j];
@@ -2145,7 +2144,7 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
           v(i, i) = co * tt + si *v(i, j);
           v(i, j) = -si * tt + co *v(i, j);
 
-          for (k = i; k < j-1; ++k) {
+          for (k = i; k < j-1; k++) {
             tt = data[i*neq + k];
             data[i*neq + k] = co * tt + si *data[k*neq + j];
             data[k*neq + j] = -si * tt + co *data[k*neq + j];
@@ -2163,7 +2162,7 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
           v(j, i) = co * tt + si *v(j, j);
           v(j, j) = -si * tt + co *v(j, j);
           //
-          for (k = j ; k < neq; ++k) {
+          for (k = j ; k < neq; k++) {
             tt = data[i*neq + k];
             data[i*neq + k] = co * tt + si *data[j*neq + k];
             data[j*neq + k] = -si * tt + co *data[j*neq + k];
@@ -2192,10 +2191,26 @@ Matrix::jaco_(Vector &eval, Matrix &v, int nf)
 
   // restore original matrix
   for (i = 0; i < neq; i++) {
-    for (j = i-1; j < neq; j++) {
+    for (j = i; j < neq; j++) {
       data[i*neq + j] = data[j*neq + i];
     }
   }
 
   return 0;
 } /* jaco_ */
+
+//neallee@tju.edu.cn
+Matrix &
+Matrix::operator()(const double theta)
+{
+  data[0] = pow(cos(theta), 2);
+  data[1] = pow(sin(theta), 2);
+  data[2] = 2.0*cos(theta)*sin(theta);
+  data[3] = pow(sin(theta), 2);
+  data[4] = pow(cos(theta), 2);
+  data[5] = -2.0*cos(theta)*sin(theta);
+  data[6] = -cos(theta)*sin(theta);
+  data[7] = cos(theta)*sin(theta);
+  data[8] = pow(cos(theta), 2) - pow(sin(theta), 2);
+  return *this;
+}

@@ -11,7 +11,7 @@ class CulaSparseSolverS6 : public SparseGenRowLinSolver
 {
 public:
   CulaSparseSolverS6(void);
-  CulaSparseSolverS6(double relTol, int maxInteration, int preCond, int solver, int single, int host);
+  CulaSparseSolverS6(double relTol, int maxInteration, int preCond, int solver, int host);
   ~CulaSparseSolverS6(void);
 
   int solve(void);
@@ -35,13 +35,7 @@ private:
   int maxInteration;
   int preCond;			//fainv
   int solver;				//Bicg
-  int single;
   int host;
-
-
-  float *Xsingle;
-  float *Bsingle;
-  float *Asingle;
 
   SparseGenRowLinSOE *theSOE;
   //SparseGenColLinSOE *theSOE;

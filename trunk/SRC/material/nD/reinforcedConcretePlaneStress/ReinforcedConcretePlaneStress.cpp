@@ -46,6 +46,9 @@
 Vector ReinforcedConcretePlaneStress::strain_vec(3);
 Vector ReinforcedConcretePlaneStress::stress_vec(3);
 Matrix ReinforcedConcretePlaneStress::tangent_matrix(3, 3);
+Vector ReinforcedConcretePlaneStress::Tstrain(3);
+Vector ReinforcedConcretePlaneStress::Tstress(3);
+Vector ReinforcedConcretePlaneStress::lastStress(3);
 
 double ReinforcedConcretePlaneStress::epslonOne = 0.0;
 double ReinforcedConcretePlaneStress::epslonTwo = 0.0;
@@ -61,8 +64,8 @@ int    ReinforcedConcretePlaneStress::dirStatus = 0; // check if principle direc
 bool   ReinforcedConcretePlaneStress::isSwapped = 0; // counter-clockwise = 0; clockwise = 1;
 int    ReinforcedConcretePlaneStress::lastDirStatus = 0; // 0, 1, 2, 3, 4, 5
 double ReinforcedConcretePlaneStress::beta = 0.0;
-double ReinforcedConcretePlaneStress::DC[3][3];
-double ReinforcedConcretePlaneStress::DC_bar[3][3];
+Matrix ReinforcedConcretePlaneStress::DC(3, 3);
+Matrix ReinforcedConcretePlaneStress::DC_bar(3, 3);
 
 #include <MaterialResponse.h>
 #include <DummyStream.h>
@@ -198,7 +201,7 @@ ReinforcedConcretePlaneStress::ReinforcedConcretePlaneStress(int      tag,
   double   E,
   double   EPSC0) :
   NDMaterial(tag, ND_TAG_ReinforcedConcretePlaneStress),
-  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rou1(ROU1), rou2(ROU2),
+  rho(RHO), angle1(ANGLE1), angle2(ANGLE2), rouL(ROU1), rouT(ROU2),
   fpc(FPC), fy(FY), E0(E), epsc0(EPSC0)
 {
   if (fpc < 0.0) { fpc = -fpc; } // set fpc > 0
@@ -317,9 +320,9 @@ ReinforcedConcretePlaneStress::setTrialStrain(const Vector &v)
   strain_vec = v;
 
   // Set initial values for Tstress
-  Tstress[0] = 0.0;
-  Tstress[1] = 0.0;
-  Tstress[2] = 0.0;
+  Tstress(0) = 0.0;
+  Tstress(1) = 0.0;
+  Tstress(2) = 0.0;
 
   TOneReverseStatus = COneReverseStatus;
   TOneNowMaxComStrain = COneNowMaxComStrain;
@@ -386,6 +389,12 @@ ReinforcedConcretePlaneStress::getCommittedStrain(void)
 }
 
 int
+ReinforcedConcretePlaneStress::RotatedMatrixAtCita(const double &cita, const Matrix &M)
+{
+  return 0;
+}
+
+int
 ReinforcedConcretePlaneStress::commitState(void)
 {
   for (int i = 0; i < 4; i++)
@@ -399,18 +408,18 @@ ReinforcedConcretePlaneStress::commitState(void)
   CTwoNowMaxComStrain = TTwoNowMaxComStrain;
   CTwoLastMaxComStrain = TTwoLastMaxComStrain;
 
-  char buffer[256];
+  char buffer[288];
   //sprintf(buffer, "e%d=%7.5f, e%d=%7.5f, e%d=%7.5f, e%d=%7.5f, gxy=%7.5f; ThetaE=%4.2f, ThetaS=%4.2f, beta=%4.2f; |S(i)|-|S(i-1)|=%7.5f. e1=%7.5f, e2=%7.5f, g12/2=%7.5f. dir=%d, swap=%d.\n",
   //  theMaterial[0]->getTag(), theMaterial[0]->getStrain(), theMaterial[1]->getTag(), theMaterial[1]->getStrain(),
   //  theMaterial[2]->getTag(), theMaterial[2]->getStrain(), theMaterial[3]->getTag(), theMaterial[3]->getStrain(), strain_vec(2), //strain_vec(0), strain_vec(1),
   //  citaStrain / PI * 180, citaStress / PI * 180, beta / PI * 180, fabs(sqrt(pow(lastStress[0], 2) + pow(lastStress[1], 2) + pow(lastStress[2], 2)) - stress_vec.Norm()),
   //  epslonOne, epslonTwo, halfGammaOneTwo, dirStatus, int(isSwapped));
   //opserr << buffer;
-  sprintf(buffer, "T1=%7.5f T2=%7.5f T12=%7.5f; e1=%7.5f e2=%7.5f; ce1=%7.5f ce2=%7.5f; ThetaE=%4.2f ThetaS=%4.2f dir=%d swap=%d DC0=%7.1f DC1=%7.1f Dc_bar0=%7.1f Dc_bar1=%7.1f E00=%7.1f E11=%7.1f E22=%7.1f\n",
+  sprintf_s(buffer, "T1=%7.5f T2=%7.5f T12=%7.5f; e1=%7.5f e2=%7.5f; ce1=%7.5f ce2=%7.5f; ThetaE=%4.2f ThetaS=%4.2f dir=%d swap=%d DC0=%7.1f DC1=%7.1f Dc_bar0=%7.1f Dc_bar1=%7.1f E00=%7.1f E11=%7.1f E22=%7.1f\n",
     Tstrain[0], Tstrain[1], Tstrain[2], epslonOne, epslonTwo, theMaterial[2]->getStrain(), theMaterial[3]->getStrain(),
     citaStrain / PI * 180, citaStress / PI * 180, // beta / PI * 180,
     dirStatus, int(isSwapped), //90. / PI*atan2(2.0*Tstrain[2], Tstrain[1] - Tstrain[0]), 90. / PI*atan2(2.0*Tstress[2], Tstress[1] - Tstress[0]));
-    DC[0][0], DC[1][1], DC_bar[0][0], DC_bar[1][1], tangent_matrix(0, 0), tangent_matrix(1, 1), tangent_matrix(2, 2));
+    DC(0,0), DC(1,1), DC_bar(0,0), DC_bar(1,1), tangent_matrix(0, 0), tangent_matrix(1, 1), tangent_matrix(2, 2));
   opserr << buffer;
 
   /*if ((epslonOne > 0.0) && (epslonTwo > 0.0)) {  // both tension
@@ -426,9 +435,9 @@ ReinforcedConcretePlaneStress::commitState(void)
   opserr << "1c2c. ";
   }*/
 
-  lastStress[0] = stress_vec(0);
-  lastStress[1] = stress_vec(1);
-  lastStress[2] = stress_vec(2);
+  lastStress(0) = stress_vec(0);
+  lastStress(1) = stress_vec(1);
+  lastStress(2) = stress_vec(2);
   lastCitaR = citaR;
   lastDirStatus = dirStatus;
 
@@ -459,12 +468,9 @@ ReinforcedConcretePlaneStress::revertToStart(void)
   for (i = 0; i < 4; i++)
     theMaterial[i]->revertToStart();
 
-  for (i = 0; i < 3; i++) {
-    Tstress[i] = 0.0;
-    Tstrain[i] = 0.0;
-    lastStress[i] = 0.0;
-  }
-
+  Tstress.Zero();
+  Tstrain.Zero();
+  lastStress.Zero();
   strain_vec.Zero();
   stress_vec.Zero();
 
@@ -506,8 +512,8 @@ ReinforcedConcretePlaneStress::getCopy(void)
     theMaterial[3],
     angle1,
     angle2,
-    rou1,
-    rou2,
+    rouL,
+    rouT,
     fpc,
     fy,
     E0,
@@ -533,8 +539,8 @@ ReinforcedConcretePlaneStress::getCopy(const char *type)
     theMaterial[3],
     angle1,
     angle2,
-    rou1,
-    rou2,
+    rouL,
+    rouT,
     fpc,
     fy,
     E0,
@@ -551,7 +557,7 @@ ReinforcedConcretePlaneStress::getCopy(const char *type)
 Response*
 ReinforcedConcretePlaneStress::setResponse(const char **argv, int argc, OPS_Stream &output)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ReinforcedConcretePlaneStress::setResponse(...)" << endln;
 #endif
 
@@ -575,7 +581,7 @@ ReinforcedConcretePlaneStress::setResponse(const char **argv, int argc, OPS_Stre
 int
 ReinforcedConcretePlaneStress::getResponse(int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "ReinforcedConcretePlaneStress::getResponse(...)" << endln;
 #endif
 
@@ -607,8 +613,8 @@ ReinforcedConcretePlaneStress::Print(OPS_Stream &s, int flag)
   s << "\tRho: " << rho << endln;
   s << "\tangle1: " << angle1 << endln;
   s << "\tangle2: " << angle2 << endln;
-  s << "\trou1: " << rou1 << endln;
-  s << "\trou2: " << rou2 << endln;
+  s << "\trou1: " << rouL << endln;
+  s << "\trou2: " << rouT << endln;
   s << "\tfpc: " << fpc << endln;
   s << "\tfy: " << fy << endln;
   s << "\tE0: " << E0 << endln;
@@ -661,8 +667,8 @@ ReinforcedConcretePlaneStress::sendSelf(int commitTag, Channel &theChannel)
   data(1) = rho;
   data(2) = angle1;
   data(3) = angle2;
-  data(4) = rou1;
-  data(5) = rou2;
+  data(4) = rouL;
+  data(5) = rouT;
   data(6) = fpc;
   data(7) = fy;
   data(8) = E0;
@@ -731,8 +737,8 @@ ReinforcedConcretePlaneStress::recvSelf(int commitTag, Channel &theChannel, FEM_
   rho = data(1);
   angle1 = data(2);
   angle2 = data(3);
-  rou1 = data(4);
-  rou2 = data(5);
+  rouL = data(4);
+  rouT = data(5);
   fpc = data(6);
   fy = data(7);
   E0 = data(8);
@@ -804,52 +810,16 @@ int
 ReinforcedConcretePlaneStress::determineTrialStress(void)
 {
   // Get strain values from strain of element
-  Tstrain[0] = strain_vec(0);
-  Tstrain[1] = strain_vec(1);
-  Tstrain[2] = 0.5*strain_vec(2);
+  Tstrain(0) = strain_vec(0);
+  Tstrain(1) = strain_vec(1);
+  Tstrain(2) = 0.5*strain_vec(2);
 
   // Get citaR based on Tstrain
-  //double temp_citaR;
-  //double eps = 1e-12;
   citaR = lastCitaR;
 
-  /*if (fabs(Tstrain[0] - Tstrain[1]) < SMALL_STRAIN ) {
-    if (fabs(Tstrain[2]) > SMALL_STRAIN) {
-    citaR = 0.25*PI;                                                        dirStatus = 0;
-    }
-    else {
-    }
-    }
-    else {// Tstrain[0] != Tstrain[1]
-    temp_citaR = 0.5 * atan(fabs(2.0e6*Tstrain[2] / (1.0e6*Tstrain[0] - 1.0e6*Tstrain[1])));
-    if (fabs(Tstrain[2]) < SMALL_STRAIN) {  //&& Tstrain[0] > Tstrain[1]
-    citaR = 0;                                                              dirStatus = 1;
-    }
-    //    else if (fabs(Tstrain[2]) < SMALL_STRAIN && Tstrain[0] < Tstrain[1]) {
-    //      citaR = 0.5*PI;                                                         dirStatus = 1;
-    //    }
-    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] < 0)) {
-    citaR = PI - temp_citaR;                                                dirStatus = 3;
-    }
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] > 0)) {
-    citaR = 0.5*PI - temp_citaR;                                            dirStatus = 4;
-    }
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] < 0)) {
-    citaR = 0.5*PI + temp_citaR;                                            dirStatus = 5;
-    }
-    else if ((Tstrain[0] > Tstrain[1]) && (Tstrain[2] > 0)) {
-    citaR = temp_citaR;                                                     dirStatus = 2;
-    }
-    else {
-    opserr << "ReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate citaR\n";
-    opserr << " Tstrain(0) = " << Tstrain[0] << endln;
-    opserr << " Tstrain(1) = " << Tstrain[1] << endln;
-    opserr << " Tstrain(2) = " << Tstrain[2] << endln;
-    }
-    }*/
   double eXPoint[2], eYPoint[2], ePolePoint[2];
-  eXPoint[0] = Tstrain[0];  eXPoint[1] = -1.*Tstrain[2];
-  eYPoint[0] = Tstrain[1];  eYPoint[1] = Tstrain[2];
+  eXPoint[0] = Tstrain(0);  eXPoint[1] = -1.*Tstrain(2);
+  eYPoint[0] = Tstrain(1);  eYPoint[1] = Tstrain(2);
   ePolePoint[0] = eYPoint[0];  ePolePoint[1] = eXPoint[1];
   if ((eYPoint[0] == eXPoint[0]) && (eYPoint[1] == eXPoint[1])) {
     opserr << "ReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate the pole point of strain\n";
@@ -864,55 +834,43 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
       opserr << e << endln;
     }
 
-//    if ((Tstrain[0] >= Tstrain[1]) && (fabs(Tstrain[2]) < SMALL_STRAIN))      dirStatus = 5;
-//    else if ((Tstrain[0] < Tstrain[1]) && (fabs(Tstrain[2]) < SMALL_STRAIN)) dirStatus = 6;
-    if ((Tstrain[0] >= Tstrain[1]) && (Tstrain[2] < 0))                       dirStatus = 2;
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] >= 0))                  dirStatus = 3;
-    else if ((Tstrain[0] < Tstrain[1]) && (Tstrain[2] < 0))                   dirStatus = 4;
-    else if ((Tstrain[0] >= Tstrain[1]) && (Tstrain[2] >= 0))                 dirStatus = 1;
-//    else if (Tstrain[0] == Tstrain[1])                                      dirStatus = 7;
+//    if ((Tstrain(0) >= Tstrain(1)) && (fabs(Tstrain(2)) < SMALL_STRAIN))     dirStatus = 5;
+//    else if ((Tstrain(0) < Tstrain(1)) && (fabs(Tstrain(2)) < SMALL_STRAIN)) dirStatus = 6;
+    if (     (Tstrain(0) >= Tstrain(1)) && (Tstrain(2) <  0))                 dirStatus = 2;
+    else if ((Tstrain(0) <  Tstrain(1)) && (Tstrain(2) >= 0))                 dirStatus = 3;
+    else if ((Tstrain(0) <  Tstrain(1)) && (Tstrain(2) <  0))                 dirStatus = 4;
+    else if ((Tstrain(0) >= Tstrain(1)) && (Tstrain(2) >= 0))                 dirStatus = 1;
+//    else if (Tstrain(0) == Tstrain(1))                                      dirStatus = 7;
     else {
       opserr << "ReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate citaR\n";
-      opserr << " Tstrain(0) = " << Tstrain[0] << endln;
-      opserr << " Tstrain(1) = " << Tstrain[1] << endln;
-      opserr << " Tstrain(2) = " << Tstrain[2] << endln;
+      opserr << " Tstrain(0) = " << Tstrain(0) << endln;
+      opserr << " Tstrain(1) = " << Tstrain(1) << endln;
+      opserr << " Tstrain(2) = " << Tstrain(2) << endln;
     }
   }
   //determineConcreteStatus(dirStatus);
-
-  //while ((citaR - 0.5*PI) > SMALL_NUMBER) {
-  //  citaR = citaR - 0.5*PI;
-  //}
+  Vector eig(2);
+  Matrix dir(2, 2);
+  Tstrain.computePrincipalValDir(eig, dir);
 
   citaStrain = citaR;
 
   // Definition of the variables and matrix
-  // Transformation matrix
-  double TOne[3][3];     // T(citaOne)
-  double TMOne[3][3];    // T(minus citaOne)
-  double TMSL[3][3];     // T(minus citaSL)
-  double TSL_One[3][3];  // T(citaSL minus citaOne)
-  double TMST[3][3];     // T(minus citaST)
-  double TST_One[3][3];  // T(citaST minus citaOne)
-
-  double V[3][3];        //Matrix considering Hsu/Zhu ratios
+  Matrix T(3, 3);    // Transformation matrix
+  Matrix V(3, 3);    // Matrix considering Hsu/Zhu ratios
 
   //Strain and stress
-  //double Tstrain[3];     //epslonx,epslony,0.5*gammaxy	
-  double tempStrain[3]; //temp values of strains
+  Vector tempStrain(3);    //temp values of strains
   double stressSL, stressST; // stress of steel layers in L and T direction
 
   //stiffness of element
-  double D[3][3];      //tangent stiffness matrix
-  //double DC[3][3];     //concrete part
-  double DSL[3][3];    //steel part in L direction
-  double DST[3][3];    //steel part in T direction
-  //double DC_bar[3][3];   //partial differentiation matrix of concrete part Eq.(49)	
-  double tempD[3][3];  //temp matrix for data transfer
+  Matrix DSL(3, 3);    //steel part in L direction
+  Matrix DST(3, 3);    //steel part in T direction  //double DC_bar[3][3];   //partial differentiation matrix of concrete part Eq.(49)	
+  Matrix tempD(3, 3);  //temp matrix for data transfer
 
   double epsy = fy / E0;
   double fcr = 0.31*sqrt(fpc);
-  double rou = (rou1 < rou2 ? rou1 : rou2);
+  double rou = (rouL < rouT ? rouL : rouT);
   if (rou < 0.0025) rou = 0.0025;
   double B = pow((fcr / fy), 1.5) / rou;
   double fn = fy * (0.91 - 2.0*B) / (0.98 - 0.25*B);
@@ -921,84 +879,14 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   double citaL = angle1;
   double citaT = angle2;
 
-  //Set values for matrix TMSL, TMST
-  TMSL[0][0] = pow(cos(citaL), 2);
-  TMSL[0][1] = pow(sin(citaL), 2);
-  TMSL[0][2] = -2.0*cos(citaL)*sin(citaL);
-  TMSL[1][0] = pow(sin(citaL), 2);
-  TMSL[1][1] = pow(cos(citaL), 2);
-  TMSL[1][2] = 2.0*cos(citaL)*sin(citaL);
-  TMSL[2][0] = cos(citaL)*sin(citaL);
-  TMSL[2][1] = -cos(citaL)*sin(citaL);
-  TMSL[2][2] = pow(cos(citaL), 2) - pow(sin(citaL), 2);
+  //calculate epslonOne, epslonTwo, halfGammaOneTwo
+  tempStrain.addMatrixVector(0.0, T(citaR), Tstrain, 1.0);
+  epslonOne = tempStrain(0);
+  epslonTwo = tempStrain(1);
+  halfGammaOneTwo = tempStrain(2);
 
-  TMST[0][0] = pow(cos(citaT), 2);
-  TMST[0][1] = pow(sin(citaT), 2);
-  TMST[0][2] = -2.0*cos(citaT)*sin(citaT);
-  TMST[1][0] = pow(sin(citaT), 2);
-  TMST[1][1] = pow(cos(citaT), 2);
-  TMST[1][2] = 2.0*cos(citaT)*sin(citaT);
-  TMST[2][0] = cos(citaT)*sin(citaT);
-  TMST[2][1] = -cos(citaT)*sin(citaT);
-  TMST[2][2] = pow(cos(citaT), 2) - pow(sin(citaT), 2);
-
-  //Set values for transformation matrix TOne[3][3],TMOne[3][3],TSL_One[3][3],TST_One[3][3]
-  TOne[0][0] = pow(cos(citaR), 2);
-  TOne[0][1] = pow(sin(citaR), 2);
-  TOne[0][2] = 2.0*cos(citaR)*sin(citaR);
-  TOne[1][0] = pow(sin(citaR), 2);
-  TOne[1][1] = pow(cos(citaR), 2);
-  TOne[1][2] = -2.0*cos(citaR)*sin(citaR);
-  TOne[2][0] = -cos(citaR)*sin(citaR);
-  TOne[2][1] = cos(citaR)*sin(citaR);
-  TOne[2][2] = pow(cos(citaR), 2) - pow(sin(citaR), 2);
-
-  TMOne[0][0] = pow(cos(citaR), 2);
-  TMOne[0][1] = pow(sin(citaR), 2);
-  TMOne[0][2] = -2.0*cos(citaR)*sin(citaR);
-  TMOne[1][0] = pow(sin(citaR), 2);
-  TMOne[1][1] = pow(cos(citaR), 2);
-  TMOne[1][2] = 2.0*cos(citaR)*sin(citaR);
-  TMOne[2][0] = cos(citaR)*sin(citaR);
-  TMOne[2][1] = -cos(citaR)*sin(citaR);
-  TMOne[2][2] = pow(cos(citaR), 2) - pow(sin(citaR), 2);
-
-  TSL_One[0][0] = pow(cos(citaL - citaR), 2);
-  TSL_One[0][1] = pow(sin(citaL - citaR), 2);
-  TSL_One[0][2] = 2.0*cos(citaL - citaR)*sin(citaL - citaR);
-  TSL_One[1][0] = pow(sin(citaL - citaR), 2);
-  TSL_One[1][1] = pow(cos(citaL - citaR), 2);
-  TSL_One[1][2] = -2.0*cos(citaL - citaR)*sin(citaL - citaR);
-  TSL_One[2][0] = -cos(citaL - citaR)*sin(citaL - citaR);
-  TSL_One[2][1] = cos(citaL - citaR)*sin(citaL - citaR);
-  TSL_One[2][2] = pow(cos(citaL - citaR), 2) - pow(sin(citaL - citaR), 2);
-
-  TST_One[0][0] = pow(cos(citaT - citaR), 2);
-  TST_One[0][1] = pow(sin(citaT - citaR), 2);
-  TST_One[0][2] = 2.0*cos(citaT - citaR)*sin(citaT - citaR);
-  TST_One[1][0] = pow(sin(citaT - citaR), 2);
-  TST_One[1][1] = pow(cos(citaT - citaR), 2);
-  TST_One[1][2] = -2.0*cos(citaT - citaR)*sin(citaT - citaR);
-  TST_One[2][0] = -cos(citaT - citaR)*sin(citaT - citaR);
-  TST_One[2][1] = cos(citaT - citaR)*sin(citaT - citaR);
-  TST_One[2][2] = pow(cos(citaT - citaR), 2) - pow(sin(citaT - citaR), 2);
-
-  int i, j, k;
-  //calculate tempStrain: epslon1,epslon2, 0.5*gamma12
-  for (i = 0; i < 3; i++) {
-    tempStrain[i] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempStrain[i] += TOne[i][k] * Tstrain[k];
-  }
-
-  //double epslonOne, epslonTwo, halfGammaOneTwo;
-  epslonOne = tempStrain[0];
-  epslonTwo = tempStrain[1];
-  halfGammaOneTwo = tempStrain[2];
-
-  /*  double CSL = theMaterial[0]->getCommittedStrain();
-  double CST = theMaterial[1]->getCommittedStrain();  */
-
+  //double CSL = theMaterial[0]->getCommittedStrain();
+  //double CST = theMaterial[1]->getCommittedStrain();
   theResponses[0]->getResponse();
   theResponses[1]->getResponse();
   Information &theInfoL = theResponses[0]->getInformation();
@@ -1006,16 +894,14 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   double CSL = theInfoL.theDouble;
   double CST = theInfoT.theDouble;
 
-  if ((CSL > epsn) || (CST > epsn)) {
-    steelStatus = 1;
-  }
+  if ((CSL > epsn) || (CST > epsn)) steelStatus = 1;
 
   //set v12 and v21 obtained from strain
   double strainSL, strainST; //Biaxial strain of steel in L, T
   double strainSF;           //larger one of strainSL, strainST
 
-  strainSL = pow(cos(citaL), 2)*Tstrain[0] + pow(sin(citaL), 2)*Tstrain[1] + 2.0*sin(citaL)*cos(citaL)*Tstrain[2];
-  strainST = pow(cos(citaT), 2)*Tstrain[0] + pow(sin(citaT), 2)*Tstrain[1] + 2.0*sin(citaT)*cos(citaT)*Tstrain[2];
+  strainSL = pow(cos(citaL), 2)*Tstrain(0) + pow(sin(citaL), 2)*Tstrain(1) + 2.0*sin(citaL)*cos(citaL)*Tstrain(2);
+  strainST = pow(cos(citaT), 2)*Tstrain(0) + pow(sin(citaT), 2)*Tstrain(1) + 2.0*sin(citaT)*cos(citaT)*Tstrain(2);
 
   strainSF = (strainSL > strainST ? strainSL : strainST);
 
@@ -1105,67 +991,45 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   miu12 = v12;
   miu21 = v21;
 
-  //set values of matrix V[3][3]
-  //if ( v12*v21==1.0 ) {
-  //    opserr << "ReinforcedConcretePlaneStress::determineTrialStress: failure to get matrix [V]!\n";
-  //    opserr << "v12= "<<v12 << endln;
-  //    opserr << "v21= "<<v21 << endln;
-  V[0][0] = 1.0;
-  V[0][1] = 0.0;
-  V[0][2] = 0.0;
-
-  V[1][0] = 0.0;
-  V[1][1] = 1.0;
-  V[1][2] = 0.0;
-
-  V[2][0] = 0.0;
-  V[2][1] = 0.0;
-  V[2][2] = 1.0;
-  //  }
-  //else
-  //  {
-  //    V[0][0] = 1.0/(1.0-v12*v21);
-  //    V[0][1] = v12/(1.0-v12*v21);
-  //    V[0][2] = 0.0;
-  //    V[1][0] = v21/(1.0-v12*v21);
-  //    V[1][1] = 1.0/(1.0-v12*v21);
-  //    V[1][2] = 0.0;
-  //    V[2][0] = 0.0;
-  //    V[2][1] = 0.0;
-  //    V[2][2] = 1.0;
-  //  }
+  //set values of matrix V
+  V.Zero();
+//  if ( v12*v21==1.0 ) {
+//    opserr << "ReinforcedConcretePlaneStress::determineTrialStress: failure to get matrix [V]!\n";
+//    opserr << "v12= "<<v12 << endln;
+//    opserr << "v21= "<<v21 << endln;
+    
+    V(0, 0) = 1.0;
+    V(1, 1) = 1.0;
+    V(2, 2) = 1.0;
+//  }
+//  else {
+//    V(0, 0) = 1.0 / (1.0 - v12*v21);
+//    V(0, 1) = v12 / (1.0 - v12*v21);
+//
+//    V(1, 0) = v21 / (1.0 - v12*v21);
+//    V(1, 1) = 1.0 / (1.0 - v12*v21);
+//
+//    V(2, 2) = 1.0;
+//  }
 
   //********** get [DC]**************
-  //set temp[DC]=[V]*[TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += V[i][k] * TOne[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DC[i][j] = tempD[i][j];
-  }
+  DC.addMatrixProduct(0.0, V, T(citaR), 1.0); // DC = V * TOne;
 
   //calculate epslon1_bar, epslon2_bar, 0.5*gamma12
-  double temp0 = tempStrain[0];
-  double temp1 = tempStrain[1];
-  tempStrain[0] = V[0][0] * temp0 + V[0][1] * temp1; //epslon1_bar
-  tempStrain[1] = V[1][0] * temp0 + V[1][1] * temp1; //epslon2_bar
+  tempStrain(0) = V(0, 0)*epslonOne + V(0, 1)*epslonTwo; //epslon1_bar
+  tempStrain(1) = V(1, 0)*epslonOne + V(1, 1)*epslonTwo; //epslon2_bar
+  //tempStrain(2) = halfGammaOneTwo;  // hsu-zhu ratio has no effect on this term
 
   //get stiffness of UniaxialMaterial strain of concrete in 12 direction
-  /*double cigmaOneC; //stress of concrete in 12 direction
-  double cigmaTwoC;*/
   double GOneTwoC; //shear modulus of concrete in 12 direction
 
   // get Damage factor: DOne, DTwo
-  if (tempStrain[0] < 0) {
+  if (tempStrain(0) < 0) {
     TOneReverseStatus = 0;
-    if (TOneNowMaxComStrain > tempStrain[0])
-      TOneNowMaxComStrain = tempStrain[0];
+    if (TOneNowMaxComStrain > tempStrain(0))
+      TOneNowMaxComStrain = tempStrain(0);
   }
-  else { // tempStrain[0] > 0
+  else { // tempStrain(0) > 0
     if (TOneReverseStatus == 0) { // first reverse from compressive strain
       TOneReverseStatus = 1;
       TOneLastMaxComStrain = COneNowMaxComStrain;
@@ -1173,12 +1037,12 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
     }
   }
 
-  if (tempStrain[1] < 0) {
+  if (tempStrain(1) < 0) {
     TTwoReverseStatus = 0;
-    if (TTwoNowMaxComStrain > tempStrain[1])
-      TTwoNowMaxComStrain = tempStrain[1];
+    if (TTwoNowMaxComStrain > tempStrain(1))
+      TTwoNowMaxComStrain = tempStrain(1);
   }
-  else { // tempStrain[1] > 0
+  else { // tempStrain(1) > 0
     if (TTwoReverseStatus == 0) { // first reverse from compressive strain
       TTwoReverseStatus = 1;
       TTwoLastMaxComStrain = CTwoNowMaxComStrain;
@@ -1186,23 +1050,20 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
     }
   }
 
-  tt1 = tempStrain[0];
-  tt2 = tempStrain[1];
+  tt1 = tempStrain(0);
+  tt2 = tempStrain(1);
 
   double DOne = 1.0;
   double DTwo = 1.0;
 
-  if (tempStrain[0] < 0) {
+  if (tempStrain(0) < 0) {
     DOne = 1 - fabs(0.4*TTwoLastMaxComStrain / epsc0);
     if (DOne < 0.2)	DOne = 0.2;
   }
-  if (tempStrain[1] < 0) {
+  if (tempStrain(1) < 0) {
     DTwo = 1 - fabs(0.4*TOneLastMaxComStrain / epsc0);
     if (DTwo < 0.2)	DTwo = 0.2;
   }
-
-  //DOne = 1.0;
-  //DTwo = 1.0;
 
   DDOne = DOne;  // assign values for screen output
   DDTwo = DTwo;
@@ -1268,10 +1129,8 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   kkk = kk;
 
   //for ConcreteZ01, ConcreteZ02
-  /*
-  theMaterial[2]->setTrialStrain(xx, kk, DOne,ita,tempStrain[1],tempStrain[0]);
-  theMaterial[3]->setTrialStrain(xx, kk, DTwo,ita,tempStrain[0],tempStrain[1]);
-  */
+  //theMaterial[2]->setTrialStrain(xx, kk, DOne,ita,tempStrain[1],tempStrain[0]);
+  //theMaterial[3]->setTrialStrain(xx, kk, DTwo,ita,tempStrain[0],tempStrain[1]);
 
   Information &theInfoC02 = theResponses[2]->getInformation();
   Information &theInfoC03 = theResponses[3]->getInformation();
@@ -1301,34 +1160,34 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   theData(3) = 0.;
   if (isSwapped) {
     theData(2) = DTwo;
-    theData(4) = tempStrain[0];   //epslon1_bar
+    theData(4) = tempStrain(0);   //epslon1_bar
     theInfoC02.setVector(theData);
     theResponses[2]->getResponse();
 
     theData(2) = DOne;
-    theData(4) = tempStrain[1];   //epslon2_bar
+    theData(4) = tempStrain(1);   //epslon2_bar
     theInfoC03.setVector(theData);
     theResponses[3]->getResponse();
 
-    theMaterial[2]->setTrialStrain(tempStrain[1], 0.0); //epslon2_bar
-    theMaterial[3]->setTrialStrain(tempStrain[0], 0.0); //epslon1_bar
+    theMaterial[2]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
+    theMaterial[3]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
 
     sigmaOneC = theMaterial[3]->getStress();
     sigmaTwoC = theMaterial[2]->getStress();
   }
   else {
     theData(2) = DOne;
-    theData(4) = tempStrain[1];   //epslon2_bar
+    theData(4) = tempStrain(1);   //epslon2_bar
     theInfoC02.setVector(theData);
     theResponses[2]->getResponse();
 
     theData(2) = DTwo;
-    theData(4) = tempStrain[0];   //epslon1_bar
+    theData(4) = tempStrain(0);   //epslon1_bar
     theInfoC03.setVector(theData);
     theResponses[3]->getResponse();
 
-    theMaterial[2]->setTrialStrain(tempStrain[0], 0.0); //epslon1_bar
-    theMaterial[3]->setTrialStrain(tempStrain[1], 0.0); //epslon2_bar
+    theMaterial[2]->setTrialStrain(tempStrain(0), 0.0); //epslon1_bar
+    theMaterial[3]->setTrialStrain(tempStrain(1), 0.0); //epslon2_bar
 
     sigmaOneC = theMaterial[2]->getStress();
     sigmaTwoC = theMaterial[3]->getStress();
@@ -1355,81 +1214,46 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   Information &theInfoC1 = theResponses[4]->getInformation();
   theResponses[5]->getResponse();
   Information &theInfoC2 = theResponses[5]->getInformation();
+  
+  if (isSwapped) {
+    DC_bar(0, 0) = theMaterial[3]->getTangent();
+    DC_bar(0, 1) = 0.0; // theInfoC2.theDouble;
+    DC_bar(0, 2) = 0.0;
+    DC_bar(1, 0) = 0.0; // theInfoC1.theDouble;
+    DC_bar(1, 1) = theMaterial[2]->getTangent();
+    DC_bar(1, 2) = 0.0;
+  }
+  else {
+    DC_bar(0, 0) = theMaterial[2]->getTangent();
+    DC_bar(0, 1) = 0.0; // theInfoC1.theDouble;
+    DC_bar(0, 2) = 0.0;
+    DC_bar(1, 0) = 0.0; // theInfoC2.theDouble;
+    DC_bar(1, 1) = theMaterial[3]->getTangent();
+    DC_bar(1, 2) = 0.0;
+  }
 
-  //if (isSwapped) {
-  //  DC_bar[0][0] = theMaterial[3]->getTangent();
-  //  DC_bar[0][1] = theInfoC2.theDouble;
-  //  DC_bar[0][2] = 0.0;
-  //
-  //  DC_bar[1][0] = theInfoC1.theDouble;
-  //  DC_bar[1][1] = theMaterial[2]->getTangent();
-  //  DC_bar[1][2] = 0.0;
-  //}
-  //else {
-  DC_bar[0][0] = theMaterial[2]->getTangent();
-  DC_bar[0][1] = theInfoC1.theDouble;
-  DC_bar[0][2] = 0.0;
-
-  DC_bar[1][0] = theInfoC2.theDouble;
-  DC_bar[1][1] = theMaterial[3]->getTangent();
-  DC_bar[1][2] = 0.0;
-  //}
-
-  DC_bar[2][0] = 0.0;
-  DC_bar[2][1] = 0.0;
-  DC_bar[2][2] = GOneTwoC;
+  DC_bar(2, 0) = 0.0;
+  DC_bar(2, 1) = 0.0;
+  DC_bar(2, 2) = GOneTwoC;
 
   //before [DC]=[v]*[TOne], now update [DC]=[Dc_bar]*[V]*[TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += DC_bar[i][k] * DC[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DC[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, DC_bar, DC, 1.0); // before here, DC = V * TOne;
+  DC = tempD;
 
   //update [DC]=[TMOne]*[Dc_bar]*[V]*[TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += TMOne[i][k] * DC[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DC[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, T(-citaR), DC, 1.0); // before here, DC = DC_Bar * V * TOne;
+  DC = tempD;
 
   //***************** get [DSL] ******************
   //get [DSL]=[V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += V[i][k] * TOne[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DSL[i][j] = tempD[i][j];
-  }
+  DSL.addMatrixProduct(0.0, V, T(citaR), 1.0);
 
   //get [DSL]=[TLMOne][V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += TSL_One[i][k] * DSL[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DSL[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, T(citaL-citaR), DSL, 1.0);
+  DSL = tempD;
 
   double strainSL_b; //uniaxial strain of steel in L direction
-  strainSL_b = DSL[0][0] * Tstrain[0] + DSL[0][1] * Tstrain[1] + DSL[0][2] * Tstrain[2];
+  strainSL_b = DSL(0,0) * Tstrain(0) + DSL(0,1) * Tstrain(1) + DSL(0,2) * Tstrain(2);
 
   //get stiffness
   double tangentSL;
@@ -1437,114 +1261,70 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
   tangentSL = theMaterial[0]->getTangent();
   stressSL = theMaterial[0]->getStress();
 
-  for (j = 0; j < 3; j++) {
-    DSL[0][j] = rou1*tangentSL*DSL[0][j];
-    DSL[1][j] = 0.0;
-    DSL[2][j] = 0.0;
+  for (int j = 0; j < 3; j++) {
+    DSL(0, j) *= (rouL*tangentSL);
+    DSL(1, j) = 0.0;
+    DSL(2, j) = 0.0;
   }
 
   //get [DSL]=[TML][Dsl][TLMOne][V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += TMSL[i][k] * DSL[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DSL[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, T(-citaL), DSL, 1.0);
+  DSL = tempD;
 
   //**************** get [DST] ****************     
   //get [DST]=[V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += V[i][k] * TOne[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DST[i][j] = tempD[i][j];
-  }
+  DST.addMatrixProduct(0.0, V, T(citaR), 1.0);
 
   //get [DST]=[TST_One][V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += TST_One[i][k] * DST[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DST[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, T(citaT-citaR), DST, 1.0);
+  DST = tempD;
 
   double strainST_b; //uniaxial strain of steel in L direction
-  strainST_b = DST[0][0] * Tstrain[0] + DST[0][1] * Tstrain[1] + DST[0][2] * Tstrain[2];
+  strainST_b = DST(0,0) * Tstrain(0) + DST(0,1) * Tstrain(1) + DST(0,2) * Tstrain(2);
 
   double tangentST;
   theMaterial[1]->setTrialStrain(strainST_b);
   tangentST = theMaterial[1]->getTangent();
   stressST = theMaterial[1]->getStress();
 
-  for (j = 0; j < 3; j++) {
-    DST[0][j] = rou2*tangentST*DST[0][j];
-    DST[1][j] = 0.0;
-    DST[2][j] = 0.0;
+  for (int j = 0; j < 3; j++) {
+    DST(0, j) *= (rouT*tangentST);
+    DST(1, j) = 0.0;
+    DST(2, j) = 0.0;
   }
 
   //get [DST]=[TMT][Dst][TTMOne][V][TOne]
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    tempD[i][j] = 0.0;
-    for (k = 0; k < 3; k++)
-      tempD[i][j] += TMST[i][k] * DST[k][j];
-  }
-  for (i = 0; i < 3; i++)
-  for (j = 0; j < 3; j++) {
-    DST[i][j] = tempD[i][j];
-  }
+  tempD.addMatrixProduct(0.0, T(-citaT), DST, 1.0);
+  DST = tempD;
 
   //****************** get tangent_matrix  ****************    
   // Get tangent_matrix
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < 3; j++) {
-      D[i][j] = 0.0;
-      D[i][j] = DC[i][j] + DSL[i][j] + DST[i][j];
-      tangent_matrix(i, j) = D[i][j];
-    }
-  }
+  tangent_matrix = DC + DSL + DST;
 
-  // add for converge check
-  if (D[2][2] < 0.01) { D[2][2] = 0.01; } // For some cases there is negative stiffness in shear
+  // added for converge check
+  if (tangent_matrix(2, 2) < 0.01) tangent_matrix(2, 2) = 0.01; // For some cases there is negative stiffness in shear
 
-  tangent_matrix(0, 2) = 0.5*D[0][2];
-  tangent_matrix(1, 2) = 0.5*D[1][2];
-  tangent_matrix(2, 2) = 0.5*D[2][2];
+  tangent_matrix(2, 0) *= 0.5;
+  tangent_matrix(2, 1) *= 0.5;
+  tangent_matrix(2, 2) *= 0.5;
 
+  Vector tempStress(3);
+  tempStress(0) = sigmaOneC; tempStress(1) = sigmaTwoC; tempStress(2) = halfGammaOneTwo*GOneTwoC;
   //**************** get Tstress and stress_vec ****************
-  Tstress[0] = pow(cos(-citaR), 2)*sigmaOneC + pow(sin(-citaR), 2)*sigmaTwoC
-    - 2 * sin(-citaR)*cos(-citaR)*halfGammaOneTwo*GOneTwoC
-    + pow(cos(citaL), 2)*rou1*stressSL + pow(cos(citaT), 2)*rou2*stressST;
+  Tstress.addMatrixVector(0.0, T(-citaR), tempStress, 1.0);
+  Tstress(0) += pow(cos(citaL), 2)*rouL*stressSL + pow(cos(citaT), 2)*rouT*stressST;
+  Tstress(1) += pow(sin(citaL), 2)*rouL*stressSL + pow(sin(citaT), 2)*rouT*stressST;
+  Tstress(2) += cos(citaL)*sin(citaL)*rouL*stressSL + cos(citaT)*sin(citaT)*rouT*stressST;
 
-  Tstress[1] = pow(sin(-citaR), 2)*sigmaOneC + pow(cos(-citaR), 2)*sigmaTwoC
-    + 2 * sin(-citaR)*cos(-citaR)*halfGammaOneTwo*GOneTwoC
-    + pow(sin(citaL), 2)*rou1*stressSL + pow(sin(citaT), 2)*rou2*stressST;
-
-  Tstress[2] = cos(-citaR)*sin(-citaR)*sigmaOneC - cos(-citaR)*sin(-citaR)*sigmaTwoC
-    + (pow(cos(-citaR), 2) - pow(sin(-citaR), 2))*halfGammaOneTwo*GOneTwoC
-    + cos(citaL)*sin(citaL)*rou1*stressSL + cos(citaT)*sin(citaT)*rou2*stressST;
-
-  stress_vec(0) = Tstress[0];
-  stress_vec(1) = Tstress[1];
-  stress_vec(2) = Tstress[2];
+  stress_vec(0) = Tstress(0);
+  stress_vec(1) = Tstress(1);
+  stress_vec(2) = Tstress(2);
 
   // get principal stress direction
   double citaP = citaR;
   double sXPoint[2], sYPoint[2], sPolePoint[2];
-  sXPoint[0] = Tstress[0];  sXPoint[1] = -1.*Tstress[2];
-  sYPoint[0] = Tstress[1];  sYPoint[1] = Tstress[2];
+  sXPoint[0] = Tstress(0);  sXPoint[1] = -1.*Tstress(2);
+  sYPoint[0] = Tstress(1);  sYPoint[1] = Tstress(2);
   sPolePoint[0] = sYPoint[0];  sPolePoint[1] = sXPoint[1];
   if ((sYPoint[0] == sXPoint[0]) && (sYPoint[1] == sXPoint[1])) {
     opserr << "ReinforcedConcretePlaneStress::determineTrialStress: Failure to calculate the pole point of stress\n";
@@ -1564,6 +1344,7 @@ ReinforcedConcretePlaneStress::determineTrialStress(void)
     //else if ((Tstress[0] < Tstress[1]) && (Tstress[2] < 0))  citaP = 0.5*PI + citaP;
   }
   citaStress = citaP;
+  Tstress.computePrincipalValDir(eig, dir);
 
   return 0;
 }

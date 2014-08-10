@@ -546,7 +546,7 @@ FASTMRCPlateFiber::getCopy(const char *type)
 Response*
 FASTMRCPlateFiber::setResponse(const char **argv, int argc, OPS_Stream &output)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "FASTMRCPlateFiber::setResponse(...)" << endln;
 #endif
 
@@ -570,7 +570,7 @@ FASTMRCPlateFiber::setResponse(const char **argv, int argc, OPS_Stream &output)
 int
 FASTMRCPlateFiber::getResponse(int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "FASTMRCPlateFiber::getResponse(...)" << endln;
 #endif
 
