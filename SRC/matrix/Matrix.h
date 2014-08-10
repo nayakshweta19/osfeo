@@ -71,18 +71,18 @@ class Matrix
     int Solve(const Matrix &M, Matrix &res) const;
     int Invert(Matrix &res) const;
 
-    int addMatrix(double factThis, const Matrix &other, double factOther);
-    int addMatrixTranspose(double factThis, const Matrix &other, double factOther);
-    int addMatrixProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); // AB
-    int addMatrixTransposeProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); // A'B
-    int addMatrixTripleProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); // A'BA
-    int addMatrixTripleProduct(double factThis, const Matrix &A, const Matrix &B, const Matrix &C, double otherFact); //A'BC
+    int addMatrix(double factThis, const Matrix &other, double factOther); //this += other * factOther
+    int addMatrixTranspose(double factThis, const Matrix &other, double factOther); //this += other^T * factOther
+    int addMatrixProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); //this += A * B  otherFact
+    int addMatrixTransposeProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); // this += At * B
+    int addMatrixTripleProduct(double factThis, const Matrix &A, const Matrix &B, double factOther); // this += A' * B * A
+    int addMatrixTripleProduct(double factThis, const Matrix &A, const Matrix &B, const Matrix &C, double otherFact); // this += At * B * C
     
     // overloaded operators 
     inline double &operator()(int row, int col);
     inline double operator()(int row, int col) const;
     Matrix operator()(const ID &rows, const ID & cols) const;
-    
+    Matrix &operator()(const double theta); // neallee@tju.edu.cn fabricate Transform Matrix T for CSMM
     Matrix &operator=(const Matrix &M);
     Matrix &operator=(const Tensor &T);
     

@@ -47,8 +47,8 @@
 #include <FEM_ObjectBroker.h>
 
 //#include <myDebug.h>
-#ifdef DEBUG_LEVEL
-#undef DEBUG_LEVEL
+#ifdef _G3DEBUG_LEVEL
+#undef _G3DEBUG_LEVEL
 #endif
 
 const double DruckerPragerSteelThermal :: one3   = 1.0 / 3.0 ;

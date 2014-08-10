@@ -234,10 +234,12 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
     // **** Quadrilateral Elements - 4 Nodes
     if (hasQuad4 == 1) {
 	  // Print HEADER
-	  if (stricmp(responseArgs[0], "material") == 0  ) { // integration of material point
-        opserr << "4 Points quad element integrPoint record has not been implemented,yet." << endln;
+      if (stricmp(responseArgs[0], "material") == 0 || stricmp(responseArgs[0], "integrPoint") == 0) { 
+        // integration of material point
+        opserr << "For GiD, 4 Points quad element integrPoint record has not been implemented,yet." << endln;
 	  }
-	  else if (stricmp(responseArgs[numArgs-1], "stresses") == 0 ) { // stress on one gauss point
+      else if (stricmp(responseArgs[numArgs - 1], "stresses") == 0 
+            || stricmp(responseArgs[numArgs - 1], "stress") == 0) { // stress on one gauss point
 		// Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
         sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs-1], stepN);
         theOutputHandler->write(outputData,80);
@@ -245,7 +247,17 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
         // ComponentNames 
         theOutputHandler->write(" ComponentNames \"Sxx\"  \"Syy\"  \"Sxy\"\n",80);
 	  }
-	  else if (stricmp(responseArgs[numArgs-1], "force") == 0) {
+      else if (stricmp(responseArgs[numArgs - 1], "strains") == 0
+            || stricmp(responseArgs[numArgs - 1], "strain") == 0) { 
+        // stress on one gauss point
+        // Result " Name of Results " "Analysis"      1.00000 Vector OnNodes
+        sprintf(outputData, "Result \"Element_%s\" \"Loading_Analysis\"\t%i", responseArgs[numArgs - 1], stepN);
+        theOutputHandler->write(outputData, 80);
+        theOutputHandler->write("\tVector OnGaussPoints \"Quadrilateral_4_GuassPoint_Set\"\n", 80);
+        // ComponentNames 
+        theOutputHandler->write(" ComponentNames \"Sxx\"  \"Syy\"  \"Sxy\"\n", 80);
+      }
+      else if (stricmp(responseArgs[numArgs - 1], "force") == 0) {
 		opserr << "4 Points quad element force record has not been implemented,yet." << endln;
 	  }
 	  // Values

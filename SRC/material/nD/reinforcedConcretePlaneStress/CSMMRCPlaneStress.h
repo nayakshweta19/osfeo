@@ -127,6 +127,9 @@ class CSMMRCPlaneStress : public NDMaterial
 	static Vector stress_vec;
 	static Matrix tangent_matrix;
 
+    static Matrix DC;
+    static Matrix DC_bar;
+
 	double        angle1;    // angel of the first steel layer to x coordinate 
 	double        angle2;    // angel of the second steel layer to x coordinate
 	double        rou1;      // steel ratio of the first steel layer

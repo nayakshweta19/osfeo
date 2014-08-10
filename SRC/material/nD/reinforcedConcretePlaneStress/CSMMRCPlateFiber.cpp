@@ -512,7 +512,7 @@ Response*
 CSMMRCPlateFiber::setResponse (const char **argv, int argc, OPS_Stream &output)
 {
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "CSMMRCPlateFiber::setResponse(...)" << endln;
 #endif
 
@@ -535,7 +535,7 @@ CSMMRCPlateFiber::setResponse (const char **argv, int argc, OPS_Stream &output)
 
 int CSMMRCPlateFiber::getResponse (int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "CSMMRCPlateFiber::getResponse(...)" << endln;
 #endif
 

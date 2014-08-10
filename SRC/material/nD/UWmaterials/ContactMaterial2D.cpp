@@ -95,7 +95,7 @@ ContactMaterial2D::ContactMaterial2D (int tag, double mu, double G, double c, do
    stress_vec(3),
    tangent_matrix(3,3)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::ContactMaterial2D" << endln;
 #endif
         frictionCoeff = mu;
@@ -130,7 +130,7 @@ ContactMaterial2D::~ContactMaterial2D ()
 //zero internal variables
 void ContactMaterial2D::zero( )
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::zero()" << endln;
 #endif
 
@@ -161,7 +161,7 @@ void ContactMaterial2D::zero( )
 
 int ContactMaterial2D::setTrialStrain (const Vector &strain_from_element)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::setTrialStrain()" << endln;
 #endif
 
@@ -213,7 +213,7 @@ int ContactMaterial2D::setTrialStrain (const Vector &strain_from_element)
             t_s = stiffness * s_e_nplus1;
     }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
     if (DEBUG_LEVEL > 1) {
         if (inSlip) {
             opserr << "   ** SLIDING" << endln; }
@@ -241,7 +241,7 @@ int ContactMaterial2D::setTrialStrain (const Vector &v, const Vector &r)
 
 const Matrix & ContactMaterial2D::getTangent ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
     opserr << "ContactMaterial2D::getTangent()\n";
 #endif
 
@@ -273,7 +273,7 @@ const Matrix & ContactMaterial2D::getTangent ()
 	} 
 	
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
     if (DEBUG_LEVEL > 1) {
         opserr << "   is sliding? " << inSlip << endln;
         opserr << "   C_nl = " << C_nl
@@ -297,7 +297,7 @@ const Matrix & ContactMaterial2D::getTangent ()
 
 const Matrix & ContactMaterial2D::getInitialTangent ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getInitialTangent()" << endln;
 #endif
 
@@ -307,7 +307,7 @@ const Matrix & ContactMaterial2D::getInitialTangent ()
 
 const Vector & ContactMaterial2D::getStress()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getStress()" << endln;
 #endif
 
@@ -317,7 +317,7 @@ const Vector & ContactMaterial2D::getStress()
 
 const Vector & ContactMaterial2D::getStrain ()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::setStrain()" << endln;
 #endif
 
@@ -327,7 +327,7 @@ const Vector & ContactMaterial2D::getStrain ()
 
 int ContactMaterial2D::commitState (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::commitState" << endln;
 #endif
 
@@ -339,7 +339,7 @@ int ContactMaterial2D::commitState (void)
 
 int ContactMaterial2D::revertToLastCommit (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::revertToLastCommit()" << endln;
 #endif
 
@@ -348,7 +348,7 @@ int ContactMaterial2D::revertToLastCommit (void)
 
 int ContactMaterial2D::revertToStart(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::revertToStart()" << endln;
 #endif
 	
@@ -360,7 +360,7 @@ int ContactMaterial2D::revertToStart(void)
 
 NDMaterial * ContactMaterial2D::getCopy (void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getCopy()" << endln;
 #endif
 
@@ -371,7 +371,7 @@ NDMaterial * ContactMaterial2D::getCopy (void)
 
 NDMaterial * ContactMaterial2D::getCopy (const char *code)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getCopy()" << endln;
 #endif
 
@@ -387,7 +387,7 @@ NDMaterial * ContactMaterial2D::getCopy (const char *code)
 
 const char * ContactMaterial2D::getType (void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getType()" << endln;
 #endif
     return "Two_Dimensional";
@@ -397,7 +397,7 @@ const char * ContactMaterial2D::getType (void) const
 
 int ContactMaterial2D::getOrder (void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "ContactMaterial2D::getOrder()" << endln;
 #endif
     return 3;

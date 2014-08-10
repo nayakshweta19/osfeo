@@ -180,7 +180,7 @@ BeamContact3D::BeamContact3D(int tag, int Nd1, int Nd2,
    mBphi(3,12),
    mIniContact(cSwitch)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::BeamContact3D(): " << MyTag << endln;
 #endif
         externalNodes(0) = Nd1;
@@ -270,7 +270,7 @@ BeamContact3D::BeamContact3D()
    mBs(BC3D_NUM_DOF-3,2),
    mBphi(3,12)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::BeamContact3D(): " << MyTag << endln;
 #endif
     mRadius     = 0.0;
@@ -293,7 +293,7 @@ BeamContact3D::BeamContact3D()
 //  destructor:
 BeamContact3D::~BeamContact3D()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::~BeamContact3D(): " << MyTag << endln;
 #endif
 }
@@ -302,7 +302,7 @@ BeamContact3D::~BeamContact3D()
 int
 BeamContact3D::getNumExternalNodes(void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getNumExternalNodes(): " << MyTag << endln;
 #endif
     return BC3D_NUM_NODE;
@@ -311,7 +311,7 @@ BeamContact3D::getNumExternalNodes(void) const
 const ID &
 BeamContact3D::getExternalNodes(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getExternalNodes(): " << MyTag << endln;
 #endif
     return externalNodes;
@@ -321,7 +321,7 @@ BeamContact3D::getExternalNodes(void)
 Node **
 BeamContact3D::getNodePtrs(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getNodePtrs(): " << MyTag << endln;
 #endif
         return theNodes;                        
@@ -330,7 +330,7 @@ BeamContact3D::getNodePtrs(void)
 int
 BeamContact3D::getNumDOF(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getNumDOF(): " << MyTag << endln;
 #endif
     return BC3D_NUM_DOF;
@@ -341,7 +341,7 @@ BeamContact3D::getNumDOF(void)
 void
 BeamContact3D::setDomain(Domain *theDomain)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::setDomain(Domain *theDomain): " << MyTag << endln;
 #endif
 
@@ -442,7 +442,7 @@ BeamContact3D::setDomain(Domain *theDomain)
 int
 BeamContact3D::commitState()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::commitState(): " << MyTag << endln;
 #endif
 
@@ -530,7 +530,7 @@ BeamContact3D::commitState()
 int
 BeamContact3D::revertToLastCommit()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::revertToLastCommit(): " << MyTag << endln;
 #endif
         return theMaterial->revertToLastCommit();
@@ -578,7 +578,7 @@ BeamContact3D::revertToStart()
 int
 BeamContact3D::update(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::update(): " << MyTag << endln;
 #endif
   if (mInitialize) {
@@ -645,7 +645,7 @@ BeamContact3D::update(void)
     //should_be_released = ( mLambda <= -(tensileStrength + mTolForce ) );
     should_be_released = ( mLambda <= - mTolForce );
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
     if (DEBUG_LEVEL > 0) {
       opserr << "   CONTACT:            " << inContact << endln;
       opserr << "   should be released: " << should_be_released << endln;
@@ -712,7 +712,7 @@ BeamContact3D::update(void)
 double
 BeamContact3D::project(double xi)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::project(): " << MyTag << endln;
 #endif
 
@@ -799,7 +799,7 @@ int
 BeamContact3D::UpdateBase(double xi)
 // this function calculates g1, g2, mg_metric, and sends value of metric tensor to the material
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::UpdateBase(): " << MyTag << endln;
 #endif
 
@@ -881,7 +881,7 @@ BeamContact3D::UpdateBase(double xi)
 void
 BeamContact3D::ComputeB(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::ComputeB(): " << MyTag << endln;
 #endif
 
@@ -1074,7 +1074,7 @@ BeamContact3D::ComputeB(void)
 Matrix
 BeamContact3D::ComputeBphi(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::ComputeB(): " << MyTag << endln;
 #endif
                 int i, j;
@@ -1176,7 +1176,7 @@ BeamContact3D::ComputeBphi(void)
 void
 BeamContact3D::UpdateTransforms(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::UpdateTransforms(): " << MyTag << endln;
 #endif
 
@@ -1239,7 +1239,7 @@ BeamContact3D::UpdateTransforms(void)
 void
 BeamContact3D::ComputeQc(double xi)
 {      
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::ComputeQc(): " << MyTag << endln;
 #endif
                 Vector c1(BC3D_NUM_NDM);        // tangent vector at projection point, c
@@ -1286,7 +1286,7 @@ BeamContact3D::ComputeQc(double xi)
 Matrix
 BeamContact3D::ExponentialMap(Vector th)
 {
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::ExponentialMap(): " << MyTag << endln;
 //#endif
 
@@ -1353,7 +1353,7 @@ BeamContact3D::ExponentialMap(Vector th)
 Matrix
 BeamContact3D::ComputeSkew(Vector th)
 {
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::ComputeSkew(): " << MyTag << endln;
 //#endif
 
@@ -1376,7 +1376,7 @@ BeamContact3D::ComputeSkew(Vector th)
 Vector
 BeamContact3D::CrossProduct(Vector &V1, Vector &V2)
 {
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::CrossProduct(): " << MyTag << endln;
 //#endif
 
@@ -1409,7 +1409,7 @@ BeamContact3D::Transpose( int dim1, int dim2, const Matrix &M )
 
 Vector
 BeamContact3D::Geta1(void){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::Geta1(): " << MyTag << endln;
 //#endif
 
@@ -1425,7 +1425,7 @@ BeamContact3D::Geta1(void){
 
 Vector
 BeamContact3D::Getb1(void){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::Getb1(): " << MyTag << endln;
 //#endif
 
@@ -1441,7 +1441,7 @@ BeamContact3D::Getb1(void){
 
 void
 BeamContact3D::Setc1(Vector c1_vec){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::Setc1(): " << MyTag << endln;
 //#endif
 
@@ -1452,7 +1452,7 @@ BeamContact3D::Setc1(Vector c1_vec){
 
 Vector
 BeamContact3D::Getc1(void){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::Getc1(): " << MyTag << endln;
 //#endif
 
@@ -1463,7 +1463,7 @@ BeamContact3D::Getc1(void){
 
 Vector
 BeamContact3D::Getdx_c(double xi){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //        opserr << "BeamContact3D::Getdx_c(): " << MyTag << endln;
 //#endif
 // ? Is this function necessary?  Calculate directly at place used instead?    
@@ -1487,7 +1487,7 @@ BeamContact3D::Getdx_c(double xi){
 
 Vector
 BeamContact3D::Getddx_c(double xi){
-//#ifdef DEBUG
+//#ifdef _G3DEBUG
 //       opserr << "BeamContact3D::Getddx_c(): " << MyTag << endln;
 //#endif
 // ? Is this function necessary?  Calculate directly at place used instead?            
@@ -1510,7 +1510,7 @@ BeamContact3D::Getddx_c(double xi){
 const Matrix &
 BeamContact3D::getTangentStiff(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getTangentStiff(): " << MyTag << endln;
 #endif
         int i, j;
@@ -1534,7 +1534,7 @@ BeamContact3D::getTangentStiff(void)
 
             // frictionless contact part
             if (Cnl != 0.0) {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                 opserr << "   ** tangent: normal" << endln;
                 }
@@ -1562,7 +1562,7 @@ BeamContact3D::getTangentStiff(void)
             //if (Csl(0) != 0.0 || Csl(1) != 0.0 ) {
 
             // sliding
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                 opserr << "   ** tangent: sliding" << endln; }
 #endif
@@ -1576,7 +1576,7 @@ BeamContact3D::getTangentStiff(void)
                         // end sliding
             } else {
             // sticking
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                 opserr << "   ** tangent: sticking" << endln;  }
 #endif
@@ -1601,7 +1601,7 @@ BeamContact3D::getTangentStiff(void)
 
 //              opserr << "   K_T: " << mTangentStiffness;
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                         opserr << "   inContact:   " << inContact << endln;
             opserr << "   K_T: " << mTangentStiffness;
@@ -1615,7 +1615,7 @@ BeamContact3D::getTangentStiff(void)
 const Matrix &
 BeamContact3D::getInitialStiff(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getInitialStiff(): " << MyTag << endln;
 #endif
   return getTangentStiff();
@@ -1624,7 +1624,7 @@ BeamContact3D::getInitialStiff(void)
 void
 BeamContact3D::zeroLoad(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::zeroLoad(): " << MyTag << endln;
 #endif
   return;
@@ -1633,7 +1633,7 @@ BeamContact3D::zeroLoad(void)
 int
 BeamContact3D::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::addLoad(ElementalLoad *theLoad, double loadFactor): " << MyTag << endln;
 #endif
   return 0;
@@ -1642,7 +1642,7 @@ BeamContact3D::addLoad(ElementalLoad *theLoad, double loadFactor)
 int
 BeamContact3D::addInertiaLoadToUnbalance(const Vector &accel)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::addInertiaLoadToUnbalance(const Vector &accel): " << MyTag << endln;
 #endif
   return 0;
@@ -1651,7 +1651,7 @@ BeamContact3D::addInertiaLoadToUnbalance(const Vector &accel)
 const Vector &
 BeamContact3D::getResistingForce()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getResistingForce(): " << MyTag << endln;
 #endif
 
@@ -1675,7 +1675,7 @@ BeamContact3D::getResistingForce()
        
           }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                         opserr << "inContact:  " << inContact << endln;
             opserr << "   F_int  = " << mInternalForces;
@@ -1689,7 +1689,7 @@ BeamContact3D::getResistingForce()
 const Vector &
 BeamContact3D::getResistingForceIncInertia()
 {      
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getResistingForceIncInertia(): " << MyTag << endln;
 #endif
   //return theVector;
@@ -1704,7 +1704,7 @@ BeamContact3D::getResistingForceIncInertia()
 int
 BeamContact3D::sendSelf(int commitTag, Channel &theChannel)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::sendSelf(int commitTag, Channel &theChannel)" << endln;
 #endif
        
@@ -1871,7 +1871,7 @@ BeamContact3D::sendSelf(int commitTag, Channel &theChannel)
 int
 BeamContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)" << endln;
 #endif
 
@@ -2058,7 +2058,7 @@ BeamContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &th
 int
 BeamContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)" << endln;
 #endif
   return 0;
@@ -2068,7 +2068,7 @@ BeamContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)
 void
 BeamContact3D::Print(OPS_Stream &s, int flag)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::Print(OPS_Stream &s, int flag)" << endln;
 #endif
         opserr << "BeamContact3D, element id:  " << this->getTag() << endln;
@@ -2084,7 +2084,7 @@ BeamContact3D::Print(OPS_Stream &s, int flag)
 Response*
 BeamContact3D::setResponse(const char **argv, int argc, OPS_Stream &eleInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::setResponse(const char **argv, int argc, OPS_Stream &eleInfo): " << MyTag << endln;
 #endif
     if (strcmp(argv[0],"force") == 0 || strcmp(argv[0],"forces") == 0)
@@ -2118,7 +2118,7 @@ BeamContact3D::setResponse(const char **argv, int argc, OPS_Stream &eleInfo)
 int
 BeamContact3D::getResponse(int responseID, Information &eleInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "BeamContact3D::getResponse(int responseID =" << responseID << ", Information &eleInfo): " << MyTag << endln;
 #endif
           Vector force(3);

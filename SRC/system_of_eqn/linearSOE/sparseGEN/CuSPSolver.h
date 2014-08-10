@@ -28,13 +28,11 @@
 //
 // Description: This file contains the definiation for CuSPSolver
 
-#ifndef CuSPSolver_h
-#define CuSPSolver_h
+#ifndef CuSPSolver_h 
+#define CuSPSolver_h 
 
-#include <SparseGenRowLinSolver.h>
 #include <SparseGenRowLinSOE.h>
-#include <SparseGenColLinSOE.h>
-#include <SparseGenColLinSolver.h>
+#include <SparseGenRowLinSolver.h>
 
 //typedef int(*CUSPSOLVE)(double* Aptr, double* Bptr, double* Xptr, int n, int nnz, int* rowPtr, int*  colInd, int maxInt, double relTol, int pre, int solv);
 
@@ -53,7 +51,7 @@ public:
 
   int setLinearSOE(SparseGenRowLinSOE &theLinearSOE);
   //int setLinearSOE(SparseGenColLinSOE &theLinearSOE);
-  
+
 private:
   int n;// order of matrix
   int nnz;// Number of no-zero ones in A;
@@ -70,7 +68,7 @@ private:
 
   int error;
 
-//  CUSPSOLVE SolveFunc;
+  //  CUSPSOLVE SolveFunc;
 };
 
 #endif

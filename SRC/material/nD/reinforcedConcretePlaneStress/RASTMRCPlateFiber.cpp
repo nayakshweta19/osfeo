@@ -538,7 +538,7 @@ RASTMRCPlateFiber::getCopy(const char *type)
 Response*
 RASTMRCPlateFiber::setResponse(const char **argv, int argc, OPS_Stream &output)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "RASTMRCPlateFiber::setResponse(...)" << endln;
 #endif
 
@@ -562,7 +562,7 @@ RASTMRCPlateFiber::setResponse(const char **argv, int argc, OPS_Stream &output)
 int
 RASTMRCPlateFiber::getResponse(int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
   opserr << "RASTMRCPlateFiber::getResponse(...)" << endln;
 #endif
 

@@ -2133,7 +2133,7 @@ RCFT_concMaterial::backtocommitStatevar(void){
   history_n = Chistory_n; history_p = Chistory_p; Frule = CFrule; Tstart_flag = Cstart_flag;
   ea1 = Cea1; eb1 = Ceb1; fa1 = Cfa1; fb1 = Cfb1;
   Er = CEr;
-  Urule == CUrule;
+  Urule = CUrule;
   eunld_n7 = Ceunld_n7; funld_n7 = Cfunld_n7; Eunld_n7 = CEunld_n7;
   eunld_p8 = Ceunld_p8; funld_p8 = Cfunld_p8; Eunld_p8 = CEunld_p8;
   er1 = Cer1; fr1 = Cfr1; Er1 = CEr1;

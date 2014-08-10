@@ -83,6 +83,8 @@ class ReinforcedConcretePlaneStress : public NDMaterial
     const Vector &getCommittedStress(void);
     const Vector &getCommittedStrain(void);    
     
+    int RotatedMatrixAtCita(const double &cita, const Matrix &M);
+    
     int commitState(void);
     int revertToLastCommit(void);
     int revertToStart(void);
@@ -126,53 +128,51 @@ class ReinforcedConcretePlaneStress : public NDMaterial
 	static Vector stress_vec;
 	static Matrix tangent_matrix;
     
-    static double DC[3][3];
-    static double DC_bar[3][3];
+    static Matrix DC;
+    static Matrix DC_bar;
 
     double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
-    double   rou1;      // steel ratio of the first steel layer
-    double   rou2;      // steel ratio of the second steel layer
+    double   rouL;      // steel ratio of the first steel layer
+    double   rouT;      // steel ratio of the second steel layer
     double   fpc;       // compressive strength of the concrete
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
-	double   Tstrain[3];  // Trial strains
-    double   Tstress[3];  // Trial stresses
-    double   lastStress[3];  // Last committed stresses, added for x, k
+	static Vector   Tstrain;     // Trial strains  //epslonx,epslony,0.5*gammaxy	
+    static Vector   Tstress;     // Trial stresses
+    static Vector   lastStress;  // Last committed stresses, added for x, k
 
-    double   citaStrain;      // principle strain direction
-    double   citaStress;     // principle stress direction
+    double   citaStrain;   // principle strain direction
+    double   citaStress;   // principle stress direction
     double   miu12;        // Hsu/Zhu ratio
     double   miu21;        // Hsu/Zhu ratio
     double   G12;
     // for damgage factor D=1-0.4*epslonC'/epslon0; epslon0=0.002
     
     // Trial values
-    int TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
+    int    TOneReverseStatus;         // Trial reverse status for concrete One, 1 reverse, 0 no
     double TOneNowMaxComStrain;
     double TOneLastMaxComStrain;
     
-    int TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
+    int    TTwoReverseStatus;         // Trial reverse status for concrete Two, 1 reverse, 0 no
     double TTwoNowMaxComStrain;
     double TTwoLastMaxComStrain;
     
     // Converged values
-    int COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
+    int    COneReverseStatus;         // Converged reverse status for concrete One, 1 reverse, 0 no
     double COneNowMaxComStrain;
     double COneLastMaxComStrain;
     
-    int CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
+    int    CTwoReverseStatus;         // Converged reverse status for concrete Two, 1 reverse, 0 no
     double CTwoNowMaxComStrain;
     double CTwoLastMaxComStrain;
     
     double DDOne; // damage factor for concrete One
     double DDTwo; // damage factor for concrete Two
     
-    double tt1;
-    double tt2;
-    double xxx;
-    double kkk;
+    double tt1, tt2;
+    double xxx, kkk;
     
     int determineTrialStress(void);
 	void determineConcreteStatus(int);

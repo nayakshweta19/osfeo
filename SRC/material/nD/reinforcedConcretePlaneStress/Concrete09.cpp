@@ -43,8 +43,6 @@
 #include <Channel.h>
 #include <Information.h>
 
-#define MAT_TAG_Concrete09 23
-
 #include <MaterialResponse.h>
 #include <elementAPI.h>
 #define OPS_Export 

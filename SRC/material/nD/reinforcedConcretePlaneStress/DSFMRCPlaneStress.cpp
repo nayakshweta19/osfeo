@@ -461,7 +461,7 @@ Response*
 DSFMRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 {
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "DSFMRCPlaneStress::setResponse(...)" << endln;
 #endif
 
@@ -485,7 +485,7 @@ DSFMRCPlaneStress::setResponse (const char **argv, int argc, OPS_Stream &output)
 int
 DSFMRCPlaneStress::getResponse (int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "DSFMRCPlaneStress::getResponse(...)" << endln;
 #endif
 

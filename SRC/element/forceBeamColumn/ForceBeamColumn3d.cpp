@@ -2523,7 +2523,7 @@ ForceBeamColumn3d::setParameter(const char **argv, int argc, Parameter &param)
   // section response -
   if (strstr(argv[0],"sectionX") != 0) {
     if (argc > 2) {
-      float sectionLoc = atof(argv[1]);
+      double sectionLoc = atof(argv[1]);
 
       double xi[maxNumSections];
       double L = crdTransf->getInitialLength();
@@ -2531,7 +2531,7 @@ ForceBeamColumn3d::setParameter(const char **argv, int argc, Parameter &param)
       
       sectionLoc /= L;
 
-      float minDistance = fabs(xi[0]-sectionLoc);
+      double minDistance = fabs(xi[0]-sectionLoc);
       int sectionNum = 0;
       for (int i = 1; i < numSections; i++) {
 	if (fabs(xi[i]-sectionLoc) < minDistance) {

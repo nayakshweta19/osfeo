@@ -501,7 +501,7 @@ Response*
 CSMMRCPlaneStressFiber::setResponse (const char **argv, int argc, OPS_Stream &output)
 {
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "CSMMRCPlaneStressFiber::setResponse(...)" << endln;
 #endif
 
@@ -525,7 +525,7 @@ CSMMRCPlaneStressFiber::setResponse (const char **argv, int argc, OPS_Stream &ou
 int 
 CSMMRCPlaneStressFiber::getResponse (int responseID, Information &matInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
 	opserr << "CSMMRCPlaneStressFiber::getResponse(...)" << endln;
 #endif
 

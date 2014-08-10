@@ -139,7 +139,7 @@ SimpleContact3D::SimpleContact3D(int tag, int Nd1, int Nd2, int Nd3, int Nd4,
    dcrdS(SC3D_NUM_NDF),
    dispL(SC3D_NUM_NDF)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::SimpleContact3D(): " << MyTag << endln;
 #endif
         externalNodes(0) = Nd1;
@@ -204,7 +204,7 @@ SimpleContact3D::SimpleContact3D()
    dcrdS(SC3D_NUM_NDF),
    dispL(SC3D_NUM_NDF)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::SimpleContact3D(): " << MyTag << endln;
 #endif
 }
@@ -213,7 +213,7 @@ SimpleContact3D::SimpleContact3D()
 //  destructor:
 SimpleContact3D::~SimpleContact3D()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::~SimpleContact3D(): " << MyTag << endln;
 #endif
         delete theMaterial;
@@ -223,7 +223,7 @@ SimpleContact3D::~SimpleContact3D()
 int
 SimpleContact3D::getNumExternalNodes(void) const
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getNumExternalNodes(): " << MyTag << endln;
 #endif
     return SC3D_NUM_NODE;
@@ -232,7 +232,7 @@ SimpleContact3D::getNumExternalNodes(void) const
 const ID &
 SimpleContact3D::getExternalNodes(void) 
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getExternalNodes(): " << MyTag << endln;
 #endif
     return externalNodes;
@@ -242,7 +242,7 @@ SimpleContact3D::getExternalNodes(void)
 Node **
 SimpleContact3D::getNodePtrs(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getNodePtrs(): " << MyTag << endln;
 #endif
         return theNodes;                        
@@ -251,7 +251,7 @@ SimpleContact3D::getNodePtrs(void)
 int
 SimpleContact3D::getNumDOF(void) 
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getNumDOF(): " << MyTag << endln;
 #endif
     return SC3D_NUM_DOF;
@@ -261,7 +261,7 @@ SimpleContact3D::getNumDOF(void)
 void
 SimpleContact3D::setDomain(Domain *theDomain)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::setDomain(Domain *theDomain): " << MyTag << endln;
 #endif
 
@@ -366,7 +366,7 @@ SimpleContact3D::setDomain(Domain *theDomain)
         // call the base class method
         this->DomainComponent::setDomain(theDomain);
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 1) {
                 opserr << "   g1: " << g1 ;
                 opserr << "   g2: " << g2 ;
@@ -380,7 +380,7 @@ SimpleContact3D::setDomain(Domain *theDomain)
 int
 SimpleContact3D::commitState()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::commitState(): " << MyTag << endln;
 #endif
         
@@ -444,7 +444,7 @@ SimpleContact3D::commitState()
 int
 SimpleContact3D::revertToLastCommit()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::revertToLastCommit(): " << MyTag << endln;
 #endif
         return theMaterial->revertToLastCommit();
@@ -453,7 +453,7 @@ SimpleContact3D::revertToLastCommit()
 int
 SimpleContact3D::revertToStart()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::revertToStart(): " << MyTag << endln;
 #endif
           inContact = false;
@@ -468,7 +468,7 @@ SimpleContact3D::revertToStart()
 int
 SimpleContact3D::update(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::update(): " << MyTag << endln;
 #endif
 //        double cohesion;
@@ -531,7 +531,7 @@ SimpleContact3D::update(void)
         should_be_released = ( lambda <= -(tensileStrength + tolForce ) );
 
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
             opserr << "   CONTACT:            " << inContact << endln;
             opserr << "   should be released: " << should_be_released << endln;
@@ -562,7 +562,7 @@ SimpleContact3D::update(void)
             theMaterial->setTrialStrain(strain);
         }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 1) {
             opserr << "end of update\n";
             }
@@ -574,7 +574,7 @@ SimpleContact3D::update(void)
 Vector
 SimpleContact3D::project(Vector XiEta0)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::project(): " << MyTag << endln;
 #endif
         Vector XiEta_P(2);
@@ -640,7 +640,7 @@ Vector
 SimpleContact3D::GetPoint(Vector XiEta)
 // this function calculates x_Xi 
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::GetPoint(): " << MyTag << endln;
 #endif
 
@@ -665,7 +665,7 @@ int
 SimpleContact3D::UpdateBase(Vector XiEta)
 // this function calculates g1, g2
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::UpdateBase(): " << MyTag << endln;
 #endif
 
@@ -688,7 +688,7 @@ SimpleContact3D::UpdateBase(Vector XiEta)
 void
 SimpleContact3D::ComputeB(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::ComputeB(): " << MyTag << endln;
 #endif
 
@@ -700,7 +700,7 @@ SimpleContact3D::ComputeB(void)
         N3 = 0.25*(1 + XiEta_nplus1(0))*(1 + XiEta_nplus1(1));
         N4 = 0.25*(1 - XiEta_nplus1(0))*(1 + XiEta_nplus1(1));
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 2) {
               opserr << "\tN1+N2+N3+N4 = " << N1+N2+N3+N4 << endln;
               }
@@ -780,7 +780,7 @@ SimpleContact3D::ComputeB(void)
 const Matrix &
 SimpleContact3D::getTangentStiff(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getTangentStiff(): " << MyTag << endln;
 
         if (DEBUG_LEVEL > 1) {
@@ -809,7 +809,7 @@ SimpleContact3D::getTangentStiff(void)
             Css(1,0) = Cmat(2,1);
             Css(1,1) = Cmat(2,2);
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 1) {
             opserr << "   Cmat = " << Cmat
                    << "   C_nl = " << Cnl
@@ -825,7 +825,7 @@ SimpleContact3D::getTangentStiff(void)
             // frictionless contact part
 
             if (Cnl != 0.0) {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 1) {
                 opserr << "   ** tangent: normal" << endln;
                 }
@@ -853,7 +853,7 @@ SimpleContact3D::getTangentStiff(void)
             if (inSlip) {
             //if (Csl(0) != 0.0 || Csl(1) != 0.0 ) {
             // sliding
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                 opserr << "   ** tangent: sliding" << endln;
                 }
@@ -869,7 +869,7 @@ opserr << "   ** tangent: sliding" << endln;
 
          else {
             // sticking
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
                 opserr << "   ** tangent: sticking" << endln;
                 }
@@ -896,7 +896,7 @@ opserr << "   ** tangent: sliding" << endln;
                 tangentStiffness(SC3D_NUM_DOF-1,SC3D_NUM_DOF-1) = 1.0;
         }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
             opserr << "   K_T: " << tangentStiffness;
             }
@@ -907,7 +907,7 @@ opserr << "   ** tangent: sliding" << endln;
 const Matrix &
 SimpleContact3D::getInitialStiff(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getInitialStiff(): " << MyTag << endln;
 #endif
   return getTangentStiff();
@@ -916,7 +916,7 @@ SimpleContact3D::getInitialStiff(void)
 void 
 SimpleContact3D::zeroLoad(void)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::zeroLoad(): " << MyTag << endln;
 #endif
   return;
@@ -925,7 +925,7 @@ SimpleContact3D::zeroLoad(void)
 int 
 SimpleContact3D::addLoad(ElementalLoad *theLoad, double loadFactor)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::addLoad(ElementalLoad *theLoad, double loadFactor): " << MyTag << endln;
 #endif
   return 0;
@@ -934,7 +934,7 @@ SimpleContact3D::addLoad(ElementalLoad *theLoad, double loadFactor)
 int 
 SimpleContact3D::addInertiaLoadToUnbalance(const Vector &accel)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::addInertiaLoadToUnbalance(const Vector &accel): " << MyTag << endln;
 #endif
   return 0;
@@ -943,7 +943,7 @@ SimpleContact3D::addInertiaLoadToUnbalance(const Vector &accel)
 const Vector &
 SimpleContact3D::getResistingForce()
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getResistingForce(): " << MyTag << endln;
 #endif
         double  t_n;            // normal force
@@ -975,7 +975,7 @@ SimpleContact3D::getResistingForce()
             internalForces(SC3D_NUM_DDOF) = t_n;
         }
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 1) {
             opserr << "   Gap    = " << gap << endln;
             opserr << "   Slip   = " << slip ;
@@ -997,7 +997,7 @@ SimpleContact3D::getResistingForce()
 const Vector &
 SimpleContact3D::getResistingForceIncInertia()
 {       
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getResistingForceIncInertia(): " << MyTag << endln;
 #endif
   return getResistingForce();
@@ -1009,7 +1009,7 @@ SimpleContact3D::getResistingForceIncInertia()
 int
 SimpleContact3D::sendSelf(int commitTag, Channel &theChannel)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::sendSelf(int commitTag, Channel &theChannel)" << endln;
 #endif
         
@@ -1067,7 +1067,7 @@ SimpleContact3D::sendSelf(int commitTag, Channel &theChannel)
 int
 SimpleContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &theBroker)" << endln;
 #endif
 
@@ -1133,7 +1133,7 @@ SimpleContact3D::recvSelf(int commitTag, Channel &theChannel, FEM_ObjectBroker &
 int
 SimpleContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)" << endln;
 #endif
   return 0;
@@ -1143,7 +1143,7 @@ SimpleContact3D::displaySelf(Renderer &theViewer, int displayMode, float fact)
 void
 SimpleContact3D::Print(OPS_Stream &s, int flag)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::Print(OPS_Stream &s, int flag)" << endln;
 #endif
         opserr << "SimpleContact3D, element id:  " << this->getTag() << endln;
@@ -1159,7 +1159,7 @@ SimpleContact3D::Print(OPS_Stream &s, int flag)
 Response*
 SimpleContact3D::setResponse(const char **argv, int argc, OPS_Stream &eleInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::setResponse(const char **argv, int argc, Information &eleInfo): " << MyTag << endln;
 #endif
     if (strcmp(argv[0],"force") == 0 || strcmp(argv[0],"forces") == 0)
@@ -1180,7 +1180,7 @@ SimpleContact3D::setResponse(const char **argv, int argc, OPS_Stream &eleInfo)
 int 
 SimpleContact3D::getResponse(int responseID, Information &eleInfo)
 {
-#ifdef DEBUG
+#ifdef _G3DEBUG
         opserr << "SimpleContact3D::getResponse(int responseID, Information &eleInfo): " << MyTag << endln;
 #endif
 
@@ -1209,7 +1209,7 @@ SimpleContact3D::getResponse(int responseID, Information &eleInfo)
       
 	  force = stress(0)*n + stress(1)*G1 + stress(2)*G2;
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
 			opserr << "Total force vector = " << force ;
 			opserr << "stress vector = " << stress;
@@ -1222,7 +1222,7 @@ SimpleContact3D::getResponse(int responseID, Information &eleInfo)
 	  
 	  force = stress(1)*G1 + stress(2)*G2;
 
-#ifdef DEBUG
+#ifdef _G3DEBUG
         if (DEBUG_LEVEL > 0) {
 			opserr << "Frictional force vector = " << force ;
 			opserr << "stress vector = " << stress;

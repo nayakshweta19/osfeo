@@ -2973,7 +2973,6 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
       maxInteration,
       preCond,
       solver,
-      single,
       host);
 #endif
 
@@ -8934,8 +8933,8 @@ defaultUnits(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
   sprintf(string, "set pi %.18e", 2.0*asin(1.0));   Tcl_Eval(interp, string);
   sprintf(string, "set PI %.18e", 2.0*asin(1.0));   Tcl_Eval(interp, string);
 
-  sprintf(string, "set kg %.18e", n / g);   Tcl_Eval(interp, string);
-  sprintf(string, "set ton %.18e", 1.e3*n / g);   Tcl_Eval(interp, string);
+  sprintf(string, "set kg %.18e", n/m*sec*sec);   Tcl_Eval(interp, string);
+  sprintf(string, "set ton %.18e", 1.e3*n/m*sec*sec);   Tcl_Eval(interp, string);
 
   int res = simulationInfo.setLengthUnit(length);
   res += simulationInfo.setTimeUnit(time);

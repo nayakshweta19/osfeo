@@ -44,8 +44,6 @@
 #include <Channel.h>
 #include <Information.h>
 
-#define MAT_TAG_Concrete10 112244
-
 #include <MaterialResponse.h>
 #include <elementAPI.h>
 

@@ -4292,7 +4292,7 @@ int TwentySevenNodeBrick::getResponse (int responseID, Information &eleInfo)
                 int tag = matpoint[1]->getTag();
     //opserr << "Materail Tag:" << tag << endln;
     //tp = "ElasticIsotropic3D";
-    float height = 1;
+    double height = 1;
              //opserr << "height" << height;
     double offset[30];
     //single pile group My ---- change multiplier to y

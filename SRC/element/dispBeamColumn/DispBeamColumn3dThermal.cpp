@@ -1483,7 +1483,7 @@ DispBeamColumn3dThermal::setResponse(const char **argv, int argc, OPS_Stream &ou
   } 
     else if (strstr(argv[0],"sectionX") != 0) {
       if (argc > 2) {
-	float sectionLoc = atof(argv[1]);
+	double sectionLoc = atof(argv[1]);
 	
 	double xi[maxNumSections];
 	double L = crdTransf->getInitialLength();
@@ -1491,7 +1491,7 @@ DispBeamColumn3dThermal::setResponse(const char **argv, int argc, OPS_Stream &ou
 	
 	sectionLoc /= L;
 	
-	float minDistance = fabs(xi[0]-sectionLoc);
+	double minDistance = fabs(xi[0]-sectionLoc);
 	int sectionNum = 0;
 	for (int i = 1; i < numSections; i++) {
 	  if (fabs(xi[i]-sectionLoc) < minDistance) {
@@ -1637,7 +1637,7 @@ DispBeamColumn3dThermal::setParameter(const char **argv, int argc, Parameter &pa
     if (argc < 3)
 		return -1;
       
-	float sectionLoc = atof(argv[1]);
+	double sectionLoc = atof(argv[1]);
 
       double xi[maxNumSections];
       double L = crdTransf->getInitialLength();
@@ -1645,7 +1645,7 @@ DispBeamColumn3dThermal::setParameter(const char **argv, int argc, Parameter &pa
       
       sectionLoc /= L;
 
-      float minDistance = fabs(xi[0]-sectionLoc);
+      double minDistance = fabs(xi[0]-sectionLoc);
       int sectionNum = 0;
       for (int i = 1; i < numSections; i++) {
 	if (fabs(xi[i]-sectionLoc) < minDistance) {

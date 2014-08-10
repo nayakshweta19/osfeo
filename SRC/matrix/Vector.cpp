@@ -1304,8 +1304,8 @@ Vector::computePrincipalValues(Vector &answer)
       // sort results
       for (int i = 1; i < 3; i++) {
         for (int j = 1; j < 3; j++) {
-          if (answer(j) > answer(j-1)) {
-            std::swap(answer(j), answer(j-1));
+          if (answer(j) > answer(j - 1)) {
+            std::swap(answer(j), answer(j - 1));
           }
         }
       }
@@ -1423,23 +1423,20 @@ void
 Vector::computePrincipalValDir(Vector &answer, Matrix &dir) const
 {
   //
-  // This function cumputes Principal values & directions corresponding to receiver.
+  // This function computes Principal values & directions corresponding to receiver.
   //
   // Return Values:
   //
   // matrix dir -> principal directions of strains or stresses
   // array sp -> principal strains or stresses
   //
-
-  Matrix ss;
-  Vector sp;
+  //Vector sp;
   int nval;
   int nonzeroFlag = 0;
-  int size = sz;
-
-
+  Matrix ss(3, 3);
   if (sz == 1) { // _1dMat
-    answer = *this;
+    ss.resize(1, 1);
+    answer = * this;
     dir.resize(1, 1);
     dir(0, 0) = 1.0;
     return;
@@ -1449,7 +1446,7 @@ Vector::computePrincipalValDir(Vector &answer, Matrix &dir) const
     ss.resize(2, 2);
     answer.resize(2);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < sz; i++) {
       if (fabs(theData[i]) > 1.e-20) {
         nonzeroFlag = 1;
       }
@@ -1463,51 +1460,43 @@ Vector::computePrincipalValDir(Vector &answer, Matrix &dir) const
 
     ss(0, 0) = theData[0];
     ss(1, 1) = theData[1];
-    ss(0, 1) = ss(1, 0) = theData[2];
+    ss(0, 1) = ss(1, 0) = 0.5*theData[2];
   }
-  else {
-    // 3D problem
-    ss.resize(3, 3);
-    //Vector s;
-
+  else if (sz == 6) {    // 3D problem
+    //ss.resize(3, 3);
     answer.resize(3);
-
-    if (sz == 6) {
-      //this->convertToFullForm(s);
-      for (int i = 0; i < size; i++) {
-        if (fabs(theData[i]) > 1.e-20) {
-          nonzeroFlag = 1;
-        }
+    //this->convertToFullForm(s);
+    for (int i = 0; i < sz; i++) {
+      if (fabs(theData[i]) > 1.e-20) {
+        nonzeroFlag = 1;
       }
-
-      if (nonzeroFlag == 0) {
-        answer.Zero();
-        ss.Zero();
-        return;
-      }
-
-      ss(0, 0) = theData[0];
-      ss(1, 1) = theData[1];
-      ss(2, 2) = theData[2];
-      ss(0, 1) = ss(1, 0) = theData[5];
-      ss(0, 2) = ss(2, 0) = theData[4];
-      ss(1, 2) = ss(2, 1) = theData[3];
     }
-    else {
-      opserr << "Vector::computePrincipalValDir(), 3D mat principle value error!!" << endln;
+
+    if (nonzeroFlag == 0) {
+      answer.Zero();
+      ss.Zero();
+      return;
     }
+
+    ss(0, 0) = theData[0];
+    ss(1, 1) = theData[1];
+    ss(2, 2) = theData[2];
+    ss(0, 1) = ss(1, 0) = 0.5*theData[5];
+    ss(0, 2) = ss(2, 0) = 0.5*theData[4];
+    ss(1, 2) = ss(2, 1) = 0.5*theData[3];
+  } 
+  else {
+    opserr << "Vector::computePrincipalValDir(), wrong dimension of vector(data.size())!!" << endln;
   }
-
   ss.jaco_(answer, dir, 10);
-
   // sort results
   nval = 3;
   if (sz == 3) {
     nval = 2;
   }
 
-  for (int ii = 0; ii < nval-1; ii++) {
-    for (int jj = 0; jj < nval-1; jj++) {
+  for (int ii = 0; ii < nval - 1; ii++) {
+    for (int jj = 0; jj < nval - 1; jj++) {
       if (answer(jj + 1) > answer(jj)) {
         // swap eigen values and eigen vectors
         std::swap(answer(jj + 1), answer(jj));
@@ -1611,7 +1600,6 @@ Vector::computeStrainNorm() const
   }
 }
 
-
 double
 Vector::computeThirdCoordinate() const
 {
@@ -1669,3 +1657,4 @@ Vector::computeThirdInvariant() const
       3. * theData[2] * theData[3] * theData[3] + theData[2] * theData[2] * theData[2]);
   }
 }
+

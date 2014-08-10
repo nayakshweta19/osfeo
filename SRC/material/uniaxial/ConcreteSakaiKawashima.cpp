@@ -14,7 +14,7 @@ OPS_ConcreteSakaiKawashima(void)
 
   int numData = OPS_GetNumRemainingInputArgs();
   if (numData != 4) {
-    opserr << "Invalid #args, want: uniaxialMaterial ConcreteSakaiKawashima E0? sigCC? epsCC?\n";
+    opserr << "Invalid #args, want: uniaxialMaterial ConcreteSakaiKawashima tag? E0? sigCC? epsCC?\n";
     return 0;
   }
 
@@ -26,7 +26,7 @@ OPS_ConcreteSakaiKawashima(void)
 
   numData = 3;
   if (OPS_GetDoubleInput(&numData, dData) != 0) {
-    opserr << "Invalid #args, want: uniaxialMaterial DoddRestr " << iData[0] << " Eo? fy? esh? esh1? fsh1? esu? fsu? Pmajor? Pminor? <slcf? tlcf? Dcrit?>>" << endln;
+    opserr << "Invalid #args, want: uniaxialMaterial ConcreteSakaiKawashima " << iData[0] << " Eo? fy? esh? esh1? fsh1? esu? fsu? Pmajor? Pminor? <slcf? tlcf? Dcrit?>>" << endln;
     return 0;
   }
 
@@ -66,12 +66,14 @@ ConcreteSakaiKawashima::ConcreteSakaiKawashima(int tag, double _YMc, double _Sig
   Ncyc =  8;
   Jcon0 = 1;
   Ncyc0 = 8;
+
+  this->revertToStart();
 }
 ConcreteSakaiKawashima::ConcreteSakaiKawashima(void)
   :UniaxialMaterial(0, MAT_TAG_ConcreteSakaiKawashima),
    YMc(0), Sigcc(0), EPScc(0)
 {
-
+  this->revertToStart();
 }
 
 ConcreteSakaiKawashima::~ConcreteSakaiKawashima()
@@ -199,6 +201,10 @@ ConcreteSakaiKawashima::commitState(void)
   cJcon0 = Jcon0;
   cNcyc0 = Ncyc0;
 
+  cStrain = tStrain;
+  cStress = tStress;
+  cTangent = tTangent;
+
   return 0;
 }
 int 
@@ -228,6 +234,10 @@ ConcreteSakaiKawashima::revertToStart(void)
   EPSpl0 =0.0; 
   Suln0 =0.0;  
   GamRL =0.0;  
+
+  tStrain = 0.0;
+  tStress = 0.0;
+  tTangent = this->getInitialTangent();
 
   Jcon =  1;
   Ncyc =  8;

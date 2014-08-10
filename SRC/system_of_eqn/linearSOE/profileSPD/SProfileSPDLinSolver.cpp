@@ -199,14 +199,14 @@ SProfileSPDLinSolver::solve(void)
 	
 	/* now form i'th col of [U] and determine [dii] */
 	
-	float aii = theSOE->A[theSOE->iDiagLoc[i] -1]; // FORTRAN ARRAY INDEXING
+    double aii = theSOE->A[theSOE->iDiagLoc[i] - 1]; // FORTRAN ARRAY INDEXING
 	ajiPtr = topRowPtr[i];
-	float *bjPtr  = &X[rowitop];  
-	float tmp = 0;	    
+    float *bjPtr = &X[rowitop];
+    double tmp = 0;
 	
 	for (int jj=rowitop; jj<i; jj++) {
-	  float aji = *ajiPtr;
-	  float lij = aji * invD[jj];
+      double aji = *ajiPtr;
+      double lij = aji * invD[jj];
 	  tmp -= lij * *bjPtr++; 		
 	  *ajiPtr++ = lij;
 	  aii = aii - lij*aji;
@@ -353,7 +353,7 @@ SProfileSPDLinSolver::factor(int n)
     if (theSOE->isAfactored == false)  {
 
 	// FACTOR & SOLVE
-	float *ajiPtr, *akjPtr, *akiPtr;    
+    float *ajiPtr, *akjPtr, *akiPtr;
 	
 	// if the matrix has not been factored already factor it into U^t D U
 	// storing D^-1 in invD as we go
@@ -367,7 +367,7 @@ SProfileSPDLinSolver::factor(int n)
 	    ajiPtr = topRowPtr[i];
 
 	    for (int j=rowitop; j<i; j++) {
-		float tmp = *ajiPtr;
+        double tmp = *ajiPtr;
 		int rowjtop = RowTop[j];
 
 		if (rowitop > rowjtop) {
@@ -393,12 +393,12 @@ SProfileSPDLinSolver::factor(int n)
 
 	    /* now form i'th col of [U] and determine [dii] */
 
-	    float aii = theSOE->A[theSOE->iDiagLoc[i] -1]; // FORTRAN ARRAY INDEXING
+        double aii = theSOE->A[theSOE->iDiagLoc[i] - 1]; // FORTRAN ARRAY INDEXING
 	    ajiPtr = topRowPtr[i];
 	    
 	    for (int jj=rowitop; jj<i; jj++) {
-		float aji = *ajiPtr;
-		float lij = aji * invD[jj];
+        double aji = *ajiPtr;
+        double lij = aji * invD[jj];
 		*ajiPtr++ = lij;
 		aii = aii - lij*aji;
 	    }
