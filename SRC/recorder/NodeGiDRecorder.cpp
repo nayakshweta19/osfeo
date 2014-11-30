@@ -620,7 +620,6 @@ NodeGiDRecorder::initialize(void)
 
     int numNodes = theDomain->getNumNodes();
     theNodes = new Node *[numNodes];
-    opserr << "NodeGiDRecorder::initialize - numNodes: " << numNodes << endln;
     if (theNodes == 0) {
       opserr << "NodeGiDRecorder::domainChanged - out of memory\n";
       return -1;
