@@ -183,7 +183,7 @@ specifyModelBuilder(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Cha
   }
   
 
-  else if ((strcmp(argv[1],"testnD") == 0) || (strcmp(argv[1],"TestnDMaterial") == 0) ||
+  else if ((strcmp(argv[1],"testND") == 0) || (strcmp(argv[1],"TestNDMaterial") == 0) ||
 	    (strcmp(argv[1],"nDMaterialTest") == 0)) {
     int count = 1;
     if (argc == 3) {

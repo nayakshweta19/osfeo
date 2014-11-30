@@ -145,7 +145,7 @@ TclNDMaterialTester_setNDMaterial(ClientData clientData, Tcl_Interp *interp, int
     Tcl_SetResult(interp, "WARNING no material found with matID", TCL_STATIC);
     return TCL_ERROR;
   }  else {
-    theTestingNDMaterial = theOrigMaterial->getCopy();
+    theTestingNDMaterial = theOrigMaterial->getCopy("ThreeDimensional");
   }
 
   return TCL_OK;
@@ -193,7 +193,7 @@ TclNDMaterialTester_getStressNDMaterial(ClientData clientData, Tcl_Interp *inter
 							 int argc,   TCL_Char **argv)
 {
   char buffer[120];
-if (theTestingNDMaterial !=0) {
+  if (theTestingNDMaterial !=0) {
 	const Vector &stress = theTestingNDMaterial->getStress();
     for (int i=0; i<stress.Size(); i++) {
       sprintf(buffer,"%.10e ",stress(i));
