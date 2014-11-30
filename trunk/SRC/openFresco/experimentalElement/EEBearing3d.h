@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 359 $
-// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEBearing3d.h $
 
 #ifndef EEBearing3d_h
@@ -160,8 +160,8 @@ private:
     Matrix Tgl;         // transformation matrix from global to local system
     Matrix Tlb;         // transformation matrix from local to basic system
     
-    Vector dbPast;      // past displacements in basic system
-    double tPast;       // past time
+    Vector dbLast;      // displacements in basic system at last update
+    double tLast;       // time at last update
     Matrix kbInit;      // stiffness matrix in basic system
     
     static Matrix theMatrix;    // a class wide Matrix

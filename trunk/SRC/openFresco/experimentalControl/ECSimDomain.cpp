@@ -272,7 +272,7 @@ int ECSimDomain::setup()
     
     // find total number of required SPs
     for (int i=0; i<numTrialCPs; i++)
-        numSPs += trialCPs[i]->getNumUniqueDir();
+        numSPs += trialCPs[i]->getNumDOF();
     
     // create array of single point constraints
     theSPs = new SP_Constraint* [numSPs];
@@ -284,8 +284,8 @@ int ECSimDomain::setup()
     for (int i=0; i<numTrialCPs; i++)  {
         // get trial control point parameters
         int nodeTag = trialCPs[i]->getNodeTag();
-        int numDir = trialCPs[i]->getNumUniqueDir();
-        ID dir = trialCPs[i]->getUniqueDir();
+        int numDir = trialCPs[i]->getNumSignal();
+        ID dir = trialCPs[i]->getNumDOF();
         
         // loop through all the directions
         for (int j=0; j<numDir; j++)  {
@@ -364,12 +364,12 @@ int ECSimDomain::setSize(ID sizeT, ID sizeO)
     int sizeTDisp = 0, sizeTForce = 0;
     int sizeODisp = 0, sizeOForce = 0;
     for (int i=0; i<numTrialCPs; i++)  {
-        sizeTDisp  += (trialCPs[i]->getSizeRespType())(OF_Resp_Disp);
-        sizeTForce += (trialCPs[i]->getSizeRespType())(OF_Resp_Force);
+        sizeTDisp += (trialCPs[i]->getRspType())(OF_Resp_Disp);
+        sizeTForce += (trialCPs[i]->getRspType())(OF_Resp_Force);
     }
     for (int i=0; i<numOutCPs; i++)  {
-        sizeODisp  += (outCPs[i]->getSizeRespType())(OF_Resp_Disp);
-        sizeOForce += (outCPs[i]->getSizeRespType())(OF_Resp_Force);
+        sizeODisp += (outCPs[i]->getRspType())(OF_Resp_Disp);
+        sizeOForce += (outCPs[i]->getRspType())(OF_Resp_Force);
     }
     if ((sizeTDisp != 0 && sizeTDisp != sizeT(OF_Resp_Disp)) ||
         (sizeTForce != 0 && sizeTForce != sizeT(OF_Resp_Force)) ||
@@ -703,8 +703,8 @@ int ECSimDomain::acquire()
     int iSP = 0;
     for (int i=0; i<numOutCPs; i++)  {
         // get output control point parameters
-        int numDir = outCPs[i]->getNumUniqueDir();
-        ID dir = outCPs[i]->getUniqueDir();
+        int numDir = outCPs[i]->getNumDOF();
+        ID dir = outCPs[i]->getDOF();
 
         // loop through all the directions
         for (int j=0; j<numDir; j++)  {

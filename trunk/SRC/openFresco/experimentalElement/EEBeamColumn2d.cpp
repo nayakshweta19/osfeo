@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 359 $
-// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEBeamColumn2d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -66,7 +66,7 @@ EEBeamColumn2d::EEBeamColumn2d(int tag, int Nd1, int Nd2,
     db(0), vb(0), ab(0), t(0),
     dbDaq(0), vbDaq(0), abDaq(0), qDaq(0), tDaq(0),
     dbCtrl(3), vbCtrl(3), abCtrl(3),
-    dbPast(3), kbInit(3,3), tPast(0.0),
+    dbLast(3), tLast(0.0), kbInit(3,3),
     firstWarning(true)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
@@ -129,7 +129,7 @@ EEBeamColumn2d::EEBeamColumn2d(int tag, int Nd1, int Nd2,
     dbCtrl.Zero();
     vbCtrl.Zero();
     abCtrl.Zero();
-    dbPast.Zero();
+    dbLast.Zero();
     for (i=0; i<3; i++)  {
         qA0[i] = 0.0;
         pA0[i] = 0.0;
@@ -150,7 +150,7 @@ EEBeamColumn2d::EEBeamColumn2d(int tag, int Nd1, int Nd2,
     db(0), vb(0), ab(0), t(0),
     dbDaq(0), vbDaq(0), abDaq(0), qDaq(0), tDaq(0),
     dbCtrl(3), vbCtrl(3), abCtrl(3),
-    dbPast(3), kbInit(3,3), tPast(0.0),
+    dbLast(3), tLast(0.0), kbInit(3,3),
     firstWarning(true)
 {
     // ensure the connectedExternalNode ID is of correct size & set values
@@ -265,7 +265,7 @@ EEBeamColumn2d::EEBeamColumn2d(int tag, int Nd1, int Nd2,
     dbCtrl.Zero();
     vbCtrl.Zero();
     abCtrl.Zero();
-    dbPast.Zero();
+    dbLast.Zero();
     for (i=0; i<3; i++)  {
         qA0[i] = 0.0;
         pA0[i] = 0.0;
@@ -420,7 +420,7 @@ int EEBeamColumn2d::commitState()
     
     // commit the site
     if (theSite != 0)  {
-        rValue += theSite->commitState();
+        rValue += theSite->commitState(t);
     }
     else  {
         sData[0] = OF_RemoteTest_commitState;
@@ -475,10 +475,11 @@ int EEBeamColumn2d::update()
     (*ab)[1] = -abA(0)*sin(dbA(1))-2*vbA(0)*cos(dbA(1))*vbA(1)+(L+dbA(0))*sin(dbA(1))*pow(vbA(1),2)-(L+dbA(0))*cos(dbA(1))*abA(1);
     (*ab)[2] = -abA(1)+abA(2);
     
-    if ((*db) != dbPast || (*t)(0) != tPast)  {
-        // save the displacements and the time
-        dbPast = (*db);
-        tPast = (*t)(0);
+    Vector dbDelta = (*db) - dbLast;
+    // do not check time for right now because of transformation constraint
+    // handler calling update at beginning of new step when applying load
+    // if (dbDelta.pNorm(2) > DBL_EPSILON || (*t)(0) > tLast)  {
+    if (dbDelta.pNorm(2) > DBL_EPSILON)  {
         // set the trial response at the site
         if (theSite != 0)  {
             theSite->setTrialResponse(db, vb, ab, (Vector*)0, t);
@@ -488,6 +489,10 @@ int EEBeamColumn2d::update()
             rValue += theChannel->sendVector(0, 0, *sendData, 0);
         }
     }
+    
+    // save the last displacements and time
+    dbLast = (*db);
+    tLast = (*t)(0);
     
     return rValue;
 }

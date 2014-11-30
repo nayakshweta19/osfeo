@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSite/ShadowExpSite.h $
 
 #ifndef ShadowExpSite_h
@@ -74,7 +74,7 @@ public:
     
     virtual int checkDaqResponse();
     
-    virtual int commitState();
+    virtual int commitState(Vector *time = 0);
     
     virtual ExperimentalSite *getCopy();
     
