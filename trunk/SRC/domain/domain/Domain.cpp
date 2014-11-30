@@ -3316,6 +3316,10 @@ Domain::setMass(const Matrix &mass, int nodeTag)
 int
 Domain::calculateNodalReactions(int flag)
 {
+
+  // apply load again! (for case ele load removed and record before an analysis)
+  this->applyLoad(committedTime);
+
   Node *theNode;
   Element *theElement;
   NodeIter &theNodes = this->getNodes();

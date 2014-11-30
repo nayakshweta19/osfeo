@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.5 $
-// $Date: 2010/02/04 00:36:46 $
+// $Date: 2010-02-04 00:36:46 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/pattern/TrapezoidalTimeSeriesIntegrator.cpp,v $
                                                                         
                                                                         
@@ -57,7 +57,7 @@ TrapezoidalTimeSeriesIntegrator::integrate(TimeSeries *theSeries, double delta)
   // Check for zero time step, before dividing to get number of steps
   if (delta <= 0.0) {
     opserr << "TrapezoidalTimeSeriesIntegrator::integrate() Attempting to integrate time step" <<
-      delta, "<= 0\n";
+      delta << "<= 0\n";
     return 0;
    }
 
@@ -116,7 +116,7 @@ TrapezoidalTimeSeriesIntegrator::integrate(TimeSeries *theSeries, double delta)
   */
 
   // Set the method return value
-  PathSeries *returnSeries = new PathSeries (0, *theIntegratedValues, delta);
+  PathSeries *returnSeries = new PathSeries (0, *theIntegratedValues, delta, true);
 
   if (returnSeries == 0) {
     opserr << "TrapezoidalTimeSeriesIntegrator::integrate() Ran out of memory creating PathSeries\n";
