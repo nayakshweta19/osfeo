@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/OpenFrescoPackage.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -43,10 +43,7 @@
 extern Domain *ops_TheActiveDomain;
 double ops_Dt = 0.0;
 StandardStream sserr;
-//OPS_Stream *opserrPtr = &sserr;
-extern OPS_Stream *opserrPtr;
-#define opserr (*opserrPtr)
-#define endln "\n"
+OPS_Stream *opserrPtr = &sserr;
 #endif
 
 Domain *theDomain = 0;
@@ -131,6 +128,36 @@ int openFresco_startLabServer(ClientData clientData,
     return TclStartLabServer(clientData, interp, argc, argv);
 }
 
+// setup laboratory server command
+extern int TclSetupLabServer(ClientData clientData, Tcl_Interp *interp,
+    int argc, TCL_Char **argv);
+
+int openFresco_setupLabServer(ClientData clientData,
+    Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+    return TclSetupLabServer(clientData, interp, argc, argv);
+}
+
+// step laboratory server command
+extern int TclStepLabServer(ClientData clientData, Tcl_Interp *interp,
+    int argc, TCL_Char **argv);
+
+int openFresco_stepLabServer(ClientData clientData,
+    Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+    return TclStepLabServer(clientData, interp, argc, argv);
+}
+
+// stop laboratory server command
+extern int TclStopLabServer(ClientData clientData, Tcl_Interp *interp,
+    int argc, TCL_Char **argv);
+
+int openFresco_stopLabServer(ClientData clientData,
+    Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+    return TclStopLabServer(clientData, interp, argc, argv);
+}
+
 // start simulation application site server command
 extern int TclStartSimAppSiteServer(ClientData clientData, Tcl_Interp *interp,
     int argc, TCL_Char **argv);
@@ -201,6 +228,15 @@ OpenFresco(ClientData clientData, Tcl_Interp *interp, int argc,
         (ClientData)NULL, NULL);
     
     Tcl_CreateCommand(interp, "startLabServer", openFresco_startLabServer,
+        (ClientData)NULL, NULL);
+    
+    Tcl_CreateCommand(interp, "setupLabServer", openFresco_setupLabServer,
+        (ClientData)NULL, NULL);
+    
+    Tcl_CreateCommand(interp, "stepLabServer", openFresco_stepLabServer,
+        (ClientData)NULL, NULL);
+    
+    Tcl_CreateCommand(interp, "stopLabServer", openFresco_stopLabServer,
         (ClientData)NULL, NULL);
     
     Tcl_CreateCommand(interp, "startSimAppSiteServer", openFresco_startSimAppSiteServer,

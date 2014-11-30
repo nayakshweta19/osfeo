@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 344 $
-// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSite/ShadowExpSite.cpp $
 
 // Written: Yoshi (yos@catfish.dpri.kyoto-u.ac.jp)
@@ -383,10 +383,21 @@ int ShadowExpSite::checkDaqResponse()
 }
 
 
-int ShadowExpSite::commitState()
+int ShadowExpSite::commitState(Vector* time)
 {
     int rValue = 0;
-
+    
+    // update the trial time vector
+    if (time != 0 && tTime != 0)  {
+        *tTime = *time;
+        int ndim = 1
+            + getTrialSize(OF_Resp_Disp)
+            + getTrialSize(OF_Resp_Vel)
+            + getTrialSize(OF_Resp_Accel)
+            + getTrialSize(OF_Resp_Force);
+        sendV.Assemble(*tTime, ndim);
+    }
+    
     // first commit the ActorExpSite
     sendV(0) = OF_RemoteTest_commitState;
     this->sendVector(sendV);

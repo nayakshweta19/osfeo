@@ -1,4 +1,4 @@
-﻿/* ****************************************************************** **
+/* ****************************************************************** **
 **    OpenFRESCO - Open Framework                                     **
 **                 for Experimental Setup and Control                 **
 **                                                                    **
@@ -22,9 +22,9 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 337 $
 // $Revision: 360 $
 // $Date: 2014-04-08 03:36:28 +0800 (星期二, 08 四月 2014) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/FrescoGlobals.h $
 
 #ifndef FrescoGlobals_h
 #define FrescoGlobals_h

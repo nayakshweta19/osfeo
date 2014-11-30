@@ -19,14 +19,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 357 $
-// $Date: 2013-12-06 07:25:25 +0800 (星期五, 06 十二月 2013) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EETwoNodeLink.h $
 
 #ifndef EETwoNodeLink_h
 #define EETwoNodeLink_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/06
 // Revision: A
 //
@@ -168,8 +168,8 @@ private:
     Matrix Tgl;         // transformation matrix from global to local system
     Matrix Tlb;         // transformation matrix from local to basic system
     
-    Vector dbPast;      // past displacements in basic system
-    double tPast;       // past time
+    Vector dbLast;      // displacements in basic system at last update
+    double tLast;       // time at last update
     Matrix kbInit;      // stiffness matrix in basic system
     
     Matrix *theMatrix;  // pointer to objects matrix (a class wide Matrix)

@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 364 $
+// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSite/ExperimentalSite.cpp $
 
 // Written: Yoshi (yos@catfish.dpri.kyoto-u.ac.jp)
@@ -281,9 +281,13 @@ const Vector& ExperimentalSite::getTime()
 }
 
 
-int ExperimentalSite::commitState()
+int ExperimentalSite::commitState(Vector* time)
 {
     int rValue = 0;
+    
+    // update the trial time vector
+    if (time != 0 && tTime != 0)
+        *tTime = *time;
     
     // first commit the setup
     if (theSetup != 0)  {

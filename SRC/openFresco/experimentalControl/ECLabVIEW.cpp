@@ -326,12 +326,12 @@ int ECLabVIEW::setSize(ID sizeT, ID sizeO)
     int sizeTDisp = 0, sizeTForce = 0;
     int sizeODisp = 0, sizeOForce = 0;
     for (int i=0; i<numTrialCPs; i++)  {
-        sizeTDisp += (trialCPs[i]->getSizeRespType())(OF_Resp_Disp);
-        sizeTForce += (trialCPs[i]->getSizeRespType())(OF_Resp_Force);
+        sizeTDisp += (trialCPs[i]->getRspType())(OF_Resp_Disp);
+        sizeTForce += (trialCPs[i]->getRspType())(OF_Resp_Force);
     }
     for (int i=0; i<numOutCPs; i++)  {
-        sizeODisp += (outCPs[i]->getSizeRespType())(OF_Resp_Disp);
-        sizeOForce += (outCPs[i]->getSizeRespType())(OF_Resp_Force);
+        sizeODisp += (outCPs[i]->getRspType())(OF_Resp_Disp);
+        sizeOForce += (outCPs[i]->getRspType())(OF_Resp_Force);
     }
     if ((sizeTDisp != 0 && sizeTDisp != sizeT(OF_Resp_Disp)) ||
         (sizeTForce != 0 && sizeTForce != sizeT(OF_Resp_Force)) ||
@@ -557,10 +557,10 @@ int ECLabVIEW::control()
             sprintf(sData,"%s\tcontrol-point\tCPNode%02d",sData,trialCPs[i]->getNodeTag());
 
         // get trial control point parameters
-        int ndm = trialCPs[i]->getNDM();
-        int numDir = trialCPs[i]->getNumDirection();
-        ID dir = trialCPs[i]->getDirection();
-        ID resp = trialCPs[i]->getResponseType();
+        int ndm = trialCPs[i]->getNodeNDF();
+        int numDir = trialCPs[i]->getNodeNDM();
+        ID dir = trialCPs[i]->getDOF();
+        ID resp = trialCPs[i]->getRspType();
         Vector fact = trialCPs[i]->getFactor();
 
         if (trialCPs[i]->hasLimits())  {
@@ -772,12 +772,12 @@ int ECLabVIEW::acquire()
         tokenPtr = strtok(NULL,"\t");
 
         // get output control point parameters
-        int ndf = trialCPs[i]->getNDF();
-        int numDir = outCPs[i]->getNumDirection();
-        ID dir = outCPs[i]->getDirection();
-        ID resp = outCPs[i]->getResponseType();
+        int ndf = trialCPs[i]->getNumDOF();
+        int numDir = outCPs[i]->getNodeNDM();
+        ID dir = outCPs[i]->getDOF();
+        ID resp = outCPs[i]->getRspType();
         Vector fact = outCPs[i]->getFactor();
-        ID sizeRespType = outCPs[i]->getSizeRespType();
+        ID sizeRespType = outCPs[i]->getRspType();
         int sizeDisp = 0, sizeForce = 0;
 
         while (tokenPtr != NULL)  {

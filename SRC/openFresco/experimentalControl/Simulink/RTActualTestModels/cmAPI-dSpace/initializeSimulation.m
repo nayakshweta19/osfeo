@@ -1,16 +1,24 @@
 %INITIALIZESIMULATION to initialize the parameters needed to build the Simulink model
 %
 % implemented by Andreas Schellenberg (andreas.schellenberg@gmail.com) 11/2004
+%
+% $Revision: 373 $
+% $Date: 2014-10-09 16:56:20 +0800 (星期四, 09 十月 2014) $
+% $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/Simulink/RTActualTestModels/cmAPI-dSpace/initializeSimulation.m $
 
 clear;
 close all;
 clc;
 
+% set number of degrees-of-freedom
+nDOF = 2;
+
 % set time steps
-HybridCtrlParameters.dtInt = 0.02;           % integration time step (sec)
-HybridCtrlParameters.dtSim = 0.04;           % simulation time step (sec)
+HybridCtrlParameters.dtInt = 0.01;           % integration time step (sec)
+HybridCtrlParameters.dtSim = 0.05;           % simulation time step (sec)
 HybridCtrlParameters.dtCon = 1/1000;         % controller time step (sec)
-HybridCtrlParameters.delay = 0.0;            % delay due to undershoot (sec)
+HybridCtrlParameters.delay(1) = 0/1000;      % delay compensation DOF 1 (sec)
+HybridCtrlParameters.delay(2) = 0/1000;      % delay compensation DOF 2 (sec)
 
 % calculate max number of substeps
 HybridCtrlParameters.N = round(HybridCtrlParameters.dtSim/HybridCtrlParameters.dtCon);
@@ -21,7 +29,7 @@ HybridCtrlParameters.dtSim = HybridCtrlParameters.N*HybridCtrlParameters.dtCon;
 HybridCtrlParameters.iDelay = round(HybridCtrlParameters.delay./HybridCtrlParameters.dtCon);
 
 % check that finite state machine does not deadlock
-delayRatio = HybridCtrlParameters.iDelay/HybridCtrlParameters.N;
+delayRatio = max(HybridCtrlParameters.iDelay)/HybridCtrlParameters.N;
 if (delayRatio>0.6 && delayRatio<0.8)
     warndlg(['The delay compensation exceeds 60% of the simulation time step.', ...
         'Please consider increasing the simulation time step in order to avoid oscillations.'], ...
@@ -39,15 +47,14 @@ HybridCtrlParameters.delay = HybridCtrlParameters.iDelay*HybridCtrlParameters.dt
 % calculate testing rate
 HybridCtrlParameters.Rate = HybridCtrlParameters.dtSim/HybridCtrlParameters.dtInt;
 
-% displacement and velocity limits
-HybridCtrlParameters.dspLim =  7.5;
-HybridCtrlParameters.velLim = 23.0;
+% signal magnitude and rate limits
+HybridCtrlParameters.magnLim = [30.0 21.0];
+HybridCtrlParameters.rateLim = [100.0 100.0];
 
 disp('Model Properties:');
 disp('=================');
 disp(HybridCtrlParameters);
 
 % initialization of tunable parameters
-nAct = 1;
-newTarget = 0;
-targDsp = zeros(1,nAct);
+newTarget  = uint32(0);
+targSignal = zeros(1,nDOF);

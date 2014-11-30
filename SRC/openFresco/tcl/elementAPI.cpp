@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 337 $
-// $Date: 2012-11-05 08:13:05 +0800 (星期一, 05 十一月 2012) $
+// $Revision: 359 $
+// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/elementAPI.cpp $
 
 // Written: Frank McKenna
@@ -42,9 +42,11 @@
 #include <UniaxialMaterial.h>
 #include <NDMaterial.h>
 #include <CrdTransf.h>
+#include <LimitCurve.h>
 //#include <WrapperUniaxialMaterial.h>
 //#include <WrapperNDMaterial.h>
 //#include <WrapperElement.h>
+//#include <WrapperLimitCurve.h>
 
 typedef struct elementFunction {
     char *funcName;
@@ -58,8 +60,15 @@ typedef struct materialFunction {
     struct materialFunction *next;
 } MaterialFunction;
 
+typedef struct limitCurveFunction {
+    char *funcName;
+    limCrvFunct theFunct; 
+    struct limitCurveFunction *next;
+} LimitCurveFunction;
+
 static ElementFunction *theElementFunctions = NULL;
 static MaterialFunction *theMaterialFunctions = NULL;
+static LimitCurveFunction *theLimitCurveFunctions = NULL;
 
 static Tcl_Interp *theInterp = 0;
 static Domain *theDomain = 0;
@@ -119,7 +128,7 @@ static void OPS_InvokeMaterialObject(struct matObject *theMat, modelState *theMo
 }
 
 
-/*extern "C" int OPS_Error(char *errorMessage, int length)
+extern "C" int OPS_Error(char *errorMessage, int length)
 {
     opserr << errorMessage;
     opserr << endln;
@@ -199,7 +208,7 @@ int OPS_GetStringCopy(char **arrayData)
     currentArg++;
 
     return 0;  
-}*/
+}
 
 
 extern "C" matObj *OPS_GetMaterial(int *matTag, int *matType)
@@ -396,27 +405,49 @@ extern "C" matObj *OPS_GetMaterialType(char *type, int sizeType)
 }
 
 
-/*extern "C" int OPS_AllocateMaterial(matObject *theMat)
+extern "C" limCrvObj *OPS_GetLimitCurveType(char *type, int sizeType)
 {
-if (theMat->nParam > 0)
-theMat->theParam = new double[theMat->nParam];
+    // try existing loaded routines
+    LimitCurveFunction *limCrvFunction = theLimitCurveFunctions;
+    bool found = false;
+    while (limCrvFunction != NULL && found == false) {
+        if (strcmp(type, limCrvFunction->funcName) == 0) {
 
-int nState = theMat->nState;
+            // create a new eleObject, set the function ptr &  return it
 
-if (nState > 0) {
-theMat->cState = new double[nState];
-theMat->tState = new double[nState];
-for (int i=0; i<nState; i++) {
-theMat->cState[i] = 0;
-theMat->tState[i] = 0;
+            limCrvObj *theLimCrvObject = new limCrvObj;
+            theLimCrvObject->limCrvFunctPtr = limCrvFunction->theFunct;
+            /* opserr << "limCrvObj *OPS_GetLimitCurveType() - FOUND " << endln;  */
+            return theLimCrvObject;
+        }
+        else
+            limCrvFunction = limCrvFunction->next;
+    }
+
+    // try to load new routine from dynamic library in load path
+    limCrvFunct limCrvFunctPtr;
+    void *libHandle;
+    int res = getLibraryFunction(type, type, &libHandle, (void **)&limCrvFunctPtr);
+
+    if (res == 0) 
+    {
+        // add the routine to the list of possible elements
+        char *funcName = new char[strlen(type)+1];
+        strcpy(funcName, type);
+        limCrvFunction = new LimitCurveFunction;
+        limCrvFunction->theFunct = limCrvFunctPtr;
+        limCrvFunction->funcName = funcName;	
+        limCrvFunction->next = theLimitCurveFunctions;
+        theLimitCurveFunctions = limCrvFunction;
+
+        // create a new eleObject, set the function ptr &  return it    
+        limCrvObj *theLimCrvObject = new limCrvObj;      
+        theLimCrvObject->limCrvFunctPtr = limCrvFunction->theFunct;
+        return theLimCrvObject;
+    }
+
+    return 0;
 }
-} else {
-theMat->cState = 0;
-theMat->tState = 0;
-}
-
-return 0;
-}*/
 
 
 /*extern "C" int OPS_AllocateElement(eleObject *theEle, int *matTags, int *matType)
@@ -449,7 +480,55 @@ return 0;
 }*/
 
 
-/*extern "C" int OPS_GetNodeCrd(int *nodeTag, int *sizeCrd, double *data)
+/*extern "C" int OPS_AllocateMaterial(matObject *theMat)
+{
+if (theMat->nParam > 0)
+theMat->theParam = new double[theMat->nParam];
+
+int nState = theMat->nState;
+
+if (nState > 0) {
+theMat->cState = new double[nState];
+theMat->tState = new double[nState];
+for (int i=0; i<nState; i++) {
+theMat->cState[i] = 0;
+theMat->tState[i] = 0;
+}
+} else {
+theMat->cState = 0;
+theMat->tState = 0;
+}
+
+return 0;
+}*/
+
+
+/*extern "C" int OPS_AllocateLimitCurve(limCrvObject *theLimCrv)
+{
+    //fprintf(stderr,"allocateLimitCurve Address %p\n",theLimCrv);
+
+    if (theLimCrv->nParam > 0)
+        theLimCrv->theParam = new double[theLimCrv->nParam];
+
+    int nState = theLimCrv->nState;
+
+    if (nState > 0) {
+        theLimCrv->cState = new double[nState];
+        theLimCrv->tState = new double[nState];
+        for (int i=0; i<nState; i++) {
+            theLimCrv->cState[i] = 0;
+            theLimCrv->tState[i] = 0;
+        }
+    } else {
+        theLimCrv->cState = 0;
+        theLimCrv->tState = 0;
+    }
+
+    return 0;
+}*/
+
+
+extern "C" int OPS_GetNodeCrd(int *nodeTag, int *sizeCrd, double *data)
 {
     Node *theNode = theDomain->getNode(*nodeTag);
 
@@ -577,7 +656,7 @@ extern "C" int OPS_GetNodeIncrDeltaDisp(int *nodeTag, int *sizeData, double *dat
         data[i] = disp(i);
 
     return 0;
-}*/
+}
 
 
 /*int Tcl_addWrapperElement(eleObj *theEle, ClientData clientData, Tcl_Interp *interp,
@@ -620,11 +699,11 @@ return 0;
 }*/
 
 
-/*UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
+UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
     ClientData clientData, Tcl_Interp *interp,  int argc, TCL_Char **argv)
 {
     return 0;
-}*/
+}
 
 
 /*UniaxialMaterial *Tcl_addWrapperUniaxialMaterial(matObj *theMat,
@@ -707,7 +786,50 @@ return theMaterial;
 }*/
 
 
-/*extern "C" int        
+LimitCurve *Tcl_addWrapperLimitCurve(limCrvObj *theLimCrv, ClientData clientData,
+    Tcl_Interp *interp,  int argc, TCL_Char **argv)		       
+{
+    return 0;
+}
+
+
+/*LimitCurve *Tcl_addWrapperLimitCurve(limCrvObj *theLimCrv, ClientData clientData,
+    Tcl_Interp *interp,  int argc, TCL_Char **argv)		       
+{
+    theInterp = interp;
+
+    //  theModelBuilder = builder;
+    currentArgv = argv;
+    currentArg = 2;
+    maxArg = argc;
+
+    // get the current load factor
+    static modelState theModelState;
+    if (theDomain != 0) {
+        double time = theDomain->getCurrentTime();
+        double dt = theDomain->getCurrentTime() - time;
+        theModelState.time = time;
+        theModelState.dt = dt;
+    }
+
+
+    // invoke the limit curve function with isw = 0
+    int isw = ISW_INIT;
+    int result;
+    theLimCrv->limCrvFunctPtr(theLimCrv, &theModelState, 0, 0, 0, &isw, &result);
+
+    if (result != 0) {
+        opserr << "Tcl_addWrapperLimitCurve - failed in limit curve function " << result << endln;
+        return 0;
+    }
+
+    WrapperLimitCurve*theLimitCurve = new WrapperLimitCurve(argv[1], theLimCrv);
+
+    return theLimitCurve;
+}*/
+
+
+/*extern "C" int
 OPS_InvokeMaterial(eleObject *theEle, int *mat, modelState *model, double *strain, double *stress, double *tang, int *isw)
 {
 int error =0;
@@ -751,7 +873,7 @@ return error;
 }*/
 
 
-/*UniaxialMaterial *OPS_GetUniaxialMaterial(int matTag)
+UniaxialMaterial *OPS_GetUniaxialMaterial(int matTag)
 {
     return OPS_getUniaxialMaterial(matTag);
 }
@@ -766,7 +888,7 @@ NDMaterial *OPS_GetNDMaterial(int matTag)
 CrdTransf *OPS_GetCrdTransfPtr(int tag)
 {
     return OPS_GetCrdTransf(tag);
-}*/
+}
 
 
 /*SectionForceDeformation *OPS_GetSectionForceDeformation(int matTag)
@@ -801,7 +923,7 @@ int OPS_ResetInputNoBuilder(ClientData clientData, Tcl_Interp *interp,
 }
 
 
-/*int OPS_GetNDF()
+int OPS_GetNDF()
 {
     return theModelBuilder->getNDF();
 }
@@ -823,4 +945,15 @@ const char *OPS_GetInterpPWD()
 {
     return getInterpPWD(theInterp);
 }
-*/
+
+
+Domain *OPS_GetDomain()
+{
+    return theDomain;
+}
+
+
+LimitCurve *OPS_GetLimitCurve(int LimCrvTag)
+{
+    return OPS_getLimitCurve(LimCrvTag);
+}
