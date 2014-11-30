@@ -413,6 +413,7 @@
 #include <TRBDF2.h>
 #include <TRBDF3.h>
 #include <WilsonTheta.h>
+#include <KRAlphaExplicit.h>
 
 // system of eqn header files
 #include <LinearSOE.h>
@@ -1965,6 +1966,9 @@ FEM_ObjectBrokerAllClasses::getNewTransientIntegrator(int classTag)
 
     case INTEGRATOR_TAGS_WilsonTheta:
       return new WilsonTheta();
+
+    case INTEGRATOR_TAGS_KRAlphaExplicit:
+      return new KRAlphaExplicit();
 
     default:
 	     opserr << "FEM_ObjectBrokerAllClasses::getNewTransientIntegrator - ";
