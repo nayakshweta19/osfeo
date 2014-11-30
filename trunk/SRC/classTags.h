@@ -18,9 +18,9 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 1.128 $
-// $Date: 2010/09/16 00:07:59 $
-// $Source: /usr/local/cvs/OpenSees/SRC/classTags.h,v $
+// $Revision: 5835 $
+// $Date: 2014-10-16 12:42:46 +0800 (星期�?, 16 十月 2014) $
+// $URL: file:///usr/local/svn/OpenSees/trunk/SRC/classTags.h $
 
 // Written: fmk
 // Revision: A
@@ -206,6 +206,9 @@
 #define MAT_TAG_BoucWen2D           1024093
 #define MAT_TAG_ConcreteDPM1        1024094
 #define MAT_TAG_ConcreteDPM2        1024095
+#define MAT_TAG_Damage2pMaterial    1024096
+#define MAT_TAG_Damage2pMaterial2D  1024097
+#define MAT_TAG_Damage2pMaterial3D  1024098
 // neallee ended
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
@@ -677,10 +680,12 @@
 #define ELE_TAG_HDR                       151
 #define ELE_TAG_ElastomericX              152
 #define ELE_TAG_LeadRubberX               153
+#define ELE_TAG_PileToe3D                 154
 
 #define ELE_TAG_MultipleShearSpring 6201
 #define ELE_TAG_MultipleNormalSpring 6202
 #define ELE_TAG_KikuchiBearing 6203
+#define ELE_TAG_YamamotoBiaxialHDR 6204
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define ELE_TAG_RCFTMBeamColumn3D 9880
@@ -707,6 +712,7 @@
 #define FRN_TAG_VelDependent       2
 #define FRN_TAG_VelPressureDep     3
 #define FRN_TAG_VelDepMultiLinear  4
+#define FRN_TAG_VelNormalFrcDep    5
 
 #define ELE_TAG_Pipe3 8301
 #define ELE_TAG_Pipelin2 8302
@@ -883,6 +889,7 @@
 #define INTEGRATOR_TAGS_BackwardEuler                   41
 #define INTEGRATOR_TAGS_EnergyConserved                 42
 #define INTEGRATOR_TAGS_PFEMIntegrator                  43
+#define INTEGRATOR_TAGS_KRAlphaExplicit                 44
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define INTEGRATOR_TAGS_ArcLengthw              48
