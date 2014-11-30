@@ -428,11 +428,13 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/UWelements/BeamContact3Dp.o \
 	$(FE)/element/UWelements/BeamEndContact3D.o \
 	$(FE)/element/UWelements/BeamEndContact3Dp.o \
+	$(FE)/element/UWelements/PileToe3D.o \
 	$(FE)/element/HUelements/MultipleShearSpring.o \
 	$(FE)/element/HUelements/MultipleNormalSpring.o \
 	$(FE)/element/HUelements/KikuchiBearing.o \
 	$(FE)/element/HUelements/DBESI0.o \
 	$(FE)/element/HUelements/DBESI1.o \
+	$(FE)/element/HUelements/YamamotoBiaxialHDR.o \
 	$(FE)/element/feap/elmt01.o \
 	$(FE)/element/feap/elmt02.o \
 	$(FE)/element/feap/elmt03.o \
@@ -496,6 +498,9 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/elastomericBearing/ElastomericBearingPlasticity2d.o \
 	$(FE)/element/elastomericBearing/ElastomericBearingPlasticity3d.o \
 	$(FE)/element/elastomericBearing/TclElastomericBearingPlasticityCommand.o \
+	$(FE)/element/elastomericBearing/HDR.o \
+	$(FE)/element/elastomericBearing/LeadRubberX.o \
+	$(FE)/element/elastomericBearing/ElastomericX.o \
 	$(FE)/element/frictionBearing/MultiFP2d.o \
 	$(FE)/element/frictionBearing/TripleFrictionPendulum.o \
 	$(FE)/element/frictionBearing/TFP_Bearing.o \
@@ -510,6 +515,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/frictionBearing/frictionModel/Coulomb.o \
 	$(FE)/element/frictionBearing/frictionModel/FrictionModel.o \
 	$(FE)/element/frictionBearing/frictionModel/FrictionResponse.o \
+	$(FE)/element/frictionBearing/frictionModel/VelNormalFrcDep.o \
 	$(FE)/element/frictionBearing/frictionModel/TclModelBuilderFrictionModelCommand.o \
 	$(FE)/element/frictionBearing/RJWatsonEQS2d.o \
 	$(FE)/element/frictionBearing/RJWatsonEQS3d.o \
@@ -582,6 +588,13 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Concrete04.o \
 	$(FE)/material/uniaxial/Concrete06.o \
 	$(FE)/material/uniaxial/Concrete07.o \
+	$(FE)/material/uniaxial/ConcreteSakaiKawashima.o \
+	$(FE)/material/uniaxial/ResilienceMaterialHR.o \
+	$(FE)/material/uniaxial/CFSSSWP.o \
+	$(FE)/material/uniaxial/CFSWSWP.o \
+	$(FE)/material/uniaxial/TriMatrix.o \
+	$(FE)/material/uniaxial/CubicSpline.o \
+	$(FE)/material/uniaxial/c14-SK-M.o \
 	$(FE)/material/uniaxial/Steel01.o \
 	$(FE)/material/uniaxial/RambergOsgoodSteel.o \
 	$(FE)/material/uniaxial/Steel02.o \
@@ -1048,6 +1061,7 @@ ANALYSIS_LIBS = $(FE)/analysis/analysis/Analysis.o \
     $(FE)/analysis/integrator/HHTHSIncrLimit.o \
 	$(FE)/analysis/integrator/HHTHSFixedNumIter.o \
 	$(FE)/analysis/integrator/AlphaOS.o \
+	$(FE)/analysis/integrator/KRAlphaExplicit.o \
 	$(FE)/analysis/integrator/AlphaOSGeneralized.o \
 	$(FE)/analysis/integrator/Collocation.o \
 	$(FE)/analysis/integrator/CollocationHSIncrReduct.o \
