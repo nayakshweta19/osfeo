@@ -248,7 +248,7 @@ CorotCrdTransf2d::update(void)
     this->transfLocalDisplsToBasic(ul);
     
     // compute the transformation matrix from local to the basic system
-    this->getTransfMatrixBasicLocal(Tbl);
+    this->compTransfMatrixBasicLocal(Tbl);
     
     return 0;
 }
@@ -324,30 +324,13 @@ CorotCrdTransf2d::compElemtLengthAndOrientWRTLocalSystem(const Vector &ul)
 } 
 
 
-void CorotCrdTransf2d::transfLocalDisplsToBasic(const Vector &ul)
-{
-    // Eliminate rigid body modes, determining displacements wrt the basic system
-    double alpha;
-    
-    alpha = atan2 (sinAlpha, cosAlpha);
-    
-    ub(0) = Ln - L;
-    ub(1) = ul(2) - alpha;
-    ub(2) = ul(5) - alpha;
-
-    //ub(1) = atan2(cosAlpha*sin(ul(2))-sinAlpha*cos(ul(2)),cosAlpha*cos(ul(2))+sinAlpha*sin(ul(2)));
-    //ub(2) = atan2(cosAlpha*sin(ul(5))-sinAlpha*cos(ul(5)),cosAlpha*cos(ul(5))+sinAlpha*sin(ul(5)));
-
-}
-
-
 void
-CorotCrdTransf2d::getTransfMatrixLocalGlobal (Matrix &Tlg) 
+CorotCrdTransf2d::compTransfMatrixLocalGlobal(Matrix &Tlg)
 {
-    // setup transformation matrix
+  // setup transformation matrix from global to local coordinates
     Tlg.Zero();
     
-    Tlg(0,0) = Tlg(3,3) =  cosTheta;           
+    Tlg(0,0) = Tlg(3,3) =  cosTheta;
     Tlg(0,1) = Tlg(3,4) =  sinTheta;
     Tlg(1,0) = Tlg(4,3) = -sinTheta;
     Tlg(1,1) = Tlg(4,4) =  cosTheta;
@@ -356,7 +339,7 @@ CorotCrdTransf2d::getTransfMatrixLocalGlobal (Matrix &Tlg)
 
 
 void
-CorotCrdTransf2d::getTransfMatrixBasicLocal(Matrix &Tbl)
+CorotCrdTransf2d::compTransfMatrixBasicLocal(Matrix &Tbl)
 {
     // set up exact force transformation matrix from basic to local coordinates
     Tbl(0,0) = -cosAlpha;      
@@ -384,16 +367,31 @@ CorotCrdTransf2d::getTransfMatrixBasicLocal(Matrix &Tbl)
     Tbl(2,5) =  1;  
 }
 
+void CorotCrdTransf2d::transfLocalDisplsToBasic(const Vector &ul)
+{
+    // Eliminate rigid body modes, determining displacements wrt the basic system
+    double alpha;
+
+    alpha = atan2(sinAlpha, cosAlpha);
+
+    ub(0) = Ln - L;
+    ub(1) = ul(2) - alpha;
+    ub(2) = ul(5) - alpha;
+
+    //ub(1) = atan2(cosAlpha*sin(ul(2))-sinAlpha*cos(ul(2)),cosAlpha*cos(ul(2))+sinAlpha*sin(ul(2)));
+    //ub(2) = atan2(cosAlpha*sin(ul(5))-sinAlpha*cos(ul(5)),cosAlpha*cos(ul(5))+sinAlpha*sin(ul(5)));
+
+}
 
 const Vector &
-CorotCrdTransf2d::getBasicTrialDisp (void)
+CorotCrdTransf2d::getBasicTrialDisp(void)
 {
     return ub;    
 }
 
 
 const Vector &
-CorotCrdTransf2d::getBasicIncrDeltaDisp (void)
+CorotCrdTransf2d::getBasicIncrDeltaDisp(void)
 {
     // dub = ub - ubpr;
     dub = ub;
@@ -519,7 +517,7 @@ CorotCrdTransf2d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
 {
     
     // transform resisting forces from the basic system to local coordinates
-    this->getTransfMatrixBasicLocal(Tbl);
+    this->compTransfMatrixBasicLocal(Tbl);
     static Vector pl(6);
     pl.addMatrixTransposeVector(0.0, Tbl, pb, 1.0);    // pl = Tbl ^ pb;
     
@@ -537,7 +535,7 @@ CorotCrdTransf2d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
     */
 
     // transform resisting forces  from local to global coordinates
-    //this->getTransfMatrixLocalGlobal(Tlg);     // OPTIMIZE LATER
+    //this->compTransfMatrixLocalGlobal(Tlg);     // OPTIMIZE LATER
     //pg.addMatrixTransposeVector(0.0, Tlg, pl, 1.0);   // pg = Tlg ^ pl; residual
 
     pg(0) = cosTheta*pl[0] - sinTheta*pl[1];
@@ -555,18 +553,16 @@ CorotCrdTransf2d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
       pg(5) += -pg(3) * nodeJOffset(1) + pg(4) * nodeJOffset(0);
     }
     
-
-
     return pg;
 }
 
 
 const Matrix &
-CorotCrdTransf2d::getGlobalStiffMatrix (const Matrix &kb, const Vector &pb)
+CorotCrdTransf2d::getGlobalStiffMatrix(const Matrix &kb, const Vector &pb)
 {
     // transform tangent stiffness matrix from the basic system to local coordinates
     static Matrix kl(6,6);
-    this->getTransfMatrixBasicLocal(Tbl);
+    this->compTransfMatrixBasicLocal(Tbl);
     kl.addMatrixTripleProduct(0.0, Tbl, kb, 1.0);      // kl = Tbl ^ kb * Tbl;
     
     // add geometric stiffness matrix
@@ -722,7 +718,7 @@ CorotCrdTransf2d::getGlobalStiffMatrix (const Matrix &kb, const Vector &pb)
 
 
 const Matrix &
-CorotCrdTransf2d::getInitialGlobalStiffMatrix (const Matrix &kb)
+CorotCrdTransf2d::getInitialGlobalStiffMatrix(const Matrix &kb)
 {
     // transform tangent stiffness matrix from the basic system to local coordinates
     static Matrix kl(6,6);
@@ -1083,6 +1079,15 @@ CorotCrdTransf2d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theB
     return 0;
 }
 
+const Matrix &
+CorotCrdTransf2d::getGlobalMatrixFromLocal(const Matrix &ml)
+{
+    this->compTransfMatrixLocalGlobal(Tlg);  // OPTIMIZE LATER
+    kg.addMatrixTripleProduct(0.0, Tlg, ml, 1.0);  // OPTIMIZE LATER
+
+    return kg;
+}
+
 
 const Vector &
 CorotCrdTransf2d::getPointGlobalCoordFromLocal(const Vector &xl)
@@ -1095,7 +1100,7 @@ CorotCrdTransf2d::getPointGlobalCoordFromLocal(const Vector &xl)
 
 
 const Vector &
-CorotCrdTransf2d::getPointGlobalDisplFromBasic (double xi, const Vector &uxb)
+CorotCrdTransf2d::getPointGlobalDisplFromBasic(double xi, const Vector &uxb)
 {
     opserr << " CorotCrdTransf2d::getPointGlobalDisplFromBasic: not implemented yet" ;
     
@@ -1202,14 +1207,14 @@ CorotCrdTransf2d::getGlobalResistingForceShapeSensitivity(const Vector &q,
   dpldh(4) = ( dsinAlphadh*q0 - dcosAlphaOverLndh*(q1+q2) )*dLdh;
   dpldh(5) = 0.0;
 
-  this->getTransfMatrixLocalGlobal(Tlg);     // OPTIMIZE LATER
+  this->compTransfMatrixLocalGlobal(Tlg);     // OPTIMIZE LATER
   dpgdh.addMatrixTransposeVector(0.0, Tlg, dpldh, 1.0);   // pg = Tlg ^ pl; residual
 
   static Vector pl(6);
   pl.Zero();
 
   static Matrix Abl(3,6);
-  this->getTransfMatrixBasicLocal(Abl);
+  this->compTransfMatrixBasicLocal(Abl);
 
   pl.addMatrixTransposeVector(0.0, Abl, q, 1.0); // OPTIMIZE LATER
 
@@ -1327,7 +1332,7 @@ CorotCrdTransf2d::getBasicTrialDispShapeSensitivity(void)
   static Matrix Abl(3,6);
 
   this->update();
-  this->getTransfMatrixBasicLocal(Abl);
+  this->compTransfMatrixBasicLocal(Abl);
 
   double dcosThetadh = 0.0;
   double dsinThetadh = 0.0;

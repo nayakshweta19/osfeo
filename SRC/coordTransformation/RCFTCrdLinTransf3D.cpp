@@ -35,14 +35,11 @@
 #include <Matrix.h>
 #include <Node.h>
 #include <Channel.h>
-//#include <iostream.h>
-//#include <fstream.h>
-
 #include <RCFTCrdLinTransf3D.h>
 
-//using std::ios;
-//using std::endl;
-//using std::ofstream;
+// initialize static variables
+Matrix RCFTCrdLinTransf3D::Tlg(12, 12);
+Matrix RCFTCrdLinTransf3D::kg(12, 12);
 
 // constructor:
 RCFTCrdLinTransf3D::RCFTCrdLinTransf3D(int tag, const Vector &vecInLocXZPlane):
@@ -210,6 +207,24 @@ RCFTCrdLinTransf3D::computeElemtLengthAndOrient()
 
    return 0;
 }
+
+void
+RCFTCrdLinTransf3D::compTransfMatrixLocalGlobal(Matrix &Tlg)
+{
+  // setup transformation matrix from local to global
+  Tlg.Zero();
+
+  Tlg(0, 0) = Tlg(3, 3) = Tlg(6, 6) = Tlg(9, 9) = R[0][0];
+  Tlg(0, 1) = Tlg(3, 4) = Tlg(6, 7) = Tlg(9, 10) = R[0][1];
+  Tlg(0, 2) = Tlg(3, 5) = Tlg(6, 8) = Tlg(9, 11) = R[0][2];
+  Tlg(1, 0) = Tlg(4, 3) = Tlg(7, 6) = Tlg(10, 9) = R[1][0];
+  Tlg(1, 1) = Tlg(4, 4) = Tlg(7, 7) = Tlg(10, 10) = R[1][1];
+  Tlg(1, 2) = Tlg(4, 5) = Tlg(7, 8) = Tlg(10, 11) = R[1][2];
+  Tlg(2, 0) = Tlg(5, 3) = Tlg(8, 6) = Tlg(11, 9) = R[2][0];
+  Tlg(2, 1) = Tlg(5, 4) = Tlg(8, 7) = Tlg(11, 10) = R[2][1];
+  Tlg(2, 2) = Tlg(5, 5) = Tlg(8, 8) = Tlg(11, 11) = R[2][2];
+}
+
 
 int
 RCFTCrdLinTransf3D::getLocalAxes(Vector &XAxis, Vector &YAxis, Vector &ZAxis)
@@ -457,7 +472,7 @@ RCFTCrdLinTransf3D::getInitialGlobalStiffMatrix (const Matrix &KB)
 }
 
 const Matrix &
-RCFTCrdLinTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
+RCFTCrdLinTransf3D::getLocalStiffMatrix(const Matrix &KB, const Vector &fk)
 {
    static Matrix kg(18,18);	// Global stiffness for return
    static double kb[12][12];
@@ -556,7 +571,7 @@ RCFTCrdLinTransf3D::getLocalStiffMatrix (const Matrix &KB, const Vector &fk)
 
 
 const Matrix &
-RCFTCrdLinTransf3D::getGlobalStiffMatrix (const Matrix &KB, const Vector &fk)
+RCFTCrdLinTransf3D::getGlobalStiffMatrix(const Matrix &KB, const Vector &fk)
 {
 #ifdef COMPOSITE_DEBUG
    ofstream check4;
@@ -795,6 +810,15 @@ RCFTCrdLinTransf3D::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &th
   return res;
 }
 
+const Matrix &
+RCFTCrdLinTransf3D::getGlobalMatrixFromLocal(const Matrix &ml)
+{
+  this->compTransfMatrixLocalGlobal(Tlg);  // OPTIMIZE LATER
+  kg.addMatrixTripleProduct(0.0, Tlg, ml, 1.0);  // OPTIMIZE LATER
+
+  return kg;
+}
+
 
 const Vector &
 RCFTCrdLinTransf3D::getPointGlobalCoordFromLocal(const Vector &xl)
@@ -812,7 +836,7 @@ RCFTCrdLinTransf3D::getPointGlobalCoordFromLocal(const Vector &xl)
 
 
 const Vector &
-RCFTCrdLinTransf3D::getPointGlobalDisplFromBasic (double xi, const Vector &uxb)
+RCFTCrdLinTransf3D::getPointGlobalDisplFromBasic(double xi, const Vector &uxb)
 {
    return 0;
 }
