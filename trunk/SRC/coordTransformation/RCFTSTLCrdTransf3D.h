@@ -76,14 +76,18 @@ class RCFTSTLCrdTransf3D: public CrdTransf
 
     void Print(OPS_Stream &s, int flag =0);
   
-    // functions used in post-processing only    
-    const Vector &getPointGlobalCoordFromLocal (const Vector &localCoords);
-    const Vector &getPointGlobalDisplFromBasic (double xi, const Vector &basicDisps);
+    // method used to rotate consistent mass matrix
+    const Matrix &getGlobalMatrixFromLocal(const Matrix &local);
+
+    // methods used in post-processing only
+    const Vector &getPointGlobalCoordFromLocal(const Vector &localCoords);
+    const Vector &getPointGlobalDisplFromBasic(double xi, const Vector &basicDisps);
 
     int  getLocalAxes(Vector &xAxis, Vector &yAxis, Vector &zAxis);
   
   private:
-    int  computeElemtLengthAndOrient (void);
+    int  computeElemtLengthAndOrient(void);
+    void compTransfMatrixLocalGlobal(Matrix &Tlg);
     int  getLocalAxes (void);
 
     Matrix kl;
@@ -92,10 +96,13 @@ class RCFTSTLCrdTransf3D: public CrdTransf
     // internal data
     Node *nodeIPtr, *nodeJPtr;          // pointers to the element two endnodes
 
-    double R[3][3];	// Transformation matrix
     double CR[3][3];    // Committed Transformation matrix
 
-    double L;       // undeformed element length
+    double R[3][3];	// Transformation matrix
+    double L;        // undeformed element length
+
+    static Matrix Tlg;  // matrix that transforms from global to local coordinates
+    static Matrix kg;   // global stiffness matrix
 
 };
 

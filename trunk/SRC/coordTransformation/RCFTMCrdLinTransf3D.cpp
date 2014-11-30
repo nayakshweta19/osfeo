@@ -35,14 +35,11 @@
 #include <Matrix.h>
 #include <Node.h>
 #include <Channel.h>
-//#include <iostream.h>
-//#include <fstream.h>
-
 #include <RCFTMCrdLinTransf3D.h>
 
-//using std::ios;
-//using std::endl;
-//using std::ofstream;
+// initialize static variables
+Matrix RCFTMCrdLinTransf3D::Tlg(12, 12);
+Matrix RCFTMCrdLinTransf3D::kg(12, 12);
 
 // constructor:
 RCFTMCrdLinTransf3D::RCFTMCrdLinTransf3D(int tag, const Vector &vecInLocXZPlane):
@@ -209,6 +206,23 @@ RCFTMCrdLinTransf3D::computeElemtLengthAndOrient()
    R[0][2]   = dx(2)/L;
 
    return 0;
+}
+
+void
+RCFTMCrdLinTransf3D::compTransfMatrixLocalGlobal(Matrix &Tlg)
+{
+  // setup transformation matrix from local to global
+  Tlg.Zero();
+
+  Tlg(0, 0) = Tlg(3, 3) = Tlg(6, 6) = Tlg(9, 9) = R[0][0];
+  Tlg(0, 1) = Tlg(3, 4) = Tlg(6, 7) = Tlg(9, 10) = R[0][1];
+  Tlg(0, 2) = Tlg(3, 5) = Tlg(6, 8) = Tlg(9, 11) = R[0][2];
+  Tlg(1, 0) = Tlg(4, 3) = Tlg(7, 6) = Tlg(10, 9) = R[1][0];
+  Tlg(1, 1) = Tlg(4, 4) = Tlg(7, 7) = Tlg(10, 10) = R[1][1];
+  Tlg(1, 2) = Tlg(4, 5) = Tlg(7, 8) = Tlg(10, 11) = R[1][2];
+  Tlg(2, 0) = Tlg(5, 3) = Tlg(8, 6) = Tlg(11, 9) = R[2][0];
+  Tlg(2, 1) = Tlg(5, 4) = Tlg(8, 7) = Tlg(11, 10) = R[2][1];
+  Tlg(2, 2) = Tlg(5, 5) = Tlg(8, 8) = Tlg(11, 11) = R[2][2];
 }
 
 int
@@ -792,6 +806,14 @@ RCFTMCrdLinTransf3D::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &t
   return res;
 }
 
+const Matrix &
+RCFTMCrdLinTransf3D::getGlobalMatrixFromLocal(const Matrix &ml)
+{
+  this->compTransfMatrixLocalGlobal(Tlg);  // OPTIMIZE LATER
+  kg.addMatrixTripleProduct(0.0, Tlg, ml, 1.0);  // OPTIMIZE LATER
+
+  return kg;
+}
 
 const Vector &
 RCFTMCrdLinTransf3D::getPointGlobalCoordFromLocal(const Vector &xl)

@@ -48,11 +48,12 @@ Matrix CorotCrdTransf3d::RJ(3,3);
 Matrix CorotCrdTransf3d::Rbar(3,3); 
 Matrix CorotCrdTransf3d::e(3,3); 
 Matrix CorotCrdTransf3d::Tp(6,7); 
-Matrix CorotCrdTransf3d::A(3,3);
+Matrix CorotCrdTransf3d::T(7, 12);
+Matrix CorotCrdTransf3d::Tlg(12, 12);
+Matrix CorotCrdTransf3d::kg(12, 12);
 Matrix CorotCrdTransf3d::Lr2(12,3);
 Matrix CorotCrdTransf3d::Lr3(12,3);
-Matrix CorotCrdTransf3d::T(7,12);
-
+Matrix CorotCrdTransf3d::A(3,3);
 
 // constructor:
 CorotCrdTransf3d::CorotCrdTransf3d(int tag, const Vector &vecInLocXZPlane,
@@ -962,9 +963,25 @@ CorotCrdTransf3d::compTransfMatrixBasicGlobalNew(void)
             T(6,i) -= Lr(i)*c;
 }
 
+void
+CorotCrdTransf3d::compTransfMatrixLocalGlobal(Matrix &Tlg)
+{
+    // setup transformation matrix from local to global
+    Tlg.Zero();
+
+    Tlg(0,0) = Tlg(3,3) = Tlg(6,6) = Tlg(9,9)   = R0(0,0);
+    Tlg(0,1) = Tlg(3,4) = Tlg(6,7) = Tlg(9,10)  = R0(0,1);
+    Tlg(0,2) = Tlg(3,5) = Tlg(6,8) = Tlg(9,11)  = R0(0,2);
+    Tlg(1,0) = Tlg(4,3) = Tlg(7,6) = Tlg(10,9)  = R0(1,0);
+    Tlg(1,1) = Tlg(4,4) = Tlg(7,7) = Tlg(10,10) = R0(1,1);
+    Tlg(1,2) = Tlg(4,5) = Tlg(7,8) = Tlg(10,11) = R0(1,2);
+    Tlg(2,0) = Tlg(5,3) = Tlg(8,6) = Tlg(11,9)  = R0(2,0);
+    Tlg(2,1) = Tlg(5,4) = Tlg(8,7) = Tlg(11,10) = R0(2,1);
+    Tlg(2,2) = Tlg(5,5) = Tlg(8,8) = Tlg(11,11) = R0(2,2);
+}
 
 const Vector &
-CorotCrdTransf3d::getBasicTrialDisp (void)
+CorotCrdTransf3d::getBasicTrialDisp(void)
 {
     static Vector ub(6);
     
@@ -976,7 +993,7 @@ CorotCrdTransf3d::getBasicTrialDisp (void)
 
 
 const Vector &
-CorotCrdTransf3d::getBasicIncrDeltaDisp (void)
+CorotCrdTransf3d::getBasicIncrDeltaDisp(void)
 {
     static Vector dub(6);
     static Vector dul(7);
@@ -1066,7 +1083,7 @@ CorotCrdTransf3d::getGlobalResistingForce(const Vector &pb, const Vector &p0)
 
 
 const Matrix &
-CorotCrdTransf3d::getGlobalStiffMatrix (const Matrix &kb, const Vector &pb)
+CorotCrdTransf3d::getGlobalStiffMatrix(const Matrix &kb, const Vector &pb)
 {
     
     this->update();
@@ -1081,7 +1098,7 @@ CorotCrdTransf3d::getGlobalStiffMatrix (const Matrix &kb, const Vector &pb)
     pl.addMatrixTransposeVector(0.0, Tp, pb, 1.0);    // pl = Tp ^ pb;
     
     // transform tangent  stiffness matrix from local to global coordinates
-    static Matrix kg(12,12);
+    //static Matrix kg(12,12);
     
     // compute the tangent stiffness matrix in global coordinates
     kg.addMatrixTripleProduct(0.0, T, kl, 1.0);
@@ -1341,14 +1358,14 @@ CorotCrdTransf3d::getGlobalStiffMatrix (const Matrix &kb, const Vector &pb)
 
 
 const Matrix &
-CorotCrdTransf3d::getInitialGlobalStiffMatrix (const Matrix &kb)
+CorotCrdTransf3d::getInitialGlobalStiffMatrix(const Matrix &kb)
 {
     // transform tangent stiffness matrix from the basic system to local coordinates
     static Matrix kl(7,7);
     kl.addMatrixTripleProduct(0.0, Tp, kb, 1.0);      // kl = Tp ^ kb * Tp;
     
     // transform tangent  stiffness matrix from local to global coordinates
-    static Matrix kg(12,12);
+    //static Matrix kg(12,12);
     
     // compute the tangent stiffness matrix in global coordinates
     kg.addMatrixTripleProduct(0.0, T, kl, 1.0);
@@ -1618,7 +1635,7 @@ CorotCrdTransf3d::getRotMatrixFromTangScaledPseudoVector(const Vector &w) const
 
 
 const Matrix &
-CorotCrdTransf3d::getSkewSymMatrix (const Vector &theta) const
+CorotCrdTransf3d::getSkewSymMatrix(const Vector &theta) const
 {
     static Matrix S(3,3);
     
@@ -1646,7 +1663,7 @@ CorotCrdTransf3d::getSkewSymMatrix (const Vector &theta) const
 
 
 const Matrix &
-CorotCrdTransf3d::getLMatrix (const Vector &ri) const
+CorotCrdTransf3d::getLMatrix(const Vector &ri) const
 {
     static Matrix L1(3,3), L2(3,3);
     static Vector r1(3), e1(3);
@@ -1718,7 +1735,7 @@ CorotCrdTransf3d::getLMatrix (const Vector &ri) const
 
 
 const Matrix &
-CorotCrdTransf3d::getKs2Matrix (const Vector &ri, const Vector &z) const
+CorotCrdTransf3d::getKs2Matrix(const Vector &ri, const Vector &z) const
 {
     static Matrix ks2(12,12);
     static Vector e1(3), r1(3);
@@ -2017,6 +2034,14 @@ CorotCrdTransf3d::recvSelf(int cTag, Channel &theChannel, FEM_ObjectBroker &theB
             
 }
 
+const Matrix &
+CorotCrdTransf3d::getGlobalMatrixFromLocal(const Matrix &ml)
+{
+    this->compTransfMatrixLocalGlobal(Tlg);  // OPTIMIZE LATER
+    kg.addMatrixTripleProduct(0.0, Tlg, ml, 1.0);  // OPTIMIZE LATER
+
+    return kg;
+}
 
 const Vector &
 CorotCrdTransf3d::getPointGlobalCoordFromLocal(const Vector &xl)
@@ -2029,7 +2054,7 @@ CorotCrdTransf3d::getPointGlobalCoordFromLocal(const Vector &xl)
 
 
 const Vector &
-CorotCrdTransf3d::getPointGlobalDisplFromBasic (double xi, const Vector &uxb)
+CorotCrdTransf3d::getPointGlobalDisplFromBasic(double xi, const Vector &uxb)
 {
     static Vector uxg(3);
     opserr << " CorotCrdTransf3d::getPointGlobalDisplFromBasic: not implemented yet" ;
