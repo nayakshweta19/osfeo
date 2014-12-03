@@ -5,7 +5,10 @@ OBJS = ElastomericBearingPlasticity2d.o \
        ElastomericBearingBoucWen2d.o \
        ElastomericBearingBoucWen3d.o \
        ElastomericBearingUFRP2d.o \
-	   TclElastomericBearingPlasticityCommand.o \
+       ElastomericX.o \
+       HDR.o \
+       LeadRubberX.o \
+	TclElastomericBearingPlasticityCommand.o \
        TclElastomericBearingBoucWenCommand.o \
        TclElastomericBearingUFRPCommand.o
 

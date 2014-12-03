@@ -91,6 +91,10 @@ NDMaterial::getCopy(const char *type)
     PlateFiberMaterial *clone = new PlateFiberMaterial(this->getTag(),*copy);
     return clone;
   }
+  else if(strcmp(type, "ThreeDimensional") == 0) {
+    NDMaterial *clone = this->getCopy("ThreeDimensional");
+    return clone;
+  }
   else
     return 0;
 }

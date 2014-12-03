@@ -113,6 +113,7 @@ extern  void *OPS_NewRASTMRCPlateFiberMaterial(void);
 extern  void *OPS_NewFASTMRCPlateFiberMaterial(void);
 extern  void *OPS_NewConcreteDPM1(void);
 extern  void *OPS_NewConcreteDPM2(void);
+extern  void *OPS_NewDamage2p3D(void);
 //end by Ln
 
 extern  void *OPS_NewElasticIsotropicMaterial(void);
@@ -440,7 +441,17 @@ TCL_Char **argv, TclModelBuilder *theTclBuilder)
         return TCL_ERROR;
     }
 
-	else if ((strcmp(argv[1], "DruckerPrager") == 0)){
+    else if ((strcmp(argv[1], "Damage2P3D") == 0) || (strcmp(argv[1], "damage2p3d") == 0)
+      || (strcmp(argv[1], "Damage2p3d") == 0) || (strcmp(argv[1], "Damage2p3D") == 0)){
+
+      void *theMat = OPS_NewDamage2p3D();
+      if (theMat != 0)
+        theMaterial = (NDMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
+    
+    else if ((strcmp(argv[1], "DruckerPrager") == 0)){
 
 		void *theMat = OPS_NewDruckerPragerMaterial();
 		if (theMat != 0)

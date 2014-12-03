@@ -55,7 +55,7 @@ using namespace std;
 
 #define OPS_Export extern "C"
 
-#define PI 3.14159l
+//#define PI 3.14159l
 
 // initialize the class wide variables
 Matrix HDR::theMatrix(12,12);

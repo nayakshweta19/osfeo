@@ -49,7 +49,7 @@
 using namespace std;
 #include <iostream>
 
-#define PI 3.14159l
+//#define PI 3.14159l
 
 // initialize the class wide variables
 Matrix ElastomericX::theMatrix(12,12);

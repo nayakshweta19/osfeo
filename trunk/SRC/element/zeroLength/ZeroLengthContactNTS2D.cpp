@@ -48,7 +48,7 @@
 static int numZeroLengthContactNTS2D = 0;
 #include <elementAPI.h>
 
-#define PI 3.141592653589793238462643383279502884197169399
+//#define PI 3.141592653589793238462643383279502884197169399
 
 Element * 
 OPS_NewZeroLengthContactNTS2D(void) {
