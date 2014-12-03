@@ -128,6 +128,7 @@ extern void *OPS_ManderConcreteC01(void);         // for CSMM
 extern void *OPS_ManderConcreteM01(void);         // for MCFT/DFSM
 extern void *OPS_NewTendonL01Material(void);      // for CSMM 
 extern void *OPS_NewConcreteDPM01(void);         // ConcreteDamagePlasticMaterial
+extern void *OPS_NewDamage2pMaterial(void);          // Faria Oliver concrete damge material uniaxial
 extern void *OPS_NewConfinedConcrete01Material(void);
 extern void *OPS_NewElasticBilin(void);
 extern void *OPS_NewMinMaxMaterial(void);
@@ -146,7 +147,7 @@ extern void *OPS_ImpactMaterial(void);
 extern void *OPS_SteelBRB(void);
 extern void *OPS_New_MultiLinear(void);
 extern void *OPS_NewHookGap(void);
-//extern void *OPS_FRPConfinedConcrete(void);
+extern void *OPS_FRPConfinedConcrete(void);
 extern void *OPS_NewSteel01Thermal(void);
 extern void *OPS_NewSteel02Thermal(void);
 extern void *OPS_NewSteel01PThermal(void);
@@ -234,6 +235,10 @@ TclModelBuilder_addSnapMaterial(ClientData clientData, Tcl_Interp *interp, int a
 
 UniaxialMaterial *
 TclModelBuilder_addPyTzQzMaterial(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain *theDomain);
+
+UniaxialMaterial *
+TclModelBuilder_FRPCnfinedConcrete(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain *theDomain);
+
 
 /*
 int
@@ -549,27 +554,35 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
 	} 
     else if (strcmp(argv[1], "ConcreteECThermal") == 0) {
-		void *theMat = OPS_NewConcreteECThermal();
-		if (theMat != 0)
-			theMaterial = (UniaxialMaterial *)theMat;
-		else
-			return TCL_ERROR;
+      void *theMat = OPS_NewConcreteECThermal();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "CFSWSWP") == 0) {
       void *theMat = OPS_CFSWSWP();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "CFSSSWP") == 0) {
       void *theMat = OPS_CFSSSWP();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "FRPConfinedConcrete") == 0) {
+      void *theMat = OPS_FRPConfinedConcrete();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "Elastic2") == 0) {
@@ -2314,12 +2327,20 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
     else if ((strcmp(argv[1], "ConcreteDPM01") == 0) || (strcmp(argv[1], "cdpm01") == 0)) {
       void *theMat = OPS_NewConcreteDPM01();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
     }
 
-    else if ((strcmp(argv[1],"ConfinedConcrete01") == 0) || (strcmp(argv[1],"ConfinedConcrete") == 0)) {
+    else if ((strcmp(argv[1], "Damage2p") == 0) || (strcmp(argv[1], "damage2p") == 0)) {
+      void *theMat = OPS_NewDamage2pMaterial();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+    }
+
+    else if ((strcmp(argv[1], "ConfinedConcrete01") == 0) || (strcmp(argv[1], "ConfinedConcrete") == 0)) {
       void *theMat = OPS_NewConfinedConcrete01Material();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;

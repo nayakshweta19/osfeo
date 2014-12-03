@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5681 $
-// $Date: 2014-02-26 09:49:45 +0800 (星期三, 26 二月 2014) $
+// $Revision: 5830 $
+// $Date: 2014-10-09 07:34:06 +0800 (星期四, 09 十月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/adapter/Actuator.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -527,9 +527,6 @@ const Vector& Actuator::getResistingForce()
         (*theVector)(i+numDOF2) = cosX[i]*q(0);
     }
     
-    // subtract external load
-    (*theVector) -= *theLoad;
-    
     return *theVector;
 }
 
@@ -537,6 +534,9 @@ const Vector& Actuator::getResistingForce()
 const Vector& Actuator::getResistingForceIncInertia()
 {
     this->getResistingForce();
+    
+    // subtract external load
+    (*theVector) -= *theLoad;
     
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {

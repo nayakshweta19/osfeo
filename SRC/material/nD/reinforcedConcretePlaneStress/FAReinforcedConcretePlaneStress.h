@@ -109,29 +109,30 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     UniaxialMaterial **theMaterial; // pointer of the materials 
     Response **theResponses; // pointer to material responses needed for Concrete
 
-	static double citaR;           // principal strain direction
-	static double lastCitaR;       // last converged principle strain direction
-	static bool   isSwapped;       // primary concrete direction has changed
-	static int    lastDirStatus;
-	static int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
-	static int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
-    static double beta;           // citaOne - citaR
-    static int    afterFirstIter; // find the equibium principle strees angle, the first iteration
-    static int    gt90;           // angle great than 90 degree
+	double citaR;           // principal strain direction
+	double lastCitaR;       // last converged principle strain direction
+	//bool   isSwapped;       // primary concrete direction has changed
+    bool   loaded;
+	//int    lastDirStatus;
+	int    steelStatus;     // check if steel yield, 0 not yield, 1 yield
+	//int    dirStatus;       // check if principle direction has exceed 90 degree, 1 yes, 0 no
+    double beta;           // citaOne - citaR
+    //int    afterFirstIter; // find the equibium principle strees angle, the first iteration
+    //int    gt90;           // angle great than 90 degree
     
-    static double epslonOne;
-	static double epslonTwo;
-	static double halfGammaOneTwo;
+    double epslonOne;
+	double epslonTwo;
+	double halfGammaOneTwo;
 
-	static double sigmaOneC;
-	static double sigmaTwoC;
+	double sigmaOneC;
+	double sigmaTwoC;
 
-	static Vector strain_vec;
-	static Vector stress_vec;
-	static Matrix tangent_matrix;
+	Vector strain_vec;
+	Vector stress_vec;
+	Matrix tangent_matrix;
 
-    static Matrix DC;
-    static Matrix DC_bar;
+    Matrix DC;
+    Matrix DC_bar;
 
 	double   angle1;    // angel of the first steel layer to x coordinate 
     double   angle2;    // angel of the second steel layer to x coordinate
@@ -141,9 +142,9 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     double   fy;        // yield stress of the bare steel bar
     double   E0;        // young's modulus of the steel
     double   epsc0;     // compressive strain of the concrete
-	static Vector   Tstrain;   // Trial strains
-    static Vector   Tstress;   // Trial stresses
-    static Vector   lastStress;  // Last committed stresses, added for x, k
+	Vector   Tstrain;   // Trial strains
+    Vector   Tstress;   // Trial stresses
+    Vector   lastStress;  // Last committed stresses, added for x, k
     
     double   citaStrain;      // principle strain direction
     double   citaStress;     // principle stress direction
@@ -177,7 +178,7 @@ class FAReinforcedConcretePlaneStress : public NDMaterial
     int determineTrialStress(void);
     double getPrincipalStressAngle(double inputAngle);
     double getAngleError(double inputCita);
-	void   determineConcreteStatus(int);
+//	void   determineConcreteStatus(int);
 };
 
 #endif

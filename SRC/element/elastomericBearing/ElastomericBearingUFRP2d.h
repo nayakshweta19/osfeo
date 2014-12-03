@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 4945 $
-// $Date: 2012-07-27 16:05:47 -0700 (Fri, 27 Jul 2012) $
+// $Revision: 5830 $
+// $Date: 2014-10-09 07:34:06 +0800 (星期四, 09 十月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingUFRP2d.h $
 
 #ifndef ElastomericBearingUFRP2d_h

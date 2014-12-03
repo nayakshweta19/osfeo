@@ -93,12 +93,16 @@ class TimoshenkoLinearCrdTransf2d: public CrdTransf
   
   void Print(OPS_Stream &s, int flag =0);
   
-  // functions used in post-processing only    
-  const Vector &getPointGlobalCoordFromLocal (const Vector &localCoords);
-  const Vector &getPointGlobalDisplFromBasic (double xi, const Vector &basicDisps);
+  // method used to rotate consistent mass matrix
+  const Matrix &getGlobalMatrixFromLocal(const Matrix &local);
+
+  // methods used in post-processing only
+  const Vector &getPointGlobalCoordFromLocal(const Vector &localCoords);
+  const Vector &getPointGlobalDisplFromBasic(double xi, const Vector &basicDisps);
   
  private:
   int  computeElemtLengthAndOrient (void);
+  void compTransfMatrixLocalGlobal(Matrix &Tlg);
   
   // internal data
   Node *nodeIPtr;
@@ -107,8 +111,12 @@ class TimoshenkoLinearCrdTransf2d: public CrdTransf
   double *nodeIOffset, *nodeJOffset;	// rigid joint offsets
   
   double cosTheta, sinTheta;
-  
-  double L;                // undeformed element length
+  double R[3][3];      // rotation matrix
+  double L;        // undeformed element length
+
+  static Matrix Tlg;  // matrix that transforms from global to local coordinates
+  static Matrix kg;   // global stiffness matrix
+
 };
 
 #endif

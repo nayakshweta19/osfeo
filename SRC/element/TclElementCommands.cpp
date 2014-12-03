@@ -98,6 +98,7 @@ extern void *OPS_BeamContact2D(void);
 extern void *OPS_BeamContact2Dp(void);
 extern void *OPS_BeamContact3D(void);
 extern void *OPS_BeamContact3Dp(void);
+extern void *OPS_PileToe3D(void);
 extern void *OPS_SurfaceLoad(void);
 extern void *OPS_ModElasticBeam2d(void);
 extern void *OPS_ElasticTimoshenkoBeam2d(void);
@@ -428,6 +429,10 @@ extern int
 TclModelBuilder_addKikuchiBearing(ClientData clientData, Tcl_Interp *interp, int argc,
 TCL_Char **argv, Domain*, TclModelBuilder *);
 
+extern int
+TclModelBuilder_addYamamotoBiaxialHDR(ClientData clientData, Tcl_Interp *interp, int argc,
+TCL_Char **argv, Domain*, TclModelBuilder *);
+
 
 extern int
 TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp, int argc,
@@ -727,6 +732,16 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
       return TCL_ERROR;
     }
 
+  }
+  else if ((strcmp(argv[1], "PileToe3d") == 0) || (strcmp(argv[1], "PileToe3D") == 0)) {
+    
+    void *theEle = OPS_PileToe3D();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
   }
   else if ((strcmp(argv[1], "BeamContact2d") == 0) || (strcmp(argv[1], "BeamContact2D") == 0)) {
 
@@ -1555,6 +1570,11 @@ return result;
     return result;
   }
 
+  else if (strcmp(argv[1], "YamamotoBiaxialHDR") == 0) {
+    int result = TclModelBuilder_addYamamotoBiaxialHDR(clientData, interp, argc, argv,
+      theTclDomain, theTclBuilder);
+    return result;
+  }
 
   //////////////////////////////////////////////////////////////////////////
   else if (strcmp(argv[1], "Timoshenko2d01") == 0) {

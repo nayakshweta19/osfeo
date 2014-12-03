@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5646 $
-// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $Revision: 5808 $
+// $Date: 2014-08-22 09:29:02 +0800 (星期五, 22 八月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elasticBeamColumn/ElasticTimoshenkoBeam3d.h $
 
 #ifndef ElasticTimoshenkoBeam3d_h
@@ -112,8 +112,8 @@ private:
     double Avy;   // shear area along local y axis
     double Avz;   // shear area along local z axis
     double rho;   // mass per unit length
-    int nlGeo;    // nonlinear geometry flag
     int cMass;    // consistent mass flag
+    int nlGeo;    // nonlinear geometry flag
     double phiY;  // ratio of bending to shear stiffness about local y axis
     double phiZ;  // ratio of bending to shear stiffness about local z axis
     double L;     // element length

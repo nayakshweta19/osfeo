@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2008/04/14 21:22:20 $
+// $Date: 2008-04-14 21:22:20 $
 // $Source: /usr/local/cvs/OpenSees/SRC/element/dispBeamColumnInt/LinearCrdTransf2dInt.h,v $
                                                                         
 // Written: Remo Magalhaes de Souza (rmsouza@ce.berkeley.edu)
@@ -92,12 +92,16 @@ class LinearCrdTransf2dInt: public CrdTransf
   
   void Print(OPS_Stream &s, int flag =0);
   
-  // functions used in post-processing only    
-  const Vector &getPointGlobalCoordFromLocal (const Vector &localCoords);
-  const Vector &getPointGlobalDisplFromBasic (double xi, const Vector &basicDisps);
+  // method used to rotate consistent mass matrix
+  const Matrix &getGlobalMatrixFromLocal(const Matrix &local);
+  
+  // methods used in post-processing only
+  const Vector &getPointGlobalCoordFromLocal(const Vector &localCoords);
+  const Vector &getPointGlobalDisplFromBasic(double xi, const Vector &basicDisps);
   
  private:
-  int  computeElemtLengthAndOrient (void);
+  int  computeElemtLengthAndOrient(void);
+  void compTransfMatrixLocalGlobal(Matrix &Tlg);
   
   // internal data
   Node *nodeIPtr;
@@ -105,9 +109,11 @@ class LinearCrdTransf2dInt: public CrdTransf
   
   double *nodeIOffset, *nodeJOffset;	// rigid joint offsets
   
-  double cosTheta, sinTheta;
+  double cosTheta, sinTheta;  // direction cosines of undeformed element wrt to global system 
+  double L;  // undeformed element length
   
-  double L;                // undeformed element length
+  static Matrix Tlg;  // matrix that transforms from global to local coordinates
+  static Matrix kg;   // global stiffness matrix
 };
 
 #endif

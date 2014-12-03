@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5646 $
-// $Date: 2013-12-15 15:08:40 +0800 (星期日, 15 十二月 2013) $
+// $Revision: 5830 $
+// $Date: 2014-10-09 07:34:06 +0800 (星期四, 09 十月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/twoNodeLink/TwoNodeLink.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -617,9 +617,6 @@ const Vector& TwoNodeLink::getResistingForce()
     // determine resisting forces in global system    
     theVector->addMatrixTransposeVector(0.0, Tgl, ql, 1.0);
     
-    // subtract external load
-    theVector->addVector(1.0, *theLoad, -1.0);
-    
     return *theVector;
 }
 
@@ -628,6 +625,9 @@ const Vector& TwoNodeLink::getResistingForceIncInertia()
 {
     // this already includes damping forces from materials
     this->getResistingForce();
+    
+    // subtract external load
+    theVector->addVector(1.0, *theLoad, -1.0);
     
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {
@@ -655,7 +655,7 @@ const Vector& TwoNodeLink::getResistingForceIncInertia()
 int TwoNodeLink::sendSelf(int commitTag, Channel &sChannel)
 {
     // send element parameters
-    static Vector data(10);
+    static Vector data(14);
     data(0) = this->getTag();
     data(1) = numDIM;
     data(2) = numDOF;
@@ -666,6 +666,10 @@ int TwoNodeLink::sendSelf(int commitTag, Channel &sChannel)
     data(7) = shearDistI.Size();
     data(8) = addRayleigh;
     data(9) = mass;
+    data(10) = alphaM;
+    data(11) = betaK;
+    data(12) = betaK0;
+    data(13) = betaKc;
     sChannel.sendVector(0, commitTag, data);
     
     // send the two end nodes
@@ -712,7 +716,7 @@ int TwoNodeLink::recvSelf(int commitTag, Channel &rChannel,
     }
     
     // receive element parameters
-    static Vector data(10);
+    static Vector data(14);
     rChannel.recvVector(0, commitTag, data);
     this->setTag((int)data(0));
     numDIM = (int)data(1);
@@ -720,7 +724,11 @@ int TwoNodeLink::recvSelf(int commitTag, Channel &rChannel,
     numDir = (int)data(3);
     addRayleigh = (int)data(8);
     mass = data(9);
-    
+    alphaM = data(10);
+    betaK = data(11);
+    betaK0 = data(12);
+    betaKc = data(13);
+   
     // receive the two end nodes
     rChannel.recvID(0, commitTag, connectedExternalNodes);
     

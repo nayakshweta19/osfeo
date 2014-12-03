@@ -18,9 +18,9 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// $Revision: 1.17 $
-// $Date: 2010-02-04 01:10:24 $
-// $Source: /usr/local/cvs/OpenSees/SRC/element/truss/Truss.h,v $
+// $Revision: 5808 $
+// $Date: 2014-08-22 09:29:02 +0800 (星期五, 22 八月 2014) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/truss/Truss.h $
                                                                         
                                                                         
 #ifndef Truss_h
@@ -47,13 +47,12 @@ class UniaxialMaterial;
 class Truss : public Element
 {
   public:
-    Truss(int tag, 
-	  int dimension,
+    Truss(int tag, int dimension,
 	  int Nd1, int Nd2, 
 	  UniaxialMaterial &theMaterial,
-	  double A, 
-	  double rho=0.0, 
-	  int doRayleighDamping = 0);
+	  double A, double rho = 0.0, 
+	  int doRayleighDamping = 0,
+      int cMass = 0);
     
     Truss();    
     ~Truss();
@@ -120,16 +119,17 @@ class Truss : public Element
     int dimension;                  // truss in 2 or 3d domain
     int numDOF;	                    // number of dof for truss
 
-    Vector *theLoad;     // pointer to the load vector P
-    Matrix *theMatrix; // pointer to objects matrix (a class wide Matrix)
-    Vector *theVector; // pointer to objects vector (a clas wide Vector)
+    Vector *theLoad;    // pointer to the load vector P
+    Matrix *theMatrix;  // pointer to objects matrix (a class wide Matrix)
+    Vector *theVector;  // pointer to objects vector (a class wide Vector)
 
-    double L;	    // length of truss based on undeformed configuration
-    double A; 	    // area of truss
-    double rho; 	// rho: mass density per unit length
-    int doRayleighDamping; 
+    double L;               // length of truss based on undeformed configuration
+    double A;               // area of truss
+    double rho;             // rho: mass density per unit length
+    int doRayleighDamping;  // flag to include Rayleigh damping
+    int cMass;              // consistent mass flag
 
-    double cosX[3]; // direction cosines
+    double cosX[3];  // direction cosines
 
     Node *theNodes[2];
     double *initialDisp;
@@ -146,13 +146,9 @@ class Truss : public Element
     static Matrix trussM6;   // class wide matrix for 6*6
     static Matrix trussM12;  // class wide matrix for 12*12
     static Vector trussV2;   // class wide Vector for size 2
-    static Vector trussV4;   // class wide Vector for size 44
+    static Vector trussV4;   // class wide Vector for size 4
     static Vector trussV6;   // class wide Vector for size 6
     static Vector trussV12;  // class wide Vector for size 12
 };
 
 #endif
-
-
-
-

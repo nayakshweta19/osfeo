@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5681 $
-// $Date: 2014-02-26 09:49:45 +0800 (星期三, 26 二月 2014) $
+// $Revision: 5830 $
+// $Date: 2014-10-09 07:34:06 +0800 (星期四, 09 十月 2014) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/generic/GenericClient.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -460,9 +460,6 @@ const Vector& GenericClient::getResistingForce()
     // determine resisting forces in global system
     theVector.Assemble(*qDaq, basicDOF);
     
-    // subtract external load
-    theVector.addVector(1.0, theLoad, -1.0);
-    
     return theVector;
 }
 
@@ -470,6 +467,9 @@ const Vector& GenericClient::getResistingForce()
 const Vector& GenericClient::getResistingForceIncInertia()
 {
     theVector = this->getResistingForce();
+    
+    // subtract external load
+    theVector.addVector(1.0, theLoad, -1.0);
     
     if (massFlag == false)
         this->getMass();

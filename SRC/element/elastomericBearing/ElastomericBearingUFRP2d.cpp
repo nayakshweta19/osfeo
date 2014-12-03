@@ -18,9 +18,9 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: $
-// $Date: $
-// $URL: $
+// $Revision: 5830 $
+// $Date: 2014-10-09 07:34:06 +0800 (星期四, 09 十月 2014) $
+// $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenSees/trunk/SRC/element/elastomericBearing/ElastomericBearingUFRP2d.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 10/13
@@ -534,9 +534,6 @@ const Vector& ElastomericBearingUFRP2d::getResistingForce()
     // determine resisting forces in global system
     theVector.addMatrixTransposeVector(0.0, Tgl, ql, 1.0);
     
-    // subtract external load
-    theVector.addVector(1.0, theLoad, -1.0);
-    
     return theVector;
 }
 
@@ -545,6 +542,9 @@ const Vector& ElastomericBearingUFRP2d::getResistingForceIncInertia()
 {
     // this already includes damping forces from materials
     theVector = this->getResistingForce();
+    
+    // subtract external load
+    theVector.addVector(1.0, theLoad, -1.0);
     
     // add the damping forces from rayleigh damping
     if (addRayleigh == 1)  {
