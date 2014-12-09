@@ -1,4 +1,4 @@
-/* ****************************************************************** **
+﻿/* ****************************************************************** **
 **    OpenSees - Open System for Earthquake Engineering Simulation    **
 **          Pacific Earthquake Engineering Research Center            **
 **                                                                    **
@@ -19,8 +19,8 @@
 ** ****************************************************************** */
 
 // $Revision: 5835 $
-// $Date: 2014-10-16 12:42:46 +0800 (星期�?, 16 十月 2014) $
-// $URL: file:///usr/local/svn/OpenSees/trunk/SRC/classTags.h $
+// $Revision: 5848 $
+// $Date: 2014-12-09 03:07:07 +0800 (鏄熸湡浜�, 09 鍗佷簩鏈� 2014) $
 
 // Written: fmk
 // Revision: A
@@ -190,6 +190,8 @@
 #define MAT_TAG_ResilienceMaterialHR            84
 #define MAT_TAG_CFSSSWP                         81
 #define MAT_TAG_CFSWSWP                         82
+#define MAT_TAG_ResilienceLow                   83
+
 // Neallee@tju.edu.cn
 #define MAT_TAG_Concrete09			1024081
 #define MAT_TAG_Concrete10			1024082

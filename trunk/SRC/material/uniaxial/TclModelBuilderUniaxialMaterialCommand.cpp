@@ -168,6 +168,8 @@ extern void *OPS_FRPConfinedConcrete(void);
 extern void *OPS_ResilienceMaterialHR(void);
 extern void *OPS_CFSSSWP(void);
 extern void *OPS_CFSWSWP(void);
+extern void *OPS_ResilienceLow(void);
+
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
 
@@ -487,54 +489,69 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-	} else if (strcmp(argv[1], "Steel01PThermal") == 0) {
-		void *theMat = OPS_NewSteel01PThermal();
-		if (theMat != 0)
-			theMaterial = (UniaxialMaterial *)theMat;
-		else
-			return TCL_ERROR;
+    }
+    else if (strcmp(argv[1], "Steel01PThermal") == 0) {
+      void *theMat = OPS_NewSteel01PThermal();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
 
-	} else if (strcmp(argv[1], "Steel02Thermal") == 0) {
+    }
+    else if (strcmp(argv[1], "Steel02Thermal") == 0) {
       void *theMat = OPS_NewSteel02Thermal();
-      if (theMat != 0) 
-	theMaterial = (UniaxialMaterial *)theMat;
-      else 
-	return TCL_ERROR;
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
 
-	  // -----Adding identity for SteelECThermal
-	} else if (strcmp(argv[1], "SteelECThermal") == 0) {
-		void *theMat = OPS_NewSteelECThermal();
-		if (theMat != 0)
-			theMaterial = (UniaxialMaterial *)theMat;
-		else
-			return TCL_ERROR;
-		//------End of adding identity for SteelEcThermal
-	} else if (strcmp(argv[1], "ElasticThermal") == 0) {
-		void *theMat = OPS_NewElasticMaterialThermal();
-		if (theMat != 0)
-			theMaterial = (UniaxialMaterial *)theMat;
-		else
-			return TCL_ERROR;
-	} else if ((strcmp(argv[1], "SteelBRB") == 0) || (strcmp(argv[1], "BRB") == 0)) {
+      // -----Adding identity for SteelECThermal
+    }
+    else if (strcmp(argv[1], "SteelECThermal") == 0) {
+      void *theMat = OPS_NewSteelECThermal();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+      //------End of adding identity for SteelEcThermal
+    }
+    else if (strcmp(argv[1], "ElasticThermal") == 0) {
+      void *theMat = OPS_NewElasticMaterialThermal();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+    }
+    else if ((strcmp(argv[1], "SteelBRB") == 0) || (strcmp(argv[1], "BRB") == 0)) {
       void *theMat = OPS_SteelBRB();
-      if (theMat != 0) 
-	theMaterial = (UniaxialMaterial *)theMat;
-      else 
-	return TCL_ERROR;
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
 
-	} else if (strcmp(argv[1],"ConcretewBeta") == 0) {
+    }
+    else if (strcmp(argv[1], "ConcretewBeta") == 0) {
       void *theMat = OPS_ConcretewBeta();
-      if (theMat != 0) 
-	theMaterial = (UniaxialMaterial *)theMat;
-      else 
-	return TCL_ERROR;
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"ConcreteSakaiKawashima") == 0) {
+    }
+    else if (strcmp(argv[1], "ConcreteSakaiKawashima") == 0) {
       void *theMat = OPS_ConcreteSakaiKawashima();
-      if (theMat != 0) 
-	theMaterial = (UniaxialMaterial *)theMat;
-      else 
-	return TCL_ERROR;
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "ResilienceLow") == 0) {
+      void *theMat = OPS_ResilienceLow();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "ResilienceMaterialHR") == 0) {
