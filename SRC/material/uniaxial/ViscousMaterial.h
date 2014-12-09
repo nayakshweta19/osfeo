@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.6 $
-// $Date: 2008/10/17 23:35:01 $
+// $Date: 2008-10-17 23:35:01 $
 // $Source: /usr/local/cvs/OpenSees/SRC/material/uniaxial/ViscousMaterial.h,v $
                                                                         
 // Written: Mehrdad Sasani 
@@ -70,10 +70,13 @@ class ViscousMaterial : public UniaxialMaterial
   protected:
     
   private:
+    double trialStrain;
     double trialRate;
     double C;
     double Alpha;
     double minVel;
+    double commitStrain;
+    double commitRate;
 };
 
 
