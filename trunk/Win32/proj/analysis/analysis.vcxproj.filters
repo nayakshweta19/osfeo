@@ -362,6 +362,9 @@
     <ClCompile Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\KrylovAccelerator2.cpp">
       <Filter>algorithm\accelerator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\KRAlphaExplicit.cpp">
+      <Filter>integrator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\analysis\analysis\Analysis.h">
@@ -684,6 +687,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\analysis\algorithm\equiSolnAlgo\accelerator\KrylovAccelerator2.h">
       <Filter>algorithm\accelerator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\KRAlphaExplicit.h">
+      <Filter>integrator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -26,21 +26,21 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -196,6 +196,8 @@
     <ClCompile Include="..\..\..\Src\nDarray\BJvector.cpp" />
     <ClCompile Include="..\..\..\SRC\matrix\ID.cpp" />
     <ClCompile Include="..\..\..\SRC\matrix\Matrix.cpp" />
+    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstraint.cpp" />
+    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstresst.cpp" />
     <ClCompile Include="..\..\..\Src\nDarray\nDarray.cpp" />
     <ClCompile Include="..\..\..\Src\nDarray\straint.cpp" />
     <ClCompile Include="..\..\..\Src\nDarray\stresst.cpp" />
@@ -208,6 +210,8 @@
     <ClInclude Include="..\..\..\Src\nDarray\BJvector.h" />
     <ClInclude Include="..\..\..\SRC\matrix\ID.h" />
     <ClInclude Include="..\..\..\SRC\matrix\Matrix.h" />
+    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstraint.h" />
+    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstresst.h" />
     <ClInclude Include="..\..\..\Src\nDarray\nDarray.h" />
     <ClInclude Include="..\..\..\Src\nDarray\straint.h" />
     <ClInclude Include="..\..\..\Src\nDarray\stresst.h" />

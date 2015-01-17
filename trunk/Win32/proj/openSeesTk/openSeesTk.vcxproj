@@ -27,21 +27,21 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -69,14 +69,20 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\$(IntelPlatform);$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ICInstallDir)compiler\lib\$(IntelPlatform);$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\MPICH2\include;C:\Program Files (x86)\Intel\Composer XE 2013\compiler\include\ia32;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\MPICH2\lib;C:\Program Files (x86)\Intel\Composer XE 2013\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ICInstallDir)compiler\include;$(ICInstallDir)compiler\include\ia32;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);c:\tcl\include;c:\mpich2\include</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ICInstallDir)compiler\lib\ia32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);c:\tcl\lib;c:\mpich2\lib</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\include;C:\MPICH2\include;$(IFORT_COMPILER15)\compiler\include\ia32;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Tcl\lib;C:\MPICH2\lib;$(IFORT_COMPILER15)\compiler\lib\ia32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>.\..\..\bin64\</OutDir>
     <IntDir>..\..\obj\openSeesTk\debug\</IntDir>
+    <IncludePath>$(IFORT_COMPILER15)\compiler\include\intel64;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(IFORT_COMPILER15)\compiler\lib\intel64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(IFORT_COMPILER15)\compiler\include\intel64;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(IFORT_COMPILER15)\compiler\lib\intel64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -116,7 +122,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>triangle.lib;csparse.lib;DoddRestrepo.lib;amd.lib;api.lib;handler.lib;tcl.lib;wsock32.lib;OpenGL32.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;optimization.lib;tcl85.lib;tk85.lib;libm.lib;ifconsol.lib;libifcoremt.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;cuda.lib;cula_sparse.lib;triangle.lib;csparse.lib;DoddRestrepo.lib;amd.lib;api.lib;handler.lib;tcl.lib;wsock32.lib;OpenGL32.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;optimization.lib;tcl85.lib;tk85.lib;libm.lib;ifconsol.lib;libifcoremt.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\..\bin/openSeesTk.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>c:\program files\tcl\lib;..\..\lib\release;..\..\lib;..\..\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -157,10 +163,10 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>triangle.lib;csparse.lib;DoddRestrepo.lib;amd.lib;api.lib;handler.lib;tcl.lib;wsock32.lib;OpenGL32.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;optimization.lib;tcl85.lib;tk85.lib;libm.lib;ifconsol.lib;libifcoremt.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;cuda.lib;cula_sparse.lib;triangle.lib;csparse.lib;DoddRestrepo.lib;amd.lib;api.lib;handler.lib;tcl.lib;wsock32.lib;OpenGL32.lib;glu32.lib;damage.lib;fedeas.lib;drain.lib;reliability.lib;database.lib;renderer.lib;blas.lib;lapack.lib;feap.lib;arpack.lib;umfpack.lib;actor.lib;analysis.lib;cblas.lib;convergence.lib;domain.lib;element.lib;graph.lib;material.lib;matrix.lib;modelbuilder.lib;recorder.lib;superLU.lib;system.lib;tagged.lib;utility.lib;optimization.lib;tcl85.lib;tk85.lib;libm.lib;ifconsol.lib;libifcoremt.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\..\bin/openSeesTk.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>c:\program Files\tcl\lib;..\..\lib\debug;..\..\lib;..\..\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>c:\tcl\lib;..\..\lib\debug;..\..\lib;..\..\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..\..\bin/openSeesTk.pdb</ProgramDatabaseFile>
@@ -186,6 +192,14 @@
       <ProgramDataBaseFileName>.\..\..\obj\openSeesTK\debug/</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>cudart_static.lib;cuda.lib;cula_sparse.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>cudart_static.lib;cuda.lib;cula_sparse.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\tcl\commands.cpp" />

@@ -27,21 +27,21 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\Houbolt.cpp" />
+    <ClCompile Include="..\..\..\SRC\analysis\integrator\KRAlphaExplicit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\ParkLMS3.cpp" />
     <ClCompile Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="..\..\..\SRC\analysis\integrator\CollocationHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\HHTHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\Houbolt.h" />
+    <ClInclude Include="..\..\..\SRC\analysis\integrator\KRAlphaExplicit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\NewmarkHSIncrLimit.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\ParkLMS3.h" />
     <ClInclude Include="..\..\..\SRC\analysis\integrator\PFEMIntegrator.h" />
