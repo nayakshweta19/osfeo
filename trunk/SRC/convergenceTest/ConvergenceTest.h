@@ -19,12 +19,14 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2005/12/15 00:19:28 $
+// $Date: 2005-12-15 00:19:28 $
 // $Source: /usr/local/cvs/OpenSees/SRC/convergenceTest/ConvergenceTest.h,v $
                                                                         
                                                                         
 #ifndef ConvergenceTest_h
 #define ConvergenceTest_h
+
+#define OPS_MAXTOL 1.7e307
 
 // Written: fmk 
 // Date: 09/98

@@ -50,6 +50,7 @@ OPS_NewConcreteDPM2()
 {
   if (numConcreteDPM2 == 0) {
     numConcreteDPM2++;
+    //opserr << "ConcreteDPM2 nDmaterial - Written: Ning Li, Tianjin University, China\n";
   }
 
   // Pointer to a nD material that will be returned
@@ -75,7 +76,7 @@ OPS_NewConcreteDPM2()
 
   numData = numRemainingArgs - 1;
   if (OPS_GetDouble(&numData, dData) != 0) {
-    opserr << "Invalid Arg: NDMaterial ConcreteDPM2 tag? fc? ft? epsc0? <ecc? nu? AHard? BHard? CHard? DHard? yieldHardInitial? ASoft? helem? href?>" << endln;
+    opserr << "Invalid args: NDMaterial ConcreteDPM2 tag? fc? ft? epsc0? <ecc? nu? AHard? BHard? CHard? DHard? yieldHardInitial? ASoft? helem? href?>" << endln;
     return 0;	
   }
   
@@ -89,10 +90,11 @@ OPS_NewConcreteDPM2()
   double DHard = 1.e-6;
   double ASoft = 15.;
   double helem = 0.;
-  double href = 0.;
+
 #ifdef SOPHISTICATED_SIZEDEPENDENT_ADJUSTMENT
-  
+  double href = 0.;
 #endif
+
   if (numRemainingArgs == 4) {
     theMaterial = new ConcreteDPM2(tag,
                                     dData[0],

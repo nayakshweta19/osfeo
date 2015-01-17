@@ -163,10 +163,13 @@ RELIABILITY_OBJS = $(FE)/domain/pattern/DiscretizedRandomProcessSeries.o \
 		$(FE)/reliability/domain/filter/StandardLinearOscillatorVelocityFilter.o \
 		$(FE)/reliability/domain/filter/KooFilter.o \
 		$(FE)/reliability/domain/filter/DeltaFilter.o \
+        $(FE)/reliability/domain/storage/ReliabilityStorage.o \
+        $(FE)/reliability/domain/storage/FORMStorage.o \
 		$(FE)/reliability/FEsensitivity/SensitivityAlgorithm.o \
 		$(FE)/reliability/FEsensitivity/SensitivityIntegrator.o \
 		$(FE)/reliability/FEsensitivity/StaticSensitivityIntegrator.o \
 		$(FE)/reliability/FEsensitivity/NewmarkSensitivityIntegrator.o \
+		$(FE)/reliability/FEsensitivity/PFEMSensitivityIntegrator.o \
 		$(FE)/reliability/tcl/TclReliabilityBuilder.o 
 
 # Compilation control

@@ -43,7 +43,7 @@
 // All code specific to LimitStateMaterial seperated by ////////////////
 
 #include <LimitStateMaterial.h>
-#include <G3Globals.h>
+#include <OPS_Globals.h>
 #include <math.h>
 #include <float.h>
 #include <Channel.h>

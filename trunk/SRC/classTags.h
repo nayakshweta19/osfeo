@@ -18,9 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5835 $
-// $Revision: 5848 $
-// $Date: 2014-12-09 03:07:07 +0800 (鏄熸湡浜�, 09 鍗佷簩鏈� 2014) $
+// $Revision: 5869 $
+// $Date: 2015-01-13 08:13:33 +0800 (Tue, 13 Jan 2015) $
 
 // Written: fmk
 // Revision: A
@@ -419,6 +418,10 @@
 #define ND_TAG_ManzariDafalias                  14012
 #define ND_TAG_ManzariDafalias3D                14013
 #define ND_TAG_ManzariDafaliasPlaneStrain       14014
+// Manzari Dafalias material - A. Ghofrani
+#define ND_TAG_ManzariDafaliasRO                14015
+#define ND_TAG_ManzariDafalias3DRO              14016
+#define ND_TAG_ManzariDafaliasPlaneStrainRO     14017
 
 #define ND_TAG_ReinforcedConcretePlaneStress  104
 #define ND_TAG_FAReinforcedConcretePlaneStress  105
@@ -672,7 +675,7 @@
 #define ELE_TAG_PFEMElement3D          141
 #define ELE_TAG_PFEMElement2DCompressible 142
 #define ELE_TAG_PFEMElement2DBubble       143
-#define ELE_TAG_PFEMElement2D73           144
+#define ELE_TAG_PFEMElement2Dmini         144
 #define ELE_TAG_ElasticTimoshenkoBeam2d   145
 #define ELE_TAG_ElasticTimoshenkoBeam3d   146
 #define ELE_TAG_ElastomericBearingUFRP2d  147
@@ -789,7 +792,8 @@
 #define CNSTRNT_TAG_MP_Joint2D          5
 #define CNSTRNT_TAG_MP_SimpleJoint2D    6
 #define CNSTRNT_TAG_MP_Joint3D          7
-#define CNSTRNT_TAG_Pressure_Constraint    8
+#define CNSTRNT_TAG_Pressure_Constraint 8
+
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define CNSTRNT_TAG_MD_Constraint       9
 // Adding HAJJAR_COMPOSITE: End /////////

@@ -949,7 +949,7 @@ int
 ShellMITC4Thermal::addInertiaLoadToUnbalance(const Vector &accel)
 {
   int tangFlag = 1 ;
-
+  static Vector r(24);
   int i;
 
   int allRhoZero = 0;
@@ -961,17 +961,18 @@ ShellMITC4Thermal::addInertiaLoadToUnbalance(const Vector &accel)
   if (allRhoZero == 0) 
     return 0;
 
+  formInertiaTerms(tangFlag);
+
   int count = 0;
   for (i=0; i<4; i++) {
     const Vector &Raccel = nodePointers[i]->getRV(accel);
     for (int j=0; j<6; j++)
-      resid(count++) = Raccel(i);
+      r(count++) = Raccel(j);
   }
 
-  formInertiaTerms( tangFlag ) ;
   if (load == 0) 
     load = new Vector(24);
-  load->addMatrixVector(1.0, mass, resid, -1.0);
+  load->addMatrixVector(1.0, mass, r, -1.0);
 
   return 0;
 }

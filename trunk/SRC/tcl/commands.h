@@ -207,6 +207,9 @@ sensNodeVel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv
 int 
 sensNodeAccel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
+int
+sensNodePressure(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
 int 
 sensSectionForce(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
@@ -226,6 +229,9 @@ stopTimer(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
 rayleighDamping(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
+
+int
+modalDamping(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);
 
 int 
 setElementRayleighDampingFactors(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv);

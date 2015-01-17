@@ -46,6 +46,7 @@
 
 #define DYNCON_TOL 1.e-6
 #define keep_track_of_dissipated_energy
+#define SOPHISTICATED_SIZEDEPENDENT_ADJUSTMENT
 
 class ConcreteDPM2 : public NDMaterial
 {
@@ -381,7 +382,7 @@ class ConcreteDPM2 : public NDMaterial
     enum ConcreteDPM2_ReturnResult { RR_NotConverged, RR_Converged };
     ConcreteDPM2_ReturnResult returnResult;
 
-    double fc, ft, ecc, e0, href,epsc0, E;
+    double fc, ft, ecc, e0, href, epsc0, E;
 
     /// Parameter of the ductilityMeasure of the plasticity model.
     double AHard;
@@ -438,11 +439,6 @@ class ConcreteDPM2 : public NDMaterial
     double ef;/// Control parameter for the exponential softening law.
 
     Vector effectiveStress;    /// Stress and its deviatoric part.
-
-#ifdef SOPHISTICATED_SIZEDEPENDENT_ADJUSTMENT
-    /// Material parameter of the size-dependent adjustment
-    double href;    /// (reference element size)
-#endif
 
   private:
     // Material parameters
