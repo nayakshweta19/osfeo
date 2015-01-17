@@ -259,6 +259,18 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS5.cpp">
       <Filter>fullGEN</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS4.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS6.cpp">
+      <Filter>fullGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSOE.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSolver.cpp">
+      <Filter>diagonal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h">
@@ -455,6 +467,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS5.h">
       <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS4.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS6.h">
+      <Filter>fullGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSOE.h">
+      <Filter>diagonal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSolver.h">
+      <Filter>diagonal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

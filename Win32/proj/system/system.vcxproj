@@ -28,21 +28,21 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\OTHER\CULA\S5\include;..\..\..\OTHER\MUMPS_4.10.0\include;C:\MPICH2\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\MUMPS_4.7.3\libseq;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\mumps;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\CUDA\v6.5\include;..\..\..\OTHER\CULA;..\..\..\OTHER\MUMPS_4.10.0\include;C:\MPICH2\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\MUMPS_4.7.3\libseq;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\mumps;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -114,7 +114,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\..\OTHER\CULA\S5\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\CUDA\v6.5;..\..\..\OTHER\CULA;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Program Files\tcl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -154,7 +154,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>..\..\..\OTHER\CULA\S5\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Tcl64\include;c:\MPICH2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\CUDA\v6.5;..\..\..\OTHER\CULA;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Tcl64\include;c:\MPICH2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderOutputFile>.\..\..\obj\system\release/system.pch</PrecompiledHeaderOutputFile>
@@ -179,7 +179,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>..\..\..\OTHER\CULA\S5\include;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Tcl64\include;c:\MPICH2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OTHER\CUDA\v6.5;..\..\..\OTHER\CULA;..\..\..\SRC\system_of_eqn\linearSOE\mumps;..\..\..\OTHER\MUMPS_4.10.0\include;..\..\..\src\element;..\..\..\SRC\domain\node;..\..\..\SRC\domain\component;..\..\..\SRC\domain\constraints;..\..\..\OTHER\CSPARSE;..\..\..\SRC\system_of_eqn\ritzSOE;..\..\..\src\utility;..\..\..\OTHER\SuperLU_4.1\SRC;..\..\..\src\system_of_eqn\linearSOE\diagonal;..\..\..\src\system_of_eqn\linearSOE;..\..\..\src\system_of_eqn\linearSOE\sparseSYM;..\..\..\src\analysis\integrator;..\..\..\src\analysis\fe_ele;..\..\..\src\analysis\dof_grp;..\..\..\src\system_of_eqn\eigenSOE;..\..\..\src\handler;..\..\..\symSparse;..\..\..\src\analysis\model\simple;..\..\..\src\system_of_eqn\linearSOE\umfGEN;..\..\..\src\system_of_eqn\linearSOE\fullGEN;..\..\..\src\system_of_eqn\linearSOE\sparseGEN;..\..\..\src\system_of_eqn\linearSOE\bandSPD;..\..\..\src\system_of_eqn\linearSOE\bandGEN;..\..\..\src\domain\domain;..\..\..\src\analysis\model;..\..\..\src\actor\objectBroker;..\..\..\src\actor\channel;..\..\..\src\tagged;..\..\..\src\graph\graph;..\..\..\src\system_of_eqn\linearSOE\profileSPD;..\..\..\src;..\..\..\src\matrix;..\..\..\src\actor\actor;..\..\..\src\system_of_eqn;..\..\..\src\nDarray;..\..\..\src\system_of_eqn\linearSOE\itpack;..\..\..\src\system_of_eqn\linearSOE\cg;..\..\..\other\SuperLU_3.0\SRC;c:\Tcl64\include;c:\MPICH2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\..\..\obj\system\debug/</AssemblerListingLocation>
       <ObjectFileName>.\..\..\obj\system\debug/</ObjectFileName>
@@ -188,6 +188,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSOE.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSolver.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.cpp" />
@@ -201,7 +203,9 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSolver.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSOE.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS4.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS5.cpp" />
+    <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS6.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMCompressibleLinSOE.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMCompressibleSolver.cpp" />
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMLinSOE.cpp" />
@@ -259,6 +263,8 @@
     <ClCompile Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\DistributedDiagonalSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSOE.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\diagonal\MPIDiagonalSolver.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\DomainSolver.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSOE.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\eigenSOE\EigenSolver.h" />
@@ -272,7 +278,9 @@
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\mumps\MumpsSolver.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSOE.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\profileSPD\SProfileSPDLinSolver.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS4.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS5.h" />
+    <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\CulaSparseSolverS6.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMCompressibleLinSOE.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMCompressibleSolver.h" />
     <ClInclude Include="..\..\..\SRC\system_of_eqn\linearSOE\sparseGEN\PFEMLinSOE.h" />

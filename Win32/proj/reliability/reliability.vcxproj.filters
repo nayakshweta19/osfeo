@@ -594,6 +594,9 @@
     <ClCompile Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.cpp">
       <Filter>domain\distributions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\PFEMSensitivityIntegrator.cpp">
+      <Filter>FEsensitivity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\reliability\analysis\curvature\CurvatureFitting.h">
@@ -1087,6 +1090,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\reliability\domain\distributions\UserDefinedRV.h">
       <Filter>domain\distributions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\PFEMSensitivityIntegrator.h">
+      <Filter>FEsensitivity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

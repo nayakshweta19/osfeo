@@ -28,21 +28,21 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>Intel C++ Compiler XE 14.0</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -360,6 +360,7 @@
     <ClCompile Include="..\..\..\SRC\reliability\domain\performanceFunction\PerformanceFunctionIter.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\domain\storage\FORMStorage.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\domain\storage\ReliabilityStorage.cpp" />
+    <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\PFEMSensitivityIntegrator.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.cpp" />
     <ClCompile Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.cpp" />
@@ -526,6 +527,7 @@
     <ClInclude Include="..\..\..\SRC\reliability\domain\performanceFunction\PerformanceFunctionIter.h" />
     <ClInclude Include="..\..\..\SRC\reliability\domain\storage\FORMStorage.h" />
     <ClInclude Include="..\..\..\SRC\reliability\domain\storage\ReliabilityStorage.h" />
+    <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\PFEMSensitivityIntegrator.h" />
     <ClInclude Include="..\..\..\SRC\reliability\tcl\TclReliabilityBuilder.h" />
     <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\NewmarkSensitivityIntegrator.h" />
     <ClInclude Include="..\..\..\SRC\reliability\FEsensitivity\SensitivityAlgorithm.h" />

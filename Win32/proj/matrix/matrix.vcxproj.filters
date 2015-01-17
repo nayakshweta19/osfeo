@@ -41,6 +41,12 @@
     <ClCompile Include="..\..\..\SRC\matrix\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\nDarray\Cosseratstresst.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Src\nDarray\basics.h">
@@ -74,6 +80,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\matrix\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\nDarray\Cosseratstresst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -950,6 +950,27 @@
     <ClCompile Include="..\..\..\SRC\element\feap\fElmt03.cpp">
       <Filter>feap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dThermalNUT.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericX.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\HDR.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\LeadRubberX.cpp">
+      <Filter>elastomericBearing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\UWelements\PileToe3D.cpp">
+      <Filter>UWelements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelNormalFrcDep.cpp">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\HUelements\YamamotoBiaxialHDR.cpp">
+      <Filter>HUelements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\SRC\element\Element.h">
@@ -1581,6 +1602,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\feap\fElmt03.h">
       <Filter>feap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\DispBeamColumn2dThermalNUT.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\ElastomericX.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\HDR.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\elastomericBearing\LeadRubberX.h">
+      <Filter>elastomericBearing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\UWelements\PileToe3D.h">
+      <Filter>UWelements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\frictionBearing\frictionModel\VelNormalFrcDep.h">
+      <Filter>fictionBearing\frictionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\HUelements\YamamotoBiaxialHDR.h">
+      <Filter>HUelements</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
