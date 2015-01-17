@@ -40,7 +40,7 @@
 #include <FEM_ObjectBroker.h>
 #include <Renderer.h>
 #include <math.h>
-#include <G3Globals.h>
+#include <OPS_Globals.h>
 #include <ElementResponse.h>
 #include <ElementalLoad.h>
 #include <iostream>

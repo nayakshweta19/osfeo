@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.3 $
-// $Date: 2003/04/02 22:02:33 $
+// $Date: 2003-04-02 22:02:33 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/algorithm/equiSolnAlgo/RegulaFalsiLineSearch.cpp,v $
 
 // Written: fmk 
@@ -121,6 +121,10 @@ RegulaFalsiLineSearch::search(double s0,
 
     
     //update the incremental difference in response and determine new unbalance
+
+    if (eta == etaJ)
+      break; // no change in response
+
     *x = dU;
     *x *= eta-etaJ;
 	    

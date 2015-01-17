@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.4 $
-// $Date: 2003/02/14 23:01:02 $
+// $Date: 2003-02-14 23:01:02 $
 // $Source: /usr/local/cvs/OpenSees/SRC/domain/region/MeshRegion.cpp,v $
                                                                         
                                                                         

@@ -51,7 +51,7 @@
 #include <EPState.h>
 
 #include <Channel.h>
-#include <G3Globals.h>
+#include <OPS_Globals.h>
 
 //#include <DP_YS.h>
 //#include <DP_PS.h>

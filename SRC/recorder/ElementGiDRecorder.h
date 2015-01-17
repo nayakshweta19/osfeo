@@ -58,7 +58,9 @@ class ElementGiDRecorder: public Recorder
 		    bool echoTime, 
 		    Domain &theDomain, 
 		    OPS_Stream &theOutputHandler,
-		    double deltaT = 0.0);
+		    double deltaT,
+            int ndf,
+            int ndm);
 
     ~ElementGiDRecorder();
 
@@ -74,6 +76,9 @@ class ElementGiDRecorder: public Recorder
 
     
   private:	
+    int ndf;
+    int ndm;
+
     int initialize(void);
 
     int numEle;

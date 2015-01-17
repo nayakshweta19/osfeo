@@ -43,7 +43,7 @@
 #include <Message.h>
 #include <Channel.h>
 #include <FEM_ObjectBroker.h>
-
+#include <ModelBuilder.h>
 #include <elementAPI.h>
 
 ElementGiDRecorder::ElementGiDRecorder()
@@ -63,7 +63,9 @@ ElementGiDRecorder::ElementGiDRecorder(ID &eleIDs,
 				 bool echoTime, 
 				 Domain &theDom, 
 				 OPS_Stream &theOutputHandler,
-				 double dT)
+				 double dT,
+                 int ndf,
+                 int ndm)
 :Recorder(RECORDER_TAGS_ElementGiDRecorder),
  numEle(0), eleID(0), theResponses(0), 
  theDomain(&theDom), theOutputHandler(&theOutputHandler),
@@ -71,7 +73,6 @@ ElementGiDRecorder::ElementGiDRecorder(ID &eleIDs,
  initializationDone(false), responseArgs(0), numArgs(0), addColumnInfo(0),
  hasLinear(false), hasTri3(false), hasQuad4(false), hasQuad8(false), hasQuad9(false), hasBrick(false)
 {
-
   if (eleIDs != 0) {
     numEle = eleIDs.Size();
     eleID = new ID(eleIDs);
@@ -159,8 +160,6 @@ ElementGiDRecorder::record(int commitTag, double timeStamp)
     int loc = 0;
     //if (echoTimeFlag == true) 
     //  (*data)(loc++) = timeStamp;
-    int ndf = OPS_GetNDF(); 
-	int ndm = OPS_GetNDM();
 	char outputData[100];
 	// **** Linear Elements - 2 Nodes
     if (hasLinear == 1) {

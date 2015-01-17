@@ -361,7 +361,7 @@ class ConcreteDPM1 : public NDMaterial
     enum Concrete_VertexType { VT_Regular, VT_Tension, VT_Compression };
     Concrete_VertexType vertexType;
 
-    double fc, ft, epsc0, E, ecc;
+    double fc, ft, epsc0, E, ecc, href;
 
     /// Parameter of the ductilityMeasure of the plasticity model.
     double AHard;
@@ -416,12 +416,6 @@ class ConcreteDPM1 : public NDMaterial
 
     /// Stress and its deviatoric part.
     Vector effectiveStress;
-
-#ifdef SOPHISTICATED_SIZEDEPENDENT_ADJUSTMENT
-    /// Material parameter of the size-dependent adjustment
-    /// (reference element size)
-    double href;
-#endif
 
   private:
     // Material parameters

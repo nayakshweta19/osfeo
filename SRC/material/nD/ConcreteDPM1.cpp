@@ -50,6 +50,7 @@ OPS_NewConcreteDPM1()
 {
   if (numConcreteDPM1 == 0) {
     numConcreteDPM1++;
+    //opserr << "ConcreteDPM1 nDmaterial - Written: Ning Li, Tianjin University, China\n";
   }
 
   // Pointer to a nD material that will be returned
@@ -89,9 +90,11 @@ OPS_NewConcreteDPM1()
   double DHard = 1.e-6;
   double ASoft = 15.;
   double helem = 0.;
+
 #ifdef SOPHISTICATED_SIZEDEPENDENT_ADJUSTMENT
   double href = 0.;
 #endif
+
   if (numRemainingArgs == 4) {
     theMaterial = new ConcreteDPM1(tag,
                                     dData[0],

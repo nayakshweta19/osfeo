@@ -359,6 +359,7 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 //#include <ParameterPositionerIter.h>
 #include <NewNewmarkSensitivityIntegrator.h>
 #include <NewStaticSensitivityIntegrator.h>
+#include <PFEMSensitivityIntegrator.h>
 //#include <OrigSensitivityAlgorithm.h>
 #include <NewSensitivityAlgorithm.h>
 #include <ReliabilityStaticAnalysis.h>
@@ -518,6 +519,7 @@ static EigenSOE *theEigenSOE = 0;
 static StaticAnalysis *theStaticAnalysis = 0;
 static DirectIntegrationAnalysis *theTransientAnalysis = 0;
 static VariableTimeStepDirectIntegrationAnalysis *theVariableTimeStepTransientAnalysis = 0;
+static int numEigen = 0;
 #ifdef _PFEM
 static PFEMAnalysis* thePFEMAnalysis = 0;
 #endif
@@ -536,6 +538,9 @@ ReliabilityDirectIntegrationAnalysis *theReliabilityTransientAnalysis = 0;
 
 static NewmarkSensitivityIntegrator *theNSI = 0;
 static NewNewmarkSensitivityIntegrator *theNNSI = 0;
+#ifdef _PFEM
+static PFEMSensitivityIntegrator* thePFEMSI = 0;
+#endif
 //static SensitivityIntegrator *theSensitivityIntegrator = 0;
 //static NewmarkSensitivityIntegrator *theNSI = 0;
 
@@ -934,7 +939,6 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "nodePressure", &nodePressure,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
-
   Tcl_CreateCommand(interp, "nodeBounds", &nodeBounds,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "start", &startTimer,
@@ -942,6 +946,8 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
   Tcl_CreateCommand(interp, "stop", &stopTimer,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "rayleigh", &rayleighDamping,
+    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+  Tcl_CreateCommand(interp, "modalDamping", &modalDamping,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "setElementRayleighDampingFactors",
     &setElementRayleighDampingFactors,
@@ -1054,6 +1060,8 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
   Tcl_CreateCommand(interp, "sensNodeAccel", &sensNodeAccel,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "sensSectionForce", &sensSectionForce,
+    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+  Tcl_CreateCommand(interp, "sensNodePressure", &sensNodePressure,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
 
   theSensitivityAlgorithm = 0;
@@ -1322,6 +1330,9 @@ sensitivityIntegrator(ClientData clientData, Tcl_Interp *interp, int argc, TCL_C
     //			theSensitivityIntegrator = theNSI;
     //			return TCL_OK;
     //		}
+#ifdef _PFEM
+    if (thePFEMSI == 0) {
+#endif
     if (theNSI == 0 && theNNSI == 0) {
       opserr << "ERROR: No sensitivity integrator has been specified. " << endln;
       return TCL_ERROR;
@@ -1338,6 +1349,13 @@ sensitivityIntegrator(ClientData clientData, Tcl_Interp *interp, int argc, TCL_C
       opserr << "ERROR: Both newmark and newnewmakr sensitivity integratorNo sensitivity integrator has been specified. " << endln;
       return TCL_ERROR;
     }
+#ifdef _PFEM
+    }
+    else {
+      theSensitivityIntegrator = thePFEMSI;
+      return TCL_OK;
+    }
+#endif
   }
   //	else if (strcmp(argv[1],"Dynamic") == 0) {  
   //
@@ -1473,6 +1491,9 @@ wipeAnalysis(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
   theStaticAnalysis = 0;
   theTransientAnalysis = 0;
   theVariableTimeStepTransientAnalysis = 0;
+#ifdef _PFEM
+  thePFEMAnalysis = 0;
+#endif
   theTest = 0;
 
   // AddingSensitivity:BEGIN /////////////////////////////////////////////////
@@ -2813,13 +2834,11 @@ specifySOE(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
     if (argc <= 2) {
       PFEMSolver* theSolver = new PFEMSolver();
       theSOE = new PFEMLinSOE(*theSolver);
-    }
-    else if (strcmp(argv[2], "-compressible") == 0) {
+    } else if (strcmp(argv[2], "-quasi-incompressible") == 0) {
       PFEMCompressibleSolver* theSolver = new PFEMCompressibleSolver();
       theSOE = new PFEMCompressibleLinSOE(*theSolver);
     }
 #endif
-
   }
 
 #ifdef _WIN32
@@ -3922,6 +3941,8 @@ TCL_Char **argv)
   double tolp2 = 0.0;
   double tolrel = 0.0;
   double tolprel = 0.0;
+  double maxTol = OPS_MAXTOL;
+
   int numIter = 0;
   int printIt = 0;
   int normType = 2;
@@ -4064,6 +4085,16 @@ TCL_Char **argv)
       if (Tcl_GetInt(interp, argv[4], &normType) != TCL_OK)
         return TCL_ERROR;
     }
+    else if (argc == 6) {
+      if (Tcl_GetInt(interp, argv[2], &numIter) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[3], &printIt) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetInt(interp, argv[4], &normType) != TCL_OK)
+        return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[5], &maxTol) != TCL_OK)
+        return TCL_ERROR;
+    }
   }
 
   ConvergenceTest *theNewTest = 0;
@@ -4081,16 +4112,15 @@ TCL_Char **argv)
       return TCL_ERROR;
     }
     if (strcmp(argv[1], "NormUnbalance") == 0)
-      theNewTest = new CTestNormUnbalance(tol, numIter, printIt, normType, maxIncr);
-
+      theNewTest = new CTestNormUnbalance(tol, numIter, printIt, normType, maxIncr, maxTol);
     else if (strcmp(argv[1], "NormDispIncr") == 0)
-      theNewTest = new CTestNormDispIncr(tol, numIter, printIt, normType);
+      theNewTest = new CTestNormDispIncr(tol, numIter, printIt, normType, maxTol);
     else if (strcmp(argv[1], "NormDispAndUnbalance") == 0)
       theNewTest = new NormDispAndUnbalance(tol, tol2, numIter, printIt, normType, maxIncr);
     else if (strcmp(argv[1], "NormDispOrUnbalance") == 0)
       theNewTest = new NormDispOrUnbalance(tol, tol2, numIter, printIt, normType, maxIncr);
     else if (strcmp(argv[1], "EnergyIncr") == 0)
-      theNewTest = new CTestEnergyIncr(tol, numIter, printIt, normType);
+      theNewTest = new CTestEnergyIncr(tol, numIter, printIt, normType, maxTol);
     else if (strcmp(argv[1], "RelativeNormUnbalance") == 0)
       theNewTest = new CTestRelativeNormUnbalance(tol, numIter, printIt, normType);
     else if (strcmp(argv[1], "RelativeNormDispIncr") == 0)
@@ -4856,6 +4886,27 @@ TCL_Char **argv)
       theReliabilityTransientAnalysis->setIntegrator(*theTransientIntegrator);
   }
 
+#ifdef _PFEM
+  else if (strcmp(argv[1], "PFEMWithSensitivity") == 0) {
+    int flag = 0;
+    if (argc > 4) {
+      if (strcmp(argv[2], "-assemble") != TCL_OK) {
+        opserr << "WARNING: Error in input to PFEMSensitivityIntegrator\n";
+        return TCL_ERROR;
+      }
+      if (Tcl_GetInt(interp, argv[3], &flag) != TCL_OK) {
+        opserr << "WARNING: Error in input to PFEMSensitivityIntegrator\n";
+        return TCL_ERROR;
+      }
+    }
+
+    thePFEMSI = new PFEMSensitivityIntegrator(flag);
+    theTransientIntegrator = thePFEMSI;
+    if (theTransientAnalysis != 0) {
+      theTransientAnalysis->setIntegrator(*theTransientIntegrator);
+    }
+  }
+#endif 
 
 #endif
 
@@ -5866,7 +5917,7 @@ TCL_Char **argv)
   }
 
   // check argv[loc] for number of modes
-  int numEigen;
+  //int numEigen;
   if ((Tcl_GetInt(interp, argv[loc], &numEigen) != TCL_OK) || numEigen < 0) {
     opserr << "WARNING eigen numModes?  - illegal numModes\n";
     return TCL_ERROR;
@@ -6033,7 +6084,8 @@ TCL_Char **argv)
   int typeNumberer = 0; // 0 - PlainNumberer
   int type = 0; // 0 - Matrix Output for M and K
 
-  int numRitz = 0;
+  //numRitz = numEigen;
+
   int isfile = 0; // 1 - file output; 0 - screen interpret output (default)
   // Check type of transformation type
   int loc = 1;
@@ -6054,7 +6106,7 @@ TCL_Char **argv)
     if ((strcmp(argv[loc], "N") == 0) || (strcmp(argv[loc], "-N") == 0) ||
       (strcmp(argv[loc], "n") == 0) || (strcmp(argv[loc], "-n") == 0)) {
       loc++;
-      if ((Tcl_GetInt(interp, argv[loc], &numRitz) != TCL_OK) || numRitz < 0) {
+      if ((Tcl_GetInt(interp, argv[loc], &numEigen) != TCL_OK) || numEigen < 0) {
         opserr << "error ritz numRitzs?  - illegal numRitzs\n";
         return TCL_ERROR;
       }
@@ -6155,7 +6207,7 @@ TCL_Char **argv)
     *theRitzSOE,
     *theRitzIntegrator);
 
-  int requiredDataSize = 20 * numRitz;
+  int requiredDataSize = 20 * numEigen; //= 20*numRitz
   if (requiredDataSize > resDataSize) {
     if (resDataPtr != 0) {
       delete[] resDataPtr;
@@ -6169,7 +6221,7 @@ TCL_Char **argv)
 
   // perform the Ritz analysis & store the results with the interpreter
 
-  if (theRitzAnalysis->analyze(numRitz) == 0) {
+  if (theRitzAnalysis->analyze(numEigen) == 0) { //numEigen = numRitz
     //char *eigenvalueS = new char[15 * numEigen];
     //const Vector &eigenvalues = theDomain.getEigenvalues();
     //int cnt = 0;
@@ -7251,15 +7303,16 @@ nodePressure(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **arg
   double pressure = 0.0;
   Pressure_Constraint* thePC = theDomain.getPressure_Constraint(tag);
   if (thePC != 0) {
-    int ptag = thePC->getPressureNode();
-    Node* pNode = theDomain.getNode(ptag);
-    if (pNode != 0) {
-      const Vector& vel = pNode->getVel();
-      if (vel.Size() > 0)  {
-        pressure = vel(0);
-        opserr << "pressure = " << pressure << "\n";
-      }
-    }
+    pressure = thePC->getPressure();
+    // int ptag = thePC->getPressureNode();
+    // Node* pNode = theDomain.getNode(ptag);
+    // if(pNode != 0) {
+    //     const Vector& vel = pNode->getVel();
+    //     if(vel.Size() > 0)  {
+    //         pressure = vel(0);
+    //         // opserr<<"pressure = "<<pressure<<"\n";
+    //     }
+    // }
   }
   char buffer[80];
   sprintf(buffer, "%35.20f", pressure);
@@ -7608,6 +7661,54 @@ sensNodeAccel(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 
   char buffer[40];
   sprintf(buffer, "%35.20f", value);
+
+  Tcl_SetResult(interp, buffer, TCL_VOLATILE);
+
+  return TCL_OK;
+}
+
+int
+sensNodePressure(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+
+  // make sure at least one other argument to contain type of system
+  if (argc < 3) {
+    interp->result = "WARNING want - sensNodePressure nodeTag? paramTag?\n";
+    return TCL_ERROR;
+  }
+
+  int tag, paramTag;
+
+  if (Tcl_GetInt(interp, argv[1], &tag) != TCL_OK) {
+    opserr << "WARNING sensNodePressure nodeTag? paramTag?- could not read nodeTag? ";
+    return TCL_ERROR;
+  }
+  if (Tcl_GetInt(interp, argv[2], &paramTag) != TCL_OK) {
+    opserr << "WARNING sensNodePressure paramTag? paramTag?- could not read paramTag? ";
+    return TCL_ERROR;
+  }
+
+  double dp = 0.0;
+  Pressure_Constraint* thePC = theDomain.getPressure_Constraint(tag);
+  if (thePC != 0) {
+    // int ptag = thePC->getPressureNode();
+    // Node* pNode = theDomain.getNode(ptag);
+    Node* pNode = thePC->getPressureNode();
+    if (pNode != 0) {
+
+      Parameter *theParam = theDomain.getParameter(paramTag);
+      if (theParam == 0) {
+        opserr << "sensNodePressure: parameter " << paramTag << " not found" << endln;
+        return TCL_ERROR;
+      }
+
+      int gradIndex = theParam->getGradIndex();
+      dp = pNode->getVelSensitivity(1, gradIndex);
+    }
+  }
+
+  char buffer[40];
+  sprintf(buffer, "%35.20f", dp);
 
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
@@ -8383,6 +8484,37 @@ rayleighDamping(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **
   return TCL_OK;
 }
 
+int
+modalDamping(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
+{
+  /*
+  if (argc < 2) {
+  opserr << "WARNING modalDamping ?factor - not enough arguments to command\n";
+  return TCL_ERROR;
+  }
+  if (numEigen == 0 || theEigenSOE == 0) {
+  opserr << "WARINING - modalDmping - eigen command needs to be called first - NO MODAL DAMPING APPLIED\n ";
+  }
+  double factor;
+  //  double numModes;
+  if (Tcl_GetDouble(interp, argv[1], &factor) != TCL_OK) {
+  opserr << "WARNING rayleigh alphaM? betaK? betaK0? betaKc? - could not read betaK? \n";
+  return TCL_ERROR;
+  }
+  if (theTransientIntegrator != 0) {
+  Vector modalDampingValues(numEigen);
+  modalDampingValues = factor;
+  for (int i=0; i<numEigen; i++)
+  modalDampingValues[i] = factor;
+  opserr << "factor: " << factor << endln;
+
+  theTransientIntegrator->setEigenSOE(theEigenSOE);
+  theTransientIntegrator->setModalDampingFactors(modalDampingValues);
+  opserr << "modalDamping: numEigen: " << numEigen << " factors: " << modalDampingValues;
+  }
+  */
+  return TCL_OK;
+}
 
 int
 setElementRayleighDampingFactors(ClientData clientData,
@@ -8591,9 +8723,9 @@ getParamValue(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **ar
 
   Parameter *theEle = theDomain.getParameter(paramTag);
 
-  char buffer[20];
+  char buffer[40];
 
-  sprintf(buffer, "%f", theEle->getValue());
+  sprintf(buffer, "%35.20f", theEle->getValue());
   Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 
   return TCL_OK;
@@ -9176,14 +9308,14 @@ int stripOpenSeesXML(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Ch
       if (strstr(inputLine, "</Data>") != 0)
         spitData = false;
       else
-        theOutputDataFile << line << endln;
+        ;//  theOutputDataFile << line << endln;
     }
     else {
       const char *inputLine = line.c_str();
       if (strstr(inputLine, "<Data>") != 0)
         spitData = true;
       else if (outputDescriptiveFile != 0)
-        theOutputDescriptiveFile << line << endln;
+        ;//  theOutputDescriptiveFile << line << endln;
     }
   }
 

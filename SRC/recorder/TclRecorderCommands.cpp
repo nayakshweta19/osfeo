@@ -64,7 +64,7 @@
  #include <RemoveRecorder.h>
 #include <NodeGiDRecorder.h>      //neallee@tju.edu.cn
 #include <ElementGiDRecorder.h>   //neallee@tju.edu.cn
- //#include <TclModelBuilder.h>
+ #include <TclModelBuilder.h>
 
  #include <StandardStream.h>
  #include <DataFileStream.h>
@@ -2351,14 +2351,17 @@
        }
 
        theOutputStream->setPrecision(precision);
-
+       int ndf = OPS_GetNDF();
+       int ndm = OPS_GetNDM();
 	   (*theRecorder) = new ElementGiDRecorder(eleIDs, 
 					      data, 
 					      argc-eleData, 
 					      echoTime, 
 					      theDomain, 
 					      *theOutputStream,
-					      dT);
+					      dT,
+                          ndf,
+                          ndm);
 
        delete [] data;
      }
