@@ -53,7 +53,7 @@
 
 enum outputMode {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BINARY_STREAM, DATA_STREAM_CSV, TCP_STREAM};
 
-extern SimulationInformation *theSimulationInfo;
+extern SimulationInformation *theSimulationInfoPtr;
 extern ExperimentalSite *getExperimentalSite(int tag);
 extern ExperimentalSite *getExperimentalSiteFirst();
 extern ExperimentalSetup *getExperimentalSetup(int tag);
@@ -189,7 +189,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if (strcmp(argv[argi],"-file") == 0)  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM;
                 argi += 2;
             }
@@ -197,7 +197,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-csv") == 0) || (strcmp(argv[argi],"-fileCSV") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM_CSV;
                 argi += 2;
             }
@@ -205,7 +205,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-xml") == 0) || (strcmp(argv[argi],"-nees") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = XML_STREAM;
                 argi += 2;
             }	    
@@ -213,7 +213,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-binary") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = BINARY_STREAM;
                 argi += 2;
             }	    
@@ -409,7 +409,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if (strcmp(argv[argi],"-file") == 0)  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM;
                 argi += 2;
             }
@@ -417,7 +417,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-csv") == 0) || (strcmp(argv[argi],"-fileCSV") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM_CSV;
                 argi += 2;
             }
@@ -425,7 +425,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-xml") == 0) || (strcmp(argv[argi],"-nees") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = XML_STREAM;
                 argi += 2;
             }	    
@@ -433,7 +433,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-binary") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = BINARY_STREAM;
                 argi += 2;
             }	    
@@ -629,7 +629,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if (strcmp(argv[argi],"-file") == 0)  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM;
                 argi += 2;
             }
@@ -637,7 +637,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-csv") == 0) || (strcmp(argv[argi],"-fileCSV") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM_CSV;
                 argi += 2;
             }
@@ -645,7 +645,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-xml") == 0) || (strcmp(argv[argi],"-nees") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = XML_STREAM;
                 argi += 2;
             }	    
@@ -653,7 +653,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-binary") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = BINARY_STREAM;
                 argi += 2;
             }	    
@@ -849,7 +849,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if (strcmp(argv[argi],"-file") == 0)  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM;
                 argi += 2;
             }
@@ -857,7 +857,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-csv") == 0) || (strcmp(argv[argi],"-fileCSV") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = DATA_STREAM_CSV;
                 argi += 2;
             }
@@ -865,7 +865,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-xml") == 0) || (strcmp(argv[argi],"-nees") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = XML_STREAM;
                 argi += 2;
             }	    
@@ -873,7 +873,7 @@ int TclCreateExpRecorder(ClientData clientData, Tcl_Interp *interp, int argc,
             else if ((strcmp(argv[argi],"-binary") == 0))  {
                 fileName = argv[argi+1];
                 const char *pwd = OPS_GetInterpPWD();
-                theSimulationInfo->addOutputFile(fileName,pwd);
+                theSimulationInfoPtr->addOutputFile(fileName, pwd);
                 eMode = BINARY_STREAM;
                 argi += 2;
             }	    

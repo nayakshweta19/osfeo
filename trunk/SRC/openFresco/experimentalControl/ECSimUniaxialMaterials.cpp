@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 344 $
-// $Date: 2013-07-19 06:33:44 +0800 (星期五, 19 七月 2013) $
+// $Revision: 376 $
+// $Date: 2015-02-24 13:56:26 +0800 (星期二, 24 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimUniaxialMaterials.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
@@ -47,7 +47,7 @@ ECSimUniaxialMaterials::ECSimUniaxialMaterials(int tag,
             << "null specimen array passed.\n";
         exit(OF_ReturnType_failed);
     }
-
+    
     // allocate memory for the uniaxial materials
     theSpecimen = new UniaxialMaterial* [numMats];
     if (theSpecimen == 0)  {
@@ -55,7 +55,7 @@ ECSimUniaxialMaterials::ECSimUniaxialMaterials(int tag,
             << "failed to allocate pointers for uniaxial materials.\n";
         exit(OF_ReturnType_failed);
     }
-
+    
     // get copies of the uniaxial materials
     for (int i=0; i<numMats; i++)  {
         if (specimen[i] == 0) {
@@ -87,7 +87,7 @@ ECSimUniaxialMaterials::ECSimUniaxialMaterials(const ECSimUniaxialMaterials& ec)
             << "failed to allocate pointers for uniaxial materials.\n";
         exit(OF_ReturnType_failed);
     }
-
+    
     // get copies of the uniaxial materials
     for (int i=0; i<numMats; i++)  {
         if (ec.theSpecimen[i] == 0) {
@@ -427,7 +427,7 @@ void ECSimUniaxialMaterials::Print(OPS_Stream &s, int flag)
 int ECSimUniaxialMaterials::control()
 {
     int rValue = 0;
-
+    
     for (int i=0; i<numMats; i++)  {
         rValue += theSpecimen[i]->setTrialStrain((*ctrlDisp)(i),(*ctrlVel)(i));
     }

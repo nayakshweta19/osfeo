@@ -152,8 +152,8 @@ TclCommand_addGeomTransf(ClientData clientData, Tcl_Interp *interp,
       return TCL_ERROR;
     }
   }
-
-  else if  ( (NDM == 3 && NDF == 6) | ( NDM == 3 && NDF == 9  ) ) {
+  // for normal BC element;       for composite element;    for semiloof BC element
+  else if ((NDM == 3 && NDF == 6) | (NDM == 3 && NDF == 9) | (NDM == 3 && NDF == 5)) {
     int crdTransfTag;
     Vector vecxzPlane(3);                  // vector that defines local xz plane
     Vector jntOffsetI(3), jntOffsetJ(3);   // joint offsets in global coordinates

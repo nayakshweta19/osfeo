@@ -107,6 +107,7 @@ extern void *OPS_TPB1D(void);
 extern void *OPS_BeamEndContact3D(void);
 extern void *OPS_BeamEndContact3Dp(void);
 extern void *OPS_TFP_Bearing(void);
+extern void *OPS_FPBearingPTV();
 extern void *OPS_MultiFP2d(void);
 extern void *OPS_CoupledZeroLength(void);
 extern void *OPS_FourNodeQuad3d(void);
@@ -128,11 +129,42 @@ extern void *OPS_ZeroLengthImpact3D(void);
 extern void *OPS_HDR(void);
 extern void *OPS_LeadRubberX(void);
 extern void *OPS_ElastomericX(void);
+extern void *OPS_N4BiaxialTruss(void);
 //////////////////////////////////////////////////////////////////////////
 extern void * OPS_mixedBeamColumn3d(void);
 extern void * OPS_mixedBeamColumn2d(void);
 extern void * OPS_mixedBeamColumn2dS(void);
+extern void * OPS_NewSemiLoofBeam(void);
+extern void * OPS_NewSemiLoofPlate(void);
+extern void * OPS_NewSemiLoofShell(void);
 //extern void * OPS_mixedBeamColumn3dS(void);
+
+extern int
+TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko2d01(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko2d02(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko3d01(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
+
+extern int
+TclModelBuilder_addTimoshenko3d(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv, Domain*, TclModelBuilder *);
 //////////////////////////////////////////////////////////////////////////
 
 extern int
@@ -433,43 +465,6 @@ extern int
 TclModelBuilder_addYamamotoBiaxialHDR(ClientData clientData, Tcl_Interp *interp, int argc,
 TCL_Char **argv, Domain*, TclModelBuilder *);
 
-
-extern int
-TclModelBuilder_addTimoshenkoBeamColumn(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko2d01(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko2d02(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko2d03(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko2d04(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko2d(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko3d01(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko3d04(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
-extern int
-TclModelBuilder_addTimoshenko3d(ClientData clientData, Tcl_Interp *interp, int argc,
-TCL_Char **argv, Domain*, TclModelBuilder *);
-
 extern int
 TclModelBuilder_Pipe3(ClientData clientData, Tcl_Interp *interp, int argc,
 TCL_Char **argv, Domain*, TclModelBuilder *, int argStart);
@@ -700,6 +695,16 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
     }
 
   }
+  else if ((strcmp(argv[1], "N4BiaxialTruss") == 0)) {
+
+    void *theEle = OPS_N4BiaxialTruss();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  } 
   else if ((strcmp(argv[1], "SimpleContact3d") == 0) || (strcmp(argv[1], "SimpleContact3D") == 0)) {
 
     void *theEle = OPS_SimpleContact3D();
@@ -894,8 +899,19 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
       opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
       return TCL_ERROR;
     }
-
   }
+
+  else if ((strcmp(argv[1], "FPBearingPTV") == 0)) {
+
+    void *theEle = OPS_FPBearingPTV();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  }
+
   else if (strcmp(argv[1], "TripleFrictionPendulum") == 0) {
 
     void *theEle = OPS_TripleFrictionPendulum();
@@ -1037,7 +1053,6 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   else if ((strcmp(argv[1], "mixedBeamColumn3d") == 0) || (strcmp(argv[1], "mixedBC3d") == 0)) {
-
     void *theEle = OPS_mixedBeamColumn3d();
     if (theEle != 0)
       theElement = (Element *)theEle;
@@ -1048,7 +1063,6 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
   }
 
   else if ((strcmp(argv[1], "mixedBeamColumn2d") == 0) || (strcmp(argv[1], "mixedBC2d") == 0)) {
-
     void *theEle = OPS_mixedBeamColumn2d();
     if (theEle != 0)
       theElement = (Element *)theEle;
@@ -1059,7 +1073,6 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
   }
 
   else if ((strcmp(argv[1], "mixedBeamColumn2dS") == 0) || (strcmp(argv[1], "mixedBC2dS") == 0)) {
-
     void *theEle = OPS_mixedBeamColumn2dS();
     if (theEle != 0)
       theElement = (Element *)theEle;
@@ -1068,6 +1081,35 @@ Domain *theTclDomain, TclModelBuilder *theTclBuilder)
       return TCL_ERROR;
     }
   }
+
+  else if ((strcmp(argv[1], "semiLoofBeam") == 0) || (strcmp(argv[1], "semiloofbeam") == 0)) {
+    void *theEle = OPS_NewSemiLoofBeam();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  }
+  else if ((strcmp(argv[1], "semiLoofPlate") == 0) || (strcmp(argv[1], "semiloofplate") == 0)) {
+    void *theEle = OPS_NewSemiLoofPlate();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  }
+  else if ((strcmp(argv[1], "semiLoofShell") == 0) || (strcmp(argv[1], "semiloofshell") == 0)) {
+    void *theEle = OPS_NewSemiLoofShell();
+    if (theEle != 0)
+      theElement = (Element *)theEle;
+    else {
+      opserr << "TclElementCommand -- unable to create element of type : " << argv[1] << endln;
+      return TCL_ERROR;
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
 
   // if one of the above worked
   if (theElement != 0) {
@@ -1622,7 +1664,7 @@ return result;
       theTclDomain, theTclBuilder);
     return result;
   }
-
+  ////////////////////////////////////////////////////////////////////////////////////
   else if ((strcmp(argv[1], "Pipe3") == 0) || (strcmp(argv[1], "pipe3") == 0) || (strcmp(argv[1], "pipe") == 0)) {
     int eleArgStart = 1;
     int result = TclModelBuilder_Pipe3(clientData, interp, argc, argv, theTclDomain, theTclBuilder, eleArgStart);

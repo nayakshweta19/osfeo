@@ -82,6 +82,7 @@
 #include <HystereticMaterial.h>
 #include <EPPGapMaterial.h>
 #include <ViscousMaterial.h>
+#include <ViscousDamper.h>
 #include <PathIndependentMaterial.h>
 #include <SeriesMaterial.h>
 #include <CableMaterial.h>
@@ -309,7 +310,7 @@
 #include <ElementRecorder.h>
 #include <EnvelopeNodeRecorder.h>
 #include <EnvelopeElementRecorder.h>
-
+#include <DriftRecorder.h>
 
 // mp_constraint header files
 #include <MP_Constraint.h>
@@ -1075,7 +1076,10 @@ FEM_ObjectBrokerAllClasses::getNewUniaxialMaterial(int classTag)
 	case MAT_TAG_Viscous:
 		return new ViscousMaterial();
 
-	case MAT_TAG_PathIndependent:
+    case MAT_TAG_ViscousDamper:
+		return new ViscousDamper();
+
+    case MAT_TAG_PathIndependent:
 		return new PathIndependentMaterial();
 
 	case MAT_TAG_SeriesMaterial:
@@ -1685,9 +1689,11 @@ FEM_ObjectBrokerAllClasses::getPtrNewRecorder(int classTag)
 	case RECORDER_TAGS_EnvelopeElementRecorder:  
 	     return new EnvelopeElementRecorder();
 
+	case RECORDER_TAGS_DriftRecorder:  
+	     return new DriftRecorder();
 
-        case RECORDER_TAGS_TclFeViewer:  
-	  return 0;
+    case RECORDER_TAGS_TclFeViewer:  
+        return 0;
   //           return new TclFeViewer();
 	     
 	default:

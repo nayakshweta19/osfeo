@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 359 $
-// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
+// $Revision: 378 $
+// $Date: 2015-02-25 00:17:07 +0800 (星期三, 25 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSCRAMNet.h $
 
 #ifndef ECSCRAMNet_h
@@ -75,15 +75,13 @@ public:
     
     // public methods for output
     void Print(OPS_Stream &s, int flag = 0);
-    
+
 protected:
     // protected methods to set and to get response
     virtual int control();
     virtual int acquire();
-    
+
 private:
-    void sleep(const clock_t wait);
-    
     const int memOffset;            // memory offset in bytes from SCRAMNet base address
     const int numDOF;               // number of degrees-of-freedom in control system
     

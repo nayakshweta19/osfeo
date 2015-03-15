@@ -39,7 +39,7 @@
 
 
 fElmt05::fElmt05(int tag, int nd1, int nd2, double E, double A, double rho)
-:fElement(tag, ELE_TAG_fElmt05, 3, 2, 0, 0)
+:fElement(tag, ELE_TAG_fElmt05, 3, 2, 0, 0, 3, 0)
 {
     (*data)(0) = A;
     (*data)(1) = E;

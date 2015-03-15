@@ -403,14 +403,14 @@ Domain::addElement(Element *element)
   const ID &nodes = element->getExternalNodes();
   int numDOF = 0;
   for (int i=0; i<nodes.Size(); i++) {
-      int nodeTag = nodes(i);
-      Node *nodePtr = this->getNode(nodeTag);
-      if (nodePtr == 0) {
-	  opserr << "WARNING Domain::addElement - In element " << *element;
-	  opserr << "\n no Node " << nodeTag << " exists in the domain\n";
-	  return false;
-      }
-      numDOF += nodePtr->getNumberDOF();
+    int nodeTag = nodes(i);
+    Node *nodePtr = this->getNode(nodeTag);
+    if (nodePtr == 0) {
+      opserr << "WARNING Domain::addElement - In element " << eleTag;
+      opserr << "\n no Node " << nodeTag << " exists in the domain\n";
+      return false;
+    }
+    numDOF += nodePtr->getNumberDOF();
   }   
 
   // check if an Element with a similar tag already exists in the Domain

@@ -79,7 +79,7 @@ class UniaxialMaterial : public Material
     virtual Response *setResponse (const char **argv, int argc, 
 				   OPS_Stream &theOutputStream);
     virtual int getResponse (int responseID, Information &matInformation);    
-
+    virtual bool hasFailed(void) { return false; }
 
 	virtual double getCommittedStrain (void) {return 0;};
 	virtual int setTrialStrain (double x, double k, double Dfactor, double ITAP, double EPSLONTP, double strain, double strainRate) {return 0;};

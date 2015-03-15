@@ -331,14 +331,15 @@
 	   if (strcmp(argv[loc],"-xml") == 0) {
 	     eMode = XML_STREAM;
 	     loc+=1;
-	   } else if (strcmp(argv[loc],"-headings") == 0) {
-	     eMode = DATA_STREAM;
-	     loc +=1;
-	   } else if (strcmp(argv[loc],"-closeOnWrite") == 0) {
-	     closeOnWrite = true;
-	     loc +=1;
-	   }
-	 }
+       } else if (strcmp(argv[loc], "-headings") == 0) {
+         eMode = DATA_STREAM;
+         loc += 1;
+       }
+
+     } else if (strcmp(argv[loc], "-closeOnWrite") == 0) {
+       closeOnWrite = true;
+       loc += 1;
+     }
 
 	 else if ((strcmp(argv[loc],"-fileCSV") == 0) || (strcmp(argv[loc],"-csv") == 0)) {
 	   fileName = argv[loc+1];
@@ -1077,11 +1078,12 @@
 	   simulationInfo.addOutputFile(fileName, pwd);
 	   eMode = DATA_STREAM;
 	   pos += 2;
-	   if (strcmp(argv[pos],"-closeOnWrite") == 0)  {
-	     closeOnWrite = true;
-	     pos += 1;
-	   }
 	 }
+
+     else if (strcmp(argv[pos], "-closeOnWrite") == 0)  {
+       closeOnWrite = true;
+       pos += 1;
+     }
 
 	 else if (strcmp(argv[pos],"-fileCSV") == 0) {
 	   fileName = argv[pos+1];

@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 339 $
-// $Date: 2013-03-06 09:18:22 +0800 (星期三, 06 三月 2013) $
+// $Revision: 378 $
+// $Date: 2015-02-25 00:17:07 +0800 (星期三, 25 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECGenericTCP.h $
 
 #ifndef ECGenericTCP_h
@@ -57,7 +57,7 @@ public:
     virtual int setup();
     virtual int setSize(ID sizeT, ID sizeO);
     
-    virtual int setTrialResponse(const Vector* disp, 
+    virtual int setTrialResponse(const Vector* disp,
         const Vector* vel,
         const Vector* accel,
         const Vector* force,
@@ -78,16 +78,14 @@ public:
     virtual int getResponse(int responseID, Information &info);
     
     // public methods for output
-    void Print(OPS_Stream &s, int flag = 0);    
-    
+    void Print(OPS_Stream &s, int flag = 0);
+
 protected:
     // protected methods to set and to get response
     virtual int control();
     virtual int acquire();
-    
+
 private:
-    void sleep(const clock_t wait);
-    
     char *ipAddress;            // ip address
     int ipPort;                 // ip port
     const int dataSize;         // data size of network transactions
@@ -97,10 +95,10 @@ private:
     Vector *sendData;           // send vector
     double *rData;              // receive data array
     Vector *recvData;           // receive vector
-
+    
     ID ctrlModes;               // id with control modes (size = 5)
     ID daqModes;                // id with daq modes (size = 5)
-
+    
     char *initFileName;         // parameter initialization file
     
     Vector *ctrlDisp, *ctrlVel, *ctrlAccel, *ctrlForce, *ctrlTime;

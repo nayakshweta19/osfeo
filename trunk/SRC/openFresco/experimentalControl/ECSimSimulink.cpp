@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 376 $
+// $Date: 2015-02-24 13:56:26 +0800 (星期二, 24 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimSimulink.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 09/09
 // Revision: A
 //
@@ -36,7 +36,7 @@
 #include <TCP_Socket.h>
 
 
-ECSimSimulink::ECSimSimulink(int tag,    
+ECSimSimulink::ECSimSimulink(int tag,
     char *ipaddress, int ipport)
     : ECSimulation(tag),
     ipAddress(ipaddress), ipPort(ipport),
@@ -44,7 +44,7 @@ ECSimSimulink::ECSimSimulink(int tag,
     sData(0), sendData(0), rData(0), recvData(0),
     ctrlDisp(0), ctrlForce(0), ctrlTime(0),
     daqDisp(0), daqForce(0), daqTime(0)
-{   
+{
     // setup the connection
     theChannel = new TCP_Socket(ipPort, ipAddress);
     if (theChannel->setUpConnection() != 0)  {
@@ -98,8 +98,9 @@ ECSimSimulink::ECSimSimulink(const ECSimSimulink &ec)
 
 ECSimSimulink::~ECSimSimulink()
 {
-    // send termination to adapter element
+    // send termination to adapter element (twice for reliability)
     sData[0] = OF_RemoteTest_DIE;
+    theChannel->sendVector(0, 0, *sendData, 0);
     theChannel->sendVector(0, 0, *sendData, 0);
     
     // delete memory of ctrl vectors
@@ -213,7 +214,7 @@ int ECSimSimulink::setup()
         exit(OF_ReturnType_failed);
     }
     
-	do  {
+    do  {
         rValue += this->control();
         rValue += this->acquire();
         
@@ -348,7 +349,7 @@ int ECSimSimulink::getDaqResponse(Vector* disp,
 
 
 int ECSimSimulink::commitState()
-{	
+{
     sData[0] = OF_RemoteTest_commitState;
     theChannel->sendVector(0, 0, *sendData, 0);
     
@@ -531,7 +532,7 @@ int ECSimSimulink::control()
     // wait until switchPC flag has changed back
     sData[0] = 4.3;
     rData[0] = 1;  // switchPC flag
-	while (rData[0] != 0)  {
+    while (rData[0] != 0)  {
         theChannel->sendVector(0, 0, *sendData, 0);
         theChannel->recvVector(0, 0, *recvData, 0);
     }
@@ -551,12 +552,4 @@ int ECSimSimulink::acquire()
     }
     
     return OF_ReturnType_completed;
-}
-
-
-void ECSimSimulink::sleep(const clock_t wait)
-{
-    clock_t goal;
-    goal = wait + clock();
-    while (goal>clock());
 }
