@@ -18,8 +18,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 5869 $
-// $Date: 2015-01-13 08:13:33 +0800 (Tue, 13 Jan 2015) $
+// $Revision: 5933 $
+// $Date: 2015-02-28 23:23:00 +0800 (鏄熸湡鍏�, 28 浜屾湀 2015) $
 
 // Written: fmk
 // Revision: A
@@ -190,6 +190,11 @@
 #define MAT_TAG_CFSSSWP                         81
 #define MAT_TAG_CFSWSWP                         82
 #define MAT_TAG_ResilienceLow                   83
+#define MAT_TAG_Bilin02                         84
+#define MAT_TAG_ModIMKPeakOriented02            85
+#define MAT_TAG_ModIMKPinching02                86
+#define MAT_TAG_Steel4                          87
+#define MAT_TAG_SimpleFractureMaterial          88
 
 // Neallee@tju.edu.cn
 #define MAT_TAG_Concrete09			1024081
@@ -594,16 +599,13 @@
 #define ELE_TAG_OnePointHingedBeam3d    70
 #define ELE_TAG_BeamColumnJoint2d       71
 #define ELE_TAG_BeamColumnJoint3d       72
-
 #define ELE_TAG_ForceBeamColumn2d       73
 #define ELE_TAG_ForceBeamColumn3d       74
 #define ELE_TAG_ElasticForceBeamColumn2d 75
 #define ELE_TAG_ElasticForceBeamColumn3d 76
 #define ELE_TAG_ForceBeamColumnCBDI2d   77
 #define ELE_TAG_ForceBeamColumnCBDI3d   78
-
 #define ELE_TAG_DispBeamColumn2dInt     79
-
 #define ELE_TAG_InternalSpring          80
 #define ELE_TAG_SimpleJoint2D           81
 #define ELE_TAG_Joint2D                 82
@@ -686,6 +688,7 @@
 #define ELE_TAG_ElastomericX              152
 #define ELE_TAG_LeadRubberX               153
 #define ELE_TAG_PileToe3D                 154
+#define ELE_TAG_N4BiaxialTruss            155
 
 #define ELE_TAG_MultipleShearSpring 6201
 #define ELE_TAG_MultipleNormalSpring 6202
@@ -712,6 +715,10 @@
 #define ELE_TAG_fElmt01   205
 #define ELE_TAG_fElmt03   10240202 // neallee
 #define ELE_TAG_fElmt04   10240203 // neallee
+
+#define ELE_TAG_semiLoofPlate  10240210 // semi-loof plate
+#define ELE_TAG_semiLoofShell  10240211 // semi-loof shell
+#define ELE_TAG_semiLoofBeam  10240212 // semi-loof beam
 
 #define FRN_TAG_Coulomb            1
 #define FRN_TAG_VelDependent       2

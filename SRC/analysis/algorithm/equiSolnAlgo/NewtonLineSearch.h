@@ -19,7 +19,7 @@
 ** ****************************************************************** */
 
 // $Revision: 1.4 $
-// $Date: 2005/11/29 22:42:42 $
+// $Date: 2005-11-29 22:42:42 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/algorithm/equiSolnAlgo/NewtonLineSearch.h,v $
 
 // Written: fmk 
@@ -61,8 +61,8 @@ class NewtonLineSearch: public EquiSolnAlgo
   protected:
     
   private:
-
     ConvergenceTest *theTest;
+    ConvergenceTest *theOtherTest;
     LineSearch *theLineSearch;
 };
 

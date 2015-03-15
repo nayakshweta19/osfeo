@@ -61,7 +61,6 @@
 #include <ViscousMaterial.h>	// Sasani
 #include <PathIndependentMaterial.h>	// MHS
 #include <BackboneMaterial.h>	// MHS
-#include <MinMaxMaterial.h>	// MHS
 #include <FatigueMaterial.h>	// Patxi
 #include <SeriesMaterial.h>		// MHS
 #include <ENTMaterial.h>		// MHS
@@ -95,6 +94,7 @@
 
 extern void *OPS_NewElasticMaterial(void);
 extern void *OPS_Bilin(void);
+extern void *OPS_Bilin02(void);
 extern void *OPS_NewSteel01(void);
 extern void *OPS_NewSteel02(void);
 extern void *OPS_RambergOsgoodSteel(void);
@@ -132,6 +132,7 @@ extern void *OPS_NewDamage2pMaterial(void);          // Faria Oliver concrete da
 extern void *OPS_NewConfinedConcrete01Material(void);
 extern void *OPS_NewElasticBilin(void);
 extern void *OPS_NewMinMaxMaterial(void);
+extern void *OPS_SimpleFractureMaterial(void);
 extern void *OPS_NewInitStrainMaterial(void);
 extern void *OPS_NewInitStressMaterial(void);
 extern void *OPS_New_pyUCLA(void);
@@ -158,7 +159,9 @@ extern void *OPS_NewElasticMaterialThermal(void);
 
 extern void *OPS_BWBN(void);
 extern void *OPS_ModIMKPeakOriented(void);
+extern void *OPS_ModIMKPeakOriented02(void);
 extern void *OPS_ModIMKPinching(void);
+extern void *OPS_ModIMKPinching02(void);
 extern void *OPS_ConcretewBeta(void);
 extern void *OPS_PinchingLimitState(void);
 extern void *OPS_NewOriginCentered(void);
@@ -169,6 +172,7 @@ extern void *OPS_ResilienceMaterialHR(void);
 extern void *OPS_CFSSSWP(void);
 extern void *OPS_CFSWSWP(void);
 extern void *OPS_ResilienceLow(void);
+extern void *OPS_Steel4(void);
 
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
@@ -286,8 +290,14 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
+    } else if (strcmp(argv[1], "Steel4") == 0) {
+      void *theMat = OPS_Steel4();
+      if (theMat != 0)
+        theMaterial = (UniaxialMaterial *)theMat;
+      else
+        return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"Concrete01") == 0) {
+    } else if (strcmp(argv[1], "Concrete01") == 0) {
       void *theMat = OPS_NewConcrete01();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
@@ -329,7 +339,14 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-	} else if ((strcmp(argv[1],"Maxwell") == 0) || (strcmp(argv[1],"MaxwellMaterial") == 0)) {
+    } else if ((strcmp(argv[1], "SimpleFractureMaterial") == 0) || (strcmp(argv[1], "SimpleFracture") == 0)) {
+      void *theMat = OPS_SimpleFractureMaterial();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+
+    } else if ((strcmp(argv[1], "Maxwell") == 0) || (strcmp(argv[1], "MaxwellMaterial") == 0)) {
 	  void *theMat = OPS_Maxwell();
 	  if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
@@ -371,9 +388,9 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 
       void *theMat = OPS_DoddRestr();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 #endif
     } else if (strcmp(argv[1], "ElasticMultiLinear") == 0) {
       void *theMat = OPS_NewElasticMultiLinear();
@@ -475,14 +492,39 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"ModIMKPeakOriented") == 0) {
+    }
+    else if (strcmp(argv[1], "ModIMKPinching02") == 0) {
+      void *theMat = OPS_ModIMKPinching02();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "ModIMKPeakOriented") == 0) {
       void *theMat = OPS_ModIMKPeakOriented();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
       else 
 	return TCL_ERROR;
 
-    } else if (strcmp(argv[1],"Steel01Thermal") == 0) {
+    }
+    else if (strcmp(argv[1], "ModIMKPeakOriented02") == 0) {
+      void *theMat = OPS_ModIMKPeakOriented02();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+
+    }
+    else if (strcmp(argv[1], "Bilin02") == 0) {
+      void *theMat = OPS_Bilin02();
+      if (theMat != 0)
+    theMaterial = (UniaxialMaterial *)theMat;
+      else
+    return TCL_ERROR;
+    }
+    else if (strcmp(argv[1], "Steel01Thermal") == 0) {
       void *theMat = OPS_NewSteel01Thermal();
       if (theMat != 0) 
 	theMaterial = (UniaxialMaterial *)theMat;
@@ -493,57 +535,58 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
     else if (strcmp(argv[1], "Steel01PThermal") == 0) {
       void *theMat = OPS_NewSteel01PThermal();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "Steel02Thermal") == 0) {
       void *theMat = OPS_NewSteel02Thermal();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
       // -----Adding identity for SteelECThermal
     }
     else if (strcmp(argv[1], "SteelECThermal") == 0) {
       void *theMat = OPS_NewSteelECThermal();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
       //------End of adding identity for SteelEcThermal
     }
     else if (strcmp(argv[1], "ElasticThermal") == 0) {
       void *theMat = OPS_NewElasticMaterialThermal();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
+
     }
     else if ((strcmp(argv[1], "SteelBRB") == 0) || (strcmp(argv[1], "BRB") == 0)) {
       void *theMat = OPS_SteelBRB();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "ConcretewBeta") == 0) {
       void *theMat = OPS_ConcretewBeta();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "ConcreteSakaiKawashima") == 0) {
       void *theMat = OPS_ConcreteSakaiKawashima();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "ResilienceLow") == 0) {
@@ -557,9 +600,9 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
     else if (strcmp(argv[1], "ResilienceMaterialHR") == 0) {
       void *theMat = OPS_ResilienceMaterialHR();
       if (theMat != 0)
-        theMaterial = (UniaxialMaterial *)theMat;
+    theMaterial = (UniaxialMaterial *)theMat;
       else
-        return TCL_ERROR;
+    return TCL_ERROR;
 
     }
     else if (strcmp(argv[1], "Concrete02Thermal") == 0) {
@@ -1674,65 +1717,6 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       theMaterial = new BackboneMaterial(tag, *backbone);
     }
 
-    else if (strcmp(argv[1],"MinMax") == 0) {
-      if (argc < 4) {
-	opserr << "WARNING insufficient arguments\n";
-	printCommand(argc,argv);
-	opserr << "Want: uniaxialMaterial MinMax tag? matTag?";
-	opserr << " <-min min?> <-max max?>" << endln;
-	return TCL_ERROR;
-      }
-      
-      int tag, matTag;
-      
-      if (Tcl_GetInt(interp, argv[2], &tag) != TCL_OK) {
-	opserr << "WARNING invalid uniaxialMaterial MinMax tag" << endln;
-	return TCL_ERROR;		
-      }
-
-      if (Tcl_GetInt(interp, argv[3], &matTag) != TCL_OK) {
-	opserr << "WARNING invalid component tag\n";
-	opserr << "uniaxialMaterial MinMax: " << tag << endln;
-	return TCL_ERROR;
-      }
-
-      // Search for min and max strains
-      double epsmin = NEG_INF_STRAIN;
-      double epsmax = POS_INF_STRAIN;
-	
-      for (int j = 4; j < argc; j++) {
-	if (strcmp(argv[j],"-min") == 0) {
-	  if ((j+1) >= argc || Tcl_GetDouble (interp, argv[j+1], &epsmin) != TCL_OK) {
-	    opserr << "WARNING invalid min\n";
-	    opserr << "uniaxialMaterial MinMax: " << tag << endln;
-	    return TCL_ERROR;
-	  }
-	  j++;
-	}
-	if (strcmp(argv[j],"-max") == 0) {
-	  if ((j+1) >= argc || Tcl_GetDouble (interp, argv[j+1], &epsmax) != TCL_OK) {
-	    opserr << "WARNING invalid max\n";
-	    opserr << "uniaxialMaterial MinMax: " << tag << endln;
-	    return TCL_ERROR;
-	  }
-	  j++;
-	}
-      }
-	
-      UniaxialMaterial *theMat = OPS_getUniaxialMaterial(matTag);
-	    
-      if (theMat == 0) {
-	opserr << "WARNING component material does not exist\n";
-	opserr << "Component material: " << matTag; 
-	opserr << "\nuniaxialMaterial MinMax: " << tag << endln;
-	return TCL_ERROR;
-      }
-	
-      // Parsing was successful, allocate the material
-      theMaterial = new MinMaxMaterial(tag, *theMat, epsmin, epsmax);
-      
-    }
-
     else if (strcmp(argv[1],"Fatigue") == 0) {
       if (argc < 4) {
 	opserr << "WARNING insufficient arguments\n";
@@ -2696,93 +2680,93 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 		}
    }
    
-  else if (strcmp(argv[1],"BarSlip") == 0)
-   {
-     if (argc != 17 && argc != 15)
+    else if (strcmp(argv[1],"BarSlip") == 0)
+    {
+      if (argc != 17 && argc != 15)
        {
 	 opserr << "WARNING insufficient arguments\n";
 	 printCommand(argc,argv);
 	 opserr << "Want: uniaxialMaterial BarSlip tag? fc? fy? Es? fu? Eh? db? ld? nb? width? depth? bsflag? type? <damage? unit?>"  << endln;
 	 return TCL_ERROR;
        }
-     
-     int tag, nb, bsf, typ, dmg, unt;
-     double fc, fy, Es, fu, Eh, ld, width, depth, db;
-     
-     int argStart = 2;
-     
-     if (Tcl_GetInt(interp, argv[argStart++], &tag) != TCL_OK)
-       {
-	 opserr << "WARNING invalid tag\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &fc) != TCL_OK)
-       {
-	 opserr << "WARNING invalid fc\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &fy) != TCL_OK)
-       {
-	 opserr << "WARNING invalid fy\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &Es) != TCL_OK)
-       {
-	 opserr << "WARNING invalid Es\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &fu) != TCL_OK)
-       {
-	 opserr << "WARNING invalid fu\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &Eh) != TCL_OK)
-       {
-	 opserr << "WARNING invalid Eh\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &db) != TCL_OK)
-       {
-	 opserr << "WARNING invalid db\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &ld) != TCL_OK)
-       {
-	 opserr << "WARNING invalid ld\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetInt(interp, argv[argStart++], &nb) != TCL_OK)
-       {
-	 opserr << "WARNING invalid nbars\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &width) != TCL_OK)
-       {
-	 opserr << "WARNING invalid width\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (Tcl_GetDouble(interp, argv[argStart++], &depth) != TCL_OK)
-       {
-	 opserr << "WARNING invalid depth\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     
-     int y;
-     y = argStart;
-     
-     
-     if ((strcmp(argv[y],"strong") == 0) || (strcmp(argv[y],"Strong") == 0) || (strcmp(argv[y],"weak") == 0) || (strcmp(argv[y],"Weak") == 0))
+      
+      int tag, nb, bsf, typ, dmg, unt;
+      double fc, fy, Es, fu, Eh, ld, width, depth, db;
+      
+      int argStart = 2;
+      
+      if (Tcl_GetInt(interp, argv[argStart++], &tag) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid tag\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &fc) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid fc\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &fy) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid fy\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &Es) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid Es\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &fu) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid fu\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &Eh) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid Eh\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &db) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid db\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &ld) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid ld\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetInt(interp, argv[argStart++], &nb) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid nbars\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &width) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid width\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (Tcl_GetDouble(interp, argv[argStart++], &depth) != TCL_OK)
+        {
+ 	 opserr << "WARNING invalid depth\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      
+      int y;
+      y = argStart;
+      
+      
+      if ((strcmp(argv[y],"strong") == 0) || (strcmp(argv[y],"Strong") == 0) || (strcmp(argv[y],"weak") == 0) || (strcmp(argv[y],"Weak") == 0))
        {
 	 if ((strcmp(argv[y],"strong") == 0) || (strcmp(argv[y],"Strong") == 0))
 	   {
@@ -2794,396 +2778,396 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
 	     bsf = 1;
 	   }
        }
-     else
+      else
        {
 	 opserr << "WARNING invalid bond strength specified\n";
 	 opserr << "BarSlip: " << tag << endln;
 	 return TCL_ERROR;
        }
-     y ++;
-     
-     if ((strcmp(argv[y],"beamtop") == 0) || (strcmp(argv[y],"beamTop") == 0) || 
-	 (strcmp(argv[y],"beambot") == 0) || (strcmp(argv[y],"beamBot") == 0) || (strcmp(argv[y],"beambottom") == 0) || (strcmp(argv[y],"beamBottom") == 0) ||
-	 (strcmp(argv[y],"beam") == 0) || (strcmp(argv[y],"Beam") == 0) || (strcmp(argv[y],"Column") == 0) || (strcmp(argv[y],"column") == 0))
-       {
-	 if ((strcmp(argv[y],"beamtop") == 0) || (strcmp(argv[y],"beamTop") == 0) || (strcmp(argv[y],"beam") == 0) || (strcmp(argv[y],"Beam") == 0))
-	   {
-	     typ = 0;
-	   }
-	 
-	 if ((strcmp(argv[y],"beambot") == 0) || (strcmp(argv[y],"beamBot") == 0) || (strcmp(argv[y],"beambottom") == 0) || (strcmp(argv[y],"beamBottom") == 0))
-	   {
-	     typ = 1;
-	   }
-	 
-	 if ((strcmp(argv[y],"column") == 0) || (strcmp(argv[y],"Column") == 0))
-	   {
-	     typ = 2;
-	   }
-       }
-     else
-       {
-	 opserr << "WARNING invalid location of bar specified\n";
-	 opserr << "BarSlip: " << tag << endln;
-	 return TCL_ERROR;
-       }
-     if (argc == 17) {
-       y ++;
-       
-       if ((strcmp(argv[y],"damage1") == 0) || (strcmp(argv[y],"Damage1") == 0) || (strcmp(argv[y],"damage2") == 0) || (strcmp(argv[y],"Damage2") == 0) || 
-	   (strcmp(argv[y],"nodamage") == 0) || (strcmp(argv[y],"Nodamage") == 0) || (strcmp(argv[y],"NoDamage") == 0) || (strcmp(argv[y],"noDamage") == 0))
-	 {
-	   if ((strcmp(argv[y],"damage1") == 0) || (strcmp(argv[y],"Damage1") == 0))
-	     {
-	       dmg = 1;
-	     }
-	   else if ((strcmp(argv[y],"damage2") == 0) || (strcmp(argv[y],"Damage2") == 0))
-	     {
-	       dmg = 2;
-	     }
-	   else if ((strcmp(argv[y],"nodamage") == 0) || (strcmp(argv[y],"Nodamage") == 0) || (strcmp(argv[y],"NoDamage") == 0) || (strcmp(argv[y],"noDamage") == 0))
-	     {
-	       dmg = 0;
-	     }
-	   
-	 }
-       else
-	 {
-	   opserr << "WARNING invalid damage specified\n";
-	   opserr << "BarSlip: " << tag << endln;
-	   return TCL_ERROR;
-	 }
-       
-       y ++;
-       
-       if ((strcmp(argv[y],"mpa") == 0) || (strcmp(argv[y],"MPa") == 0) || (strcmp(argv[y],"mPa") == 0) || (strcmp(argv[y],"Mpa") == 0) ||
-	   (strcmp(argv[y],"psi") == 0) || (strcmp(argv[y],"Psi") == 0) || (strcmp(argv[y],"PSI") == 0) || (strcmp(argv[y],"Pa") == 0) ||
-	   (strcmp(argv[y],"pa") == 0) ||  (strcmp(argv[y],"psf") == 0) || (strcmp(argv[y],"Psf") == 0) || (strcmp(argv[y],"PSF") == 0) ||
-	   (strcmp(argv[y],"ksi") == 0) || (strcmp(argv[y],"Ksi") == 0) || (strcmp(argv[y],"KSI") == 0) || (strcmp(argv[y],"ksf") == 0) ||
-	   (strcmp(argv[y],"Ksf") == 0) || (strcmp(argv[y],"KSF") == 0))
-	 {
-	   if ((strcmp(argv[y],"mpa") == 0) || (strcmp(argv[y],"MPa") == 0) || (strcmp(argv[y],"mPa") == 0) || (strcmp(argv[y],"Mpa") == 0))
-	     {
-	       unt = 1;
-	     }
-	   else if ((strcmp(argv[y],"psi") == 0) || (strcmp(argv[y],"Psi") == 0) || (strcmp(argv[y],"PSI") == 0))
-	     {
-	       unt = 2;
-	     }
-	   else if ((strcmp(argv[y],"Pa") == 0) || (strcmp(argv[y],"pa") == 0))
-	     {
-	       unt = 3;
-	     }
-	   else if ((strcmp(argv[y],"psf") == 0) || (strcmp(argv[y],"Psf") == 0) || (strcmp(argv[y],"PSF") == 0))
-	     {
-	       unt = 4;
-	     }
-	   else if ((strcmp(argv[y],"ksi") == 0) || (strcmp(argv[y],"Ksi") == 0) || (strcmp(argv[y],"KSI") == 0))
-	     {
-	       unt = 5;
-	     }
-	   else if ((strcmp(argv[y],"ksf") == 0) || (strcmp(argv[y],"Ksf") == 0) || (strcmp(argv[y],"KSF") == 0))
-	     {
-	       unt = 6;
-	     }
-	 }
-       else
-	 {
-	   opserr << "WARNING invalid unit specified\n";
-	   opserr << "BarSlip: " << tag << endln;
-	   return TCL_ERROR;
-	 }
-     }
-     
-     // allocate the material
-     if (argc == 15 ) {
-       theMaterial = new BarSlipMaterial (tag, fc, fy, Es, fu, Eh, db, ld, nb, width, depth, bsf, typ);
-     }
-     
-     if (argc == 17) {
-       theMaterial = new BarSlipMaterial (tag, fc, fy, Es, fu, Eh, db, ld, nb, width, depth, bsf, typ, dmg, unt);
-     }
-     
-   } 
-    
-    
-    
-  else if (strcmp(argv[1],"ShearPanel") == 0) {
-    if (argc != 42 && argc != 31 ) {
-      opserr << "WARNING insufficient arguments\n";
-      printCommand(argc,argv);
-      opserr << "Want: uniaxialMaterial ShearPanel tag? stress1p? strain1p? stress2p? strain2p? stress3p? strain3p? stress4p? strain4p? "
-	     << "\n<stress1n? strain1n? stress2n? strain2n? stress3n? strain3n? stress4n? strain4n?> rDispP? rForceP? uForceP? "
-	     << "\n<rDispN? rForceN? uForceN?> gammaK1? gammaK2? gammaK3? gammaK4? gammaKLimit? gammaD1? gammaD2? gammaD3? gammaD4? "
-	     << "\ngammaDLimit? gammaF1? gammaF2? gammaF3? gammaF4? gammaFLimit? gammaE? YieldStress? ";
-      return TCL_ERROR;
-    }
-    
-    int tag;
-    double stress1p, stress2p, stress3p, stress4p;
-    double strain1p, strain2p, strain3p, strain4p;
-    double stress1n, stress2n, stress3n, stress4n;
-    double strain1n, strain2n, strain3n, strain4n;
-    double rDispP, rForceP, uForceP, rDispN, rForceN, uForceN;
-    double gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit;
-    double gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit;
-    double gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit;
-    double gammaE, yStr;
-    
-    int i = 2;
-    
-    if (Tcl_GetInt(interp, argv[i++], &tag) != TCL_OK) {
-      opserr << "WARNING invalid uniaxialMaterial ShearPanel tag" << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &stress1p) != TCL_OK) {
-      opserr << "WARNING invalid stress1p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &strain1p) != TCL_OK) {
-      opserr << "WARNING invalid strain1p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &stress2p) != TCL_OK) {
-      opserr << "WARNING invalid stress2p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &strain2p) != TCL_OK) {
-      opserr << "WARNING invalid strain2p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &stress3p) != TCL_OK) {
-      opserr << "WARNING invalid stress3p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &strain3p) != TCL_OK) {
-      opserr << "WARNING invalid strain3p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &stress4p) != TCL_OK) {
-      opserr << "WARNING invalid stress4p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &strain4p) != TCL_OK) {
-      opserr << "WARNING invalid strain4p\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (argc == 42) {
-      if (Tcl_GetDouble(interp, argv[i++], &stress1n) != TCL_OK) {
-	opserr << "WARNING invalid stress1n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      y ++;
+      
+      if ((strcmp(argv[y],"beamtop") == 0) || (strcmp(argv[y],"beamTop") == 0) || 
+ 	 (strcmp(argv[y],"beambot") == 0) || (strcmp(argv[y],"beamBot") == 0) || (strcmp(argv[y],"beambottom") == 0) || (strcmp(argv[y],"beamBottom") == 0) ||
+ 	 (strcmp(argv[y],"beam") == 0) || (strcmp(argv[y],"Beam") == 0) || (strcmp(argv[y],"Column") == 0) || (strcmp(argv[y],"column") == 0))
+        {
+ 	 if ((strcmp(argv[y],"beamtop") == 0) || (strcmp(argv[y],"beamTop") == 0) || (strcmp(argv[y],"beam") == 0) || (strcmp(argv[y],"Beam") == 0))
+ 	   {
+ 	     typ = 0;
+ 	   }
+ 	 
+ 	 if ((strcmp(argv[y],"beambot") == 0) || (strcmp(argv[y],"beamBot") == 0) || (strcmp(argv[y],"beambottom") == 0) || (strcmp(argv[y],"beamBottom") == 0))
+ 	   {
+ 	     typ = 1;
+ 	   }
+ 	 
+ 	 if ((strcmp(argv[y],"column") == 0) || (strcmp(argv[y],"Column") == 0))
+ 	   {
+ 	     typ = 2;
+ 	   }
+        }
+      else
+        {
+ 	 opserr << "WARNING invalid location of bar specified\n";
+ 	 opserr << "BarSlip: " << tag << endln;
+ 	 return TCL_ERROR;
+        }
+      if (argc == 17) {
+        y ++;
+        
+        if ((strcmp(argv[y],"damage1") == 0) || (strcmp(argv[y],"Damage1") == 0) || (strcmp(argv[y],"damage2") == 0) || (strcmp(argv[y],"Damage2") == 0) || 
+ 	   (strcmp(argv[y],"nodamage") == 0) || (strcmp(argv[y],"Nodamage") == 0) || (strcmp(argv[y],"NoDamage") == 0) || (strcmp(argv[y],"noDamage") == 0))
+ 	 {
+ 	   if ((strcmp(argv[y],"damage1") == 0) || (strcmp(argv[y],"Damage1") == 0))
+ 	     {
+ 	       dmg = 1;
+ 	     }
+ 	   else if ((strcmp(argv[y],"damage2") == 0) || (strcmp(argv[y],"Damage2") == 0))
+ 	     {
+ 	       dmg = 2;
+ 	     }
+ 	   else if ((strcmp(argv[y],"nodamage") == 0) || (strcmp(argv[y],"Nodamage") == 0) || (strcmp(argv[y],"NoDamage") == 0) || (strcmp(argv[y],"noDamage") == 0))
+ 	     {
+ 	       dmg = 0;
+ 	     }
+ 	   
+ 	 }
+        else
+ 	 {
+ 	   opserr << "WARNING invalid damage specified\n";
+ 	   opserr << "BarSlip: " << tag << endln;
+ 	   return TCL_ERROR;
+ 	 }
+        
+        y ++;
+        
+        if ((strcmp(argv[y],"mpa") == 0) || (strcmp(argv[y],"MPa") == 0) || (strcmp(argv[y],"mPa") == 0) || (strcmp(argv[y],"Mpa") == 0) ||
+ 	   (strcmp(argv[y],"psi") == 0) || (strcmp(argv[y],"Psi") == 0) || (strcmp(argv[y],"PSI") == 0) || (strcmp(argv[y],"Pa") == 0) ||
+ 	   (strcmp(argv[y],"pa") == 0) ||  (strcmp(argv[y],"psf") == 0) || (strcmp(argv[y],"Psf") == 0) || (strcmp(argv[y],"PSF") == 0) ||
+ 	   (strcmp(argv[y],"ksi") == 0) || (strcmp(argv[y],"Ksi") == 0) || (strcmp(argv[y],"KSI") == 0) || (strcmp(argv[y],"ksf") == 0) ||
+ 	   (strcmp(argv[y],"Ksf") == 0) || (strcmp(argv[y],"KSF") == 0))
+ 	 {
+ 	   if ((strcmp(argv[y],"mpa") == 0) || (strcmp(argv[y],"MPa") == 0) || (strcmp(argv[y],"mPa") == 0) || (strcmp(argv[y],"Mpa") == 0))
+ 	     {
+ 	       unt = 1;
+ 	     }
+ 	   else if ((strcmp(argv[y],"psi") == 0) || (strcmp(argv[y],"Psi") == 0) || (strcmp(argv[y],"PSI") == 0))
+ 	     {
+ 	       unt = 2;
+ 	     }
+ 	   else if ((strcmp(argv[y],"Pa") == 0) || (strcmp(argv[y],"pa") == 0))
+ 	     {
+ 	       unt = 3;
+ 	     }
+ 	   else if ((strcmp(argv[y],"psf") == 0) || (strcmp(argv[y],"Psf") == 0) || (strcmp(argv[y],"PSF") == 0))
+ 	     {
+ 	       unt = 4;
+ 	     }
+ 	   else if ((strcmp(argv[y],"ksi") == 0) || (strcmp(argv[y],"Ksi") == 0) || (strcmp(argv[y],"KSI") == 0))
+ 	     {
+ 	       unt = 5;
+ 	     }
+ 	   else if ((strcmp(argv[y],"ksf") == 0) || (strcmp(argv[y],"Ksf") == 0) || (strcmp(argv[y],"KSF") == 0))
+ 	     {
+ 	       unt = 6;
+ 	     }
+ 	 }
+        else
+ 	 {
+ 	   opserr << "WARNING invalid unit specified\n";
+ 	   opserr << "BarSlip: " << tag << endln;
+ 	   return TCL_ERROR;
+ 	 }
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &strain1n) != TCL_OK) {
-	opserr << "WARNING invalid strain1n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      // allocate the material
+      if (argc == 15 ) {
+        theMaterial = new BarSlipMaterial (tag, fc, fy, Es, fu, Eh, db, ld, nb, width, depth, bsf, typ);
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &stress2n) != TCL_OK) {
-	opserr << "WARNING invalid stress2n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (argc == 17) {
+        theMaterial = new BarSlipMaterial (tag, fc, fy, Es, fu, Eh, db, ld, nb, width, depth, bsf, typ, dmg, unt);
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &strain2n) != TCL_OK) {
-	opserr << "WARNING invalid strain2n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+    } 
+    
+    
+    
+    else if (strcmp(argv[1],"ShearPanel") == 0) {
+      if (argc != 42 && argc != 31 ) {
+        opserr << "WARNING insufficient arguments\n";
+        printCommand(argc,argv);
+        opserr << "Want: uniaxialMaterial ShearPanel tag? stress1p? strain1p? stress2p? strain2p? stress3p? strain3p? stress4p? strain4p? "
+  	     << "\n<stress1n? strain1n? stress2n? strain2n? stress3n? strain3n? stress4n? strain4n?> rDispP? rForceP? uForceP? "
+  	     << "\n<rDispN? rForceN? uForceN?> gammaK1? gammaK2? gammaK3? gammaK4? gammaKLimit? gammaD1? gammaD2? gammaD3? gammaD4? "
+  	     << "\ngammaDLimit? gammaF1? gammaF2? gammaF3? gammaF4? gammaFLimit? gammaE? YieldStress? ";
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &stress3n) != TCL_OK) {
-	opserr << "WARNING invalid stress3n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      int tag;
+      double stress1p, stress2p, stress3p, stress4p;
+      double strain1p, strain2p, strain3p, strain4p;
+      double stress1n, stress2n, stress3n, stress4n;
+      double strain1n, strain2n, strain3n, strain4n;
+      double rDispP, rForceP, uForceP, rDispN, rForceN, uForceN;
+      double gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit;
+      double gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit;
+      double gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit;
+      double gammaE, yStr;
+      
+      int i = 2;
+      
+      if (Tcl_GetInt(interp, argv[i++], &tag) != TCL_OK) {
+        opserr << "WARNING invalid uniaxialMaterial ShearPanel tag" << endln;
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &strain3n) != TCL_OK) {
-	opserr << "WARNING invalid strain3n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &stress1p) != TCL_OK) {
+        opserr << "WARNING invalid stress1p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &stress4n) != TCL_OK) {
-	opserr << "WARNING invalid stress4n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &strain1p) != TCL_OK) {
+        opserr << "WARNING invalid strain1p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &strain4n) != TCL_OK) {
-	opserr << "WARNING invalid strain4n\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &stress2p) != TCL_OK) {
+        opserr << "WARNING invalid stress2p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
       }
       
-    }
-    
-    
-    if (Tcl_GetDouble(interp, argv[i++], &rDispP) != TCL_OK) {
-      opserr << "WARNING invalid rDispP\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &rForceP) != TCL_OK) {
-      opserr << "WARNING invalid rForceP\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &uForceP) != TCL_OK) {
-      opserr << "WARNING invalid uForceP\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (argc == 42) {
-      if (Tcl_GetDouble(interp, argv[i++], &rDispN) != TCL_OK) {
-	opserr << "WARNING invalid rDispN\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &strain2p) != TCL_OK) {
+        opserr << "WARNING invalid strain2p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &rForceN) != TCL_OK) {
-	opserr << "WARNING invalid rForceN\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &stress3p) != TCL_OK) {
+        opserr << "WARNING invalid stress3p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
       }
       
-      if (Tcl_GetDouble(interp, argv[i++], &uForceN) != TCL_OK) {
-	opserr << "WARNING invalid uForceN\n";
-	opserr << "ShearPanel material: " << tag << endln;
-	return TCL_ERROR;
+      if (Tcl_GetDouble(interp, argv[i++], &strain3p) != TCL_OK) {
+        opserr << "WARNING invalid strain3p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &stress4p) != TCL_OK) {
+        opserr << "WARNING invalid stress4p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &strain4p) != TCL_OK) {
+        opserr << "WARNING invalid strain4p\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (argc == 42) {
+        if (Tcl_GetDouble(interp, argv[i++], &stress1n) != TCL_OK) {
+  	opserr << "WARNING invalid stress1n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &strain1n) != TCL_OK) {
+  	opserr << "WARNING invalid strain1n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &stress2n) != TCL_OK) {
+  	opserr << "WARNING invalid stress2n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &strain2n) != TCL_OK) {
+  	opserr << "WARNING invalid strain2n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &stress3n) != TCL_OK) {
+  	opserr << "WARNING invalid stress3n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &strain3n) != TCL_OK) {
+  	opserr << "WARNING invalid strain3n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &stress4n) != TCL_OK) {
+  	opserr << "WARNING invalid stress4n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &strain4n) != TCL_OK) {
+  	opserr << "WARNING invalid strain4n\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+      }
+      
+      
+      if (Tcl_GetDouble(interp, argv[i++], &rDispP) != TCL_OK) {
+        opserr << "WARNING invalid rDispP\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &rForceP) != TCL_OK) {
+        opserr << "WARNING invalid rForceP\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &uForceP) != TCL_OK) {
+        opserr << "WARNING invalid uForceP\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (argc == 42) {
+        if (Tcl_GetDouble(interp, argv[i++], &rDispN) != TCL_OK) {
+  	opserr << "WARNING invalid rDispN\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &rForceN) != TCL_OK) {
+  	opserr << "WARNING invalid rForceN\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+        
+        if (Tcl_GetDouble(interp, argv[i++], &uForceN) != TCL_OK) {
+  	opserr << "WARNING invalid uForceN\n";
+  	opserr << "ShearPanel material: " << tag << endln;
+  	return TCL_ERROR;
+        }
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &gammaK1) != TCL_OK) {
+        opserr << "WARNING invalid gammaK1\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaK2) != TCL_OK) {
+        opserr << "WARNING invalid gammaK2\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaK3) != TCL_OK) {
+        opserr << "WARNING invalid gammaK3\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaK4) != TCL_OK) {
+        opserr << "WARNING invalid gammaK4\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaKLimit) != TCL_OK) {
+        opserr << "WARNING invalid gammaKLimit\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaD1) != TCL_OK) {
+        opserr << "WARNING invalid gammaD1\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }										   
+      if (Tcl_GetDouble(interp, argv[i++], &gammaD2) != TCL_OK) {
+        opserr << "WARNING invalid gammaD2\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaD3) != TCL_OK) {
+        opserr << "WARNING invalid gammaD3\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaD4) != TCL_OK) {
+        opserr << "WARNING invalid gammaD4\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaDLimit) != TCL_OK) {
+        opserr << "WARNING invalid gammaDLimit\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaF1) != TCL_OK) {
+        opserr << "WARNING invalid gammaF1\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaF2) != TCL_OK) {
+        opserr << "WARNING invalid gammaF2\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaF3) != TCL_OK) {
+        opserr << "WARNING invalid gammaF3\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaF4) != TCL_OK) {
+        opserr << "WARNING invalid gammaF4\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      if (Tcl_GetDouble(interp, argv[i++], &gammaFLimit) != TCL_OK) {
+        opserr << "WARNING invalid gammaFLimit\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &gammaE) != TCL_OK) {
+        opserr << "WARNING invalid gammaE\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      if (Tcl_GetDouble(interp, argv[i++], &yStr) != TCL_OK) {
+        opserr << "WARNING invalid yield stress\n";
+        opserr << "ShearPanel material: " << tag << endln;
+        return TCL_ERROR;
+      }
+      
+      // allocate the pinching material
+      if (argc == 42) {
+        theMaterial = new ShearPanelMaterial (tag,
+  					    stress1p, strain1p, stress2p, strain2p, stress3p, strain3p, stress4p, strain4p,
+  					    stress1n, strain1n, stress2n, strain2n, stress3n, strain3n, stress4n, strain4n,
+  					    rDispP, rForceP, uForceP, rDispN, rForceN, uForceN, 
+  					    gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit,
+  					    gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit,
+  					    gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit, gammaE, yStr);
+      }
+      if (argc == 31) {
+        theMaterial = new ShearPanelMaterial (tag,
+  					    stress1p, strain1p, stress2p, strain2p, stress3p, strain3p, stress4p, strain4p,
+  					    rDispP, rForceP, uForceP,  
+  					    gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit,
+  					    gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit,
+  					    gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit, gammaE, yStr);		
       }
     }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &gammaK1) != TCL_OK) {
-      opserr << "WARNING invalid gammaK1\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaK2) != TCL_OK) {
-      opserr << "WARNING invalid gammaK2\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaK3) != TCL_OK) {
-      opserr << "WARNING invalid gammaK3\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaK4) != TCL_OK) {
-      opserr << "WARNING invalid gammaK4\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaKLimit) != TCL_OK) {
-      opserr << "WARNING invalid gammaKLimit\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaD1) != TCL_OK) {
-      opserr << "WARNING invalid gammaD1\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }										   
-    if (Tcl_GetDouble(interp, argv[i++], &gammaD2) != TCL_OK) {
-      opserr << "WARNING invalid gammaD2\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaD3) != TCL_OK) {
-      opserr << "WARNING invalid gammaD3\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaD4) != TCL_OK) {
-      opserr << "WARNING invalid gammaD4\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaDLimit) != TCL_OK) {
-      opserr << "WARNING invalid gammaDLimit\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaF1) != TCL_OK) {
-      opserr << "WARNING invalid gammaF1\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaF2) != TCL_OK) {
-      opserr << "WARNING invalid gammaF2\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaF3) != TCL_OK) {
-      opserr << "WARNING invalid gammaF3\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaF4) != TCL_OK) {
-      opserr << "WARNING invalid gammaF4\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    if (Tcl_GetDouble(interp, argv[i++], &gammaFLimit) != TCL_OK) {
-      opserr << "WARNING invalid gammaFLimit\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &gammaE) != TCL_OK) {
-      opserr << "WARNING invalid gammaE\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    if (Tcl_GetDouble(interp, argv[i++], &yStr) != TCL_OK) {
-      opserr << "WARNING invalid yield stress\n";
-      opserr << "ShearPanel material: " << tag << endln;
-      return TCL_ERROR;
-    }
-    
-    // allocate the pinching material
-    if (argc == 42) {
-      theMaterial = new ShearPanelMaterial (tag,
-					    stress1p, strain1p, stress2p, strain2p, stress3p, strain3p, stress4p, strain4p,
-					    stress1n, strain1n, stress2n, strain2n, stress3n, strain3n, stress4n, strain4n,
-					    rDispP, rForceP, uForceP, rDispN, rForceN, uForceN, 
-					    gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit,
-					    gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit,
-					    gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit, gammaE, yStr);
-    }
-    if (argc == 31) {
-      theMaterial = new ShearPanelMaterial (tag,
-					    stress1p, strain1p, stress2p, strain2p, stress3p, strain3p, stress4p, strain4p,
-					    rDispP, rForceP, uForceP,  
-					    gammaK1, gammaK2, gammaK3, gammaK4, gammaKLimit,
-					    gammaD1, gammaD2, gammaD3, gammaD4, gammaDLimit,
-					    gammaF1, gammaF2, gammaF3, gammaF4, gammaFLimit, gammaE, yStr);		
-    }
-  }
-    
-  else if ((strcmp(argv[1],"Bond_SP01") == 0) || (strcmp(argv[1],"Bond") == 0)) {  //%strain penetration material
+      
+    else if ((strcmp(argv[1],"Bond_SP01") == 0) || (strcmp(argv[1],"Bond") == 0)) {  //%strain penetration material
       // Check that there is the minimum number of arguments
       if (argc < 9) {
 	opserr << "WARNING insufficient arguments\n";

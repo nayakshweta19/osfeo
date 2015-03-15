@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 376 $
+// $Date: 2015-02-24 13:56:26 +0800 (星期二, 24 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimulation.h $
 
 #ifndef ECSimulation_h
@@ -55,7 +55,7 @@ public:
     virtual int setup() = 0;
     virtual int setSize(ID sizeT, ID sizeO) = 0;
     
-    virtual int setTrialResponse(const Vector* disp, 
+    virtual int setTrialResponse(const Vector* disp,
         const Vector* vel,
         const Vector* accel,
         const Vector* force,
@@ -67,7 +67,7 @@ public:
         Vector* time) = 0;
     
     virtual ExperimentalControl *getCopy() = 0;
-    
+
 protected:
     // protected methods to set and to get response
     virtual int control() = 0;

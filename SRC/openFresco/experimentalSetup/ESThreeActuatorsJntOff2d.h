@@ -19,14 +19,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 383 $
+// $Date: 2015-02-26 05:03:33 +0800 (星期四, 26 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSetup/ESThreeActuatorsJntOff2d.h $
 
 #ifndef ESThreeActuatorsJntOff2d_h
 #define ESThreeActuatorsJntOff2d_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 01/07
 // Revision: A
 //
@@ -54,6 +54,9 @@ public:
     
     // destructor
     virtual ~ESThreeActuatorsJntOff2d();
+    
+    // method to get class type
+    const char *getClassType() const {return "ESThreeActuatorsJntOff2d";};
     
     // public methods
     virtual int setup();

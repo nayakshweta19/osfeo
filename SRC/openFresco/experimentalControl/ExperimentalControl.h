@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 329 $
-// $Date: 2012-01-21 13:23:43 +0800 (星期六, 21 一月 2012) $
+// $Revision: 377 $
+// $Date: 2015-02-24 13:57:30 +0800 (星期二, 24 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ExperimentalControl.h $
 
 #ifndef ExperimentalControl_h
@@ -52,7 +52,7 @@ class ExperimentalControl : public TaggedObject
 {
 public:
     // constructors
-    ExperimentalControl(int tag);    
+    ExperimentalControl(int tag);
     ExperimentalControl(const ExperimentalControl& ec);
     
     // destructor
@@ -98,6 +98,9 @@ protected:
     // protected methods to set and to get response
     virtual int control() = 0;
     virtual int acquire() = 0;
+    
+    // method to pause for wait msec
+    void sleep(const clock_t wait);
     
     // size of ctrl/daq data
     // sizeCtrl/Daq[0]:disp, [1]:vel, [2]:accel, [3]:force, [4]:time

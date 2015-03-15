@@ -19,14 +19,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 383 $
+// $Date: 2015-02-26 05:03:33 +0800 (星期四, 26 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSetup/ESFourActuators3d.h $
 
 #ifndef ESFourActuators3d_h
 #define ESFourActuators3d_h
 
-// Written: VesnaTerzic (vesna@berkeley.edu)
+// Written: Vesna Terzic (vesna@berkeley.edu)
 // Created: 01/07
 // Revision: A
 //
@@ -55,6 +55,9 @@ public:
     
     // destructor
     virtual ~ESFourActuators3d();
+    
+    // method to get class type
+    const char *getClassType() const {return "ESFourActuators3d";};
     
     // public methods
     virtual int setup();

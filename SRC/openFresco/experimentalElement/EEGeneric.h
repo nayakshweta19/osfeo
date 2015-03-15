@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 364 $
-// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
+// $Revision: 375 $
+// $Date: 2015-02-24 12:55:32 +0800 (星期二, 24 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEGeneric.h $
 
 #ifndef EEGeneric_h
@@ -48,11 +48,13 @@ public:
     // constructors
     EEGeneric(int tag, ID nodes, ID *dof,
         ExperimentalSite *site,
-        bool iMod = false, int addRayleigh = 1, const Matrix *mass = 0);
+        bool iMod = false, int addRayleigh = 1, const Matrix *mass = 0,
+        int checkTime = 0);
     EEGeneric(int tag, ID nodes, ID *dof,
         int port, char *machineInetAddress = 0,
         int ssl = 0, int udp = 0, int dataSize = OF_Network_dataSize,
-        bool iMod = false, int addRayleigh = 1, const Matrix *mass = 0);
+        bool iMod = false, int addRayleigh = 1, const Matrix *mass = 0,
+        int checkTime = 0);
     
     // destructor
     ~EEGeneric();
@@ -117,6 +119,7 @@ private:
     bool iMod;                  // I-Modification flag
     int addRayleigh;            // flag to add Rayleigh damping
     Matrix *mass;               // mass matrix
+    int checkTime;              // flag to check time when setting trial
     
     Matrix theMatrix;           // objects matrix
     Vector theVector;           // objects vector

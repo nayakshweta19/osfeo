@@ -414,6 +414,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/truss/CorotTrussSection.o \
 	$(FE)/element/truss/Truss2.o \
 	$(FE)/element/truss/CorotTruss2.o \
+	$(FE)/element/truss/N4BiaxialTruss.o \
 	$(FE)/element/zeroLength/ZeroLengthContact2D.o \
 	$(FE)/element/zeroLength/ZeroLengthContact3D.o \
 	$(FE)/element/zeroLength/ZeroLengthContactNTS2D.o \
@@ -506,6 +507,7 @@ ELE_LIBS   =  $(FE)/element/Element.o \
 	$(FE)/element/frictionBearing/TFP_Bearing.o \
 	$(FE)/element/frictionBearing/TFP_Bearing2d.o \
 	$(FE)/element/frictionBearing/TPB1D.o \
+	$(FE)/element/frictionBearing/FPBearingPTV.o \
 	$(FE)/element/frictionBearing/FlatSliderSimple2d.o \
 	$(FE)/element/frictionBearing/FlatSliderSimple3d.o \
 	$(FE)/element/frictionBearing/TclFlatSliderCommand.o \
@@ -610,7 +612,9 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/Concrete02Thermal.o \
 	$(FE)/material/uniaxial/limitState/PinchingLimitStateMaterial.o \
 	$(FE)/material/uniaxial/ModIMKPinching.o \
+	$(FE)/material/uniaxial/ModIMKPinching02.o \
 	$(FE)/material/uniaxial/ModIMKPeakOriented.o \
+	$(FE)/material/uniaxial/ModIMKPeakOriented02.o \
 	$(FE)/material/uniaxial/SmoothPSConcrete.o \
 	$(FE)/material/uniaxial/Concrete01WithSITC.o \
 	$(FE)/material/uniaxial/ConcretewBeta.o \
@@ -632,12 +636,14 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/uniaxial/PathIndependentMaterial.o \
 	$(FE)/material/uniaxial/BackboneMaterial.o \
 	$(FE)/material/uniaxial/MinMaxMaterial.o \
+	$(FE)/material/uniaxial/SimpleFractureMaterial.o \
 	$(FE)/material/uniaxial/InitStrainMaterial.o \
 	$(FE)/material/uniaxial/InitStressMaterial.o \
 	$(FE)/material/uniaxial/pyUCLA.o \
 	$(FE)/material/uniaxial/FatigueMaterial.o \
 	$(FE)/material/uniaxial/SAWSMaterial.o \
 	$(FE)/material/uniaxial/snap/Bilin.o \
+	$(FE)/material/uniaxial/snap/Bilin02.o \
 	$(FE)/material/uniaxial/ConfinedConcrete01.o \
 	$(FE)/material/uniaxial/CableMaterial.o \
 	$(FE)/material/uniaxial/ENTMaterial.o \
@@ -686,8 +692,11 @@ MATERIAL_LIBS   =  $(FE)/material/Material.o \
 	$(FE)/material/nD/UWmaterials/BoundingCamClay3D.o \
 	$(FE)/material/nD/UWmaterials/BoundingCamClayPlaneStrain.o \
 	$(FE)/material/nD/UWmaterials/ManzariDafalias.o \
-    $(FE)/material/nD/UWmaterials/ManzariDafalias3D.o \
-    $(FE)/material/nD/UWmaterials/ManzariDafaliasPlaneStrain.o \
+	$(FE)/material/nD/UWmaterials/ManzariDafalias3D.o \
+	$(FE)/material/nD/UWmaterials/ManzariDafaliasPlaneStrain.o \
+	$(FE)/material/nD/UWmaterials/ManzariDafaliasRO.o \
+	$(FE)/material/nD/UWmaterials/ManzariDafalias3DRO.o \
+	$(FE)/material/nD/UWmaterials/ManzariDafaliasPlaneStrainRO.o \
 	$(FE)/material/nD/UWmaterials/InitialStateAnalysisWrapper.o \
 	$(FE)/material/nD/FeapMaterial.o \
 	$(FE)/material/nD/feap/TclFeapMaterialCommand.o \

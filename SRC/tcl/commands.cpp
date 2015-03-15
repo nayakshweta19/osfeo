@@ -349,19 +349,19 @@ extern TransientIntegrator *OPS_NewGeneralizedAlpha(void);
 // AddingSensitivity:BEGIN /////////////////////////////////////////////////
 #include <ReliabilityDomain.h>
 #include <SensitivityAlgorithm.h>
-#include <SensitivityIntegrator.h>
-#include <StaticSensitivityIntegrator.h>
+//#include <SensitivityIntegrator.h>
+//#include <StaticSensitivityIntegrator.h>
 //#include <DynamicSensitivityIntegrator.h>
-#include <NewmarkSensitivityIntegrator.h>
+//#include <NewmarkSensitivityIntegrator.h>
 //#include <RandomVariablePositioner.h>
 //#include <RandomVariablePositionerIter.h>
 //#include <ParameterPositioner.h>
 //#include <ParameterPositionerIter.h>
-#include <NewNewmarkSensitivityIntegrator.h>
-#include <NewStaticSensitivityIntegrator.h>
-#include <PFEMSensitivityIntegrator.h>
+//#include <NewNewmarkSensitivityIntegrator.h>
+//#include <NewStaticSensitivityIntegrator.h>
+//#include <PFEMSensitivityIntegrator.h>
 //#include <OrigSensitivityAlgorithm.h>
-#include <NewSensitivityAlgorithm.h>
+//#include <NewSensitivityAlgorithm.h>
 #include <ReliabilityStaticAnalysis.h>
 #include <ReliabilityDirectIntegrationAnalysis.h>
 // AddingSensitivity:END /////////////////////////////////////////////////
@@ -532,15 +532,15 @@ static RitzAnalysis *theRitzAnalysis = 0;
 static TclReliabilityBuilder *theReliabilityBuilder = 0;
 
 SensitivityAlgorithm *theSensitivityAlgorithm = 0;
-SensitivityIntegrator *theSensitivityIntegrator = 0;
+Integrator *theSensitivityIntegrator = 0;
 ReliabilityStaticAnalysis *theReliabilityStaticAnalysis = 0;
 ReliabilityDirectIntegrationAnalysis *theReliabilityTransientAnalysis = 0;
 
-static NewmarkSensitivityIntegrator *theNSI = 0;
-static NewNewmarkSensitivityIntegrator *theNNSI = 0;
-#ifdef _PFEM
-static PFEMSensitivityIntegrator* thePFEMSI = 0;
-#endif
+//static NewmarkSensitivityIntegrator *theNSI = 0;
+//static NewNewmarkSensitivityIntegrator *theNNSI = 0;
+//#ifdef _PFEM
+//static PFEMSensitivityIntegrator* thePFEMSI = 0;
+//#endif
 //static SensitivityIntegrator *theSensitivityIntegrator = 0;
 //static NewmarkSensitivityIntegrator *theNSI = 0;
 
@@ -1051,8 +1051,8 @@ int OpenSeesAppInit(Tcl_Interp *interp) {
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "sensitivityAlgorithm", &sensitivityAlgorithm,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
-  Tcl_CreateCommand(interp, "sensitivityIntegrator", &sensitivityIntegrator,
-    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
+//  Tcl_CreateCommand(interp, "sensitivityIntegrator", &sensitivityIntegrator,
+//    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "sensNodeDisp", &sensNodeDisp,
     (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
   Tcl_CreateCommand(interp, "sensNodeVel", &sensNodeVel,
@@ -1230,6 +1230,12 @@ sensitivityAlgorithm(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Ch
   bool withRespectToRVs = true;
   bool newalgorithm = false;
   int analysisTypeTag = 1;
+  if (theStaticIntegrator != 0) {
+    theSensitivityIntegrator = theStaticIntegrator;
+  }
+  else if (theTransientIntegrator != 0) {
+    theSensitivityIntegrator = theTransientIntegrator;
+  }
   // 1: compute at each step (default); 2: compute by command
 
   if (argc < 2) {
@@ -1259,12 +1265,12 @@ sensitivityAlgorithm(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Ch
   ReliabilityDomain *theReliabilityDomain;
   theReliabilityDomain = theReliabilityBuilder->getReliabilityDomain();
   if (newalgorithm){
-    theSensitivityAlgorithm = new
-      NewSensitivityAlgorithm(theReliabilityDomain,
-      &theDomain,
-      theAlgorithm,
-      theSensitivityIntegrator,
-      analysisTypeTag);
+//    theSensitivityAlgorithm = new
+//      NewSensitivityAlgorithm(theReliabilityDomain,
+//      &theDomain,
+//      theAlgorithm,
+//      theSensitivityIntegrator,
+//      analysisTypeTag);
   }
   else {
     theSensitivityAlgorithm = new
@@ -1298,6 +1304,7 @@ sensitivityAlgorithm(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Ch
   return TCL_OK;
 }
 
+/*
 int
 sensitivityIntegrator(ClientData clientData, Tcl_Interp *interp, int argc, TCL_Char **argv)
 {
@@ -1370,7 +1377,7 @@ sensitivityIntegrator(ClientData clientData, Tcl_Interp *interp, int argc, TCL_C
     opserr << "WARNING: Invalid type of sensitivity integrator." << endln;
     return TCL_ERROR;
   }
-}
+}*/
 
 // AddingSensitivity:END /////////////////////////////////////////////////
 
@@ -4700,6 +4707,7 @@ TCL_Char **argv)
       theTransientAnalysis->setIntegrator(*theTransientIntegrator);
   }
 
+/*
 #ifdef _RELIABILITY
   else if (strcmp(argv[1], "NewmarkWithSensitivity") == 0) {
     int assemblyFlag = 0;
@@ -4909,6 +4917,7 @@ TCL_Char **argv)
 #endif 
 
 #endif
+  */
 
   else if (strcmp(argv[1], "HHT") == 0) {
     theTransientIntegrator = OPS_NewHHT();
@@ -6756,6 +6765,7 @@ TCL_Char **argv)
     if (theSensitivityAlgorithm != 0) {
       theStaticAnalysis->setSensitivityAlgorithm(0);
       theSensitivityAlgorithm = 0;
+      theSensitivityIntegrator = 0;
     }
   }
   // AddingSensitivity:END ///////////////////////////////////////

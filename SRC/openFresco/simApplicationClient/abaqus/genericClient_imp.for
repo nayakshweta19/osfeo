@@ -25,11 +25,11 @@
 **                                                                    **
 ** ****************************************************************** **
 
-** $Revision: 348 $
-** $Date: 2013-07-25 11:40:13 +0800 (星期四, 25 七月 2013) $
+** $Revision: 382 $
+** $Date: 2015-02-26 03:44:07 +0800 (星期四, 26 二月 2015) $
 ** $Source: $
 
-** Written: Andreas Schellenberg
+** Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 ** Created: 03/09
 ** Revision: A
 

@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 359 $
-// $Date: 2014-04-08 03:23:41 +0800 (星期二, 08 四月 2014) $
+// $Revision: 378 $
+// $Date: 2015-02-25 00:17:07 +0800 (星期三, 25 二月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSCRAMNetGT.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -684,12 +684,4 @@ int ECSCRAMNetGT::acquire()
     }
     
     return OF_ReturnType_completed;
-}
-
-
-void ECSCRAMNetGT::sleep(const clock_t wait)
-{
-    clock_t goal;
-    goal = wait + clock();
-    while (goal>clock());
 }
