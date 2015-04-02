@@ -39,6 +39,8 @@
 #include <RCFTSTLCrdTransf3D.h>
 #include <RCFTSTLLinCrdTransf3D.h>
 
+#include <semiLoofCrdTransf3d.h> // for semiloof element
+
 #include <TimoshenkoLinearCrdTransf2d.h>
 
 
@@ -236,6 +238,10 @@ TclCommand_addGeomTransf(ClientData clientData, Tcl_Interp *interp,
 		crdTransf3d = new RCFTMCrdLinTransf3D(crdTransfTag, vecxzPlane);
 	else if (strcmp(argv[1],"RCFTSTLLinCrd") == 0)
 		crdTransf3d = new RCFTSTLLinCrdTransf3D(crdTransfTag, vecxzPlane);
+    // neallee@tju.edu.cn
+    else if (strcmp(argv[1], "semiLoof") == 0)
+      crdTransf3d = new semiLoofCrdTransf3d(crdTransfTag, vecxzPlane, jntOffsetI, jntOffsetJ);
+    // end neallee@tju.edu.cn
 
     else {
       opserr << "WARNING TclElmtBuilder - addGeomTransf - invalid Type\n";
