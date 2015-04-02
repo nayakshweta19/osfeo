@@ -774,6 +774,7 @@
 #define CRDTR_TAG_LinearCrdTransf2dInt 7
 #define CRDTR_TAG_ModerateDispCrdTransf2d 8
 #define CRDTR_TAG_ModerateDispCrdTransf3d 9
+#define CRDTR_TAG_semiLoofCrdTransf3d 10 // semiloof beam element
 
 // Adding HAJJAR_COMPOSITE: Begin /////////
 #define CRDTR_TAG_RCFTCrdTransf3D   8
