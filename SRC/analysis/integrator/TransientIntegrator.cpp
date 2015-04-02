@@ -19,7 +19,7 @@
 ** ****************************************************************** */
                                                                         
 // $Revision: 1.8 $
-// $Date: 2007/04/02 23:42:26 $
+// $Date: 2007-04-02 23:42:26 $
 // $Source: /usr/local/cvs/OpenSees/SRC/analysis/integrator/TransientIntegrator.cpp,v $
                                                                         
                                                                         
@@ -95,10 +95,8 @@ TransientIntegrator::formTangent(int statFlag)
 	    result = -2;
 	}
     }
-
     return result;
 }
-
 
 
     
@@ -106,13 +104,7 @@ int
 TransientIntegrator::formEleResidual(FE_Element *theEle)
 {
   theEle->zeroResidual();
-  int numdof = theEle->getnumdof();
-  if( numdof == 18 ){
-	  theEle->addRCFTIncInertiaToResidual();
-  }
-  else{
-	  theEle->addRIncInertiaToResidual();
-  }
+  theEle->addRIncInertiaToResidual();
   return 0;
 }    
 
@@ -123,3 +115,6 @@ TransientIntegrator::formNodUnbalance(DOF_Group *theDof)
   theDof->addPIncInertiaToUnbalance();
   return 0;
 }    
+
+
+
