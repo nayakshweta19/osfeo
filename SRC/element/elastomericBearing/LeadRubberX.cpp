@@ -48,10 +48,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+#ifndef fmax
+#define fmax(a,b) ((a)>(b) ? (a) : (b))
+#define fmin(a,b) ((a)>(b) ? (b) : (a))
+#endif
+
 #include <OPS_Globals.h>
 #include <Message.h>
 using namespace std;
 #include <iostream>
+
+#define PI 3.14159l
 
 // initialize the class wide variables
 Matrix LeadRubberX::theMatrix(12,12);
