@@ -19,11 +19,11 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 379 $
-// $Date: 2015-02-25 00:23:33 +0800 (星期三, 25 二月 2015) $
+// $Revision: 387 $
+// $Date: 2015-03-21 13:07:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECLabVIEW.cpp $
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 01/07
 // Revision: A
 //
@@ -353,7 +353,8 @@ int ECLabVIEW::setSize(ID sizeT, ID sizeO)
 }
 
 
-int ECLabVIEW::setTrialResponse(const Vector* disp,
+int ECLabVIEW::setTrialResponse(
+    const Vector* disp,
     const Vector* vel,
     const Vector* accel,
     const Vector* force,
@@ -381,7 +382,8 @@ int ECLabVIEW::setTrialResponse(const Vector* disp,
 }
 
 
-int ECLabVIEW::getDaqResponse(Vector* disp,
+int ECLabVIEW::getDaqResponse(
+    Vector* disp,
     Vector* vel,
     Vector* accel,
     Vector* force,

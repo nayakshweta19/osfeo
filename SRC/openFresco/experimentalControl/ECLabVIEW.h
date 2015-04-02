@@ -19,14 +19,14 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 379 $
-// $Date: 2015-02-25 00:23:33 +0800 (星期三, 25 二月 2015) $
+// $Revision: 387 $
+// $Date: 2015-03-21 13:07:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECLabVIEW.h $
 
 #ifndef ECLabVIEW_h
 #define ECLabVIEW_h
 
-// Written: Andreas Schellenberg (andreas.schellenberg@gmx.net)
+// Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
 // Created: 01/07
 // Revision: A
 //
@@ -46,7 +46,8 @@ class ECLabVIEW : public ExperimentalControl
 {
 public:
     // constructors
-    ECLabVIEW(int tag, int nTrialCPs, ExperimentalCP **trialCPs,
+    ECLabVIEW(int tag,
+        int nTrialCPs, ExperimentalCP **trialCPs,
         int nOutCPs, ExperimentalCP **outCPs,
         char *ipAddress, int ipPort = 44000);
     ECLabVIEW(const ECLabVIEW &ec);
@@ -61,12 +62,14 @@ public:
     virtual int setup();
     virtual int setSize(ID sizeT, ID sizeO);
     
-    virtual int setTrialResponse(const Vector* disp,
+    virtual int setTrialResponse(
+        const Vector* disp,
         const Vector* vel,
         const Vector* accel,
         const Vector* force,
         const Vector* time);
-    virtual int getDaqResponse(Vector* disp,
+    virtual int getDaqResponse(
+        Vector* disp,
         Vector* vel,
         Vector* accel,
         Vector* force,

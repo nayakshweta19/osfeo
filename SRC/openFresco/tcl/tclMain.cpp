@@ -33,8 +33,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/tclMain.cpp $
 
 // Modified: Frank McKenna & Andreas Schellenberg
@@ -176,7 +176,7 @@ void tclMain(int argc, char **argv, Tcl_AppInitProc * appInitProc)
     /* beginning of modifications for OpenFresco */
     fprintf(stderr,"\n\n");
     fprintf(stderr,"\t OpenFresco -- Open Framework for Experimental Setup and Control\n");
-    fprintf(stderr,"\t                           Version %s                          \n\n",OPF_VERSION);
+    fprintf(stderr,"\t                    Version %s                   \n\n",OPF_VERSION);
     fprintf(stderr,"\t Copyright (c) 2006 The Regents of the University of California \n");
     fprintf(stderr,"\t                       All Rights Reserved                      \n\n\n");    
 

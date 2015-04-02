@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 360 $
-// $Date: 2014-04-08 03:36:28 +0800 (星期二, 08 四月 2014) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/FrescoGlobals.h $
 
 #ifndef FrescoGlobals_h
@@ -35,7 +35,7 @@
 //
 // Description: This file contains the global values in Fresco
 
-#define OPF_VERSION "2.6.3"
+#define OPF_VERSION "2.7.0 (Build 385)"
 
 #ifndef _bool_h
 #include "bool.h"

@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 364 $
-// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EETrussCorot.h $
 
 #ifndef EETrussCorot_h
@@ -147,9 +147,8 @@ private:
     Vector vbCtrl;      // ctrl velocities in basic system
     Vector abCtrl;      // ctrl accelerations in basic system
     
-    Vector dbLast;      // displacements in basic system at last update
-    double tLast;       // time at last update
     Matrix kbInit;      // stiffness matrix in basic system
+    double tLast;       // time at last update
     
     Node *theNodes[2];  // array of node pointers
     

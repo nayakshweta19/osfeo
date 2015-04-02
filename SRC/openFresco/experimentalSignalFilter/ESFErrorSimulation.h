@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 388 $
+// $Date: 2015-03-21 13:11:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSignalFilter/ESFErrorSimulation.h $
 
 #ifndef ESFErrorSimulation_h
@@ -52,6 +52,9 @@ public:
     const char *getClassType() const {return "ESFErrorSimulation";};
     
     virtual double filtering(double data) = 0;
+    virtual Vector& converting(Vector* td);
+    virtual Vector& converting(Vector* td, Vector* tf);
+    virtual int setSize(const int sz);
     virtual void update() = 0;
     
     virtual ExperimentalSignalFilter *getCopy() = 0;

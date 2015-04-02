@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 388 $
+// $Date: 2015-03-21 13:11:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSignalFilter/ExperimentalSignalFilter.h $
 
 #ifndef ExperimentalSignalFilter_h
@@ -59,6 +59,9 @@ public:
     virtual ~ExperimentalSignalFilter();
     
     virtual double filtering(double data) = 0;
+    virtual Vector& converting(Vector* td) = 0;
+    virtual Vector& converting(Vector* td, Vector* tf) = 0;
+    virtual int setSize(const int sz) = 0;
     virtual void update() = 0;
     
     virtual ExperimentalSignalFilter *getCopy() = 0;

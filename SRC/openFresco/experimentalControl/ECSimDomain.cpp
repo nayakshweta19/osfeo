@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 376 $
-// $Date: 2015-02-24 13:56:26 +0800 (星期二, 24 二月 2015) $
+// $Revision: 387 $
+// $Date: 2015-03-21 13:07:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimDomain.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -91,6 +91,7 @@ ECSimDomain::ECSimDomain(int tag,
     ctrlDisp(0), ctrlVel(0), ctrlAccel(0), ctrlForce(0),
     daqDisp(0), daqVel(0), daqAccel(0), daqForce(0)
 {
+    // get trial and output control points
     if (trialcps == 0 || outcps == 0)  {
       opserr << "ECSimDomain::ECSimDomain() - "
           << "null trialCPs or outCPs array passed.\n";
@@ -389,7 +390,8 @@ int ECSimDomain::setSize(ID sizeT, ID sizeO)
 }
 
 
-int ECSimDomain::setTrialResponse(const Vector* disp,
+int ECSimDomain::setTrialResponse(
+    const Vector* disp,
     const Vector* vel,
     const Vector* accel,
     const Vector* force,
@@ -431,7 +433,8 @@ int ECSimDomain::setTrialResponse(const Vector* disp,
 }
 
 
-int ECSimDomain::getDaqResponse(Vector* disp,
+int ECSimDomain::getDaqResponse(
+    Vector* disp,
     Vector* vel,
     Vector* accel,
     Vector* force,
