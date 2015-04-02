@@ -22,8 +22,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 314 $
-// $Date: 2011-05-23 05:17:07 +0800 (星期一, 23 五月 2011) $
+// $Revision: 388 $
+// $Date: 2015-03-21 13:11:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalSignalFilter/ESFErrorSimulation.cpp $
 
 // Written: Yoshi
@@ -52,4 +52,27 @@ ESFErrorSimulation::ESFErrorSimulation(const ESFErrorSimulation& esf)
 ESFErrorSimulation::~ESFErrorSimulation()
 {
     // does nothing
+}
+
+
+Vector& ESFErrorSimulation::converting(Vector* td)
+{
+    opserr << "\nWARNING ESFErrorSimulation::converting(Vector* td) - " << endln
+    << "No conversion performed. The input vector is returned instead." << endln;
+    return *td;
+}
+
+
+Vector& ESFErrorSimulation::converting(Vector* td, Vector* tf)
+{
+    opserr << "\nWARNING ESFErrorSimulation::converting(Vector* td, const Vector* tf) - " << endln
+    << "No conversion performed. The input vector is returned instead." << endln;
+    return *tf;
+}
+
+
+int ESFErrorSimulation::setSize(const int sz)
+{
+    // does nothing
+    return OF_ReturnType_completed;
 }

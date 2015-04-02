@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 364 $
-// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/tcl/OpenFrescoPackage.cpp $
 
 // Written: Andreas Schellenberg (andreas.schellenberg@gmail.com)
@@ -202,7 +202,7 @@ OpenFresco(ClientData clientData, Tcl_Interp *interp, int argc,
     // beginning of OpenFresco additions
     fprintf(stderr,"\n\n");
     fprintf(stderr,"\t OpenFresco -- Open Framework for Experimental Setup and Control\n");
-    fprintf(stderr,"\t                           Version %s                          \n\n",OPF_VERSION);
+    fprintf(stderr,"\t                    Version %s                   \n\n",OPF_VERSION);
     fprintf(stderr,"\t Copyright (c) 2006 The Regents of the University of California \n");
     fprintf(stderr,"\t                       All Rights Reserved                      \n\n\n");    
     

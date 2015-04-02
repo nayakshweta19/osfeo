@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 376 $
-// $Date: 2015-02-24 13:56:26 +0800 (星期二, 24 二月 2015) $
+// $Revision: 387 $
+// $Date: 2015-03-21 13:07:49 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalControl/ECSimDomain.h $
 
 #ifndef ECSimDomain_h
@@ -71,12 +71,14 @@ public:
     virtual int setup();
     virtual int setSize(ID sizeT, ID sizeO);
     
-    virtual int setTrialResponse(const Vector* disp,
+    virtual int setTrialResponse(
+        const Vector* disp,
         const Vector* vel,
         const Vector* accel,
         const Vector* force,
         const Vector* time);
-    virtual int getDaqResponse(Vector* disp,
+    virtual int getDaqResponse(
+        Vector* disp,
         Vector* vel,
         Vector* accel,
         Vector* force,
@@ -104,8 +106,8 @@ private:
     ExperimentalCP **trialCPs;  // trial control points
     int numOutCPs;              // number of output control points
     ExperimentalCP **outCPs;    // output control points
-    
-    Domain            *theDomain;
+    Domain *theDomain;          // OpenSees domain with specimen information
+
     AnalysisModel     *theModel;
     ConvergenceTest   *theTest;
     LineSearch        *theLineSearch;

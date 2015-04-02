@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 364 $
-// $Date: 2014-09-23 04:42:12 +0800 (星期二, 23 九月 2014) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEBeamColumn3d.h $
 
 #ifndef EEBeamColumn3d_h
@@ -144,9 +144,8 @@ private:
     Vector vbCtrl;      // ctrl velocities in basic system B
     Vector abCtrl;      // ctrl accelerations in basic system B
     
-    Vector dbLast;      // displacements in basic system B at last update
-    double tLast;       // time at last update
     Matrix kbInit;      // stiffness matrix in basic system B
+    double tLast;       // time at last update
     double qA0[6];      // fixed end forces in basic system A
     double pA0[6];      // reactions in basic system A
     

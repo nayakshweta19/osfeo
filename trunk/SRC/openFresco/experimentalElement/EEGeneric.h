@@ -19,8 +19,8 @@
 **                                                                    **
 ** ****************************************************************** */
 
-// $Revision: 375 $
-// $Date: 2015-02-24 12:55:32 +0800 (星期二, 24 二月 2015) $
+// $Revision: 386 $
+// $Date: 2015-03-21 02:34:09 +0800 (星期六, 21 三月 2015) $
 // $URL: svn://opensees.berkeley.edu/usr/local/svn/OpenFresco/trunk/SRC/experimentalElement/EEGeneric.h $
 
 #ifndef EEGeneric_h
@@ -146,9 +146,8 @@ private:
     Vector vbCtrl;      // ctrl velocities in basic system
     Vector abCtrl;      // ctrl accelerations in basic system
     
-    Vector dbLast;      // displacements in basic system at last update
-    double tLast;       // time at last update
     Matrix kbInit;      // stiffness matrix in basic system
+    double tLast;       // time at last update
     
     Node **theNodes;
 };
