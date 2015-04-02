@@ -172,7 +172,10 @@ extern void *OPS_ResilienceMaterialHR(void);
 extern void *OPS_CFSSSWP(void);
 extern void *OPS_CFSWSWP(void);
 extern void *OPS_ResilienceLow(void);
+
+#ifdef _HAVE_Steel4
 extern void *OPS_Steel4(void);
+#endif
 
 //extern int TclCommand_ConfinedConcrete02(ClientData clientData, Tcl_Interp *interp, int argc, 
 //					 TCL_Char **argv, TclModelBuilder *theTclBuilder);
@@ -290,13 +293,14 @@ TclModelBuilderUniaxialMaterialCommand (ClientData clientData, Tcl_Interp *inter
       else 
 	return TCL_ERROR;
 
+#ifdef _HAVE_Steel4
     } else if (strcmp(argv[1], "Steel4") == 0) {
       void *theMat = OPS_Steel4();
       if (theMat != 0)
         theMaterial = (UniaxialMaterial *)theMat;
       else
         return TCL_ERROR;
-
+#endif
     } else if (strcmp(argv[1], "Concrete01") == 0) {
       void *theMat = OPS_NewConcrete01();
       if (theMat != 0) 
