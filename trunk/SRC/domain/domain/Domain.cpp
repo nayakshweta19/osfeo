@@ -403,14 +403,14 @@ Domain::addElement(Element *element)
   const ID &nodes = element->getExternalNodes();
   int numDOF = 0;
   for (int i=0; i<nodes.Size(); i++) {
-    int nodeTag = nodes(i);
-    Node *nodePtr = this->getNode(nodeTag);
-    if (nodePtr == 0) {
-      opserr << "WARNING Domain::addElement - In element " << eleTag;
-      opserr << "\n no Node " << nodeTag << " exists in the domain\n";
-      return false;
-    }
-    numDOF += nodePtr->getNumberDOF();
+      int nodeTag = nodes(i);
+      Node *nodePtr = this->getNode(nodeTag);
+      if (nodePtr == 0) {
+	opserr << "WARNING Domain::addElement - In element " << eleTag;
+	  opserr << "\n no Node " << nodeTag << " exists in the domain\n";
+	  return false;
+      }
+      numDOF += nodePtr->getNumberDOF();
   }   
 
   // check if an Element with a similar tag already exists in the Domain
@@ -547,7 +547,7 @@ Domain::addPressure_Constraint(Pressure_Constraint *pConstraint)
 {
 #ifdef _G3DEBUG    
     // check the Node exists in the Domain
-	int nodeTag = pConstraint->getTag();
+    int nodeTag = pConstraint->getTag();
     Node *nodePtr = this->getNode(nodeTag);
     if (nodePtr == 0) {
         opserr << "Domain::addPressure_Constraint - cannot add as node with tag";
@@ -1769,7 +1769,8 @@ Domain::initialize(void)
     // lvalue needed here for M$ VC++ compiler -- MHS
 	// and either the  VS2011 or intel compiler does not like it!
 #ifndef _VS2011
-	Matrix initM(elePtr->getInitialStiff());
+    Matrix initM(elePtr->getInitialStiff());
+
 #else
 	 elePtr->getInitialStiff();
 #endif
@@ -1969,11 +1970,14 @@ Domain::updateParameter(int tag, double value)
   TaggedObject *mc = theParameters->getComponentPtr(tag);
   
   // if not there return 0
-  if (mc == 0) 
+  if (mc == 0) {
+	  opserr << "Domain::updateParameter(int tag, double value) - parameter with tag not present\n";
       return 0;
+  }
 
-  Parameter *result = (Parameter *)mc;
-  return result->update(value);
+  Parameter *theParam = (Parameter *)mc;
+  int res =  theParam->update(value);
+  return res;
 }
 
 
@@ -2243,10 +2247,10 @@ Domain::getRegion(int tag)
 void
 Domain::getRegionTags(ID& rtags) const
 {
-  rtags.resize(numRegions);
-  for (int i = 0; i < numRegions; i++) {
-    rtags(i) = theRegions[i]->getTag();
-  }
+    rtags.resize(numRegions);
+    for(int i=0; i<numRegions; i++) {
+        rtags(i) = theRegions[i]->getTag();
+    }
 
 }
 
